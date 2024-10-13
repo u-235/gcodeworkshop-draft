@@ -57,7 +57,8 @@ HEADERS += \
     src/sessionmanager.h \
     src/sessionnamedialog.h \
     src/setupdialog.h \
-    src/tooltips.h
+    src/tooltips.h \
+    src/ui/defaultkeysequences.h
 
 SOURCES += \
     src/capslockeventfilter.cpp \
@@ -86,6 +87,7 @@ SOURCES += \
     src/sessionnamedialog.cpp \
     src/setupdialog.cpp \
     src/ui/actions/knownactions.cpp \
+    src/ui/defaultkeysequences.cpp \
     src/utils/expressionparser.cpp \
     src/utils/removezeros.cpp
 
