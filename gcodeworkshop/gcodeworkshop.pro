@@ -51,6 +51,7 @@ HEADERS += \
     src/gui/workshop/defaultkeysequences.h \
     src/gui/workshop/editactions.h \
     src/gui/workshop/fileactions.h \
+    src/gui/workshop/helpactions.h \
     src/gui/workshop/toolactions.h \
     src/gui/workshop/windowactions.h \
     src/highlighter.h \
@@ -84,6 +85,7 @@ SOURCES += \
     src/gui/workshop/defaultkeysequences.cpp \
     src/gui/workshop/editactions.cpp \
     src/gui/workshop/fileactions.cpp \
+    src/gui/workshop/helpactions.cpp \
     src/gui/workshop/knownactions.cpp \
     src/gui/workshop/toolactions.cpp \
     src/gui/workshop/windowactions.cpp \
