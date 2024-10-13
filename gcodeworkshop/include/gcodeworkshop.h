@@ -82,6 +82,7 @@ namespace Actions {
 class ActionKit;
 class EditActions;
 class FileActions;
+class HelpActions;
 class ToolActions;
 class WindowActions;
 } // namespace Actions
@@ -104,6 +105,7 @@ public:
 	Addons::Actions* addonsActions();
 	Ui::Actions::EditActions* editActions();
 	Ui::Actions::FileActions* fileActions();
+	Ui::Actions::HelpActions* helpActions();
 	Ui::Actions::ToolActions* toolActions();
 	Ui::Actions::WindowActions* windowActions();
 	DocumentManager* documentManager() const;
@@ -141,6 +143,7 @@ protected:
 	Addons::Actions* m_addonsActions;
 	Ui::Actions::EditActions* m_editActions;
 	Ui::Actions::FileActions* m_fileActions;
+	Ui::Actions::HelpActions* m_helpActions;
 	Ui::Actions::ToolActions* m_toolActions;
 	Ui::Actions::WindowActions* m_windowActions;
 
@@ -334,11 +337,6 @@ private:
 	QToolBar* editToolBar;
 	QToolBar* windowToolBar;
 	QToolBar* toolsToolBar;
-
-	QAction* aboutAct;
-	QAction* aboutQtAct;
-	QAction* createGlobalToolTipsAct;
-	QAction* createUserToolTipsAct;
 
 	QProcess* proc;
 	QProcess* sfsProc;

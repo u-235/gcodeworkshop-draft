@@ -60,6 +60,7 @@ HEADERS += \
     src/tooltips.h \
     src/ui/actions/editactions.h \
     src/ui/actions/fileactions.h \
+    src/ui/actions/helpactions.h \
     src/ui/actions/toolactions.h \
     src/ui/actions/windowactions.h \
     src/ui/defaultkeysequences.h
@@ -92,6 +93,7 @@ SOURCES += \
     src/setupdialog.cpp \
     src/ui/actions/editactions.cpp \
     src/ui/actions/fileactions.cpp \
+    src/ui/actions/helpactions.cpp \
     src/ui/actions/knownactions.cpp \
     src/ui/actions/toolactions.cpp \
     src/ui/actions/windowactions.cpp \
