@@ -60,6 +60,7 @@ HEADERS += \
     src/tooltips.h \
     src/ui/actions/editactions.h \
     src/ui/actions/fileactions.h \
+    src/ui/actions/toolactions.h \
     src/ui/defaultkeysequences.h
 
 SOURCES += \
@@ -91,6 +92,7 @@ SOURCES += \
     src/ui/actions/editactions.cpp \
     src/ui/actions/fileactions.cpp \
     src/ui/actions/knownactions.cpp \
+    src/ui/actions/toolactions.cpp \
     src/ui/defaultkeysequences.cpp \
     src/utils/expressionparser.cpp \
     src/utils/removezeros.cpp
