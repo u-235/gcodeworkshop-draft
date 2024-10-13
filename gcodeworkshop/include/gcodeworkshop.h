@@ -62,7 +62,6 @@ class QToolButton;
 #include <documentinfo.h>           // for DocumentInfo, DocumentInfo::Ptr
 #include <utils/keysequencemap.h>   // for KeySequenceMap
 
-class ActionKit;
 class Document;
 class DocumentManager;
 class FindInFiles;
@@ -72,6 +71,13 @@ class KDiff3App;
 class Medium;
 class RecentFiles;
 class SessionManager;
+
+
+namespace GUI {
+namespace Actions {
+class FileActions;
+} // namespace Actions
+} // namespace GUI
 
 namespace Addons {
 class Actions;
@@ -96,6 +102,7 @@ public:
 
 	QMainWindow* mainWindow();
 	Addons::Actions* addonsActions();
+	GUI::Actions::FileActions* fileActions();
 	DocumentManager* documentManager() const;
 	Document* activeDocument() const;
 	GCoderDocument* activeGCoderDocument() const;
@@ -131,6 +138,7 @@ protected:
 
 	KeySequenceMap m_shortcuts;
 	Addons::Actions* m_addonsActions;
+	GUI::Actions::FileActions* m_fileActions;
 
 public:
 	void openFile(const QString& fileName);
@@ -147,7 +155,7 @@ protected:
 	bool event(QEvent* event);
 	void setLastOpenedPath(const QString& path);
 
-	bool save(Document* doc, bool forceSaveAs);
+	bool saveDocument(Document* doc, bool forceSaveAs);
 
 	void setMdiTabbedMode(bool tabbed);
 
@@ -155,7 +163,7 @@ public slots:
 	Document* newFileFromTemplate();
 
 private slots:
-	void open(const QDir& dir);
+	void openDir(const QDir& dir);
 
 public slots:
 	void open();
@@ -365,21 +373,9 @@ private:
 	QToolBar* windowToolBar;
 	QToolBar* toolsToolBar;
 
-	QAction* newAct;
-	QAction* openAct;
-	QAction* openExampleAct;
-	QAction* saveAct;
-	QAction* saveAllAct;
-	QAction* saveAsAct;
-	QAction* exitAct;
-	QAction* findFilesAct;
-	QAction* printAct;
-	QAction* printPreviewAct;
 	QAction* cutAct;
 	QAction* copyAct;
 	QAction* pasteAct;
-	QAction* closeAct;
-	QAction* closeAllAct;
 	QAction* tileHAct;
 	QAction* tileVAct;
 	QAction* cascadeAct;
@@ -393,8 +389,6 @@ private:
 	QAction* undoAct;
 	QAction* redoAct;
 	QAction* inLineCalcAct;
-
-	QAction* sessionMgrAct;
 
 	QAction* findAct;
 	QAction* replaceAct;

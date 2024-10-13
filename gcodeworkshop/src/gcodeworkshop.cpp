@@ -122,20 +122,21 @@
 #include <utils/gcode-converter.h>      // for Converter
 #include <version.h>
 
-#include "capslockeventfilter.h"    // for CapsLockEventFilter
-#include "findinf.h"                // for FindInFiles
-#include "gcoder.h"                 // for DOCUMENT_TYPE
-#include "gcoderinfo.h"             // for GCoderInfo
-#include "gcoderproducer.h"         // for GCoderProducer
+#include "capslockeventfilter.h"            // for CapsLockEventFilter
+#include "findinf.h"                        // for FindInFiles
+#include "gcoder.h"                         // for DOCUMENT_TYPE
+#include "gcoderinfo.h"                     // for GCoderInfo
+#include "gcoderproducer.h"                 // for GCoderProducer
+#include "gui/actions/fileactions.h"        // for FileActions
 #include "gui/defaultkeysequences.h"
-#include "highlightmode.h"          // for MODE_AUTO, MODE_FANUC, MODE_HEIDENHAIN, MODE_HEIDENHAIN_ISO, MODE_LINU...
-#include "newfiledialog.h"          // for newFileDialog
-#include "recentfiles.h"            // for RecentFiles
-#include "sessiondialog.h"          // for SessionDialog
-#include "sessionmanager.h"         // for SessionManager
-#include "setupdialog.h"            // for AppConfig, SetupDialog
-#include "tooltips.h"               // for writeTooltipFile
-#include "ui_gcodeworkshop.h"       // for Ui::GCodeWorkShop
+#include "highlightmode.h"                  // for MODE_AUTO, MODE_FANUC, MODE_HEIDENHAIN, MODE_HEIDENHAIN_ISO, MODE_LINU...
+#include "newfiledialog.h"                  // for newFileDialog
+#include "recentfiles.h"                    // for RecentFiles
+#include "sessiondialog.h"                  // for SessionDialog
+#include "sessionmanager.h"                 // for SessionManager
+#include "setupdialog.h"                    // for AppConfig, SetupDialog
+#include "tooltips.h"                       // for writeTooltipFile
+#include "ui_gcodeworkshop.h"               // for Ui::GCodeWorkShop
 
 
 #define EXAMPLES_PATH             "/usr/share/gcodeworkshop/EXAMPLES"
@@ -167,7 +168,6 @@ GCodeWorkShop::GCodeWorkShop(Medium* medium)
 	diffApp = nullptr;
 	findFiles = nullptr;
 	dirModel = nullptr;
-	openExampleAct = nullptr;
 	m_fileServer = nullptr;
 
 	m_MdiWidgetsMaximized = true;
@@ -332,6 +332,11 @@ Addons::Actions* GCodeWorkShop::addonsActions()
 	return m_addonsActions;
 }
 
+GUI::Actions::FileActions* GCodeWorkShop::fileActions()
+{
+	return m_fileActions;
+}
+
 DocumentManager* GCodeWorkShop::documentManager() const
 {
 	return m_documentManager;
@@ -446,7 +451,7 @@ Document* GCodeWorkShop::newFile()
 //
 //**************************************************************************************************
 
-void GCodeWorkShop::open(const QDir& dir)
+void GCodeWorkShop::openDir(const QDir& dir)
 {
 	const QString& filters = getFilters(m_extensions);
 
@@ -463,7 +468,7 @@ void GCodeWorkShop::open(const QDir& dir)
 
 void GCodeWorkShop::open()
 {
-	open(currentPath());
+	openDir(currentPath());
 	statusBar()->showMessage(tr("File loaded"), 5000);
 }
 
@@ -478,7 +483,7 @@ void GCodeWorkShop::openExample()
 		dir = QApplication::applicationDirPath() + "/" + "EXAMPLES";
 	}
 
-	open(dir);
+	openDir(dir);
 	statusBar()->showMessage(tr("File loaded"), 5000);
 }
 
@@ -491,7 +496,7 @@ void GCodeWorkShop::openFile(const QString& fileName)
 	loadFile(DocumentInfo::Ptr(info), true);
 }
 
-bool GCodeWorkShop::save(Document* doc, bool forceSaveAs)
+bool GCodeWorkShop::saveDocument(Document* doc, bool forceSaveAs)
 {
 	if (doc->isUntitled() || forceSaveAs) {
 		QString oldFileName;
@@ -568,7 +573,7 @@ bool GCodeWorkShop::save()
 		return true;
 	}
 
-	bool saved = save(doc, false);
+	bool saved = saveDocument(doc, false);
 
 	if (saved) {
 		statusBar()->showMessage(tr("File saved"), 5000);
@@ -587,7 +592,7 @@ bool GCodeWorkShop::saveAll()
 
 	for (Document* doc : m_documentManager->documentList()) {
 		if (doc->isModified()) {
-			if (save(doc, false)) {
+			if (saveDocument(doc, false)) {
 				i++;
 			} else {
 				saved = false;
@@ -609,7 +614,7 @@ bool GCodeWorkShop::saveAs()
 		return true;
 	}
 
-	bool saved = save(doc, true);
+	bool saved = saveDocument(doc, true);
 
 	if (saved) {
 		statusBar()->showMessage(tr("File saved"), 5000);
@@ -648,7 +653,7 @@ bool GCodeWorkShop::maybeSave(Document* doc)
 
 		switch (ret) {
 		case QMessageBox::Save:
-			return save(doc, false);
+			return saveDocument(doc, false);
 			break;
 
 		case QMessageBox::Discard:
@@ -779,12 +784,12 @@ void GCodeWorkShop::findInFl()
 		}
 
 		connect(findFiles, SIGNAL(fileClicked(QString)), this, SLOT(loadFoundedFile(QString)));
-	} else if (!findFilesAct->isChecked()) {
+	} else if (!m_fileActions->findFiles()->isChecked()) {
 		findFiles->close();
 		findFiles = nullptr;
 	} else {
 		findFiles->show();
-		findFilesAct->setChecked(true);
+		m_fileActions->findFiles()->setChecked(true);
 	}
 }
 
@@ -1329,14 +1334,14 @@ void GCodeWorkShop::updateMenus()
 		undoAct->setEnabled(false);
 	}
 
-	saveAct->setEnabled(hasModifiedMdiChild);
-	saveAllAct->setEnabled(hasMdiChild);
-	saveAsAct->setEnabled(hasMdiChild);
-	printAct->setEnabled(hasMdiChild);
-	printPreviewAct->setEnabled(hasMdiChild);
+	m_fileActions->save()->setEnabled(hasModifiedMdiChild);
+	m_fileActions->saveAll()->setEnabled(hasMdiChild);
+	m_fileActions->saveAs()->setEnabled(hasMdiChild);
+	m_fileActions->print()->setEnabled(hasMdiChild);
+	m_fileActions->printPreview()->setEnabled(hasMdiChild);
 	pasteAct->setEnabled(hasMdiChild);
-	closeAct->setEnabled(hasMdiChild);
-	closeAllAct->setEnabled(hasMdiChild);
+	m_fileActions->close()->setEnabled(hasMdiChild);
+	m_fileActions->closeAll()->setEnabled(hasMdiChild);
 	tileHAct->setEnabled(hasMdiChild);
 	tileVAct->setEnabled(hasMdiChild);
 	cascadeAct->setEnabled(hasMdiChild);
@@ -1396,9 +1401,9 @@ void GCodeWorkShop::updateMenus()
 	}
 
 	if (doc) {
-		saveAct->setText(tr("&Save \"%1\"").arg(doc->fileName()));
-		saveAsAct->setText(tr("Save \"%1\" &As...").arg(doc->fileName()));
-		closeAct->setText(tr("Cl&ose \"%1\"").arg(doc->fileName()));
+		m_fileActions->save()->setText(tr("&Save \"%1\"").arg(doc->fileName()));
+		m_fileActions->saveAs()->setText(tr("Save \"%1\" &As...").arg(doc->fileName()));
+		m_fileActions->close()->setText(tr("Cl&ose \"%1\"").arg(doc->fileName()));
 	}
 
 	updateStatusBar();
@@ -1454,8 +1459,8 @@ void GCodeWorkShop::updateWindowMenu()
 	QString text;
 
 	windowMenu->clear();
-	windowMenu->addAction(closeAct);
-	windowMenu->addAction(closeAllAct);
+	windowMenu->addAction(m_fileActions->close());
+	windowMenu->addAction(m_fileActions->closeAll());
 	windowMenu->addSeparator();
 	windowMenu->addAction(tileHAct);
 	windowMenu->addAction(tileVAct);
@@ -1516,66 +1521,10 @@ void GCodeWorkShop::createActions()
 {
 	m_addonsActions = new Addons::Actions(this);
 
-	newAct = new QAction(QIcon(":/images/filenew.png"), tr("&New"), this);
-	newAct->setShortcut(QKeySequence::New);
-	newAct->setToolTip(tr("Create a new file"));
-	connect(newAct, SIGNAL(triggered()), this, SLOT(newFileFromTemplate()));
-
-	openAct = new QAction(QIcon(":/images/fileopen.png"), tr("&Open..."), this);
-	openAct->setShortcut(QKeySequence::Open);
-	openAct->setToolTip(tr("Open an existing file"));
-	connect(openAct, SIGNAL(triggered()), this, SLOT(open()));
-
-	if (QDir(EXAMPLES_PATH).exists()
-	        || QDir(QApplication::applicationDirPath() + "/" + "EXAMPLES").exists()) {
-		openExampleAct = new QAction(QIcon(":/images/fileopen.png"), tr("&Open example..."), this);
-		openExampleAct->setToolTip(tr("Open an example file"));
-		connect(openExampleAct, SIGNAL(triggered()), this, SLOT(openExample()));
-	}
-
-	saveAct = new QAction(QIcon(":/images/filesave.png"), tr("&Save \"%1\"").arg(""), this);
-	saveAct->setShortcut(QKeySequence::Save);
-	saveAct->setToolTip(tr("Save the document to disk"));
-	connect(saveAct, SIGNAL(triggered()), this, SLOT(save()));
-
-	saveAllAct = new QAction(QIcon(":/images/filesaveall.png"), tr("Save A&ll"), this);
-	saveAllAct->setShortcut(tr("Ctrl+Shift+S"));
-	saveAllAct->setToolTip(tr("Save all modified documents to disk"));
-	connect(saveAllAct, SIGNAL(triggered()), this, SLOT(saveAll()));
-
-	saveAsAct = new QAction(QIcon(":/images/filesaveas.png"), tr("Save \"%1\" &As...").arg(""),
-	                        this);
-	saveAsAct->setShortcut(QKeySequence::SaveAs);
-	saveAsAct->setToolTip(tr("Save the document under a new name"));
-	connect(saveAsAct, SIGNAL(triggered()), this, SLOT(saveAs()));
-
-	exitAct = new QAction(QIcon(":/images/exit.png"), tr("E&xit"), this);
-	//exitAct->setShortcut(QKeySequence::Quit);
-	exitAct->setShortcut(tr("Ctrl+Q"));
-	exitAct->setToolTip(tr("Exit the application"));
-	connect(exitAct, SIGNAL(triggered()), qApp, SLOT(closeAllWindows()));
-
-	findFilesAct = new QAction(QIcon(":/images/filefind.png"), tr("&Find files..."), this);
-	//openAct->setShortcut(tr("Ctrl+"));
-	findFilesAct->setCheckable(true);
-	findFilesAct->setToolTip(tr("Find files"));
-	connect(findFilesAct, SIGNAL(triggered()), this, SLOT(findInFl()));
-
-	printAct = new QAction(QIcon(":/images/document-print.png"), tr("&Print"), this);
-	printAct->setShortcut(QKeySequence::Print);
-	printAct->setToolTip(tr("Print file"));
-	connect(printAct, SIGNAL(triggered()), this, SLOT(printFile()));
-
-	printPreviewAct = new QAction(QIcon(":/images/document-print-preview.png"),
-	                              tr("Pr&int preview"), this);
-	//printPreviewAct->setShortcut(QKeySequence::Print);
-	printPreviewAct->setToolTip(tr("Preview printing"));
-	connect(printPreviewAct, SIGNAL(triggered()), this, SLOT(filePrintPreview()));
-
-	sessionMgrAct = new QAction(tr("Session manager..."), this);
-	sessionMgrAct->setToolTip(tr("Sessions manager"));
-	connect(sessionMgrAct, SIGNAL(triggered()), this, SLOT(showSessionDialog()));
-
+	m_fileActions = new GUI::Actions::FileActions(this);
+	m_fileActions->openExample()->setEnabled(QDir(EXAMPLES_PATH).exists()
+	        || QDir(QApplication::applicationDirPath() + "../" + "examples").exists()
+	        || QDir(QApplication::applicationDirPath() + "../../" + "examples").exists());
 
 	undoAct = new QAction(QIcon(":/images/undo.png"), tr("&Undo"), this);
 	undoAct->setShortcut(QKeySequence::Undo);
@@ -1675,15 +1624,6 @@ void GCodeWorkShop::createActions()
 	diffEditorAct->setToolTip(tr("Show diff of currently edited file and file on disk"));
 	connect(diffEditorAct, SIGNAL(triggered()), this, SLOT(diffEditorFile()));
 
-	closeAct = new QAction(QIcon(":/images/fileclose.png"), tr("Cl&ose \"%1\"").arg(""), this);
-	//closeAct->setShortcut(QKeySequence::Close);
-	closeAct->setToolTip(tr("Close the active window"));
-	connect(closeAct, SIGNAL(triggered()), this, SLOT(closeCurrentWindow()));
-
-	closeAllAct = new QAction(QIcon(":/images/window-close.png"), tr("Close &All"), this);
-	closeAllAct->setToolTip(tr("Close all the windows"));
-	connect(closeAllAct, SIGNAL(triggered()), this, SLOT(closeAllMdiWindows()));
-
 	tileHAct = new QAction(QIcon(":/images/tile_h.png"), tr("Tile &horizontally"), this);
 	tileHAct->setToolTip(tr("Tile the windows horizontally"));
 	connect(tileHAct, SIGNAL(triggered()), ui->mdiArea, SLOT(tileSubWindows()));
@@ -1732,37 +1672,34 @@ void GCodeWorkShop::createActions()
 void GCodeWorkShop::createMenus()
 {
 	fileMenu = menuBar()->addMenu(tr("&File"));
-	fileMenu->addAction(newAct);
-	fileMenu->addAction(openAct);
-
-	if (openExampleAct != nullptr) {
-		fileMenu->addAction(openExampleAct);
-	}
+	fileMenu->addAction(m_fileActions->makeNew());
+	fileMenu->addAction(m_fileActions->open());
+	fileMenu->addAction(m_fileActions->openExample());
 
 	fileMenu->addSeparator();
 	recentFileMenu = fileMenu->addMenu(tr("&Recent files"));
 	recentFileMenu->setIcon(QIcon(":/images/document-open-recent.png"));
 	connect(recentFileMenu, SIGNAL(triggered(QAction*)), this, SLOT(fileOpenRecent(QAction*)));
 	fileMenu->addSeparator();
-	fileMenu->addAction(saveAct);
-	fileMenu->addAction(saveAsAct);
-	fileMenu->addAction(saveAllAct);
+	fileMenu->addAction(m_fileActions->save());
+	fileMenu->addAction(m_fileActions->saveAs());
+	fileMenu->addAction(m_fileActions->saveAll());
 	fileMenu->addSeparator();
-	fileMenu->addAction(findFilesAct);
+	fileMenu->addAction(m_fileActions->findFiles());
 	fileMenu->addSeparator();
 
 	sessionsMenu = fileMenu->addMenu(tr("Sessions"));
 	connect(sessionsMenu, SIGNAL(triggered(QAction*)), this, SLOT(changeSession(QAction*)));
-	fileMenu->addAction(sessionMgrAct);
+	fileMenu->addAction(m_fileActions->sessionManager());
 
 	fileMenu->addSeparator();
-	fileMenu->addAction(printAct);
-	fileMenu->addAction(printPreviewAct);
+	fileMenu->addAction(m_fileActions->print());
+	fileMenu->addAction(m_fileActions->printPreview());
 	fileMenu->addSeparator();
-	fileMenu->addAction(closeAct);
-	fileMenu->addAction(closeAllAct);
+	fileMenu->addAction(m_fileActions->close());
+	fileMenu->addAction(m_fileActions->closeAll());
 	fileMenu->addSeparator();
-	fileMenu->addAction(exitAct);
+	fileMenu->addAction(m_fileActions->exit());
 
 	editMenu = menuBar()->addMenu(tr("&Edit"));
 	editMenu->addAction(undoAct);
@@ -1840,15 +1777,15 @@ void GCodeWorkShop::createToolBars()
 {
 	fileToolBar = addToolBar(tr("File"));
 	fileToolBar->setObjectName("File");
-	fileToolBar->addAction(newAct);
-	fileToolBar->addAction(openAct);
-	fileToolBar->addAction(saveAct);
-	fileToolBar->addAction(saveAllAct);
-	fileToolBar->addAction(saveAsAct);
+	fileToolBar->addAction(m_fileActions->makeNew());
+	fileToolBar->addAction(m_fileActions->open());
+	fileToolBar->addAction(m_fileActions->save());
+	fileToolBar->addAction(m_fileActions->saveAll());
+	fileToolBar->addAction(m_fileActions->saveAs());
 	fileToolBar->addSeparator();
-	fileToolBar->addAction(findFilesAct);
+	fileToolBar->addAction(m_fileActions->findFiles());
 	fileToolBar->addSeparator();
-	fileToolBar->addAction(printAct);
+	fileToolBar->addAction(m_fileActions->print());
 
 	editToolBar = addToolBar(tr("Edit"));
 	editToolBar->setObjectName("Edit");
