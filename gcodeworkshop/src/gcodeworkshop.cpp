@@ -20,7 +20,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <QAbstractItemModel>   // for QTypeInfo<>::isLarge, QTypeInfo<>::isStatic
 #include <QAbstractPrintDialog> // for QAbstractPrintDialog, QAbstractPrintDialog::PrintSelection
 #include <QAction>              // for QAction
 #include <QActionGroup>         // for QActionGroup
@@ -118,6 +117,7 @@
 #include <serialportconfigdialog.h>     // SerialPortConfigDialog
 #include <serialporttestdialog.h>       // SerialPortTestDialog
 #include <serialtransmissiondialog.h>   // SerialTransmissionDialog
+#include <ui/actions/actionkit.h>       // for AtionKit
 #include <utils/medium.h>               // Medium
 #include <utils/gcode-converter.h>      // for Converter
 #include <version.h>
@@ -135,6 +135,7 @@
 #include "setupdialog.h"            // for AppConfig, SetupDialog
 #include "tooltips.h"               // for writeTooltipFile
 #include "ui_gcodeworkshop.h"       // for Ui::GCodeWorkShop
+#include "ui/defaultkeysequences.h"
 
 
 #define EXAMPLES_PATH             "/usr/share/gcodeworkshop/EXAMPLES"
@@ -214,6 +215,7 @@ GCodeWorkShop::GCodeWorkShop(Medium* medium)
 	connect(m_recentFiles, SIGNAL(fileListChanged(QStringList)), this, SLOT(updateRecentFilesMenu(QStringList)));
 	connect(m_recentFiles, SIGNAL(saveRequest()), this, SLOT(recentFilesChanged()));
 
+	m_shortcuts.insert(Ui::defaultKeySequence());
 	m_addonsActions = new Addons::Actions(this);
 	createActions();
 	createToolBars();
@@ -252,6 +254,7 @@ GCodeWorkShop::GCodeWorkShop(Medium* medium)
 
 	readSettings();
 	clipboardLoad();
+	updateShortcuts(m_shortcuts);
 }
 
 GCodeWorkShop::~GCodeWorkShop()
@@ -2087,6 +2090,8 @@ void GCodeWorkShop::readSettings()
 	ui->currentPathCheckBox->setChecked(settings.value("FileBrowserShowCurrentFileDir",
 	                                    false).toBool());
 	ui->filePreviewSpinBox->setValue(settings.value("FilePreviewNo", 10).toInt());
+
+	m_shortcuts.loadSettings(&settings);
 }
 
 void GCodeWorkShop::writeSettings()
@@ -2149,6 +2154,8 @@ void GCodeWorkShop::writeSettings()
 	if (!m_startEmpty) {
 		storeFileInfoInSession();
 	}
+
+	m_shortcuts.saveSettings(&settings);
 }
 
 Document* GCodeWorkShop::activeDocument() const

@@ -43,8 +43,10 @@ class QDropEvent;
 class QEvent;
 class QFileSystemModel;
 class QFileSystemWatcher;
+class QKeySequence;
 class QLabel;
 class QLineEdit;
+template <class Key, class T> class QMap;
 class QMdiSubWindow;
 class QMenu;
 class QModelIndex;
@@ -57,7 +59,8 @@ class QStandardItemModel;
 class QToolBar;
 class QToolButton;
 
-#include <documentinfo.h>   // for DocumentInfo, DocumentInfo::Ptr
+#include <documentinfo.h>           // for DocumentInfo, DocumentInfo::Ptr
+#include <utils/keysequencemap.h>   // for KeySequenceMap
 
 class Document;
 class DocumentManager;
@@ -75,7 +78,10 @@ class Actions;
 
 namespace Ui {
 class GCodeWorkShop;
-}
+namespace Actions {
+class ActionKit;
+} // namespace Actions
+} // namespace Ui
 
 
 class GCodeWorkShop : public QMainWindow
@@ -123,6 +129,7 @@ protected:
 		QSize size;
 	} mMWConfig;
 
+	KeySequenceMap m_shortcuts;
 	Addons::Actions* m_addonsActions;
 
 public:
