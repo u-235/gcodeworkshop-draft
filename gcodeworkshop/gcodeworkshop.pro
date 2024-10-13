@@ -49,6 +49,7 @@ HEADERS += \
     src/gcodereventfilter.h \
     src/gcoderinfo.h \
     src/gcoderproducer.h \
+    src/gui/actions/editactions.h \
     src/gui/actions/fileactions.h \
     src/gui/defaultkeysequences.h \
     src/highlighter.h \
@@ -80,6 +81,7 @@ SOURCES += \
     src/gcoderwidgetproperties.cpp \
     src/gcodeworkshop.cpp \
     src/gui/actions/actionkit.cpp \
+    src/gui/actions/editactions.cpp \
     src/gui/actions/fileactions.cpp \
     src/gui/actions/knownactions.cpp \
     src/gui/defaultkeysequences.cpp \
