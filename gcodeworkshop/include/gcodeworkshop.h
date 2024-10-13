@@ -78,6 +78,7 @@ namespace Actions {
 class EditActions;
 class FileActions;
 class ToolActions;
+class WindowActions;
 } // namespace Actions
 } // namespace GUI
 
@@ -107,6 +108,7 @@ public:
 	GUI::Actions::EditActions* editActions();
 	GUI::Actions::FileActions* fileActions();
 	GUI::Actions::ToolActions* toolActions();
+	GUI::Actions::WindowActions* windowActions();
 	DocumentManager* documentManager() const;
 	Document* activeDocument() const;
 	GCoderDocument* activeGCoderDocument() const;
@@ -145,6 +147,7 @@ protected:
 	GUI::Actions::EditActions* m_editActions;
 	GUI::Actions::FileActions* m_fileActions;
 	GUI::Actions::ToolActions* m_toolActions;
+	GUI::Actions::WindowActions* m_windowActions;
 
 public:
 	void openFile(const QString& fileName);
@@ -288,7 +291,11 @@ private slots:
 	void fileChanged(const QString& fileName);
 
 public slots:
+	void tileSubWindowsHorizontally();
 	void tileSubWindowsVertycally();
+	void cascadeSubWindows();
+	void activateNextSubWindow();
+	void activatePreviousSubWindow();
 
 private slots:
 	void clipboardChanged();
@@ -379,12 +386,6 @@ private:
 	QToolBar* windowToolBar;
 	QToolBar* toolsToolBar;
 
-	QAction* tileHAct;
-	QAction* tileVAct;
-	QAction* cascadeAct;
-	QAction* nextAct;
-	QAction* previousAct;
-	QAction* separatorAct;
 	QAction* aboutAct;
 	QAction* aboutQtAct;
 	QAction* createGlobalToolTipsAct;

@@ -52,6 +52,7 @@ HEADERS += \
     src/gui/actions/editactions.h \
     src/gui/actions/fileactions.h \
     src/gui/actions/toolactions.h \
+    src/gui/actions/windowactions.h \
     src/gui/defaultkeysequences.h \
     src/highlighter.h \
     src/highlightmode.h \
@@ -86,6 +87,7 @@ SOURCES += \
     src/gui/actions/fileactions.cpp \
     src/gui/actions/knownactions.cpp \
     src/gui/actions/toolactions.cpp \
+    src/gui/actions/windowactions.cpp \
     src/gui/defaultkeysequences.cpp \
     src/highlighter.cpp \
     src/inlinecalc.cpp \
