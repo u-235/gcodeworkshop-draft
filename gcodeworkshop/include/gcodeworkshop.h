@@ -80,6 +80,7 @@ namespace Ui {
 class GCodeWorkShop;
 namespace Actions {
 class ActionKit;
+class EditActions;
 class FileActions;
 } // namespace Actions
 } // namespace Ui
@@ -99,6 +100,7 @@ public:
 
 	QMainWindow* mainWindow();
 	Addons::Actions* addonsActions();
+	Ui::Actions::EditActions* editActions();
 	Ui::Actions::FileActions* fileActions();
 	DocumentManager* documentManager() const;
 	Document* activeDocument() const;
@@ -133,6 +135,7 @@ protected:
 
 	KeySequenceMap m_shortcuts;
 	Addons::Actions* m_addonsActions;
+	Ui::Actions::EditActions* m_editActions;
 	Ui::Actions::FileActions* m_fileActions;
 
 public:
@@ -322,9 +325,6 @@ private:
 	QToolBar* windowToolBar;
 	QToolBar* toolsToolBar;
 
-	QAction* cutAct;
-	QAction* copyAct;
-	QAction* pasteAct;
 	QAction* tileHAct;
 	QAction* tileVAct;
 	QAction* cascadeAct;
@@ -335,17 +335,7 @@ private:
 	QAction* aboutQtAct;
 	QAction* createGlobalToolTipsAct;
 	QAction* createUserToolTipsAct;
-	QAction* undoAct;
-	QAction* redoAct;
 	QAction* inLineCalcAct;
-
-	QAction* findAct;
-	QAction* replaceAct;
-	QAction* deleteAct;
-	QAction* selAllAct;
-	QAction* readOnlyAct;
-
-	QAction* configAct;
 
 	QAction* calcAct;
 	QAction* diffLAct;

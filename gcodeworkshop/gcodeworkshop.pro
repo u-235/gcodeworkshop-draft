@@ -58,6 +58,7 @@ HEADERS += \
     src/sessionnamedialog.h \
     src/setupdialog.h \
     src/tooltips.h \
+    src/ui/actions/editactions.h \
     src/ui/actions/fileactions.h \
     src/ui/defaultkeysequences.h
 
@@ -87,6 +88,7 @@ SOURCES += \
     src/sessionmanager.cpp \
     src/sessionnamedialog.cpp \
     src/setupdialog.cpp \
+    src/ui/actions/editactions.cpp \
     src/ui/actions/fileactions.cpp \
     src/ui/actions/knownactions.cpp \
     src/ui/defaultkeysequences.cpp \

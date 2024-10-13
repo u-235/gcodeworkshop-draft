@@ -135,6 +135,7 @@
 #include "setupdialog.h"                    // for AppConfig, SetupDialog
 #include "tooltips.h"                       // for writeTooltipFile
 #include "ui_gcodeworkshop.h"               // for Ui::GCodeWorkShop
+#include "ui/actions/editactions.h"         // for EditActions
 #include "ui/actions/fileactions.h"         // for FileActions
 #include "ui/defaultkeysequences.h"
 
@@ -233,8 +234,8 @@ GCodeWorkShop::GCodeWorkShop(Medium* medium)
 	connect(m_documentManager, SIGNAL(documentListChanged()), this, SLOT(updateOpenFileList()));
 	connect(m_documentManager, SIGNAL(closeRequested(Document*)), this, SLOT(maybeSave(Document*)),
 	        Qt::ConnectionType::DirectConnection);
-	connect(m_documentManager, SIGNAL(redoAvailable(bool)), redoAct, SLOT(setEnabled(bool)));
-	connect(m_documentManager, SIGNAL(undoAvailable(bool)), undoAct, SLOT(setEnabled(bool)));
+	connect(m_documentManager, SIGNAL(redoAvailable(bool)), m_editActions->redo(), SLOT(setEnabled(bool)));
+	connect(m_documentManager, SIGNAL(undoAvailable(bool)), m_editActions->undo(), SLOT(setEnabled(bool)));
 	connect(m_documentManager, SIGNAL(customContextMenuRequested(Document*, const QPoint&)), this,
 	        SLOT(customContextMenuRequest(Document*, const QPoint&)));
 	connect(m_documentManager, SIGNAL(fileWatchRequest(const QString&, bool)), this, SLOT(watchFile(const QString&, bool)));
@@ -322,6 +323,11 @@ QMainWindow* GCodeWorkShop::mainWindow()
 Addons::Actions* GCodeWorkShop::addonsActions()
 {
 	return m_addonsActions;
+}
+
+Ui::Actions::EditActions* GCodeWorkShop::editActions()
+{
+	return m_editActions;
 }
 
 Ui::Actions::FileActions* GCodeWorkShop::fileActions()
@@ -1002,7 +1008,7 @@ void GCodeWorkShop::config()
 void GCodeWorkShop::readOnly()
 {
 	if (activeDocument()) {
-		activeDocument()->setReadOnly(readOnlyAct->isChecked());
+		activeDocument()->setReadOnly(editActions()->readOnly()->isChecked());
 	}
 
 	updateMenus();
@@ -1314,15 +1320,15 @@ void GCodeWorkShop::updateMenus()
 		hasSelection = gdoc ? gdoc->hasSelection() : false;
 		hasModifiedMdiChild = doc->isModified();
 
-		redoAct->setEnabled(hasMdiChild && doc->isRedoAvailable());
-		undoAct->setEnabled(hasMdiChild && doc->isUndoAvailable());
+		m_editActions->redo()->setEnabled(hasMdiChild && doc->isRedoAvailable());
+		m_editActions->undo()->setEnabled(hasMdiChild && doc->isUndoAvailable());
 	} else {
 		hasMdiChildNotReadOnly = false;
 		hasSelection = false;
 		hasModifiedMdiChild = false;
 
-		redoAct->setEnabled(false);
-		undoAct->setEnabled(false);
+		m_editActions->redo()->setEnabled(false);
+		m_editActions->undo()->setEnabled(false);
 	}
 
 	m_fileActions->save()->setEnabled(hasModifiedMdiChild);
@@ -1330,24 +1336,25 @@ void GCodeWorkShop::updateMenus()
 	m_fileActions->saveAs()->setEnabled(hasMdiChild);
 	m_fileActions->print()->setEnabled(hasMdiChild);
 	m_fileActions->printPreview()->setEnabled(hasMdiChild);
-	pasteAct->setEnabled(hasMdiChild);
+	m_editActions->paste()->setEnabled(hasMdiChild);
 	m_fileActions->close()->setEnabled(hasMdiChild);
 	m_fileActions->closeAll()->setEnabled(hasMdiChild);
+
 	tileHAct->setEnabled(hasMdiChild);
 	tileVAct->setEnabled(hasMdiChild);
 	cascadeAct->setEnabled(hasMdiChild);
 	nextAct->setEnabled(hasMdiChild);
 	previousAct->setEnabled(hasMdiChild);
 	separatorAct->setVisible(hasMdiChild);
-	selAllAct->setEnabled(hasMdiChildNotReadOnly);
-	findAct->setEnabled(hasMdiChild);
+	m_editActions->selectAll()->setEnabled(hasMdiChildNotReadOnly);
+	m_editActions->find()->setEnabled(hasMdiChild);
 
 	diffLAct->setEnabled(hasMdiChild);
 	diffRAct->setEnabled(hasMdiChild);
 	diffEditorAct->setEnabled(hasMdiChildNotReadOnly);
 
-	replaceAct->setEnabled(hasMdiChildNotReadOnly);
-	readOnlyAct->setEnabled(hasMdiChild);
+	m_editActions->replace()->setEnabled(hasMdiChildNotReadOnly);
+	m_editActions->readOnly()->setEnabled(hasMdiChild);
 	m_addonsActions->renumber()->setEnabled(hasMdiChildNotReadOnly);
 	m_addonsActions->dot()->setEnabled(hasMdiChildNotReadOnly);
 	m_addonsActions->removeEmptyLines()->setEnabled(hasMdiChildNotReadOnly);
@@ -1367,18 +1374,18 @@ void GCodeWorkShop::updateMenus()
 	inLineCalcAct->setEnabled(hasMdiChild);
 
 	if (!hasMdiChildNotReadOnly) {
-		readOnlyAct->setChecked(true);
-		readOnlyAct->setIcon(QIcon(":/images/lock.png"));
+		m_editActions->readOnly()->setChecked(true);
+		m_editActions->readOnly()->setIcon(QIcon(":/images/lock.png"));
 	} else {
-		readOnlyAct->setChecked(false);
-		readOnlyAct->setIcon(QIcon(":/images/unlock.png"));
+		m_editActions->readOnly()->setChecked(false);
+		m_editActions->readOnly()->setIcon(QIcon(":/images/unlock.png"));
 	}
 
-	cutAct->setEnabled(hasSelection && hasMdiChildNotReadOnly);
-	deleteAct->setEnabled(hasSelection && hasMdiChildNotReadOnly);
-	copyAct->setEnabled(hasSelection);
+	m_editActions->cut()->setEnabled(hasSelection && hasMdiChildNotReadOnly);
+	m_editActions->del()->setEnabled(hasSelection && hasMdiChildNotReadOnly);
+	m_editActions->copy()->setEnabled(hasSelection);
 
-	pasteAct->setEnabled((!clipboard->text().isEmpty()) && hasMdiChildNotReadOnly);
+	m_editActions->paste()->setEnabled((!clipboard->text().isEmpty()) && hasMdiChildNotReadOnly);
 
 	if (gdoc) {
 		if (findToolBar)
@@ -1512,72 +1519,11 @@ void GCodeWorkShop::createActions()
 {
 	m_addonsActions = new Addons::Actions(this);
 
+	m_editActions = new Ui::Actions::EditActions(this);
 	m_fileActions = new Ui::Actions::FileActions(this);
 	m_fileActions->openExample()->setEnabled(QDir(EXAMPLES_PATH).exists()
 	        || QDir(QApplication::applicationDirPath() + "../" + "examples").exists()
 	        || QDir(QApplication::applicationDirPath() + "../../" + "examples").exists());
-
-	undoAct = new QAction(QIcon(":/images/undo.png"), tr("&Undo"), this);
-	undoAct->setShortcut(QKeySequence::Undo);
-	undoAct->setToolTip(tr("Undo last operation"));
-	connect(undoAct, SIGNAL(triggered()), this, SLOT(undo()));
-	undoAct->setEnabled(false);
-
-	redoAct = new QAction(QIcon(":/images/redo.png"), tr("&Redo"), this);
-	redoAct->setShortcut(QKeySequence::Redo);
-	redoAct->setToolTip(tr("Redo last operation"));
-	connect(redoAct, SIGNAL(triggered()), this, SLOT(redo()));
-	redoAct->setEnabled(false);
-
-	cutAct = new QAction(QIcon(":/images/editcut.png"), tr("Cu&t"), this);
-	cutAct->setShortcut(QKeySequence::Cut);
-	cutAct->setToolTip(tr("Cut the current selection's contents to the "
-	                      "clipboard"));
-	connect(cutAct, SIGNAL(triggered()), this, SLOT(cut()));
-
-	copyAct = new QAction(QIcon(":/images/editcopy.png"), tr("&Copy"), this);
-	copyAct->setShortcut(QKeySequence::Copy);
-	copyAct->setToolTip(tr("Copy the current selection's contents to the "
-	                       "clipboard"));
-	connect(copyAct, SIGNAL(triggered()), this, SLOT(copy()));
-
-	pasteAct = new QAction(QIcon(":/images/editpaste.png"), tr("&Paste"), this);
-	pasteAct->setShortcut(QKeySequence::Paste);
-	pasteAct->setToolTip(tr("Paste the clipboard's contents into the current "
-	                        "selection"));
-	connect(pasteAct, SIGNAL(triggered()), this, SLOT(paste()));
-
-	findAct = new QAction(QIcon(":/images/find.png"), tr("&Find"), this);
-	findAct->setShortcut(QKeySequence::Find);
-	findAct->setToolTip(tr("Find text"));
-	connect(findAct, SIGNAL(triggered()), this, SLOT(createFindToolBar()));
-
-	replaceAct = new QAction(QIcon(":/images/replace.png"), tr("&Replace"), this);
-	replaceAct->setShortcut(tr("Ctrl+R"));
-	replaceAct->setToolTip(tr("Find and replace text"));
-	connect(replaceAct, SIGNAL(triggered()), this, SLOT(createFindToolBar()));
-
-
-	deleteAct = new QAction(QIcon(":/images/editdelete.png"), tr("&Delete"), this);
-	deleteAct->setShortcut(QKeySequence::Delete);
-	deleteAct->setToolTip(tr("Removes selected text"));
-	connect(deleteAct, SIGNAL(triggered()), this, SLOT(deleteText()));
-
-	selAllAct = new QAction(QIcon(":/images/edit-select-all.png"), tr("&Select all"), this);
-	selAllAct->setShortcut(QKeySequence::SelectAll);
-	selAllAct->setToolTip(tr("Select all text"));
-	connect(selAllAct, SIGNAL(triggered()), this, SLOT(selAll()));
-
-	readOnlyAct = new QAction(QIcon(":/images/unlock.png"), tr("Read &only"), this);
-	readOnlyAct->setShortcut(tr("F12"));
-	readOnlyAct->setCheckable(true);
-	readOnlyAct->setToolTip(tr("Makes text read only"));
-	connect(readOnlyAct, SIGNAL(triggered()), this, SLOT(readOnly()));
-
-	configAct = new QAction(QIcon(":/images/configure.png"), tr("Configuration"), this);
-	configAct->setShortcut(QKeySequence::Preferences);
-	configAct->setToolTip(tr("Open configuration dialog"));
-	connect(configAct, SIGNAL(triggered()), this, SLOT(config()));
 
 	inLineCalcAct = new QAction(QIcon(":/images/inlinecalc.png"), tr("Inline calculator"), this);
 	inLineCalcAct->setShortcut(tr("Ctrl+0"));
@@ -1693,18 +1639,18 @@ void GCodeWorkShop::createMenus()
 	fileMenu->addAction(m_fileActions->exit());
 
 	editMenu = menuBar()->addMenu(tr("&Edit"));
-	editMenu->addAction(undoAct);
-	editMenu->addAction(redoAct);
+	editMenu->addAction(m_editActions->undo());
+	editMenu->addAction(m_editActions->redo());
 	editMenu->addSeparator();
-	editMenu->addAction(cutAct);
-	editMenu->addAction(copyAct);
-	editMenu->addAction(pasteAct);
-	editMenu->addAction(deleteAct);
+	editMenu->addAction(m_editActions->cut());
+	editMenu->addAction(m_editActions->copy());
+	editMenu->addAction(m_editActions->paste());
+	editMenu->addAction(m_editActions->del());
 	editMenu->addSeparator();
-	editMenu->addAction(selAllAct);
+	editMenu->addAction(m_editActions->selectAll());
 	editMenu->addSeparator();
-	editMenu->addAction(findAct);
-	editMenu->addAction(replaceAct);
+	editMenu->addAction(m_editActions->find());
+	editMenu->addAction(m_editActions->replace());
 
 	editMenu->addSeparator();
 	editMenu->addAction(m_addonsActions->semiComment());
@@ -1715,9 +1661,9 @@ void GCodeWorkShop::createMenus()
 	blockSkipMenu->addAction(m_addonsActions->blockSkipDecrement());
 	blockSkipMenu->addAction(m_addonsActions->blockSkipRemove());
 	editMenu->addSeparator();
-	editMenu->addAction(readOnlyAct);
+	editMenu->addAction(m_editActions->readOnly());
 	editMenu->addSeparator();
-	editMenu->addAction(configAct);
+	editMenu->addAction(m_editActions->config());
 
 	toolsMenu = menuBar()->addMenu(tr("&Tools"));
 	toolsMenu->addAction(showSerialToolBarAct);
@@ -1780,19 +1726,19 @@ void GCodeWorkShop::createToolBars()
 
 	editToolBar = addToolBar(tr("Edit"));
 	editToolBar->setObjectName("Edit");
-	editToolBar->addAction(undoAct);
-	editToolBar->addAction(redoAct);
+	editToolBar->addAction(m_editActions->undo());
+	editToolBar->addAction(m_editActions->redo());
 	editToolBar->addSeparator();
-	editToolBar->addAction(cutAct);
-	editToolBar->addAction(copyAct);
-	editToolBar->addAction(pasteAct);
+	editToolBar->addAction(m_editActions->cut());
+	editToolBar->addAction(m_editActions->copy());
+	editToolBar->addAction(m_editActions->paste());
 	editToolBar->addSeparator();
-	editToolBar->addAction(deleteAct);
+	editToolBar->addAction(m_editActions->del());
 	editToolBar->addSeparator();
-	editToolBar->addAction(selAllAct);
+	editToolBar->addAction(m_editActions->selectAll());
 	editToolBar->addSeparator();
-	editToolBar->addAction(findAct);
-	editToolBar->addAction(replaceAct);
+	editToolBar->addAction(m_editActions->find());
+	editToolBar->addAction(m_editActions->replace());
 	editToolBar->addSeparator();
 	editToolBar->addAction(diffAct);
 	editToolBar->addSeparator();
@@ -1875,7 +1821,7 @@ void GCodeWorkShop::createStatusBar()
 	deAttachHighlightButton->setDefaultAction(deAttachHighlightToDirAct);
 
 	readOnlyButton = new QToolButton();
-	readOnlyButton->setDefaultAction(readOnlyAct);
+	readOnlyButton->setDefaultAction(m_editActions->readOnly());
 
 	//statusBar()->addPermanentWidget(highlightLabel);
 	statusBar()->addPermanentWidget(labelStat1);
