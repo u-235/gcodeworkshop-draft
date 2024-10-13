@@ -51,6 +51,7 @@ HEADERS += \
     src/gcoderproducer.h \
     src/gui/actions/editactions.h \
     src/gui/actions/fileactions.h \
+    src/gui/actions/helpactions.h \
     src/gui/actions/toolactions.h \
     src/gui/actions/windowactions.h \
     src/gui/defaultkeysequences.h \
@@ -85,6 +86,7 @@ SOURCES += \
     src/gui/actions/actionkit.cpp \
     src/gui/actions/editactions.cpp \
     src/gui/actions/fileactions.cpp \
+    src/gui/actions/helpactions.cpp \
     src/gui/actions/knownactions.cpp \
     src/gui/actions/toolactions.cpp \
     src/gui/actions/windowactions.cpp \
