@@ -28,7 +28,6 @@
 #include <QCheckBox>            // for QCheckBox
 #include <QClipboard>           // for QClipboard
 #include <QCloseEvent>          // for QCloseEvent
-#include <QColor>               // for QColor
 #include <QComboBox>            // for QComboBox, QComboBox::AdjustToContents
 #include <QDesktopServices>     // for QDesktopServices
 #include <QDialog>              // for QDialog, QDialog::Accepted
@@ -49,9 +48,7 @@
 #include <QIODevice>            // for QIODevice, QIODevice::ReadWrite, operator|, QIODevice::ReadOnly, QIODe...
 #include <QIcon>                // for QIcon
 #include <QItemSelectionModel>  // for QItemSelectionModel
-#include <QKeySequence>         // for QKeySequence, QKeySequence::Back, QKeySequence::Copy, QKeySequence::Cut
 #include <QLabel>               // for QLabel
-#include <QLineEdit>            // for QLineEdit
 #include <QList>                // for QList, QList<>::iterator, QList<>::const_iterator, QList<>::Iterator
 #include <QMainWindow>          // for QMainWindow
 #include <QMdiArea>             // for QMdiArea, QMdiArea::SubWindowView, QMdiArea::TabbedView
@@ -65,7 +62,6 @@
 #include <QObject>              // for SIGNAL, SLOT, qobject_cast, emit
 #include <QPageLayout>          // for QPageLayout, QPageLayout::Orientation
 #include <QPageSize>            // for QPageSize, QPageSize::A4, QPageSize::PageSizeId
-#include <QPalette>             // for QPalette, QPalette::Base
 #include <QPoint>               // for QPoint
 #include <QPointer>             // for QPointer
 #include <QPrintDialog>         // for QPrintDialog
@@ -74,7 +70,6 @@
 #include <QProcess>             // for QProcess
 #include <QPushButton>          // for QPushButton
 #include <QRect>                // for QRect
-#include <QRegularExpression>   // for QRegularExpression
 #include <QResizeEvent>         // for QResizeEvent
 #include <QSettings>            // for QSettings, QSettings::IniFormat, QSettings::NoError
 #include <QSize>                // for QSize
@@ -88,8 +83,6 @@
 #include <QTabWidget>           // for QTabWidget
 #include <QTableWidget>         // for QTableWidget, QTableWidgetItem::UserType
 #include <QTableWidgetItem>     // for QTableWidgetItem
-#include <QTextCursor>          // for QTextCursor
-#include <QTextDocument>        // for QTextDocument, QTextDocument::FindFlags, QTextDocument::FindCaseSensit...
 #include <QTextStream>          // for QTextStream
 #include <QToolBar>             // for QToolBar
 #include <QToolButton>          // for QToolButton
@@ -122,7 +115,6 @@
 #include <utils/gcode-converter.h>      // for Converter
 #include <version.h>
 
-#include "capslockeventfilter.h"            // for CapsLockEventFilter
 #include "findinf.h"                        // for FindInFiles
 #include "gcoder.h"                         // for DOCUMENT_TYPE
 #include "gcoderinfo.h"                     // for GCoderInfo
@@ -133,6 +125,7 @@
 #include "gui/actions/toolactions.h"        // for ToolActions
 #include "gui/actions/windowactions.h"      // for WindowActions
 #include "gui/defaultkeysequences.h"
+#include "gui/findtoolbar/findtoolbar.h"    // for FindToolBar
 #include "highlightmode.h"                  // for MODE_AUTO, MODE_FANUC, MODE_HEIDENHAIN, MODE_HEIDENHAIN_ISO, MODE_LINU...
 #include "newfiledialog.h"                  // for newFileDialog
 #include "recentfiles.h"                    // for RecentFiles
@@ -169,7 +162,6 @@ GCodeWorkShop::GCodeWorkShop(Medium* medium)
 	connect(ui->mdiArea, SIGNAL(subWindowActivated(QMdiSubWindow*)), this,
 	        SLOT(activeWindowChanged(QMdiSubWindow*)));
 
-	findToolBar = nullptr;
 	serialToolBar = nullptr;
 	diffApp = nullptr;
 	findFiles = nullptr;
@@ -262,6 +254,8 @@ GCodeWorkShop::GCodeWorkShop(Medium* medium)
 	connect(m_sessionManager, SIGNAL(currentSessionChanged()), this, SLOT(currentSessionChanged()));
 	connect(m_sessionManager, SIGNAL(saveRequest()), this, SLOT(sessionsChanged()));
 
+	createFindToolBar();
+	connect(m_documentManager, SIGNAL(activeDocumentChanged(Document*)), m_findToolBar, SLOT(highlight()));
 	createMenus();
 	updateWindowMenu();
 	updateMenus();
@@ -823,162 +817,6 @@ void GCodeWorkShop::findInFl()
 	}
 }
 
-bool GCodeWorkShop::findNext()
-{
-	GCoderDocument* gdoc = activeGCoderDocument();
-	bool hasMdiChild = (gdoc != 0);
-	bool found = false;
-	QPalette palette;
-
-	findNextAct->setEnabled(false);
-	findPreviousAct->setEnabled(false);
-
-	if (!findEdit->text().isEmpty() && hasMdiChild) {
-		found = gdoc->findNext(findEdit->text(),
-		                       mCheckFindWholeWords->isChecked(),
-		                       !mCheckIgnoreCase->isChecked(),
-		                       mCheckIgnoreComments->isChecked());
-
-		palette.setColor(QPalette::Base, QColor(Qt::red).lighter(160));
-
-		if (found) {
-			findEdit->setPalette(QPalette());
-		} else {
-			findEdit->setPalette(palette);
-		}
-	}
-
-	findNextAct->setEnabled(true);
-	findPreviousAct->setEnabled(true);
-	return found;
-}
-
-bool GCodeWorkShop::findPrevious()
-{
-	GCoderDocument* gdoc = activeGCoderDocument();
-	bool hasMdiChild = (gdoc != 0);
-	bool found = false;
-	QPalette palette;
-
-	findNextAct->setEnabled(false);
-	findPreviousAct->setEnabled(false);
-
-	if (!findEdit->text().isEmpty() && hasMdiChild) {
-		found = gdoc->findNext(findEdit->text(),
-		                       mCheckFindWholeWords->isChecked(),
-		                       !mCheckIgnoreCase->isChecked(),
-		                       mCheckIgnoreComments->isChecked(),
-		                       true);
-
-		palette.setColor(QPalette::Base, QColor(Qt::red).lighter(160));
-
-		if (found) {
-			findEdit->setPalette(QPalette());
-		} else {
-			findEdit->setPalette(palette);
-		}
-	}
-
-	findNextAct->setEnabled(true);
-	findPreviousAct->setEnabled(true);
-
-	return found;
-}
-
-void GCodeWorkShop::replaceNext()
-{
-	QPalette palette;
-	GCoderDocument* gdoc = activeGCoderDocument();
-	bool hasMdiChildNotReadOnly = ((gdoc != 0) && !activeDocument()->isReadOnly());
-
-	replaceNextAct->setEnabled(false);
-	replacePreviousAct->setEnabled(false);
-	replaceAllAct->setEnabled(false);
-
-	if (hasMdiChildNotReadOnly) {
-		bool found = gdoc->replaceNext(findEdit->text(), replaceEdit->text(),
-		                               mCheckFindWholeWords->isChecked(),
-		                               !mCheckIgnoreCase->isChecked(),
-		                               mCheckIgnoreComments->isChecked());
-
-		palette.setColor(QPalette::Base, QColor(Qt::red).lighter(160));
-
-		if (found) {
-			findEdit->setPalette(QPalette());
-		} else {
-			findEdit->setPalette(palette);
-		}
-	}
-
-	replaceNextAct->setEnabled(true);
-	replacePreviousAct->setEnabled(true);
-	replaceAllAct->setEnabled(true);
-}
-
-void GCodeWorkShop::replacePrevious()
-{
-	QPalette palette;
-	GCoderDocument* gdoc = activeGCoderDocument();
-	bool hasMdiChildNotReadOnly = ((gdoc != 0) && !activeDocument()->isReadOnly());
-
-	replaceNextAct->setEnabled(false);
-	replacePreviousAct->setEnabled(false);
-	replaceAllAct->setEnabled(false);
-
-	if (hasMdiChildNotReadOnly) {
-		bool found = gdoc->replaceNext(findEdit->text(), replaceEdit->text(),
-		                               mCheckFindWholeWords->isChecked(),
-		                               !mCheckIgnoreCase->isChecked(),
-		                               mCheckIgnoreComments->isChecked(),
-		                               true);
-
-		palette.setColor(QPalette::Base, QColor(Qt::red).lighter(160));
-
-		if (found) {
-			findEdit->setPalette(QPalette());
-		} else {
-			findEdit->setPalette(palette);
-		}
-	}
-
-	replaceNextAct->setEnabled(true);
-	replacePreviousAct->setEnabled(true);
-	replaceAllAct->setEnabled(true);
-}
-
-void GCodeWorkShop::replaceAll()
-{
-	QPalette palette;
-	GCoderDocument* gdoc = activeGCoderDocument();
-	bool hasMdiChildNotReadOnly = ((gdoc != 0) && !activeDocument()->isReadOnly());
-
-	replaceNextAct->setEnabled(false);
-	replacePreviousAct->setEnabled(false);
-	replaceAllAct->setEnabled(false);
-
-	if (hasMdiChildNotReadOnly) {
-		QApplication::setOverrideCursor(Qt::BusyCursor);
-		bool found = gdoc->replaceAll(findEdit->text(), replaceEdit->text(),
-		                              mCheckFindWholeWords->isChecked(),
-		                              !mCheckIgnoreCase->isChecked(),
-		                              mCheckIgnoreComments->isChecked());
-
-		palette.setColor(QPalette::Base, QColor(Qt::red).lighter(160));
-
-		if (found) {
-			findEdit->setPalette(QPalette());
-		} else {
-			findEdit->setPalette(palette);
-		}
-
-		QApplication::restoreOverrideCursor();
-	}
-
-	replaceNextAct->setEnabled(true);
-	replacePreviousAct->setEnabled(true);
-	replaceAllAct->setEnabled(true);
-}
-
 void GCodeWorkShop::selAll()
 {
 	GCoderDocument* gdoc = activeGCoderDocument();
@@ -1420,17 +1258,6 @@ void GCodeWorkShop::updateMenus()
 
 	m_editActions->paste()->setEnabled((!clipboard->text().isEmpty()) && hasMdiChildNotReadOnly);
 
-	if (gdoc) {
-		if (findToolBar)
-			gdoc->highlightFindText(findEdit->text(),
-			                        mCheckFindWholeWords->isChecked(),
-			                        !mCheckIgnoreCase->isChecked(),
-			                        mCheckIgnoreComments->isChecked());
-		else {
-			gdoc->highlightFindText("");
-		}
-	}
-
 	if (doc) {
 		m_fileActions->save()->setText(tr("&Save \"%1\"").arg(doc->fileName()));
 		m_fileActions->saveAs()->setText(tr("Save \"%1\" &As...").arg(doc->fileName()));
@@ -1788,6 +1615,14 @@ void GCodeWorkShop::createStatusBar()
 	statusBar()->showMessage(tr("Ready"));
 }
 
+void GCodeWorkShop::createFindToolBar()
+{
+	m_findToolBar = new GUI::FindToolBar(this, mainWindow());
+	m_findToolBar->hide();
+	m_findToolBar->setObjectName("Find");
+	addToolBar(Qt::BottomToolBarArea, m_findToolBar);
+}
+
 void GCodeWorkShop::setHighLightMode(int mode)
 {
 	bool ok;
@@ -1819,8 +1654,10 @@ void GCodeWorkShop::readSettings()
 		m_toolActions->showSerialToolBar()->setChecked(true);
 	}
 
+	m_findToolBar->loadSettings(&settings);
+
 	if (settings.value("FindToolBarShown", false).toBool()) {
-		createFindToolBar();
+		showFindToolBar();
 	}
 
 	restoreState(state);
@@ -1955,7 +1792,8 @@ void GCodeWorkShop::writeSettings()
 	settings.setValue("PanelHidden", panelHidden);
 	settings.setValue("FileBrowserShowCurrentFileDir", ui->currentPathCheckBox->isChecked());
 
-	settings.setValue("FindToolBarShown", !findToolBar.isNull());
+	settings.setValue("FindToolBarShown", !m_findToolBar->isHidden());
+	m_findToolBar->saveSettings(&settings);
 
 	//cleanup old settings
 	settings.remove("LastDoc");
@@ -2100,183 +1938,29 @@ void GCodeWorkShop::messReceived(const QString& text)
 	emit needToShow();
 }
 
-void GCodeWorkShop::createFindToolBar()
+void GCodeWorkShop::showFindReplaceToolBar(bool replace)
 {
-	QString selText;
-	QTextCursor cursor;
+	bool intCapsLock = false;
+	GCoderWidgetProperties* prop = dynamic_cast<GCoderWidgetProperties*>(m_documentManager->documentWidgetProperties(
+	                                   GCoder::DOCUMENT_TYPE).get());
 
-	if (!findToolBar) {
-		findToolBar = new QToolBar(tr("Find"));
-		addToolBar(Qt::BottomToolBarArea, findToolBar);
-		findToolBar->setObjectName("Find");
-
-		findToolBar->setAttribute(Qt::WA_DeleteOnClose);
-
-		findNextAct = new QAction(QIcon(":/images/arrow-right.png"), tr("Find next"), this);
-		findNextAct->setShortcut(QKeySequence::FindNext);
-		findNextAct->setToolTip(tr("Find next"));
-		connect(findNextAct, SIGNAL(triggered()), this, SLOT(findNext()));
-
-		findPreviousAct = new QAction(QIcon(":/images/arrow-left.png"), tr("Find previous"), this);
-		findPreviousAct->setShortcut(QKeySequence::FindPrevious);
-		findPreviousAct->setToolTip(tr("Find previous"));
-		connect(findPreviousAct, SIGNAL(triggered()), this, SLOT(findPrevious()));
-
-		replaceNextAct = new QAction(QIcon(":/images/arrow-right.png"), tr("Replace && find next"),
-		                             this);
-		//replaceNextAct->setShortcut(tr("F3"));
-		replaceNextAct->setToolTip(tr("Replace && find next"));
-		connect(replaceNextAct, SIGNAL(triggered()), this, SLOT(replaceNext()));
-
-		replacePreviousAct = new QAction(QIcon(":/images/arrow-left.png"),
-		                                 tr("Replace && find previous"), this);
-		//replacePreviousAct->setShortcut(tr("F3"));
-		replacePreviousAct->setToolTip(tr("Replace && find previous"));
-		connect(replacePreviousAct, SIGNAL(triggered()), this, SLOT(replacePrevious()));
-
-		replaceAllAct = new QAction(QIcon(":/images/arrow-right-double.png"), tr("Replace all"), this);
-		//replaceAllAct->setShortcut(tr("F3"));
-		replaceAllAct->setToolTip(tr("Replace all"));
-		connect(replaceAllAct, SIGNAL(triggered()), this, SLOT(replaceAll()));
-
-		findCloseAct = new QAction(QIcon(":/images/close_small.png"), tr("Close find toolbar"), this);
-		findCloseAct->setToolTip(tr("Close find toolbar"));
-		connect(findCloseAct, SIGNAL(triggered()), this, SLOT(closeFindToolBar()));
-
-		findLabel = new QLabel(tr("Find:"));
-		findToolBar->addWidget(findLabel);
-		findEdit = new QLineEdit();
-		findEdit->setClearButtonEnabled(true);
-		findEdit->setToolTip(
-		    tr("<b>Letter$$</b> - matches any number.<p><b>Letter$max$min</b> - matches number &lt;=max &gt;=min.</p>"
-		       \
-		       "<p><b>$min</b> can be omitted, then equal 0</p>" \
-		       "<p><b>X$100$-10</b> - matches all X with value -10 to 100</p>"));
-		CapsLockEventFilter* findEditEventFilter = new CapsLockEventFilter(findEdit);
-		connect(this, SIGNAL(intCapsLockChanged(bool)), findEditEventFilter, SLOT(setCapsLockEnable(bool)));
-		bool intCapsLock = false;
-		GCoderWidgetProperties* prop = dynamic_cast<GCoderWidgetProperties*>(m_documentManager->documentWidgetProperties(
-		                                   GCoder::DOCUMENT_TYPE).get());
-
-		if (prop) {
-			intCapsLock = prop->intCapsLock;
-		}
-
-		findEditEventFilter->setCapsLockEnable(intCapsLock);
-		findEdit->installEventFilter(findEditEventFilter);
-		connect(findEdit, SIGNAL(textChanged(QString)), this, SLOT(findTextChanged()));
-		findToolBar->addWidget(findEdit);
-		findToolBar->addAction(findPreviousAct);
-		findToolBar->addAction(findNextAct);
-		findToolBar->addSeparator();
-
-		replaceLabel = new QLabel(tr("Replace with:"));
-		findToolBar->addWidget(replaceLabel);
-		replaceEdit = new QLineEdit();
-		replaceEdit->setClearButtonEnabled(true);
-		replaceEdit->setToolTip(
-		    tr("<b>$$OperatorNumber</b> - do some math on replaced numbers. Operator +-*/" \
-		       "<p>$$+1 - will add 1 to replaced numbers</p>"));
-		CapsLockEventFilter* replaceEditEventFilter = new CapsLockEventFilter(replaceEdit);
-		connect(this, SIGNAL(intCapsLockChanged(bool)), replaceEditEventFilter, SLOT(setCapsLockEnable(bool)));
-		replaceEditEventFilter->setCapsLockEnable(intCapsLock);
-		replaceEdit->installEventFilter(replaceEditEventFilter);
-		findToolBar->addWidget(replaceEdit);
-		findToolBar->addAction(replacePreviousAct);
-		findToolBar->addAction(replaceNextAct);
-		findToolBar->addAction(replaceAllAct);
-		findToolBar->addSeparator();
-
-		mCheckIgnoreCase = new QCheckBox(tr("Ignore c&ase"));
-		connect(mCheckIgnoreCase, SIGNAL(clicked()), this, SLOT(findTextChanged()));
-		findToolBar->addWidget(mCheckIgnoreCase);
-		mCheckFindWholeWords = new QCheckBox(tr("&Whole words only"));
-		connect(mCheckFindWholeWords, SIGNAL(clicked()), this, SLOT(findTextChanged()));
-		findToolBar->addWidget(mCheckFindWholeWords);
-		//findToolBar->addSeparator();
-		mCheckIgnoreComments = new QCheckBox(tr("Ignore c&omments"));
-		connect(mCheckIgnoreComments, SIGNAL(clicked()), this, SLOT(findTextChanged()));
-		findToolBar->addWidget(mCheckIgnoreComments);
-		findToolBar->addSeparator();
-		findToolBar->addAction(findCloseAct);
-
-		QSettings& settings = *Medium::instance().settings();
-		mCheckIgnoreComments->setChecked(settings.value("FindIgnoreComments", true).toBool());
-		mCheckFindWholeWords->setChecked(settings.value("FindWholeWords", false).toBool());
-		mCheckIgnoreCase->setChecked(settings.value("FindIgnoreCase", true).toBool());
-	} else {
-		findToolBar->show();
+	if (prop) {
+		intCapsLock = prop->intCapsLock;
 	}
 
-	GCoderDocument* gdoc = activeGCoderDocument();
-
-	if (gdoc) {
-		disconnect(findEdit, SIGNAL(textChanged(QString)), this, SLOT(findTextChanged()));
-
-		if (gdoc->hasSelection()) {
-			selText = gdoc->selectedText();
-		} else {
-			selText = gdoc->wordUnderCursor();
-		}
-
-		if (selText.size() < 32) {
-			findEdit->setText(selText);
-		}
-
-		findEdit->setPalette(QPalette());
-		connect(findEdit, SIGNAL(textChanged(QString)), this, SLOT(findTextChanged()));
-		findEdit->setFocus(Qt::MouseFocusReason);
-
-		gdoc->highlightFindText(findEdit->text(),
-		                        ((mCheckFindWholeWords->isChecked() ? QTextDocument::FindWholeWords :
-		                          QTextDocument::FindFlags()) |
-		                         (!mCheckIgnoreCase->isChecked() ? QTextDocument::FindCaseSensitively :
-		                          QTextDocument::FindFlags())), mCheckIgnoreComments->isChecked());
-	}
-
-	findEdit->selectAll();
+	m_findToolBar->setCapsLockEnable(intCapsLock);
+	m_findToolBar->show();
+	m_findToolBar->activate(replace);
 }
 
-void GCodeWorkShop::closeFindToolBar()
+void GCodeWorkShop::showFindToolBar()
 {
-	GCoderDocument* gdoc = activeGCoderDocument();
-
-	if (gdoc) {
-		gdoc->widget()->setFocus(Qt::MouseFocusReason);
-		gdoc->highlightFindText("");
-		gdoc->centerCursor();
-	}
-
-	QSettings& settings = *Medium::instance().settings();
-	settings.setValue("FindIgnoreComments", mCheckIgnoreComments->isChecked());
-	settings.setValue("FindWholeWords", mCheckFindWholeWords->isChecked());
-	settings.setValue("FindIgnoreCase", mCheckIgnoreCase->isChecked());
-
-	findToolBar->close();
-	//findToolBar = nullptr;
+	showFindReplaceToolBar(false);
 }
 
-void GCodeWorkShop::findTextChanged()
+void GCodeWorkShop::showReplaceToolBar()
 {
-	if (findEdit->text().contains(QRegularExpression("\\$\\$"))
-	        || findEdit->text().contains(
-	            QRegularExpression("(\\$)[-]{0,1}[0-9]{0,}[0-9.]{1,1}[0-9]{0,}"))) {
-		replaceAllAct->setEnabled(false);
-	} else {
-		replaceAllAct->setEnabled(true);
-	}
-
-	GCoderDocument* gdoc = activeGCoderDocument();
-
-	if (gdoc) {
-		gdoc->clearSelection(true);
-
-		if (!findEdit->text().isEmpty()) {
-			findNext();
-		} else {
-			findEdit->setPalette(QPalette());
-		}
-	}
+	showFindReplaceToolBar(true);
 }
 
 void GCodeWorkShop::createSerialToolBar()
