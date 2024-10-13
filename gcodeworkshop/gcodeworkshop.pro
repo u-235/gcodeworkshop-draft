@@ -48,6 +48,8 @@ HEADERS += \
     src/gcodereventfilter.h \
     src/gcoderinfo.h \
     src/gcoderproducer.h \
+    src/gui/findtoolbar/findtoolbar.h \
+    src/gui/findtoolbar/findtoolbaractions.h \
     src/gui/workshop/defaultkeysequences.h \
     src/gui/workshop/editactions.h \
     src/gui/workshop/fileactions.h \
@@ -82,6 +84,8 @@ SOURCES += \
     src/gcoderstyle.cpp \
     src/gcoderwidgetproperties.cpp \
     src/gcodeworkshop.cpp \
+    src/gui/findtoolbar/findtoolbar.cpp \
+    src/gui/findtoolbar/findtoolbaractions.cpp \
     src/gui/workshop/defaultkeysequences.cpp \
     src/gui/workshop/editactions.cpp \
     src/gui/workshop/fileactions.cpp \
