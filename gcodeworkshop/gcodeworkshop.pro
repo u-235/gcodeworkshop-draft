@@ -32,6 +32,7 @@ HEADERS += \
     include/gcoderstyle.h \
     include/gcoderwidgetproperties.h \
     include/gcodeworkshop.h \
+    include/ui/actions/knownactions.h \
     include/utils/expressionparser.h \
     include/utils/removezeros.h
 
@@ -84,6 +85,7 @@ SOURCES += \
     src/sessionmanager.cpp \
     src/sessionnamedialog.cpp \
     src/setupdialog.cpp \
+    src/ui/actions/knownactions.cpp \
     src/utils/expressionparser.cpp \
     src/utils/removezeros.cpp
 
