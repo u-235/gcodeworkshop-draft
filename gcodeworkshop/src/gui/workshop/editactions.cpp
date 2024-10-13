@@ -38,11 +38,11 @@ GUI::WorkShop::EditActions::EditActions(GCodeWorkShop* app, QObject* parent) :
 	connect(makeAction(ActionId::COPY), &QAction::triggered, app, &GCodeWorkShop::copy);
 	connect(makeAction(ActionId::CUT), &QAction::triggered, app, &GCodeWorkShop::cut);
 	connect(makeAction(ActionId::DELETE), &QAction::triggered, app, &GCodeWorkShop::deleteText);
-	connect(makeAction(ActionId::FIND), &QAction::triggered, app, &GCodeWorkShop::createFindToolBar);
+	connect(makeAction(ActionId::FIND), &QAction::triggered, app, &GCodeWorkShop::showFindToolBar);
 	connect(makeAction(ActionId::PASTE), &QAction::triggered, app, &GCodeWorkShop::paste);
 	connect(makeAction(ActionId::READ_ONLY), &QAction::triggered, app, &GCodeWorkShop::readOnly);
 	connect(makeAction(ActionId::REDO), &QAction::triggered, app, &GCodeWorkShop::redo);
-	connect(makeAction(ActionId::REPLACE), &QAction::triggered, app, &GCodeWorkShop::createFindToolBar);
+	connect(makeAction(ActionId::REPLACE), &QAction::triggered, app, &GCodeWorkShop::showReplaceToolBar);
 	connect(makeAction(ActionId::SELECT_ALL), &QAction::triggered, app, &GCodeWorkShop::selAll);
 	connect(makeAction(ActionId::UNDO), &QAction::triggered, app, &GCodeWorkShop::undo);
 
