@@ -105,6 +105,11 @@ public:
 	void dragEnterEvent(QDragEnterEvent* event) override;
 	void dropEvent(QDropEvent* event) override;
 
+signals:
+	void updateTranslations();
+	void updateIcons();
+	void updateShortcuts(const QMap<QString, QKeySequence>&);
+
 protected:
 	Ui::GCodeWorkShop* ui;
 	static GCodeWorkShop* SINGLETON;
