@@ -51,6 +51,7 @@ HEADERS += \
     src/gui/workshop/defaultkeysequences.h \
     src/gui/workshop/editactions.h \
     src/gui/workshop/fileactions.h \
+    src/gui/workshop/toolactions.h \
     src/highlighter.h \
     src/highlightmode.h \
     src/inlinecalc.h \
@@ -83,6 +84,7 @@ SOURCES += \
     src/gui/workshop/editactions.cpp \
     src/gui/workshop/fileactions.cpp \
     src/gui/workshop/knownactions.cpp \
+    src/gui/workshop/toolactions.cpp \
     src/highlighter.cpp \
     src/inlinecalc.cpp \
     src/main.cpp \
