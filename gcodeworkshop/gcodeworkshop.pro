@@ -49,6 +49,7 @@ HEADERS += \
     src/gcoderinfo.h \
     src/gcoderproducer.h \
     src/gui/workshop/defaultkeysequences.h \
+    src/gui/workshop/fileactions.h \
     src/highlighter.h \
     src/highlightmode.h \
     src/inlinecalc.h \
@@ -78,6 +79,7 @@ SOURCES += \
     src/gcoderwidgetproperties.cpp \
     src/gcodeworkshop.cpp \
     src/gui/workshop/defaultkeysequences.cpp \
+    src/gui/workshop/fileactions.cpp \
     src/gui/workshop/knownactions.cpp \
     src/highlighter.cpp \
     src/inlinecalc.cpp \
