@@ -662,7 +662,7 @@ void GCodeWorkShop::printFile()
 {
 #ifndef QT_NO_PRINTER
 
-	GCoderDocument* gdoc = dynamic_cast<GCoderDocument*>(activeDocument());
+	GCoderDocument* gdoc = activeGCoderDocument();
 
 	if (gdoc) {
 		QPrinter printer(QPrinter::HighResolution);
@@ -694,7 +694,7 @@ void GCodeWorkShop::filePrintPreview()
 {
 #ifndef QT_NO_PRINTER
 
-	GCoderDocument* gdoc = dynamic_cast<GCoderDocument*>(activeDocument());
+	GCoderDocument* gdoc = activeGCoderDocument();
 
 	if (gdoc) {
 		QPrinter printer(QPrinter::HighResolution);
@@ -720,7 +720,7 @@ void GCodeWorkShop::printPreview(QPrinter* printer)
 {
 #ifndef QT_NO_PRINTER
 
-	GCoderDocument* gdoc = dynamic_cast<GCoderDocument*>(activeDocument());
+	GCoderDocument* gdoc = activeGCoderDocument();
 
 	if (gdoc) {
 		printer->setDocName(gdoc->fileName());
@@ -734,7 +734,7 @@ void GCodeWorkShop::printPreview(QPrinter* printer)
 
 void GCodeWorkShop::cut()
 {
-	GCoderDocument* gdoc = dynamic_cast<GCoderDocument*>(activeDocument());
+	GCoderDocument* gdoc = activeGCoderDocument();
 
 	if (gdoc) {
 		gdoc->cut();
@@ -743,7 +743,7 @@ void GCodeWorkShop::cut()
 
 void GCodeWorkShop::copy()
 {
-	GCoderDocument* gdoc = dynamic_cast<GCoderDocument*>(activeDocument());
+	GCoderDocument* gdoc = activeGCoderDocument();
 
 	if (gdoc) {
 		gdoc->copy();
@@ -779,7 +779,7 @@ void GCodeWorkShop::findInFl()
 
 bool GCodeWorkShop::findNext()
 {
-	GCoderDocument* gdoc = dynamic_cast<GCoderDocument*>(activeDocument());
+	GCoderDocument* gdoc = activeGCoderDocument();
 	bool hasMdiChild = (gdoc != 0);
 	bool found = false;
 	QPalette palette;
@@ -809,7 +809,7 @@ bool GCodeWorkShop::findNext()
 
 bool GCodeWorkShop::findPrevious()
 {
-	GCoderDocument* gdoc = dynamic_cast<GCoderDocument*>(activeDocument());
+	GCoderDocument* gdoc = activeGCoderDocument();
 	bool hasMdiChild = (gdoc != 0);
 	bool found = false;
 	QPalette palette;
@@ -842,7 +842,7 @@ bool GCodeWorkShop::findPrevious()
 void GCodeWorkShop::replaceNext()
 {
 	QPalette palette;
-	GCoderDocument* gdoc = dynamic_cast<GCoderDocument*>(activeDocument());
+	GCoderDocument* gdoc = activeGCoderDocument();
 	bool hasMdiChildNotReadOnly = ((gdoc != 0) && !activeDocument()->isReadOnly());
 
 	replaceNextAct->setEnabled(false);
@@ -872,7 +872,7 @@ void GCodeWorkShop::replaceNext()
 void GCodeWorkShop::replacePrevious()
 {
 	QPalette palette;
-	GCoderDocument* gdoc = dynamic_cast<GCoderDocument*>(activeDocument());
+	GCoderDocument* gdoc = activeGCoderDocument();
 	bool hasMdiChildNotReadOnly = ((gdoc != 0) && !activeDocument()->isReadOnly());
 
 	replaceNextAct->setEnabled(false);
@@ -903,7 +903,7 @@ void GCodeWorkShop::replacePrevious()
 void GCodeWorkShop::replaceAll()
 {
 	QPalette palette;
-	GCoderDocument* gdoc = dynamic_cast<GCoderDocument*>(activeDocument());
+	GCoderDocument* gdoc = activeGCoderDocument();
 	bool hasMdiChildNotReadOnly = ((gdoc != 0) && !activeDocument()->isReadOnly());
 
 	replaceNextAct->setEnabled(false);
@@ -935,7 +935,7 @@ void GCodeWorkShop::replaceAll()
 
 void GCodeWorkShop::selAll()
 {
-	GCoderDocument* gdoc = dynamic_cast<GCoderDocument*>(activeDocument());
+	GCoderDocument* gdoc = activeGCoderDocument();
 
 	if (gdoc) {
 		gdoc->selectAll();
@@ -1003,7 +1003,7 @@ void GCodeWorkShop::readOnly()
 
 void GCodeWorkShop::goToLine(const QString& fileName, int line)
 {
-	GCoderDocument* gdoc = dynamic_cast<GCoderDocument*>(activeDocument());
+	GCoderDocument* gdoc = activeGCoderDocument();
 
 	if (gdoc) {
 		QString childFileName = gdoc->filePath();
@@ -1207,7 +1207,7 @@ void GCodeWorkShop::doCalc()
 
 void GCodeWorkShop::deleteText()
 {
-	GCoderDocument* gdoc = dynamic_cast<GCoderDocument*>(activeDocument());
+	GCoderDocument* gdoc = activeGCoderDocument();
 
 	if (gdoc) {
 		gdoc->removeSelectedText();
@@ -1216,7 +1216,7 @@ void GCodeWorkShop::deleteText()
 
 void GCodeWorkShop::paste()
 {
-	GCoderDocument* gdoc = dynamic_cast<GCoderDocument*>(activeDocument());
+	GCoderDocument* gdoc = activeGCoderDocument();
 
 	if (gdoc) {
 		gdoc->paste();
@@ -1296,7 +1296,7 @@ void GCodeWorkShop::about()
 void GCodeWorkShop::updateMenus()
 {
 	Document* doc = activeDocument();
-	GCoderDocument* gdoc = dynamic_cast<GCoderDocument*>(doc);
+	GCoderDocument* gdoc = activeGCoderDocument();
 	bool hasMdiChildNotReadOnly;
 	bool hasSelection;
 	bool hasModifiedMdiChild;
@@ -1418,7 +1418,7 @@ void GCodeWorkShop::updateCurrentSerialConfig()
 
 void GCodeWorkShop::updateStatusBar()
 {
-	GCoderDocument* gdoc = dynamic_cast<GCoderDocument*>(activeDocument());
+	GCoderDocument* gdoc = activeGCoderDocument();
 
 	if (gdoc) {
 		int id = highlightTypeCombo->findData(gdoc->highlightMode());
@@ -1971,7 +1971,7 @@ void GCodeWorkShop::createStatusBar()
 void GCodeWorkShop::setHighLightMode(int mode)
 {
 	bool ok;
-	GCoderDocument* gdoc = dynamic_cast<GCoderDocument*>(activeDocument());
+	GCoderDocument* gdoc = activeGCoderDocument();
 	int id = highlightTypeCombo->itemData(mode).toInt(&ok);
 
 	if (gdoc && ok) {
@@ -2154,6 +2154,11 @@ void GCodeWorkShop::writeSettings()
 Document* GCodeWorkShop::activeDocument() const
 {
 	return m_documentManager->activeDocument();
+}
+
+GCoderDocument* GCodeWorkShop::activeGCoderDocument() const
+{
+	return dynamic_cast<GCoderDocument*>(activeDocument());
 }
 
 Document* GCodeWorkShop::findDocument(const QString& fileName)
@@ -2383,7 +2388,7 @@ void GCodeWorkShop::createFindToolBar()
 		findToolBar->show();
 	}
 
-	GCoderDocument* gdoc = dynamic_cast<GCoderDocument*>(activeDocument());
+	GCoderDocument* gdoc = activeGCoderDocument();
 
 	if (gdoc) {
 		disconnect(findEdit, SIGNAL(textChanged(QString)), this, SLOT(findTextChanged()));
@@ -2414,7 +2419,7 @@ void GCodeWorkShop::createFindToolBar()
 
 void GCodeWorkShop::closeFindToolBar()
 {
-	GCoderDocument* gdoc = dynamic_cast<GCoderDocument*>(activeDocument());
+	GCoderDocument* gdoc = activeGCoderDocument();
 
 	if (gdoc) {
 		gdoc->widget()->setFocus(Qt::MouseFocusReason);
@@ -2441,7 +2446,7 @@ void GCodeWorkShop::findTextChanged()
 		replaceAllAct->setEnabled(true);
 	}
 
-	GCoderDocument* gdoc = dynamic_cast<GCoderDocument*>(activeDocument());
+	GCoderDocument* gdoc = activeGCoderDocument();
 
 	if (gdoc) {
 		gdoc->clearSelection(true);
@@ -3504,7 +3509,7 @@ void GCodeWorkShop::serialConfigTest()
 void GCodeWorkShop::sendButtonClicked()
 {
 	QString tx;
-	GCoderDocument* gdoc = dynamic_cast<GCoderDocument*>(activeDocument());
+	GCoderDocument* gdoc = activeGCoderDocument();
 
 	if (!gdoc) {
 		return;
@@ -3871,7 +3876,7 @@ void GCodeWorkShop::clipboardLoad()
 
 void GCodeWorkShop::doShowInLineCalc()
 {
-	GCoderDocument* gdoc = dynamic_cast<GCoderDocument*>(activeDocument());
+	GCoderDocument* gdoc = activeGCoderDocument();
 
 	if (gdoc) {
 		gdoc->showInLineCalc();

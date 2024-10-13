@@ -94,6 +94,7 @@ public:
 	Addons::Actions* addonsActions();
 	DocumentManager* documentManager() const;
 	Document* activeDocument() const;
+	GCoderDocument* activeGCoderDocument() const;
 	QString currentPath() const;
 	QString lastOpenedPath() const;
 	/*
