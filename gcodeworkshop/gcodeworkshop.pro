@@ -15,7 +15,7 @@ defined(VERSION, var) {
     VERSION = $$getVersion()
 }
 
-INCLUDEPATH += include
+INCLUDEPATH += include src
 
 
 # GCoderWorkShop : public API
@@ -63,6 +63,8 @@ HEADERS += \
     src/ui/actions/helpactions.h \
     src/ui/actions/toolactions.h \
     src/ui/actions/windowactions.h \
+    src/ui/findtoolbar/findtoolbar.h \
+    src/ui/findtoolbar/findtoolbaractions.h \
     src/ui/defaultkeysequences.h
 
 SOURCES += \
@@ -97,6 +99,8 @@ SOURCES += \
     src/ui/actions/knownactions.cpp \
     src/ui/actions/toolactions.cpp \
     src/ui/actions/windowactions.cpp \
+    src/ui/findtoolbar/findtoolbar.cpp \
+    src/ui/findtoolbar/findtoolbaractions.cpp \
     src/ui/defaultkeysequences.cpp \
     src/utils/expressionparser.cpp \
     src/utils/removezeros.cpp
