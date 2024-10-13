@@ -15,7 +15,7 @@ defined(VERSION, var) {
     VERSION = $$getVersion()
 }
 
-INCLUDEPATH += include
+INCLUDEPATH += include src
 
 
 # GCoderWorkShop : public API
@@ -48,6 +48,7 @@ HEADERS += \
     src/gcodereventfilter.h \
     src/gcoderinfo.h \
     src/gcoderproducer.h \
+    src/gui/workshop/defaultkeysequences.h \
     src/highlighter.h \
     src/highlightmode.h \
     src/inlinecalc.h \
@@ -76,6 +77,7 @@ SOURCES += \
     src/gcoderstyle.cpp \
     src/gcoderwidgetproperties.cpp \
     src/gcodeworkshop.cpp \
+    src/gui/workshop/defaultkeysequences.cpp \
     src/gui/workshop/knownactions.cpp \
     src/highlighter.cpp \
     src/inlinecalc.cpp \
