@@ -78,6 +78,7 @@ namespace GUI {
 namespace WorkShop {
 class EditActions;
 class FileActions;
+class HelpActions;
 class ToolActions;
 class WindowActions;
 } // namespace WorkShop
@@ -108,6 +109,7 @@ public:
 	Addons::Actions* addonsActions();
 	GUI::WorkShop::EditActions* editActions();
 	GUI::WorkShop::FileActions* fileActions();
+	GUI::WorkShop::HelpActions* helpActions();
 	GUI::WorkShop::ToolActions* toolActions();
 	GUI::WorkShop::WindowActions* windowActions();
 	DocumentManager* documentManager() const;
@@ -147,6 +149,7 @@ protected:
 	Addons::Actions* m_addonsActions;
 	GUI::WorkShop::EditActions* m_editActions;
 	GUI::WorkShop::FileActions* m_fileActions;
+	GUI::WorkShop::HelpActions* m_helpActions;
 	GUI::WorkShop::ToolActions* m_toolActions;
 	GUI::WorkShop::WindowActions* m_windowActions;
 
@@ -386,11 +389,6 @@ private:
 	QToolBar* editToolBar;
 	QToolBar* windowToolBar;
 	QToolBar* toolsToolBar;
-
-	QAction* aboutAct;
-	QAction* aboutQtAct;
-	QAction* createGlobalToolTipsAct;
-	QAction* createUserToolTipsAct;
 
 	QProcess* proc;
 	QProcess* sfsProc;
