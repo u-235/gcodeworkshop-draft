@@ -32,6 +32,7 @@ HEADERS += \
     include/gcoderstyle.h \
     include/gcoderwidgetproperties.h \
     include/gcodeworkshop.h \
+    include/gui/actions/knownactions.h \
     include/utils/expressionparser.h \
     include/utils/removezeros.h
 
@@ -75,6 +76,7 @@ SOURCES += \
     src/gcoderstyle.cpp \
     src/gcoderwidgetproperties.cpp \
     src/gcodeworkshop.cpp \
+    src/gui/actions/knownactions.cpp \
     src/highlighter.cpp \
     src/inlinecalc.cpp \
     src/main.cpp \
