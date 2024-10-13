@@ -83,6 +83,7 @@ class ActionKit;
 class EditActions;
 class FileActions;
 class ToolActions;
+class WindowActions;
 } // namespace Actions
 } // namespace Ui
 
@@ -104,6 +105,7 @@ public:
 	Ui::Actions::EditActions* editActions();
 	Ui::Actions::FileActions* fileActions();
 	Ui::Actions::ToolActions* toolActions();
+	Ui::Actions::WindowActions* windowActions();
 	DocumentManager* documentManager() const;
 	Document* activeDocument() const;
 	GCoderDocument* activeGCoderDocument() const;
@@ -140,6 +142,7 @@ protected:
 	Ui::Actions::EditActions* m_editActions;
 	Ui::Actions::FileActions* m_fileActions;
 	Ui::Actions::ToolActions* m_toolActions;
+	Ui::Actions::WindowActions* m_windowActions;
 
 public:
 	void openFile(const QString& fileName);
@@ -243,7 +246,11 @@ private slots:
 	void currentSessionChanged();
 	void showSessionDialog();
 	void fileChanged(const QString& fileName);
+	void tileSubWindowsHorizontally();
 	void tileSubWindowsVertycally();
+	void cascadeSubWindows();
+	void activateNextSubWindow();
+	void activatePreviousSubWindow();
 	void clipboardChanged();
 	void deleteFromClipboardButtonClicked();
 	void clipboardTreeViewContextMenu(const QPoint& point);
@@ -328,12 +335,6 @@ private:
 	QToolBar* windowToolBar;
 	QToolBar* toolsToolBar;
 
-	QAction* tileHAct;
-	QAction* tileVAct;
-	QAction* cascadeAct;
-	QAction* nextAct;
-	QAction* previousAct;
-	QAction* separatorAct;
 	QAction* aboutAct;
 	QAction* aboutQtAct;
 	QAction* createGlobalToolTipsAct;
