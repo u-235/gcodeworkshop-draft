@@ -129,6 +129,7 @@
 #include "gcoderproducer.h"                 // for GCoderProducer
 #include "gui/actions/editactions.h"        // for EditActions
 #include "gui/actions/fileactions.h"        // for FileActions
+#include "gui/actions/toolactions.h"        // for ToolActions
 #include "gui/defaultkeysequences.h"
 #include "highlightmode.h"                  // for MODE_AUTO, MODE_FANUC, MODE_HEIDENHAIN, MODE_HEIDENHAIN_ISO, MODE_LINU...
 #include "newfiledialog.h"                  // for newFileDialog
@@ -341,6 +342,11 @@ GUI::Actions::EditActions* GCodeWorkShop::editActions()
 GUI::Actions::FileActions* GCodeWorkShop::fileActions()
 {
 	return m_fileActions;
+}
+
+GUI::Actions::ToolActions* GCodeWorkShop::toolActions()
+{
+	return m_toolActions;
 }
 
 DocumentManager* GCodeWorkShop::documentManager() const
@@ -1055,11 +1061,11 @@ void GCodeWorkShop::doDiffL()
 	createDiffApp();
 
 	if (diffApp != nullptr) {
-		diffLAct->setEnabled(false);
-		diffRAct->setEnabled(false);
-		diffAct->setEnabled(false);
+		m_toolActions->diffLeft()->setEnabled(false);
+		m_toolActions->diffRight()->setEnabled(false);
+		m_toolActions->diff()->setEnabled(false);
 
-		diffAct->setChecked(true);
+		m_toolActions->diff()->setChecked(true);
 
 		if (activeDocument()) {
 			fileName = activeDocument()->filePath();
@@ -1072,9 +1078,9 @@ void GCodeWorkShop::doDiffL()
 		//        diffApp->close();
 		diffApp->completeInit(fileName, "");
 
-		diffLAct->setEnabled(true);
-		diffRAct->setEnabled(true);
-		diffAct->setEnabled(true);
+		m_toolActions->diffLeft()->setEnabled(true);
+		m_toolActions->diffRight()->setEnabled(true);
+		m_toolActions->diff()->setEnabled(true);
 	}
 }
 
@@ -1085,11 +1091,11 @@ void GCodeWorkShop::doDiffR()
 	createDiffApp();
 
 	if (diffApp != nullptr) {
-		diffLAct->setEnabled(false);
-		diffRAct->setEnabled(false);
-		diffAct->setEnabled(false);
+		m_toolActions->diffLeft()->setEnabled(false);
+		m_toolActions->diffRight()->setEnabled(false);
+		m_toolActions->diff()->setEnabled(false);
 
-		diffAct->setChecked(true);
+		m_toolActions->diff()->setChecked(true);
 
 		if (activeDocument()) {
 			fileName = activeDocument()->filePath();
@@ -1102,9 +1108,9 @@ void GCodeWorkShop::doDiffR()
 		//        diffApp->close();
 		diffApp->completeInit("", fileName);
 
-		diffLAct->setEnabled(true);
-		diffRAct->setEnabled(true);
-		diffAct->setEnabled(true);
+		m_toolActions->diffLeft()->setEnabled(true);
+		m_toolActions->diffRight()->setEnabled(true);
+		m_toolActions->diff()->setEnabled(true);
 	}
 }
 
@@ -1113,7 +1119,7 @@ void GCodeWorkShop::diffTwoFiles(const QString& filename1, const QString& filena
 	createDiffApp();
 
 	if (diffApp != nullptr) {
-		diffAct->setChecked(true);
+		m_toolActions->diff()->setChecked(true);
 		//        diffApp->close();
 		diffApp->completeInit(filename1, filename2);
 
@@ -1159,7 +1165,7 @@ void GCodeWorkShop::diffEditorFile()
 		file.write(doc->rawData());
 		file.close();
 
-		diffAct->setChecked(true);
+		m_toolActions->diff()->setChecked(true);
 		//        diffApp->close();
 		diffApp->completeInit(fileName, fileName1);
 
@@ -1193,8 +1199,8 @@ void GCodeWorkShop::doDiff()
 		//        diffApp->close();
 		diffApp->completeInit(QFileInfo(fileName).canonicalPath(), QFileInfo(fileName).canonicalPath());
 
-	} else if (!diffAct->isChecked()) {
-		diffAct->setChecked(false);
+	} else if (!m_toolActions->diff()->isChecked()) {
+		m_toolActions->diff()->setChecked(false);
 		diffApp->close();
 		diffApp = nullptr;
 	}
@@ -1358,9 +1364,9 @@ void GCodeWorkShop::updateMenus()
 	m_editActions->selectAll()->setEnabled(hasMdiChildNotReadOnly);
 	m_editActions->find()->setEnabled(hasMdiChild);
 
-	diffLAct->setEnabled(hasMdiChild);
-	diffRAct->setEnabled(hasMdiChild);
-	diffEditorAct->setEnabled(hasMdiChildNotReadOnly);
+	m_toolActions->diffLeft()->setEnabled(hasMdiChild);
+	m_toolActions->diffRight()->setEnabled(hasMdiChild);
+	m_toolActions->diffEditor()->setEnabled(hasMdiChildNotReadOnly);
 
 	m_editActions->replace()->setEnabled(hasMdiChildNotReadOnly);
 	m_editActions->readOnly()->setEnabled(hasMdiChild);
@@ -1380,7 +1386,7 @@ void GCodeWorkShop::updateMenus()
 	m_addonsActions->blockSkipDecrement()->setEnabled(hasMdiChildNotReadOnly && hasSelection);
 	m_addonsActions->blockSkipIncrement()->setEnabled(hasMdiChildNotReadOnly && hasSelection);
 	m_addonsActions->blockSkipRemove()->setEnabled(hasMdiChildNotReadOnly && hasSelection);
-	inLineCalcAct->setEnabled(hasMdiChild);
+	m_toolActions->inLineCalc()->setEnabled(hasMdiChild);
 
 	if (!hasMdiChildNotReadOnly) {
 		m_editActions->readOnly()->setChecked(true);
@@ -1532,42 +1538,7 @@ void GCodeWorkShop::createActions()
 	m_fileActions->openExample()->setEnabled(QDir(EXAMPLES_PATH).exists()
 	        || QDir(QApplication::applicationDirPath() + "../" + "examples").exists()
 	        || QDir(QApplication::applicationDirPath() + "../../" + "examples").exists());
-
-	inLineCalcAct = new QAction(QIcon(":/images/inlinecalc.png"), tr("Inline calculator"), this);
-	inLineCalcAct->setShortcut(tr("Ctrl+0"));
-	connect(inLineCalcAct, SIGNAL(triggered()), this, SLOT(doShowInLineCalc()));
-
-	calcAct = new QAction(QIcon(":/images/calc.png"), tr("Calculator"), this);
-	//calcAct->setShortcut(tr("F9"));
-	calcAct->setToolTip(tr("Run calculator"));
-	connect(calcAct, SIGNAL(triggered()), this, SLOT(doCalc()));
-
-	showSerialToolBarAct = new QAction(QIcon(":/images/serial.png"), tr("Serial port send/receive"),
-	                                   this);
-	//showSerialToolBarAct->setShortcut(tr("F9"));
-	showSerialToolBarAct->setCheckable(true);
-	showSerialToolBarAct->setToolTip(tr("Serial port send/receive"));
-	connect(showSerialToolBarAct, SIGNAL(triggered()), this, SLOT(createSerialToolBar()));
-
-	diffRAct = new QAction(QIcon(":/images/diffr.png"),
-	                       tr("Show diff - open current file in right diff window"), this);
-	diffRAct->setToolTip(tr("Show diff - open current file in right diff window"));
-	connect(diffRAct, SIGNAL(triggered()), this, SLOT(doDiffR()));
-
-	diffLAct = new QAction(QIcon(":/images/diffl.png"),
-	                       tr("Show diff - open current file in left diff window"), this);
-	diffLAct->setToolTip(tr("Show diff - open current file in left diff window"));
-	connect(diffLAct, SIGNAL(triggered()), this, SLOT(doDiffL()));
-
-	diffAct = new QAction(QIcon(":/images/diff.png"), tr("On/off diff window"), this);
-	diffAct->setCheckable(true);
-	diffAct->setToolTip(tr("Show diff window"));
-	connect(diffAct, SIGNAL(triggered()), this, SLOT(doDiff()));
-
-	diffEditorAct = new QAction(QIcon(":/images/diff_editor.png"), tr("Show unsaved changes"),
-	                            this);
-	diffEditorAct->setToolTip(tr("Show diff of currently edited file and file on disk"));
-	connect(diffEditorAct, SIGNAL(triggered()), this, SLOT(diffEditorFile()));
+	m_toolActions = new GUI::Actions::ToolActions(this);
 
 	tileHAct = new QAction(QIcon(":/images/tile_h.png"), tr("Tile &horizontally"), this);
 	tileHAct->setToolTip(tr("Tile the windows horizontally"));
@@ -1674,7 +1645,7 @@ void GCodeWorkShop::createMenus()
 	editMenu->addAction(m_editActions->config());
 
 	toolsMenu = menuBar()->addMenu(tr("&Tools"));
-	toolsMenu->addAction(showSerialToolBarAct);
+	toolsMenu->addAction(m_toolActions->showSerialToolBar());
 	toolsMenu->addSeparator();
 	toolsMenu->addAction(m_addonsActions->insertSpaces());
 	toolsMenu->addAction(m_addonsActions->removeSpaces());
@@ -1686,11 +1657,11 @@ void GCodeWorkShop::createMenus()
 	toolsMenu->addAction(m_addonsActions->splitProgramms());
 	toolsMenu->addAction(m_addonsActions->renumber());
 	toolsMenu->addSeparator();
-	toolsMenu->addAction(diffAct);
+	toolsMenu->addAction(m_toolActions->diff());
 	toolsMenu->addSeparator();
-	toolsMenu->addAction(diffLAct);
-	toolsMenu->addAction(diffRAct);
-	toolsMenu->addAction(diffEditorAct);
+	toolsMenu->addAction(m_toolActions->diffLeft());
+	toolsMenu->addAction(m_toolActions->diffRight());
+	toolsMenu->addAction(m_toolActions->diffEditor());
 	toolsMenu->addSeparator();
 	toolsMenu->addAction(m_addonsActions->bhc());
 	toolsMenu->addAction(m_addonsActions->feeds());
@@ -1701,8 +1672,8 @@ void GCodeWorkShop::createMenus()
 	toolsMenu->addSeparator();
 	toolsMenu->addAction(m_addonsActions->compileMacro());
 	toolsMenu->addSeparator();
-	toolsMenu->addAction(inLineCalcAct);
-	toolsMenu->addAction(calcAct);
+	toolsMenu->addAction(m_toolActions->inLineCalc());
+	toolsMenu->addAction(m_toolActions->calc());
 
 	windowMenu = menuBar()->addMenu(tr("&Window"));
 	updateWindowMenu();
@@ -1748,16 +1719,16 @@ void GCodeWorkShop::createToolBars()
 	editToolBar->addAction(m_editActions->find());
 	editToolBar->addAction(m_editActions->replace());
 	editToolBar->addSeparator();
-	editToolBar->addAction(diffAct);
+	editToolBar->addAction(m_toolActions->diff());
 	editToolBar->addSeparator();
-	editToolBar->addAction(diffLAct);
-	editToolBar->addAction(diffRAct);
-	editToolBar->addAction(diffEditorAct);
+	editToolBar->addAction(m_toolActions->diffLeft());
+	editToolBar->addAction(m_toolActions->diffRight());
+	editToolBar->addAction(m_toolActions->diffEditor());
 
 	toolsToolBar = new QToolBar(tr("Tools"));
 	addToolBar(Qt::LeftToolBarArea, toolsToolBar);
 	toolsToolBar->setObjectName("Tools");
-	toolsToolBar->addAction(showSerialToolBarAct);
+	toolsToolBar->addAction(m_toolActions->showSerialToolBar());
 	toolsToolBar->addSeparator();
 	toolsToolBar->addAction(m_addonsActions->insertSpaces());
 	toolsToolBar->addAction(m_addonsActions->removeSpaces());
@@ -1776,7 +1747,7 @@ void GCodeWorkShop::createToolBars()
 	toolsToolBar->addSeparator();
 	toolsToolBar->addAction(m_addonsActions->compileMacro());
 	toolsToolBar->addSeparator();
-	toolsToolBar->addAction(calcAct);
+	toolsToolBar->addAction(m_toolActions->calc());
 	toolsToolBar->addSeparator();
 
 	windowToolBar = addToolBar(tr("Window"));
@@ -1870,7 +1841,7 @@ void GCodeWorkShop::readSettings()
 
 	if (settings.value("SerialToolbarShown", false).toBool()) {
 		createSerialToolBar();
-		showSerialToolBarAct->setChecked(true);
+		m_toolActions->showSerialToolBar()->setChecked(true);
 	}
 
 	if (settings.value("FindToolBarShown", false).toBool()) {
@@ -2403,12 +2374,12 @@ void GCodeWorkShop::createSerialToolBar()
 
 		serialToolBar->addSeparator();
 		serialToolBar->addAction(serialCloseAct);
-	} else if (!showSerialToolBarAct->isChecked()) {
+	} else if (!m_toolActions->showSerialToolBar()->isChecked()) {
 		closeSerialToolbar();
 		return;
 	} else {
 		serialToolBar->show();
-		showSerialToolBarAct->setChecked(true);
+		m_toolActions->showSerialToolBar()->setChecked(true);
 	}
 
 	loadSerialConfignames();
@@ -2421,7 +2392,7 @@ void GCodeWorkShop::closeSerialToolbar()
 	serialToolBar->close();
 	delete (serialToolBar);
 	serialToolBar = nullptr;
-	showSerialToolBarAct->setChecked(false);
+	m_toolActions->showSerialToolBar()->setChecked(false);
 }
 
 void GCodeWorkShop::attachToDirButtonClicked(bool attach)
@@ -3647,7 +3618,6 @@ QMenu* GCodeWorkShop::doContextMenuGCoder(GCoderDocument* doc, const QPoint& pos
 {
 	QMenu* menu = doc->createStandardContextMenu(pos);
 	menu->addSeparator();
-
 	menu->addAction(addonsActions()->semiComment());
 	menu->addAction(addonsActions()->paraComment());
 	menu->addSeparator();
@@ -3655,12 +3625,7 @@ QMenu* GCodeWorkShop::doContextMenuGCoder(GCoderDocument* doc, const QPoint& pos
 	menu->addAction(addonsActions()->blockSkipDecrement());
 	menu->addAction(addonsActions()->blockSkipRemove());
 	menu->addSeparator();
-
-	QAction* inLineCalcAct = new QAction(QIcon(":/images/inlinecalc.png"), tr("Inline calculator"), menu);
-	inLineCalcAct->setShortcut(tr("Ctrl+0"));
-	connect(inLineCalcAct, SIGNAL(triggered()), doc, SLOT(showInLineCalc()));
-	menu->addAction(inLineCalcAct);
-
+	menu->addAction(toolActions()->inLineCalc());
 	return menu;
 }
 

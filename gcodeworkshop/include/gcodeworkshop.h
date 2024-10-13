@@ -77,6 +77,7 @@ namespace GUI {
 namespace Actions {
 class EditActions;
 class FileActions;
+class ToolActions;
 } // namespace Actions
 } // namespace GUI
 
@@ -105,6 +106,7 @@ public:
 	Addons::Actions* addonsActions();
 	GUI::Actions::EditActions* editActions();
 	GUI::Actions::FileActions* fileActions();
+	GUI::Actions::ToolActions* toolActions();
 	DocumentManager* documentManager() const;
 	Document* activeDocument() const;
 	GCoderDocument* activeGCoderDocument() const;
@@ -142,6 +144,7 @@ protected:
 	Addons::Actions* m_addonsActions;
 	GUI::Actions::EditActions* m_editActions;
 	GUI::Actions::FileActions* m_fileActions;
+	GUI::Actions::ToolActions* m_toolActions;
 
 public:
 	void openFile(const QString& fileName);
@@ -386,13 +389,6 @@ private:
 	QAction* aboutQtAct;
 	QAction* createGlobalToolTipsAct;
 	QAction* createUserToolTipsAct;
-	QAction* inLineCalcAct;
-
-	QAction* calcAct;
-	QAction* diffLAct;
-	QAction* diffRAct;
-	QAction* diffAct;
-	QAction* diffEditorAct;
 
 	QProcess* proc;
 	QProcess* sfsProc;
@@ -421,7 +417,6 @@ private:
 	QCheckBox* mCheckIgnoreComments;
 
 	QPointer<QToolBar> serialToolBar;
-	QAction* showSerialToolBarAct;
 	QAction* configPortAct;
 	QAction* receiveAct;
 	QAction* sendAct;
