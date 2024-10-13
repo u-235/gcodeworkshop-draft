@@ -24,6 +24,8 @@
 #define GCODEWORKSHOP_H
 
 #include <QByteArray>   // for QByteArray
+// Special for the moc_gcodeworkshop.cpp
+#include <QKeySequence> // IWYU pragma: keep
 #include <QMainWindow>  // for QMainWindow
 #include <QObject>      // for slots, Q_OBJECT, signals
 #include <QPoint>       // for QPoint
@@ -45,6 +47,7 @@ class QFileSystemModel;
 class QFileSystemWatcher;
 class QLabel;
 class QLineEdit;
+template <class Key, class T> class QMap;
 class QMdiSubWindow;
 class QMenu;
 class QModelIndex;
@@ -104,6 +107,11 @@ public:
 	 */
 	void dragEnterEvent(QDragEnterEvent* event) override;
 	void dropEvent(QDropEvent* event) override;
+
+signals:
+	void updateTranslations();
+	void updateIcons();
+	void updateShortcuts(const QMap<QString, QKeySequence>&);
 
 protected:
 	Ui::GCodeWorkShop* ui;
