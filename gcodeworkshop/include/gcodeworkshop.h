@@ -90,6 +90,7 @@ public:
 	void resizeEvent(QResizeEvent* event);
 	void moveEvent(QMoveEvent* event);
 
+	QMainWindow* mainWindow();
 	Addons::Actions* addonsActions();
 	DocumentManager* documentManager() const;
 	Document* activeDocument() const;
