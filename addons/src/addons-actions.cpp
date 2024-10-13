@@ -22,17 +22,22 @@
 #include <QAction>          // for QAction
 #include <QApplication>     // for QApplication
 #include <QIcon>            // for QIcon
+#include <QList>            // for QList<>::iterator
+#include <QLatin1String>    // for QLatin1String
+#include <QMainWindow>      // for QMainWindow
 #include <QMessageBox>      // for QMessageBox
 #include <QStringList>      // for QStringList
 #include <Qt>               // for BusyCursor
 
-#include <addons-actions.h>
-#include <document.h>           // for Document
-#include <gcoderdocument.h>     // for GCoderDocument
-#include <gcodeworkshop.h>      // for GCodeWorkShop
-#include <ui/longjobhelper.h>   // for LongJobHelper, LongJobHelper::CANCEL
-#include <utils/medium.h>       // for Medium
-#include <utils/splitfile.h>    // for splitFile
+#include <gui/actions/actionkit.h>      // for ActionKit
+#include <addons-actions.h>             // IWYU pragma: associated
+#include <document.h>                   // for Document
+#include <gcoderdocument.h>             // for GCoderDocument
+#include <gcodeworkshop.h>              // for GCodeWorkShop
+#include <gui/actions/knownactions.h>   // for KnownActions
+#include <ui/longjobhelper.h>           // for LongJobHelper, LongJobHelper::CANCEL
+#include <utils/medium.h>               // for Medium
+#include <utils/splitfile.h>            // for splitFile
 
 #include "addons-context.h" // for Context, Context::ALL, Context::SELECTED, Context::SELECTED_BLOCKS
 
@@ -53,125 +58,222 @@
 #include "triangle/addons-triangle.h"
 
 
-Addons::Actions::Actions(GCodeWorkShop* parent) : QObject(parent),
-	m_app(parent),
-	m_bhc(new QAction(this)),
-	m_blockSkipDecrement(new QAction(this)),
-	m_blockSkipIncrement(new QAction(this)),
-	m_blockSkipRemove(new QAction(this)),
-	m_chamfer(new QAction(this)),
-	m_cleanUp(new QAction(this)),
-	m_paraComment(new QAction(this)),
-	m_semiComment(new QAction(this)),
-	m_compileMacro(new QAction(this)),
-	m_dot(new QAction(this)),
-	m_insertEmptyLines(new QAction(this)),
-	m_removeEmptyLines(new QAction(this)),
-	m_feeds(new QAction(this)),
-	m_i2m(new QAction(this)),
-	m_i2mProg(new QAction(this)),
-	m_renumber(new QAction(this)),
-	m_insertSpaces(new QAction(this)),
-	m_removeSpaces(new QAction(this)),
-	m_splitProgramms(new QAction(this)),
-	m_swapAxes(new QAction(this)),
-	m_triangle(new QAction(this))
-{
-	connect(m_bhc, SIGNAL(triggered()), this, SLOT(doBhc()));
-	connect(m_blockSkipDecrement, SIGNAL(triggered()), this, SLOT(doBlockSkipDecrement()));
-	connect(m_blockSkipIncrement, SIGNAL(triggered()), this, SLOT(doBlockSkipIncrement()));
-	connect(m_blockSkipRemove, SIGNAL(triggered()), this, SLOT(doBlockSkipRemove()));
-	connect(m_chamfer, SIGNAL(triggered()), this, SLOT(doChamfer()));
-	connect(m_cleanUp, SIGNAL(triggered()), this, SLOT(doCleanUp()));
-	connect(m_paraComment, SIGNAL(triggered()), this, SLOT(doParaComment()));
-	connect(m_semiComment, SIGNAL(triggered()), this, SLOT(doSemiComment()));
-	connect(m_compileMacro, SIGNAL(triggered()), this, SLOT(doCompileMacro()));
-	connect(m_dot, SIGNAL(triggered()), this, SLOT(doDot()));
-	connect(m_insertEmptyLines, SIGNAL(triggered()), this, SLOT(doInsertEmptyLines()));
-	connect(m_removeEmptyLines, SIGNAL(triggered()), this, SLOT(doRemoveEmptyLines()));
-	connect(m_feeds, SIGNAL(triggered()), this, SLOT(doFeeds()));
-	connect(m_i2m, SIGNAL(triggered()), this, SLOT(doI2M()));
-	connect(m_i2mProg, SIGNAL(triggered()), this, SLOT(doI2MProg()));
-	connect(m_renumber, SIGNAL(triggered()), this, SLOT(doRenumber()));
-	connect(m_insertSpaces, SIGNAL(triggered()), this, SLOT(doInsertSpaces()));
-	connect(m_removeSpaces, SIGNAL(triggered()), this, SLOT(doRemoveSpaces()));
-	connect(m_splitProgramms, SIGNAL(triggered()), this, SLOT(doSplitProgramms()));
-	connect(m_swapAxes, SIGNAL(triggered()), this, SLOT(doSwapAxes()));
-	connect(m_triangle, SIGNAL(triggered()), this, SLOT(doTriangle()));
+using ActionId = GUI::Actions::KnownActions::Addons;
 
-	loadIcons();
-	loadTranslations();
+
+Addons::Actions::Actions(GCodeWorkShop* parent) :
+	GUI::Actions::ActionKit(parent),
+	m_app(parent)
+{
+	connect(makeAction(ActionId::BHC), SIGNAL(triggered()), this, SLOT(doBhc()));
+	connect(makeAction(ActionId::BLOCK_SKIP_DECREMENT), SIGNAL(triggered()), this, SLOT(doBlockSkipDecrement()));
+	connect(makeAction(ActionId::BLOCK_SKIP_INCREMENT), SIGNAL(triggered()), this, SLOT(doBlockSkipIncrement()));
+	connect(makeAction(ActionId::BLOCK_SKIP_REMOVE), SIGNAL(triggered()), this, SLOT(doBlockSkipRemove()));
+	connect(makeAction(ActionId::CHAMFER), SIGNAL(triggered()), this, SLOT(doChamfer()));
+	connect(makeAction(ActionId::CLEANUP), SIGNAL(triggered()), this, SLOT(doCleanUp()));
+	connect(makeAction(ActionId::COMMENT_PARA), SIGNAL(triggered()), this, SLOT(doParaComment()));
+	connect(makeAction(ActionId::COMMENT_SEMI), SIGNAL(triggered()), this, SLOT(doSemiComment()));
+	connect(makeAction(ActionId::COMPILE_MACRO), SIGNAL(triggered()), this, SLOT(doCompileMacro()));
+	connect(makeAction(ActionId::DOT), SIGNAL(triggered()), this, SLOT(doDot()));
+	connect(makeAction(ActionId::EMPTY_LINE_INSERT), SIGNAL(triggered()), this, SLOT(doInsertEmptyLines()));
+	connect(makeAction(ActionId::EMPTY_LINE_REMOVE), SIGNAL(triggered()), this, SLOT(doRemoveEmptyLines()));
+	connect(makeAction(ActionId::FEEDS), SIGNAL(triggered()), this, SLOT(doFeeds()));
+	connect(makeAction(ActionId::I2M), SIGNAL(triggered()), this, SLOT(doI2M()));
+	connect(makeAction(ActionId::I2MPROG), SIGNAL(triggered()), this, SLOT(doI2MProg()));
+	connect(makeAction(ActionId::RENUMBER), SIGNAL(triggered()), this, SLOT(doRenumber()));
+	connect(makeAction(ActionId::SPACES_INSERT), SIGNAL(triggered()), this, SLOT(doInsertSpaces()));
+	connect(makeAction(ActionId::SPACES_REMOVE), SIGNAL(triggered()), this, SLOT(doRemoveSpaces()));
+	connect(makeAction(ActionId::SPLIT_PROGRAMMS), SIGNAL(triggered()), this, SLOT(doSplitProgramms()));
+	connect(makeAction(ActionId::SWAP_AXES), SIGNAL(triggered()), this, SLOT(doSwapAxes()));
+	connect(makeAction(ActionId::TRIANGLE), SIGNAL(triggered()), this, SLOT(doTriangle()));
+
+	connect(parent, SIGNAL(updateIcons()), this, SLOT(loadIcons()));
+	connect(parent, SIGNAL(updateTranslations()), this, SLOT(loadTranslations()));
+	connect(parent, SIGNAL(updateShortcuts(const QMap<QString, QKeySequence>&)), this,
+	        SLOT(loadShortcuts(const QMap<QString, QKeySequence>&)));
+
+	Actions::loadIcons();
+	Actions::loadTranslations();
+}
+
+Addons::Actions::~Actions()
+{
 }
 
 void Addons::Actions::loadTranslations()
 {
-	m_bhc->setText(tr("&Bolt hole circle"));
-	m_bhc->setToolTip(tr("Calculate bolt hole's positions"));
-	m_blockSkipDecrement->setText(tr("Block Skip -"));
-	m_blockSkipDecrement->setToolTip(tr("Insert/decrease Block Skip /"));
-	m_blockSkipIncrement->setText(tr("Block Skip +"));
-	m_blockSkipIncrement->setToolTip(tr("Insert/increase Block Skip /"));
-	m_blockSkipRemove->setText(tr("Block Skip remove"));
-	m_blockSkipRemove->setToolTip(tr("Remove Block Skip /"));
-	m_chamfer->setText(tr("Chamfer"));
-	m_chamfer->setToolTip(tr("Calculate chamfer"));
-	m_cleanUp->setText(tr("Clean &up"));
-	m_cleanUp->setToolTip(tr("Remove text using regular expressions"));
-	m_paraComment->setText(tr("Comment ()"));
-	m_paraComment->setToolTip(tr("Comment/uncomment selected text using parentheses"));
-	m_semiComment->setText(tr("Comment ;"));
-	m_semiComment->setToolTip(tr("Comment/uncomment selected text using semicolon"));
-	m_compileMacro->setText(tr("Compile macro - experimental"));
-	m_compileMacro->setToolTip(tr("Translate EdytorNC macro into CNC program"));
-	m_dot->setText(tr("Insert dots"));
-	m_dot->setToolTip(tr("Inserts decimal dot"));
-	m_insertEmptyLines->setText(tr("Insert empty lines"));
-	m_insertEmptyLines->setToolTip(tr("Inserts empty lines"));
-	m_removeEmptyLines->setText(tr("Remove empty lines"));
-	m_removeEmptyLines->setToolTip(tr("Removes empty lines"));
-	m_feeds->setText(tr("Feed's speed's"));
-	m_feeds->setToolTip(tr("Calculate speed, feed, cutting speed"));
-	m_i2m->setText(tr("Convert inch <-> mm"));
-	m_i2m->setToolTip(tr("Convert inch <-> mm"));
-	m_i2mProg->setText(tr("Convert program inch <-> mm"));
-	m_i2mProg->setToolTip(tr("Convert program inch <-> mm"));
-	m_renumber->setText(tr("Renumber"));
-	m_renumber->setToolTip(tr("Renumber program blocks"));
-	m_insertSpaces->setText(tr("&Insert spaces"));
-	m_insertSpaces->setToolTip(tr("Inserts spaces"));
-	m_removeSpaces->setText(tr("Remove spaces"));
-	m_removeSpaces->setToolTip(tr("Removes spaces"));
-	m_splitProgramms->setText(tr("Split file"));
-	m_splitProgramms->setToolTip(tr("Split file"));
-	m_swapAxes->setText(tr("Swap axes"));
-	m_swapAxes->setToolTip(tr("Swap/modify axes, selected text or entire program"));
-	m_triangle->setText(tr("Solution of triangles"));
-	m_triangle->setToolTip(tr("Solution of triangles"));
+	setActionText(ActionId::BHC, tr("&Bolt hole circle"));
+	setActionExToolTip(ActionId::BHC, tr("Calculate bolt hole's positions"));
+	setActionText(ActionId::BLOCK_SKIP_DECREMENT, tr("Block Skip -"));
+	setActionExToolTip(ActionId::BLOCK_SKIP_DECREMENT, tr("Insert/decrease Block Skip /"));
+	setActionText(ActionId::BLOCK_SKIP_INCREMENT, tr("Block Skip +"));
+	setActionExToolTip(ActionId::BLOCK_SKIP_INCREMENT, tr("Insert/increase Block Skip /"));
+	setActionText(ActionId::BLOCK_SKIP_REMOVE, tr("Block Skip remove"));
+	setActionExToolTip(ActionId::BLOCK_SKIP_REMOVE, tr("Remove Block Skip /"));
+	setActionText(ActionId::CHAMFER, tr("Chamfer"));
+	setActionExToolTip(ActionId::CHAMFER, tr("Calculate chamfer"));
+	setActionText(ActionId::CLEANUP, tr("Clean &up"));
+	setActionExToolTip(ActionId::CLEANUP, tr("Remove text using regular expressions"));
+	setActionText(ActionId::COMMENT_PARA, tr("Comment ()"));
+	setActionExToolTip(ActionId::COMMENT_PARA, tr("Comment/uncomment selected text using parentheses"));
+	setActionText(ActionId::COMMENT_SEMI, tr("Comment ;"));
+	setActionExToolTip(ActionId::COMMENT_SEMI, tr("Comment/uncomment selected text using semicolon"));
+	setActionText(ActionId::COMPILE_MACRO, tr("Compile macro - experimental"));
+	setActionExToolTip(ActionId::COMPILE_MACRO, tr("Translate EdytorNC macro into CNC program"));
+	setActionText(ActionId::DOT, tr("Insert dots"));
+	setActionExToolTip(ActionId::DOT, tr("Inserts decimal dot"));
+	setActionText(ActionId::EMPTY_LINE_INSERT, tr("Insert empty lines"));
+	setActionExToolTip(ActionId::EMPTY_LINE_INSERT, tr("Inserts empty lines"));
+	setActionText(ActionId::EMPTY_LINE_REMOVE, tr("Remove empty lines"));
+	setActionExToolTip(ActionId::EMPTY_LINE_REMOVE, tr("Removes empty lines"));
+	setActionText(ActionId::FEEDS, tr("Feed's speed's"));
+	setActionExToolTip(ActionId::FEEDS, tr("Calculate speed, feed, cutting speed"));
+	setActionText(ActionId::I2M, tr("Convert inch <-> mm"));
+	setActionExToolTip(ActionId::I2M, tr("Convert inch <-> mm"));
+	setActionText(ActionId::I2MPROG, tr("Convert program inch <-> mm"));
+	setActionExToolTip(ActionId::I2MPROG, tr("Convert program inch <-> mm"));
+	setActionText(ActionId::RENUMBER, tr("Renumber"));
+	setActionExToolTip(ActionId::RENUMBER, tr("Renumber program blocks"));
+	setActionText(ActionId::SPACES_INSERT, tr("&Insert spaces"));
+	setActionExToolTip(ActionId::SPACES_INSERT, tr("Inserts spaces"));
+	setActionText(ActionId::SPACES_REMOVE, tr("Remove spaces"));
+	setActionExToolTip(ActionId::SPACES_REMOVE, tr("Removes spaces"));
+	setActionText(ActionId::SPLIT_PROGRAMMS, tr("Split file"));
+	setActionExToolTip(ActionId::SPLIT_PROGRAMMS, tr("Split file"));
+	setActionText(ActionId::SWAP_AXES, tr("Swap axes"));
+	setActionExToolTip(ActionId::SWAP_AXES, tr("Swap/modify axes, selected text or entire program"));
+	setActionText(ActionId::TRIANGLE, tr("Solution of triangles"));
+	setActionExToolTip(ActionId::TRIANGLE, tr("Solution of triangles"));
 }
 
 void Addons::Actions::loadIcons()
 {
-	m_bhc->setIcon(QIcon(":/images/bhc.png"));
-	m_blockSkipDecrement->setIcon(QIcon(":/images/blockskip-.png"));
-	m_blockSkipIncrement->setIcon(QIcon(":/images/blockskip+.png"));
-	m_blockSkipRemove->setIcon(QIcon(":/images/blockskipr.png"));
-	m_chamfer->setIcon(QIcon(":/images/chamfer.png"));
-	m_cleanUp->setIcon(QIcon(":/images/cleanup.png"));
-	m_paraComment->setIcon(QIcon(":/images/paracomment.pn"));
-	m_semiComment->setIcon(QIcon(":/images/semicomment.png"));
-	m_compileMacro->setIcon(QIcon(":/images/compfile.png"));
-	m_dot->setIcon(QIcon(":/images/dots.png"));
-	m_insertEmptyLines->setIcon(QIcon(":/images/insertemptylines.png"));
-	m_removeEmptyLines->setIcon(QIcon(":/images/removeemptylines.png"));
-	m_feeds->setIcon(QIcon(":/images/vcf.png"));
-	m_i2m->setIcon(QIcon(":/images/i2m.png"));
-	m_i2mProg->setIcon(QIcon(":/images/i2mprog.png"));
-	m_renumber->setIcon(QIcon(":/images/renumber.png"));
-	m_insertSpaces->setIcon(QIcon(":/images/insertspc.png"));
-	m_removeSpaces->setIcon(QIcon(":/images/removespc.png"));
-	m_splitProgramms->setIcon(QIcon(":/images/split_prog.png"));
-	m_swapAxes->setIcon(QIcon(":/images/swapaxes.png"));
-	m_triangle->setIcon(QIcon(":/images/triangles.png"));
+	setActionIcon(ActionId::BHC, QIcon(":/images/bhc.png"));
+	setActionIcon(ActionId::BLOCK_SKIP_DECREMENT, QIcon(":/images/blockskip-.png"));
+	setActionIcon(ActionId::BLOCK_SKIP_INCREMENT, QIcon(":/images/blockskip+.png"));
+	setActionIcon(ActionId::BLOCK_SKIP_REMOVE, QIcon(":/images/blockskipr.png"));
+	setActionIcon(ActionId::CHAMFER, QIcon(":/images/chamfer.png"));
+	setActionIcon(ActionId::CLEANUP, QIcon(":/images/cleanup.png"));
+	setActionIcon(ActionId::COMMENT_PARA, QIcon(":/images/paracomment.pn"));
+	setActionIcon(ActionId::COMMENT_SEMI, QIcon(":/images/semicomment.png"));
+	setActionIcon(ActionId::COMPILE_MACRO, QIcon(":/images/compfile.png"));
+	setActionIcon(ActionId::DOT, QIcon(":/images/dots.png"));
+	setActionIcon(ActionId::EMPTY_LINE_INSERT, QIcon(":/images/insertemptylines.png"));
+	setActionIcon(ActionId::EMPTY_LINE_REMOVE, QIcon(":/images/removeemptylines.png"));
+	setActionIcon(ActionId::FEEDS, QIcon(":/images/vcf.png"));
+	setActionIcon(ActionId::I2M, QIcon(":/images/i2m.png"));
+	setActionIcon(ActionId::I2MPROG, QIcon(":/images/i2mprog.png"));
+	setActionIcon(ActionId::RENUMBER, QIcon(":/images/renumber.png"));
+	setActionIcon(ActionId::SPACES_INSERT, QIcon(":/images/insertspc.png"));
+	setActionIcon(ActionId::SPACES_REMOVE, QIcon(":/images/removespc.png"));
+	setActionIcon(ActionId::SPLIT_PROGRAMMS, QIcon(":/images/split_prog.png"));
+	setActionIcon(ActionId::SWAP_AXES, QIcon(":/images/swapaxes.png"));
+	setActionIcon(ActionId::TRIANGLE, QIcon(":/images/triangles.png"));
+}
+
+QAction* Addons::Actions::bhc()
+{
+	return action(ActionId::BHC);
+}
+
+QAction* Addons::Actions::blockSkipDecrement()
+{
+	return action(ActionId::BLOCK_SKIP_DECREMENT);
+}
+
+QAction* Addons::Actions::blockSkipIncrement()
+{
+	return action(ActionId::BLOCK_SKIP_INCREMENT);
+}
+
+QAction* Addons::Actions::blockSkipRemove()
+{
+	return action(ActionId::BLOCK_SKIP_REMOVE);
+}
+
+QAction* Addons::Actions::chamfer()
+{
+	return action(ActionId::CHAMFER);
+}
+
+QAction* Addons::Actions::cleanUp()
+{
+	return action(ActionId::CLEANUP);
+}
+
+QAction* Addons::Actions::paraComment()
+{
+	return action(ActionId::COMMENT_PARA);
+}
+
+QAction* Addons::Actions::semiComment()
+{
+	return action(ActionId::COMMENT_SEMI);
+}
+
+QAction* Addons::Actions::compileMacro()
+{
+	return action(ActionId::COMPILE_MACRO);
+}
+
+QAction* Addons::Actions::dot()
+{
+	return action(ActionId::DOT);
+}
+
+QAction* Addons::Actions::insertEmptyLines()
+{
+	return action(ActionId::EMPTY_LINE_INSERT);
+}
+
+QAction* Addons::Actions::removeEmptyLines()
+{
+	return action(ActionId::EMPTY_LINE_REMOVE);
+}
+
+QAction* Addons::Actions::feeds()
+{
+	return action(ActionId::FEEDS);
+}
+
+QAction* Addons::Actions::i2m()
+{
+	return action(ActionId::I2M);
+}
+
+QAction* Addons::Actions::i2mProg()
+{
+	return action(ActionId::I2MPROG);
+}
+
+QAction* Addons::Actions::renumber()
+{
+	return action(ActionId::RENUMBER);
+}
+
+QAction* Addons::Actions::insertSpaces()
+{
+	return action(ActionId::SPACES_INSERT);
+}
+
+QAction* Addons::Actions::removeSpaces()
+{
+	return action(ActionId::SPACES_REMOVE);
+}
+
+QAction* Addons::Actions::splitProgramms()
+{
+	return action(ActionId::SPLIT_PROGRAMMS);
+}
+
+QAction* Addons::Actions::swapAxes()
+{
+	return action(ActionId::SWAP_AXES);
+}
+
+QAction* Addons::Actions::triangle()
+{
+	return action(ActionId::TRIANGLE);
 }
 
 void Addons::Actions::doBhc()

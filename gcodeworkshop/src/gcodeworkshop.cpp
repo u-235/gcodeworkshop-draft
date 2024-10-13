@@ -224,7 +224,6 @@ GCodeWorkShop::GCodeWorkShop(Medium* medium)
 		m_shortcuts.save(cfg);
 	});
 
-	m_addonsActions = new Addons::Actions(this);
 	createActions();
 	createToolBars();
 	createStatusBar();
@@ -1515,6 +1514,8 @@ Document* GCodeWorkShop::createDocument(const QString& type)
 
 void GCodeWorkShop::createActions()
 {
+	m_addonsActions = new Addons::Actions(this);
+
 	newAct = new QAction(QIcon(":/images/filenew.png"), tr("&New"), this);
 	newAct->setShortcut(QKeySequence::New);
 	newAct->setToolTip(tr("Create a new file"));
@@ -1641,27 +1642,6 @@ void GCodeWorkShop::createActions()
 	inLineCalcAct = new QAction(QIcon(":/images/inlinecalc.png"), tr("Inline calculator"), this);
 	inLineCalcAct->setShortcut(tr("Ctrl+0"));
 	connect(inLineCalcAct, SIGNAL(triggered()), this, SLOT(doShowInLineCalc()));
-
-	m_addonsActions->bhc()->setShortcut(tr("F8"));
-	m_addonsActions->blockSkipRemove()->setShortcut(tr("Ctrl+1"));
-	m_addonsActions->blockSkipIncrement()->setShortcut(tr("Ctrl+2"));
-	m_addonsActions->blockSkipDecrement()->setShortcut(tr("Ctrl+3"));
-	//m_addonsActions->chamfer()->setShortcut(tr("F9"));
-	//m_addonsActions->cleanUp()->setShortcut(QKeySequence::Print);
-	m_addonsActions->paraComment()->setShortcut(tr("Ctrl+9"));
-	m_addonsActions->semiComment()->setShortcut(tr("Ctrl+;"));
-	//m_addonsActions->compileMacro()->setShortcut(tr("F9"));
-	m_addonsActions->dot()->setShortcut(tr("F6"));
-	//m_addonsActions->insertEmptyLines()->setShortcut(tr("F5"));
-	//m_addonsActions->removeEmptyLines()->setShortcut(tr("F5"));
-	m_addonsActions->feeds()->setShortcut(tr("F9"));
-	//m_addonsActions->i2m()->setShortcut(tr("F9"));
-	//m_addonsActions->i2mProg()->setShortcut(tr("F9"));
-	m_addonsActions->renumber()->setShortcut(tr("F7"));
-	m_addonsActions->insertSpaces()->setShortcut(tr("F4"));
-	m_addonsActions->removeSpaces()->setShortcut(tr("F5"));
-	//m_addonsActions->swapAxes()->setShortcut(QKeySequence::Save);
-	//m_addonsActions->triangle()->setShortcut(tr("F9"));
 
 	calcAct = new QAction(QIcon(":/images/calc.png"), tr("Calculator"), this);
 	//calcAct->setShortcut(tr("F9"));

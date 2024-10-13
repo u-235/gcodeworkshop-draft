@@ -25,150 +25,49 @@
 
 class QAction;
 
+#include <gui/actions/actionkit.h> // for ActionKit
+
 class GCodeWorkShop;
 
 
 namespace Addons {
-class Actions : public QObject
+class Actions : public GUI::Actions::ActionKit
 {
 	Q_OBJECT
 
 public:
 	explicit Actions(GCodeWorkShop* parent);
+	~Actions();
 
 public slots:
-	void loadTranslations();
-	void loadIcons();
+	void loadTranslations() override;
+	void loadIcons() override;
 
 public:
-	QAction* bhc()
-	{
-		return m_bhc;
-	}
-
-	QAction* blockSkipDecrement()
-	{
-		return m_blockSkipDecrement;
-	}
-
-	QAction* blockSkipIncrement()
-	{
-		return m_blockSkipIncrement;
-	}
-
-	QAction* blockSkipRemove()
-	{
-		return m_blockSkipRemove;
-	}
-
-	QAction* chamfer()
-	{
-		return m_chamfer;
-	}
-
-	QAction* cleanUp()
-	{
-		return m_cleanUp;
-	}
-
-	QAction* paraComment()
-	{
-		return m_paraComment;
-	}
-
-	QAction* semiComment()
-	{
-		return m_semiComment;
-	}
-
-	QAction* compileMacro()
-	{
-		return m_compileMacro;
-	}
-
-	QAction* dot()
-	{
-		return m_dot;
-	}
-
-	QAction* insertEmptyLines()
-	{
-		return m_insertEmptyLines;
-	}
-
-	QAction* removeEmptyLines()
-	{
-		return m_removeEmptyLines;
-	}
-
-	QAction* feeds()
-	{
-		return m_feeds;
-	}
-
-	QAction* i2m()
-	{
-		return m_i2m;
-	}
-
-	QAction* i2mProg()
-	{
-		return m_i2mProg;
-	}
-
-	QAction* renumber()
-	{
-		return m_renumber;
-	}
-
-	QAction* insertSpaces()
-	{
-		return m_insertSpaces;
-	}
-
-	QAction* removeSpaces()
-	{
-		return m_removeSpaces;
-	}
-
-	QAction* splitProgramms()
-	{
-		return m_splitProgramms;
-	}
-
-	QAction* swapAxes()
-	{
-		return m_swapAxes;
-	}
-
-	QAction* triangle()
-	{
-		return m_triangle;
-	}
+	QAction* bhc();
+	QAction* blockSkipDecrement();
+	QAction* blockSkipIncrement();
+	QAction* blockSkipRemove();
+	QAction* chamfer();
+	QAction* cleanUp();
+	QAction* paraComment();
+	QAction* semiComment();
+	QAction* compileMacro();
+	QAction* dot();
+	QAction* insertEmptyLines();
+	QAction* removeEmptyLines();
+	QAction* feeds();
+	QAction* i2m();
+	QAction* i2mProg();
+	QAction* renumber();
+	QAction* insertSpaces();
+	QAction* removeSpaces();
+	QAction* splitProgramms();
+	QAction* swapAxes();
+	QAction* triangle();
 
 protected:
 	GCodeWorkShop* m_app;
-	QAction* m_bhc;
-	QAction* m_blockSkipDecrement;
-	QAction* m_blockSkipIncrement;
-	QAction* m_blockSkipRemove;
-	QAction* m_chamfer;
-	QAction* m_cleanUp;
-	QAction* m_paraComment;
-	QAction* m_semiComment;
-	QAction* m_compileMacro;
-	QAction* m_dot;
-	QAction* m_insertEmptyLines;
-	QAction* m_removeEmptyLines;
-	QAction* m_feeds;
-	QAction* m_i2m;
-	QAction* m_i2mProg;
-	QAction* m_renumber;
-	QAction* m_insertSpaces;
-	QAction* m_removeSpaces;
-	QAction* m_splitProgramms;
-	QAction* m_swapAxes;
-	QAction* m_triangle;
 
 protected slots:
 	void doBhc();
