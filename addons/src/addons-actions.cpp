@@ -28,8 +28,8 @@
 
 #include <addons-actions.h>
 #include <document.h>           // for Document
-#include <gcodeworkshop.h>      // for GCodeWorkShop
 #include <gcoderdocument.h>     // for GCoderDocument
+#include <gcodeworkshop.h>      // for GCodeWorkShop
 #include <ui/longjobhelper.h>   // for LongJobHelper, LongJobHelper::CANCEL
 #include <utils/medium.h>       // for Medium
 #include <utils/splitfile.h>    // for splitFile
@@ -53,7 +53,8 @@
 #include "triangle/addons-triangle.h"
 
 
-Addons::Actions::Actions(QObject* parent) : QObject(parent),
+Addons::Actions::Actions(GCodeWorkShop* parent) : QObject(parent),
+	m_app(parent),
 	m_bhc(new QAction(this)),
 	m_blockSkipDecrement(new QAction(this)),
 	m_blockSkipIncrement(new QAction(this)),
@@ -175,7 +176,7 @@ void Addons::Actions::loadIcons()
 
 void Addons::Actions::doBhc()
 {
-	Addons::doBhc(GCodeWorkShop::instance(), Medium::instance().settings());
+	Addons::doBhc(m_app->mainWindow(), Medium::instance().settings());
 }
 
 void Addons::Actions::doBlockSkip(bool remove, bool inc)
@@ -209,7 +210,7 @@ void Addons::Actions::doBlockSkipRemove()
 
 void Addons::Actions::doChamfer()
 {
-	Addons::doChamfer(GCodeWorkShop::instance(), Medium::instance().settings());
+	Addons::doChamfer(m_app->mainWindow(), Medium::instance().settings());
 }
 
 void Addons::Actions::doCleanUp()
@@ -220,7 +221,7 @@ void Addons::Actions::doCleanUp()
 		return;
 	}
 
-	if (Addons::doCleanUp(GCodeWorkShop::instance(), Medium::instance().settings(), ctx.text())) {
+	if (Addons::doCleanUp(m_app->mainWindow(), Medium::instance().settings(), ctx.text())) {
 		ctx.push();
 	}
 }
@@ -278,14 +279,13 @@ void Addons::Actions::doCompileMacro()
 	}
 
 	Utils::CompileMacro compiler;
-	GCodeWorkShop* enc = GCodeWorkShop::instance();
 
 	if (compiler.compile(ctx.text()) == -1) {
-		QMessageBox::warning(enc, tr("GCodeWorkShop - compile macro"), compiler.status());
+		QMessageBox::warning(m_app->mainWindow(), tr("GCodeWorkShop - compile macro"), compiler.status());
 		//return;
 	}
 
-	GCoderDocument* gdoc = dynamic_cast<GCoderDocument*>(enc->newFile());
+	GCoderDocument* gdoc = dynamic_cast<GCoderDocument*>(m_app->newFile());
 
 	if (gdoc) {
 		gdoc->insertText(compiler.result());
@@ -300,7 +300,7 @@ void Addons::Actions::doDot()
 		return;
 	}
 
-	if (Addons::doDot(GCodeWorkShop::instance(), Medium::instance().settings(), ctx.text())) {
+	if (Addons::doDot(m_app->mainWindow(), Medium::instance().settings(), ctx.text())) {
 		ctx.push();
 	}
 }
@@ -351,12 +351,12 @@ void Addons::Actions::doRemoveEmptyLines()
 
 void Addons::Actions::doFeeds()
 {
-	Addons::doFeeds(GCodeWorkShop::instance(), Medium::instance().settings());
+	Addons::doFeeds(m_app->mainWindow(), Medium::instance().settings());
 }
 
 void Addons::Actions::doI2M()
 {
-	Addons::doI2M(GCodeWorkShop::instance(), Medium::instance().settings());
+	Addons::doI2M(m_app->mainWindow(), Medium::instance().settings());
 }
 
 void Addons::Actions::doI2MProg()
@@ -367,7 +367,7 @@ void Addons::Actions::doI2MProg()
 		return;
 	}
 
-	if (Addons::doI2MProg(GCodeWorkShop::instance(), Medium::instance().settings(), ctx.text())) {
+	if (Addons::doI2MProg(m_app->mainWindow(), Medium::instance().settings(), ctx.text())) {
 		ctx.push();
 	}
 }
@@ -380,7 +380,7 @@ void Addons::Actions::doRenumber()
 		return;
 	}
 
-	if (Addons::doRenumber(GCodeWorkShop::instance(), Medium::instance().settings(), ctx.text())) {
+	if (Addons::doRenumber(m_app->mainWindow(), Medium::instance().settings(), ctx.text())) {
 		ctx.push();
 	}
 }
@@ -393,7 +393,7 @@ void Addons::Actions::doInsertSpaces()
 		return;
 	}
 
-	LongJobHelper helper{GCodeWorkShop::instance()};
+	LongJobHelper helper{m_app->mainWindow()};
 	helper.begin(ctx.text().length(), tr("Inserting space"));
 
 	int changed = Utils::insertSpaces(ctx.text(), [&helper](int pos) -> bool{
@@ -415,7 +415,7 @@ void Addons::Actions::doRemoveSpaces()
 		return;
 	}
 
-	LongJobHelper helper{GCodeWorkShop::instance()};
+	LongJobHelper helper{m_app->mainWindow()};
 	helper.begin(ctx.text().length(), tr("Removing space"));
 
 	int changed = Utils::removeSpaces(ctx.text(), [&helper](int pos) -> bool{
@@ -447,7 +447,7 @@ void Addons::Actions::doSplitProgramms()
 	}
 
 	for (QString it : list) {
-		GCoderDocument* gdoc = dynamic_cast<GCoderDocument*>(GCodeWorkShop::instance()->newFile());
+		GCoderDocument* gdoc = dynamic_cast<GCoderDocument*>(m_app->newFile());
 
 		if (gdoc == nullptr) {
 			continue;
@@ -468,12 +468,12 @@ void Addons::Actions::doSwapAxes()
 		return;
 	}
 
-	if (Addons::doSwapAxes(GCodeWorkShop::instance(), Medium::instance().settings(), ctx.text())) {
+	if (Addons::doSwapAxes(m_app->mainWindow(), Medium::instance().settings(), ctx.text())) {
 		ctx.push();
 	}
 }
 
 void Addons::Actions::doTriangle()
 {
-	Addons::doTriangle(GCodeWorkShop::instance(), Medium::instance().settings());
+	Addons::doTriangle(m_app->mainWindow(), Medium::instance().settings());
 }

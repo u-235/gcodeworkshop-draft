@@ -312,6 +312,11 @@ void GCodeWorkShop::dropEvent(QDropEvent* event)
 	event->acceptProposedAction();
 }
 
+QMainWindow* GCodeWorkShop::mainWindow()
+{
+	return this;
+}
+
 Addons::Actions* GCodeWorkShop::addonsActions()
 {
 	return m_addonsActions;
@@ -353,7 +358,7 @@ void GCodeWorkShop::closeAllMdiWindows()
 void GCodeWorkShop::closeEvent(QCloseEvent* event)
 {
 	if (m_fileServer) {
-		QMessageBox::StandardButton result = QMessageBox::warning(this,
+		QMessageBox::StandardButton result = QMessageBox::warning(mainWindow(),
 		                                     tr("GCodeWorkShop - Serial port file server"),
 		                                     tr("Serial port file server is running.\nClose anyway?"),
 		                                     QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
@@ -383,7 +388,7 @@ Document* GCodeWorkShop::newFileFromTemplate()
 {
 	Document* doc = 0;
 
-	newFileDialog* newFileDlg = new newFileDialog(this);
+	newFileDialog* newFileDlg = new newFileDialog(mainWindow());
 	int result = newFileDlg->exec();
 
 	if (result == QDialog::Accepted) {
@@ -435,7 +440,7 @@ void GCodeWorkShop::open(const QDir& dir)
 	const QString& filters = getFilters(m_extensions);
 
 	QStringList files = QFileDialog::getOpenFileNames(
-	                        this,
+	                        mainWindow(),
 	                        tr("Select one or more files to open"),
 	                        dir.canonicalPath(),
 	                        filters, 0);
@@ -512,7 +517,7 @@ bool GCodeWorkShop::save(Document* doc, bool forceSaveAs)
 		}
 
 		QString newFileName = QFileDialog::getSaveFileName(
-		                          this,
+		                          mainWindow(),
 		                          tr("Save file as..."),
 		                          doc->dir().filePath(oldFileName),
 		                          filters, nullptr, QFileDialog::DontConfirmOverwrite);
@@ -523,7 +528,7 @@ bool GCodeWorkShop::save(Document* doc, bool forceSaveAs)
 
 		if (QFile::exists(newFileName)) {
 			QMessageBox msgBox;
-			msgBox.setParent(this, Qt::Dialog);
+			msgBox.setParent(mainWindow(), Qt::Dialog);
 			msgBox.setText(tr("<b>File \"%1\" exists.</b>").arg(newFileName));
 			msgBox.setInformativeText(tr("Do you want overwrite it ?"));
 			msgBox.setStandardButtons(QMessageBox::Save | QMessageBox::Discard);
@@ -557,7 +562,7 @@ bool GCodeWorkShop::save()
 	if (saved) {
 		statusBar()->showMessage(tr("File saved"), 5000);
 	} else {
-		QMessageBox::warning(this, tr("GCodeWorkShop"), tr("Cannot write file \"%1\".\n %2")
+		QMessageBox::warning(mainWindow(), tr("GCodeWorkShop"), tr("Cannot write file \"%1\".\n %2")
 		                     .arg(doc->filePath()).arg(doc->ioErrorString()));
 	}
 
@@ -575,7 +580,7 @@ bool GCodeWorkShop::saveAll()
 				i++;
 			} else {
 				saved = false;
-				QMessageBox::warning(this, tr("GCodeWorkShop"), tr("Cannot write file \"%1\".\n %2")
+				QMessageBox::warning(mainWindow(), tr("GCodeWorkShop"), tr("Cannot write file \"%1\".\n %2")
 				                     .arg(doc->filePath()).arg(doc->ioErrorString()));
 			}
 		}
@@ -598,7 +603,7 @@ bool GCodeWorkShop::saveAs()
 	if (saved) {
 		statusBar()->showMessage(tr("File saved"), 5000);
 	} else {
-		QMessageBox::warning(this, tr("GCodeWorkShop"), tr("Cannot write file \"%1\".\n %2")
+		QMessageBox::warning(mainWindow(), tr("GCodeWorkShop"), tr("Cannot write file \"%1\".\n %2")
 		                     .arg(doc->filePath()).arg(doc->ioErrorString()));
 	}
 
@@ -622,7 +627,7 @@ bool GCodeWorkShop::maybeSave(Document* doc)
 {
 	if (doc->isModified()) {
 		QMessageBox msgBox;
-		msgBox.setParent(this, Qt::Dialog);
+		msgBox.setParent(mainWindow(), Qt::Dialog);
 		msgBox.setText(tr("<b>File: \"%1\"\n has been modified.</b>").arg(doc->filePath()));
 		msgBox.setInformativeText(tr("Do you want to save your changes ?"));
 		msgBox.setStandardButtons(QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
@@ -665,7 +670,7 @@ void GCodeWorkShop::printFile()
 
 		printer.setOutputFormat(QPrinter::NativeFormat);
 
-		QPrintDialog dialog(&printer, this);
+		QPrintDialog dialog(&printer, mainWindow());
 		dialog.setWindowTitle(tr("Print Document"));
 
 		if (gdoc->hasSelection()) {
@@ -701,7 +706,7 @@ void GCodeWorkShop::filePrintPreview()
 			printer.setPrintRange(QPrinter::Selection);
 		}
 
-		QPrintPreviewDialog preview(&printer, this);
+		QPrintPreviewDialog preview(&printer, mainWindow());
 		preview.setWindowFlags(Qt::Window);
 		connect(&preview, SIGNAL(paintRequested(QPrinter*)), SLOT(printPreview(QPrinter*)));
 		preview.exec();
@@ -951,7 +956,7 @@ void GCodeWorkShop::config()
 	config.disableFileChangeMonitor = m_disableFileChangeMonitor;
 	config.startEmpty = m_startEmpty;
 	config.gcodeConverterOptions = GCode::Converter::defaultOptions();
-	SetupDialog* setUpDialog = new SetupDialog(this, &config);
+	SetupDialog* setUpDialog = new SetupDialog(mainWindow(), &config);
 
 	if (setUpDialog->exec() == QDialog::Accepted) {
 		config = setUpDialog->getSettings();
@@ -1122,7 +1127,7 @@ void GCodeWorkShop::diffEditorFile()
 		QFile file(fileName1);
 
 		if (!file.open(QIODevice::WriteOnly)) {
-			QMessageBox::warning(this, tr("GCodeWorkShop"),
+			QMessageBox::warning(mainWindow(), tr("GCodeWorkShop"),
 			                     tr("Cannot write tmp file \"%1\".\n %2")
 			                     .arg(QDir::toNativeSeparators(fileName1))
 			                     .arg(file.errorString()));
@@ -1176,7 +1181,7 @@ void GCodeWorkShop::doDiff()
 void GCodeWorkShop::doCalc()
 {
 	if (!QFile::exists(m_calcBinary)) {
-		QMessageBox::information(this, tr("Information"),
+		QMessageBox::information(mainWindow(), tr("Information"),
 		                         tr("Set correct calculator program name in configuration dialog."));
 		return;
 	}
@@ -1255,7 +1260,7 @@ void GCodeWorkShop::activeWindowChanged(QMdiSubWindow* window)
 
 void GCodeWorkShop::about()
 {
-	QMessageBox::about(this, tr("About GCodeWorkShop"),
+	QMessageBox::about(mainWindow(), tr("About GCodeWorkShop"),
 	                   tr("The <b>GCodeWorkShop</b> is text editor for CNC programmers."
 	                      "<br>This is a fork of <a href='https://github.com/artur3/EdytorNC'>EdytorNC</a>."
 	                      "<P>Version: %1"
@@ -2221,7 +2226,7 @@ void GCodeWorkShop::loadFile(const DocumentInfo::Ptr& info, bool checkAlreadyLoa
 			m_recentFiles->add(info->filePath);
 			fileTreeViewChangeRootDir();
 		} else {
-			QMessageBox::warning(this, tr("GCodeWorkShop"), tr("Cannot read file \"%1\".\n %2")
+			QMessageBox::warning(mainWindow(), tr("GCodeWorkShop"), tr("Cannot read file \"%1\".\n %2")
 			                     .arg(doc->filePath()).arg(doc->ioErrorString()));
 			doc->close();
 		}
@@ -2711,7 +2716,7 @@ void GCodeWorkShop::projectAdd()
 	                     "Pictures (*.jpg *.bmp *.svg);;"
 	                     "Text files (*.txt)");
 	QStringList files = QFileDialog::getOpenFileNames(
-	                        this,
+	                        mainWindow(),
 	                        tr("Add files to project"),
 	                        lastOpenedPath(),
 	                        filters, 0);
@@ -2929,7 +2934,7 @@ QString GCodeWorkShop::projectSelectName()
 {
 	QString filters = tr("GCodeWorkShop project file (*.ncp)");
 	QString file = QFileDialog::getSaveFileName(
-	                   this,
+	                   mainWindow(),
 	                   tr("Select the project name and location..."),
 	                   currentProjectName,
 	                   filters);
@@ -2945,7 +2950,7 @@ void GCodeWorkShop::projectOpen()
 
 	QString filters = tr("GCodeWorkShop project file (*.ncp)");
 	QString fileName = QFileDialog::getOpenFileName(
-	                       this,
+	                       mainWindow(),
 	                       tr("Open the project file..."),
 	                       currentProjectName,
 	                       filters);
@@ -3076,7 +3081,7 @@ bool GCodeWorkShop::maybeSaveProject()
 {
 	if (currentProjectModified) {
 		QMessageBox msgBox;
-		msgBox.setParent(this, Qt::Dialog);
+		msgBox.setParent(mainWindow(), Qt::Dialog);
 		msgBox.setText(tr("<b>Project: \"%1\"\n has been modified.</b>").arg(currentProjectName));
 		msgBox.setInformativeText(tr("Do you want to save your changes ?"));
 		msgBox.setStandardButtons(QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
@@ -3318,7 +3323,7 @@ bool GCodeWorkShop::event(QEvent* event)
 				key = "<p style='white-space:pre'>";
 			}
 
-			QToolTip::showText(helpEvent->globalPos(), key + text, this, QRect());
+			QToolTip::showText(helpEvent->globalPos(), key + text, mainWindow(), QRect());
 		} else {
 			QToolTip::hideText();
 			event->ignore();
@@ -3394,7 +3399,7 @@ void GCodeWorkShop::storeFileInfoInSession()
 
 void GCodeWorkShop::showSessionDialog()
 {
-	SessionDialog sesDialog(this, m_sessionManager);
+	SessionDialog sesDialog(mainWindow(), m_sessionManager);
 	sesDialog.exec();
 }
 
@@ -3458,7 +3463,7 @@ void GCodeWorkShop::loadPrinterSettings(QPrinter* printer)
 
 void GCodeWorkShop::serialConfig()
 {
-	SerialPortConfigDialog* serialConfigDialog = new SerialPortConfigDialog(this,
+	SerialPortConfigDialog* serialConfigDialog = new SerialPortConfigDialog(mainWindow(),
 	        configBox->currentText());
 
 	if (serialConfigDialog->exec() == QDialog::Accepted) {
@@ -3491,7 +3496,7 @@ void GCodeWorkShop::loadSerialConfignames()
 
 void GCodeWorkShop::serialConfigTest()
 {
-	SerialPortTestDialog* trDialog = new SerialPortTestDialog(this);
+	SerialPortTestDialog* trDialog = new SerialPortTestDialog(mainWindow());
 
 	trDialog->show();
 }
@@ -3512,7 +3517,7 @@ void GCodeWorkShop::sendButtonClicked()
 
 	tx.append(gdoc->text());
 
-	SerialTransmissionDialog transmissionDialog(this);
+	SerialTransmissionDialog transmissionDialog(mainWindow());
 	transmissionDialog.sendData(tx, configBox->currentText());
 
 	receiveAct->setEnabled(true);
@@ -3528,7 +3533,7 @@ void GCodeWorkShop::receiveButtonClicked()
 	commAppAct->setEnabled(false);
 	QApplication::setOverrideCursor(Qt::BusyCursor);
 
-	SerialTransmissionDialog transmissionDialog(this);
+	SerialTransmissionDialog transmissionDialog(mainWindow());
 	QStringList progList = transmissionDialog.receiveData(configBox->currentText());
 
 	if (!progList.isEmpty()) {
@@ -3582,6 +3587,7 @@ void GCodeWorkShop::fileChanged(const QString& fileName)
 	fileChangeMonitor->addPath(fileName);
 
 	QMessageBox msgBox;
+	msgBox.setParent(mainWindow(), Qt::Dialog);
 	msgBox.setText(tr("File \"%1\" <b>was modified on disk.</b><p>Do you want to reload it?</p>%2")
 	               .arg(fileName)
 	               .arg((modified ? tr("<p><b>Warning:</b> File in editor contains unsaved changes.</p>") : "")));
@@ -3643,7 +3649,7 @@ void GCodeWorkShop::clipboardChanged()
 	QFont font;
 	bool notFound = true;
 
-	if (!isActiveWindow()) {
+	if (!mainWindow()->isActiveWindow()) {
 		return;
 	}
 

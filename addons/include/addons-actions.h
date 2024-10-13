@@ -25,6 +25,8 @@
 
 class QAction;
 
+class GCodeWorkShop;
+
 
 namespace Addons {
 class Actions : public QObject
@@ -32,7 +34,7 @@ class Actions : public QObject
 	Q_OBJECT
 
 public:
-	explicit Actions(QObject* parent = nullptr);
+	explicit Actions(GCodeWorkShop* parent);
 
 public slots:
 	void loadTranslations();
@@ -145,6 +147,7 @@ public:
 	}
 
 protected:
+	GCodeWorkShop* m_app;
 	QAction* m_bhc;
 	QAction* m_blockSkipDecrement;
 	QAction* m_blockSkipIncrement;
