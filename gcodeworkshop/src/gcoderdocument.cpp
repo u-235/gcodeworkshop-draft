@@ -90,7 +90,7 @@ GCoderDocument::GCoderDocument() : Document(nullptr)
 	m_inLineCalc = new InLineCalc(m_textEdit);
 	connect(m_inLineCalc, &InLineCalc::complete, this, &GCoderDocument::inLineCalcComplete);
 
-	m_textEdit->setWindowIcon(QIcon(":/images/ncfile.png"));
+	m_textEdit->setWindowIcon(QIcon(":/images/mime-gcode.png"));
 	m_textEdit->setContextMenuPolicy(Qt::CustomContextMenu);
 	connect(m_textEdit, &QPlainTextEdit::customContextMenuRequested, this, &GCoderDocument::customContextMenuRequest);
 	connect(m_textEdit, &QPlainTextEdit::cursorPositionChanged, this, &GCoderDocument::cursorMoved);

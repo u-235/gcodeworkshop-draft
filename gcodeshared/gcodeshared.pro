@@ -64,4 +64,4 @@ FORMS += src/utils/configdialog.ui
 # resources
 #######################################
 
-RESOURCES = application.qrc
+RESOURCES = images/default/application.qrc
