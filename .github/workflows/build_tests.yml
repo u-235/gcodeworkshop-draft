@@ -33,7 +33,7 @@ jobs:
         config:
         - {
             name:     Win_x64,
-            os:       windows-2019,
+            os:       windows-2025,
             q_extra:  "",
             build:    nmake
           }
@@ -44,8 +44,8 @@ jobs:
             build:    make
           }
         - {
-            name:     macOS_x64,
-            os:       macos-13,
+            name:     macOS_arm64,
+            os:       macos-14,
             # https://stackoverflow.com/a/77631382
             q_extra:  "-early QMAKE_DEFAULT_LIBDIRS=$(xcrun -show-sdk-path)/usr/lib",
             build:    make
