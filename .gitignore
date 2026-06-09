@@ -1,19 +1,23 @@
-
-bin/
+# Build & artefacts
 build/
-doc/html
-lang/*.qm
+*.deb
+*.exe
+*.rpm
+*.zip
 
-/gcodeworkshop_top.pro.user*
-*.autosave
+# Generated docs
+doc/html/
 
-/Makefile
-/src/Makefile*
+# Qmake project files
+*.pro.user*
 
-/3rdparty/lib/*release
-/3rdparty/lib/*debug
-/3rdparty/Makefile
-/3rdparty/*/Makefile
+# Cmake project files
+CMakeLists.txt.user*
+CMakeUserPresets.json
+compile_commands.json
 
-*object_script.*
-*.stash
+# KDev project files
+*.kdev4*
+
+# Qt Creator files
+.qtcreator/
