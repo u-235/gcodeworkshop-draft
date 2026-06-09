@@ -90,6 +90,7 @@ ${PACKAGE_INSTALL_PREFIX}/share/gcodeworkshop/lang/gcodeworkshop_fi.qm
 ${PACKAGE_INSTALL_PREFIX}/share/gcodeworkshop/lang/gcodeworkshop_nl.qm
 ${PACKAGE_INSTALL_PREFIX}/share/gcodeworkshop/lang/gcodeworkshop_pl.qm
 ${PACKAGE_INSTALL_PREFIX}/share/gcodeworkshop/lang/gcodeworkshop_ru.qm
+${PACKAGE_INSTALL_PREFIX}/share/gcodeworkshop/lang/gcodeworkshop_zh_CN.qm
 ${PACKAGE_INSTALL_PREFIX}/share/gcodeworkshop/lang/kdiff3_ca.qm
 ${PACKAGE_INSTALL_PREFIX}/share/gcodeworkshop/lang/kdiff3_cs_CZ.qm
 ${PACKAGE_INSTALL_PREFIX}/share/gcodeworkshop/lang/kdiff3_de.qm
@@ -98,6 +99,7 @@ ${PACKAGE_INSTALL_PREFIX}/share/gcodeworkshop/lang/kdiff3_fi.qm
 ${PACKAGE_INSTALL_PREFIX}/share/gcodeworkshop/lang/kdiff3_nl.qm
 ${PACKAGE_INSTALL_PREFIX}/share/gcodeworkshop/lang/kdiff3_pl.qm
 ${PACKAGE_INSTALL_PREFIX}/share/gcodeworkshop/lang/kdiff3_ru.qm
+${PACKAGE_INSTALL_PREFIX}/share/gcodeworkshop/lang/kdiff3_zh_CN.qm
 ${PACKAGE_INSTALL_PREFIX}/share/icons/hicolor/32x32/mimetypes/application-x-g-code.png
 ${PACKAGE_INSTALL_PREFIX}/share/icons/hicolor/48x48/apps/edytornc.png
 ${PACKAGE_INSTALL_PREFIX}/share/mime/packages/application-x-g-code.xml
