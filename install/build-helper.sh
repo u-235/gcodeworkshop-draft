@@ -21,36 +21,25 @@ BUILD_DIR=${SOURCE_DIR}/build
 QMAKE=qmake
 MAKE_JOBS=$(nproc)
 
-# Work files
-########################################
-BIN_LIST_FILE=${BUILD_DIR}/get_dependies-bin.txt
-LDD_LIST_FILE=${BUILD_DIR}/get_dependies-ldd.txt
-OBJ_LIST_FILE=${BUILD_DIR}/get_dependies-obj.txt
-LIB_LIST_FILE=${BUILD_DIR}/get_dependies-lib.txt
-PKG_LIST_FILE=${BUILD_DIR}/get_dependies-pkg.txt
-DEP_LIST_FILE=${BUILD_DIR}/get_dependies-dep.txt
-
 usage()
 {
     echo "\
 
 Usage:
-$(basename "$0") [-b bld_dir] [-p pkg_dir] [-q qmake] [-s suffix] [-v version] [-w browser]
+$(basename "$0") [-b bld_dir] [-p pkg_dir] [-q qmake] [-s suffix] [-v version]
 
 Options:
-  -b bld_dir  The directory where the application will be built.
+  -b bld_dir  The directory where the application will be build.
               By default it is <source_root>/build
-  -p pkg_dir  The directory where the package will be built.
+  -p pkg_dir  The directory where the package will be build.
               By default this is <bld_dir>/<pkg_name>_<pkg_version>
   -q qmake    The name or full path of the qmake utility. In some
               distributives, qmake for Qt 6 is named qmake6.
   -s suffix   The suffix that will be added to the package name after the
               version and before the architecture type.
               Nothing is added by default.
-  -v version  Define the package version. By default version settings from
+  -v version  Define the package version. By default version gettings from
               the version.h file.
-  -w browser  Define the webengine to be used. Possible values:
-              WebEngine or WebKit (default).
 
 It is assumed that the necessary dependencies and tools are already installed
 in the system.
@@ -69,10 +58,10 @@ usage
 while getopts ":b:p:q:s:v:h" options; do
     case "${options}" in
     b)
-        BUILD_DIR=${OPTARG}
+        BUILD_DIR="$(realpath "${OPTARG}")"
         ;;
     p)
-        PACKAGE_DIR=${OPTARG}
+        PACKAGE_DIR="$(realpath "${OPTARG}")"
         FORCE_PACKAGE_DIR=1
         ;;
     q)
@@ -125,6 +114,15 @@ title3()
     echo "$1"
     echo "-------------------------"
 }
+
+# Work files
+########################################
+BIN_LIST_FILE=${BUILD_DIR}/get_dependies-bin.txt
+LDD_LIST_FILE=${BUILD_DIR}/get_dependies-ldd.txt
+OBJ_LIST_FILE=${BUILD_DIR}/get_dependies-obj.txt
+LIB_LIST_FILE=${BUILD_DIR}/get_dependies-lib.txt
+PKG_LIST_FILE=${BUILD_DIR}/get_dependies-pkg.txt
+DEP_LIST_FILE=${BUILD_DIR}/get_dependies-dep.txt
 
 # Calculates the dependencies and stores them in the variable PACKAGE_DEPENDS.
 #
@@ -278,6 +276,10 @@ PACKAGE_DIR       ${PACKAGE_DIR}
             echo "Remove $PACKAGE_DIR"
             rm -rf "$PACKAGE_DIR"
         fi
+    fi
+
+    if [ "$FORCE_VERSION" = 1 ]; then
+        QMAKE_OPTIONS="$QMAKE_OPTIONS VERSION=$PACKAGE_VERSION"
     fi
 
     title1 "Prepare to build"
