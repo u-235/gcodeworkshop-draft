@@ -1,4 +1,7 @@
 name: build tests
+# https://github.com/actions/checkout
+# https://github.com/ilammy/msvc-dev-cmd
+# https://github.com/jurplel/install-qt-action
 
 on:
   push:
@@ -9,6 +12,8 @@ on:
 
 env:
   ACTIONS_ALLOW_UNSECURE_COMMANDS: true
+  # While the ilammy/msvc-dev-cmd uses the Node.js v20.
+  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
 
 jobs:
   build:
@@ -26,7 +31,7 @@ jobs:
           }
         - {
             # https://doc.qt.io/qt.html
-            version:    6.2.*,
+            version:    6.8.*,
             archives:   icu qtbase qtprintsupport qtnetwork qttools qttranslations,
             modules:    qtserialport qt5compat
           }
@@ -53,7 +58,7 @@ jobs:
 
     steps:
     - name: checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
 
     - name: MSVC Environment Setup
       if: contains( matrix.config.os, 'Windows' )

@@ -1,5 +1,8 @@
 name: release
 # Based on https://github.com/ra3xdh/qucs_s/.github/workflows/deploy.yml
+# https://github.com/actions/checkout
+# https://github.com/actions/upload-artifact
+# https://github.com/actions/download-artifact
 
 on:
   push:
@@ -15,59 +18,179 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os_name: ['bullseye', 'bookworm', 'trixie']
+        distr:
+          - name:       trixie
+            version:    13
+            artifact:   "Qt5"
+            extra_pack: "qtbase5-dev libqt5serialport5-dev qttools5-dev-tools"
+            flags:      ""
+          - name:       trixie
+            version:    13
+            artifact:   "Qt6"
+            extra_pack: "qt6-base-dev qt6-base-dev-tools qt6-serialport-dev qt6-5compat-dev qt6-l10n-tools qt6-translations-l10n"
+            flags:      "-q qmake6"
+          - name:       bookworm
+            version:    12
+            artifact:   "Qt5"
+            extra_pack: "qtbase5-dev libqt5serialport5-dev qttools5-dev-tools"
+            flags:      ""
+          - name:       bookworm
+            version:    12
+            artifact:   "Qt6"
+            extra_pack: "qt6-base-dev qt6-base-dev-tools qt6-serialport-dev qt6-5compat-dev qt6-l10n-tools qt6-translations-l10n"
+            flags:      "-q qmake6"
+          - name:       bullseye
+            version:    11
+            artifact:   "Qt5"
+            extra_pack: "qtbase5-dev libqt5serialport5-dev qttools5-dev-tools"
+            flags:      ""
+        arch:
+          - name: amd64
+            id:   linux/amd64
     container:
       # https://en.wikipedia.org/wiki/Debian_version_history
       # https://hub.docker.com/_/debian
-      image: debian:${{matrix.os_name}}
+      image: debian:${{matrix.distr.name}}
+      options: --platform ${{matrix.arch.id}}
     steps:
-    - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v5
 
-    - name: 'Install Dependencies'
-      shell: bash
-      run: |
-        apt-get update
-        # https://serverfault.com/a/992421
-        DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get install -y build-essential qtbase5-dev qttools5-dev-tools libqt5serialport5-dev
+      - name: 'Install Dependencies'
+        shell: bash
+        run: |
+          apt-get update
+          # https://serverfault.com/a/992421
+          DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get install -y build-essential ${{matrix.distr.extra_pack}}
 
-    - name: 'Build'
-      shell: bash
-      run: install/build-deb.sh -s debian-${{matrix.os_name}} -v ${{ github.ref_name }}
+      - name: 'Build'
+        shell: bash
+        run: install/build-deb.sh ${{matrix.distr.flags}} -s debian-${{matrix.distr.name}} -v ${{ github.ref_name }}
 
-    - name: 'Upload debian packages'
-      uses: actions/upload-artifact@v4
-      with:
-        name: debian-${{matrix.os_name}}
-        path: '*.deb'
+      - name: 'Upload debian packages'
+        uses: actions/upload-artifact@v6
+        with:
+          name: debian-${{matrix.distr.name}}-${{matrix.distr.artifact}}-${{matrix.arch.name}}
+          path: '*.deb'
 
   build-ubuntu-packages:
     runs-on: ubuntu-22.04
     strategy:
       fail-fast: false
       matrix:
-        os_name: ['focal', 'jammy', 'noble']
+        distr:
+          - name:       resolute
+            version:    26.04
+            artifact:   "Qt5"
+            extra_pack: "qtbase5-dev libqt5serialport5-dev qttools5-dev-tools"
+            flags:      ""
+          - name:       resolute
+            version:    26.04
+            artifact:   "Qt6"
+            extra_pack: "qt6-base-dev qt6-base-dev-tools qt6-serialport-dev qt6-5compat-dev qt6-l10n-tools qt6-translations-l10n"
+            flags:      "-q qmake6"
+          - name:       noble
+            version:    24.04
+            artifact:   "Qt5"
+            extra_pack: "qtbase5-dev libqt5serialport5-dev qttools5-dev-tools"
+            flags:      ""
+          - name:       noble
+            version:    24.04
+            artifact:   "Qt6"
+            extra_pack: "qt6-base-dev qt6-base-dev-tools qt6-serialport-dev qt6-5compat-dev qt6-l10n-tools qt6-translations-l10n"
+            flags:      "-q qmake6"
+          - name:       jammy
+            version:    22.04
+            artifact:   "Qt5"
+            extra_pack: "qtbase5-dev libqt5serialport5-dev qttools5-dev-tools"
+            flags:      ""
+          - name:       focal
+            version:    20.04
+            artifact:   "Qt5"
+            extra_pack: "qtbase5-dev libqt5serialport5-dev qttools5-dev-tools"
+            flags:      ""
+        arch:
+          - name: amd64
+            id:   linux/amd64
     container:
       # https://en.wikipedia.org/wiki/Ubuntu_version_history
       # https://hub.docker.com/_/ubuntu
-      image: ubuntu:${{matrix.os_name}}
+      image: ubuntu:${{matrix.distr.name}}
+      options: --platform ${{matrix.arch.id}}
     steps:
-    - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v5
 
-    - name: 'Install Dependencies'
-      shell: bash
-      run: |
-        apt-get update
-        DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get install -y build-essential qtbase5-dev qttools5-dev-tools libqt5serialport5-dev
+      - name: 'Install Dependencies'
+        shell: bash
+        run: |
+          apt-get update
+          DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get install -y build-essential ${{matrix.distr.extra_pack}}
 
-    - name: 'Build'
-      shell: bash
-      run: install/build-deb.sh -s ubuntu-${{matrix.os_name}} -v ${{ github.ref_name }}
+      - name: 'Build'
+        shell: bash
+        run: install/build-deb.sh ${{matrix.distr.flags}} -s ubuntu-${{matrix.distr.name}} -v ${{ github.ref_name }}
 
-    - name: 'Upload ubuntu packages'
-      uses: actions/upload-artifact@v4
-      with:
-        name: ubuntu-${{matrix.os_name}}
-        path: '*.deb'
+      - name: 'Upload ubuntu packages'
+        uses: actions/upload-artifact@v6
+        with:
+          name: ubuntu-${{matrix.distr.name}}-${{matrix.distr.artifact}}-${{matrix.arch.name}}
+          path: '*.deb'
+
+  # https://en.wikipedia.org/wiki/Fedora_Linux_release_history
+  # https://hub.docker.com/_/fedora
+  build-fedora-packages:
+    runs-on: ubuntu-22.04
+    strategy:
+      fail-fast: false
+      matrix:
+        distr:
+          - version:    43
+            artifact:   "Qt5"
+            extra_pack: "qt5-qtserialport-devel qt5-linguist"
+            flags:      "-q qmake-qt5"
+          - version:    43
+            artifact:   "Qt6"
+            extra_pack: "qt6-qtserialport-devel qt6-qt5compat-devel qt6-linguist"
+            flags:      ""
+          - version:    42
+            artifact:   "Qt5"
+            extra_pack: "qt5-qtserialport-devel qt5-linguist"
+            flags:      "-q qmake-qt5"
+          - version:    42
+            artifact:   "Qt6"
+            extra_pack: "qt6-qtserialport-devel qt6-qt5compat-devel qt6-linguist"
+            flags:      ""
+          - version:    41
+            artifact:   "Qt5"
+            extra_pack: "qt5-qtserialport-devel qt5-linguist"
+            flags:      "-q qmake-qt5"
+          - version:    41
+            artifact:   "Qt6"
+            extra_pack: "qt6-qtserialport-devel qt6-qt5compat-devel qt6-linguist"
+            flags:      ""
+        arch:
+          - name: amd64
+            id:   linux/amd64
+    container:
+      image: fedora:${{matrix.distr.version}}
+      options: --platform ${{matrix.arch.id}}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Install Dependencies
+        run: |
+          dnf install -q -y coreutils gcc make rpm-build ${{matrix.distr.extra_pack}}
+
+      - name: Build
+        run: install/build-rpm.sh ${{matrix.distr.flags}} -s fedora-${{matrix.distr.version}} -v ${{ github.ref_name }}
+
+      - name: Upload fedora packages
+        uses: actions/upload-artifact@v6
+        with:
+          name: fedora-${{matrix.distr.version}}-${{matrix.distr.artifact}}-${{matrix.arch.name}}
+          path: '*.rpm'
 
   build-windows-installer:
     runs-on: windows-2025
@@ -78,104 +201,103 @@ jobs:
     defaults:
       run:
         shell: msys2 {0}
-    steps:  
-    - name: Disable autocrlf in Git
-      shell: pwsh
-      # https://github.com/msys2/setup-msys2?tab=readme-ov-file#actionscheckout-and-line-endings
-      run: |
-        git config --global core.autocrlf false
-        git config --global core.eol lf
+    steps:
+      - name: Disable autocrlf in Git
+        shell: pwsh
+        # https://github.com/msys2/setup-msys2?tab=readme-ov-file#actionscheckout-and-line-endings
+        run: |
+          git config --global core.autocrlf false
+          git config --global core.eol lf
 
-    - name: Checkout repository
-      uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v5
 
-    - name: Set up MSYS2 environment
-      # The qt5-serialport package is now missing from mingw32, so we use
-      # a static build. The openssl package is needed for qt-static, but it is
-      # not in the qt5-static dependencies and so has to be installed explicitly.
-      uses: msys2/setup-msys2@v2
-      with:
-        msystem: ${{matrix.msystem}}
-        cache: true
-        update: true
-        install: >-
-          make
-          zip
-        pacboy: >-
-          gcc:p
-          nsis:p
-          ntldd:p
-          qt5-static:p
-          openssl:p
+      - name: Set up MSYS2 environment
+        # The qt5-serialport package is now missing from mingw32, so we use
+        # a static build. The openssl package is needed for qt-static, but it is
+        # not in the qt5-static dependencies and so has to be installed explicitly.
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: ${{matrix.msystem}}
+          cache: true
+          update: true
+          install: >-
+            make
+            zip
+          pacboy: >-
+            gcc:p
+            nsis:p
+            ntldd:p
+            qt5-static:p
+            openssl:p
 
-    - name: 'Build'
-      run: install/build-win-msys2.sh -s windows -v ${{ github.ref_name }} -q /${{matrix.msystem}}/qt5-static/bin/qmake.exe
+      - name: 'Build'
+        run: install/build-win-msys2.sh -s windows -v ${{ github.ref_name }} -q /${{matrix.msystem}}/qt5-static/bin/qmake.exe
 
-    - name: 'Upload windows installers'
-      uses: actions/upload-artifact@v4
-      with:
-        name: windows-${{matrix.msystem}}
-        path: |
-          *.exe
-          *.zip
+      - name: 'Upload windows installers'
+        uses: actions/upload-artifact@v6
+        with:
+          name: windows-${{matrix.msystem}}
+          path: |
+            *.exe
+            *.zip
 
   create-release:
     runs-on: ubuntu-latest
     needs: [build-debian-packages, build-ubuntu-packages, build-windows-installer]
     steps:
-    - name: Download build artifacts
-      uses: actions/download-artifact@v4
-      with:
-        path: ~/artifacts
-        merge-multiple: true
+      - name: Download build artifacts
+        uses: actions/download-artifact@v7
+        with:
+          path: ~/artifacts
+          merge-multiple: true
 
-    - name: Calculate SHA-256 checksums
-      run: |
-        cd ~/artifacts
-        echo 'SHA-256 checksums' > notes.txt
-        echo '-----------------' >> notes.txt
-        echo -e '\n```' >> notes.txt
-        for file in $(find . -type f \( -name "*.exe" -o -name "*.zip" -o -name "*.deb" -o -name "*.rpm" \) | sort); do
-          filename=$(basename "$file")
-          checksum=$(sha256sum "$file" | awk '{print $1}')
-          echo "$checksum  $filename" >> notes.txt
-          #echo $checksum > "$filename".sha256
-        done
-        echo -e '```\n' >> notes.txt
-        cd ..
-        tree ~/artifacts
+      - name: Calculate SHA-256 checksums
+        run: |
+          cd ~/artifacts
+          echo 'SHA-256 checksums' > notes.txt
+          echo '-----------------' >> notes.txt
+          echo -e '\n```' >> notes.txt
+          for file in $(find . -type f \( -name "*.exe" -o -name "*.zip" -o -name "*.deb" -o -name "*.rpm" \) | sort); do
+            filename=$(basename "$file")
+            checksum=$(sha256sum "$file" | awk '{print $1}')
+            echo "$checksum  $filename" >> notes.txt
+            #echo $checksum > "$filename".sha256
+          done
+          echo -e '```\n' >> notes.txt
+          cd ..
+          tree ~/artifacts
 
-    - name: Setup Release Information
-      run: |
-        echo "RELEASE_NAME=${{ github.ref_name }}" >> $GITHUB_ENV
-        echo "TAG_NAME=${{ github.ref_name }}" >> $GITHUB_ENV
-          
-    - name: Create GitHub Release
-      continue-on-error: false
-      run: |
-        # Find existing artifact files
-        hash_files=$(find ~/artifacts -name "*.sha256" -print0 | xargs -0 echo)
-        exe_files=$(find ~/artifacts -name "*.exe" -print0 | xargs -0 echo)
-        zip_files=$(find ~/artifacts -name "*.zip" -print0 | xargs -0 echo)
-        deb_files=$(find ~/artifacts -name "*.deb" -print0 | xargs -0 echo)
-        rpm_files=$(find ~/artifacts -name "*.rpm" -print0 | xargs -0 echo)
+      - name: Setup Release Information
+        run: |
+          echo "RELEASE_NAME=${{ github.ref_name }}" >> $GITHUB_ENV
+          echo "TAG_NAME=${{ github.ref_name }}" >> $GITHUB_ENV
 
-        # Check existing release and delete if it's exist
-        if gh release view ${{ env.TAG_NAME }} --repo $GITHUB_REPOSITORY &> /dev/null; then
-          gh release delete ${{ env.TAG_NAME }} --repo $GITHUB_REPOSITORY
-          echo "${{ env.TAG_NAME }} deleted!"
-        fi
+      - name: Create GitHub Release
+        continue-on-error: false
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Find existing artifact files
+          hash_files=$(find ~/artifacts -name "*.sha256" -print0 | xargs -0 echo)
+          exe_files=$(find ~/artifacts -name "*.exe" -print0 | xargs -0 echo)
+          zip_files=$(find ~/artifacts -name "*.zip" -print0 | xargs -0 echo)
+          deb_files=$(find ~/artifacts -name "*.deb" -print0 | xargs -0 echo)
+          rpm_files=$(find ~/artifacts -name "*.rpm" -print0 | xargs -0 echo)
 
-        gh release create ${{ env.TAG_NAME }} \
-                            --repo $GITHUB_REPOSITORY \
-                            --draft \
-                            --title "${{ env.RELEASE_NAME }}" \
-                            --notes-file ~/artifacts/notes.txt \
-                            $hash_files \
-                            $exe_files \
-                            $zip_files \
-                            $deb_files \
-                            $rpm_files
-        
-      env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Check existing release and delete if it's exist
+          if gh release view ${{ env.TAG_NAME }} --repo $GITHUB_REPOSITORY &> /dev/null; then
+            gh release delete ${{ env.TAG_NAME }} --repo $GITHUB_REPOSITORY
+            echo "${{ env.TAG_NAME }} deleted!"
+          fi
+
+          gh release create ${{ env.TAG_NAME }} \
+                              --repo $GITHUB_REPOSITORY \
+                              --draft \
+                              --title "${{ env.RELEASE_NAME }}" \
+                              --notes-file ~/artifacts/notes.txt \
+                              $hash_files \
+                              $exe_files \
+                              $zip_files \
+                              $deb_files \
+                              $rpm_files
