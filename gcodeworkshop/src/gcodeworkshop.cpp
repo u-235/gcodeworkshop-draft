@@ -2219,6 +2219,7 @@ void GCodeWorkShop::loadFile(const DocumentInfo::Ptr& info, bool checkAlreadyLoa
 			setLastOpenedPath(file.path());
 			updateStatusBar();
 			m_recentFiles->add(info->filePath);
+			fileTreeViewChangeRootDir();
 		} else {
 			QMessageBox::warning(this, tr("GCodeWorkShop"), tr("Cannot read file \"%1\".\n %2")
 			                     .arg(doc->filePath()).arg(doc->ioErrorString()));
@@ -3222,7 +3223,7 @@ void GCodeWorkShop::fileTreeViewChangeRootDir()
 		return;
 	}
 
-	if (ui->currentPathCheckBox->isChecked() && (activeDocument() != nullptr)) {
+	if (ui->currentPathCheckBox->isChecked() && (activeDocument() != nullptr) && !activeDocument()->isUntitled()) {
 		path = activeDocument()->filePath();
 
 		if (QFileInfo(path).exists()) {
