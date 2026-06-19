@@ -86,11 +86,13 @@ while getopts ":b:p:q:s:v:h" options; do
     esac
 done
 
+QT_MAJOR=$($QMAKE -query QT_VERSION  | awk -F . '{print $1}')
+
 if ! [ "$FORCE_PACKAGE_DIR" = 1 ]; then
     PACKAGE_DIR=${BUILD_DIR}/${PACKAGE_NAME}_${PACKAGE_VERSION}
 fi
 PACKAGE_BIN_DIR=${PACKAGE_DIR}/${PACKAGE_INSTALL_PREFIX}/bin
-PACKAGE_FILE_NAME="${PACKAGE_NAME}-${PACKAGE_VERSION}${PACKAGE_SUFFIX}_${PACKAGE_ARCH}"
+PACKAGE_FILE_NAME="${PACKAGE_NAME}-${PACKAGE_VERSION}${PACKAGE_SUFFIX}_${PACKAGE_ARCH}_qt${QT_MAJOR}"
 
 title1()
 {
@@ -253,6 +255,7 @@ create()
     title1 "\
 Try to build package with:
 
+QT_MAJOR          ${QT_MAJOR}
 PACKAGE_NAME      ${PACKAGE_NAME}
 PACKAGE_SUFFIX    ${PACKAGE_SUFFIX}
 PACKAGE_VERSION   ${PACKAGE_VERSION}
