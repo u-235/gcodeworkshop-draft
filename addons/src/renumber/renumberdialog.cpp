@@ -41,11 +41,10 @@ class QWidget;
 
 
 RenumberDialog::RenumberDialog(QWidget* parent, QSettings* settings) :
-	QDialog(parent)
+	QDialog(parent),
+	mSettings{settings}
 {
 	setupUi(this);
-
-	mSettings = settings;
 
 	setWindowTitle(tr("Renumber lines"));
 
