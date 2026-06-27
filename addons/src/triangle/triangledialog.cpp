@@ -57,11 +57,10 @@ class QWidget;
 
 
 TriangleDialog::TriangleDialog(QWidget* parent, QSettings* settings) :
-	QDialog(parent)
+	QDialog(parent),
+	mSettings{settings}
 {
 	setupUi(this);
-
-	mSettings = settings;
 
 	setAttribute(Qt::WA_DeleteOnClose);
 	setWindowTitle(tr("Solution of triangles"));

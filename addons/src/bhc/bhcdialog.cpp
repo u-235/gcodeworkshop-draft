@@ -60,11 +60,10 @@
 
 
 BHCDialog::BHCDialog(QWidget* parent, QSettings* settings) :
-	QDialog(parent)
+	QDialog(parent),
+	mSettings{settings}
 {
 	setupUi(this);
-
-	mSettings = settings;
 
 	setAttribute(Qt::WA_DeleteOnClose);
 	setWindowTitle(tr("Bolt circle"));

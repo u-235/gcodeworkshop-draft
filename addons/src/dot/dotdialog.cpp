@@ -43,11 +43,10 @@ class QWidget;
 
 
 DotDialog::DotDialog(QWidget* parent, QSettings* settings) :
-	QDialog(parent)
+	QDialog(parent),
+	mSettings{settings}
 {
 	setupUi(this);
-
-	mSettings = settings;
 
 	setWindowTitle(tr("Insert dots"));
 

@@ -41,11 +41,10 @@ class QWidget;
 
 
 I2MProgDialog::I2MProgDialog(QWidget* parent, QSettings* settings) :
-	QDialog(parent)
+	QDialog(parent),
+	mSettings{settings}
 {
 	setupUi(this);
-
-	mSettings = settings;
 
 	setWindowTitle(tr("Convert program inch to metric"));
 

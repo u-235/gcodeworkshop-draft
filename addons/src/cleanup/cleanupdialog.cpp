@@ -58,11 +58,10 @@
 
 CleanUpDialog::CleanUpDialog(QWidget* parent, QSettings* settings) :
 	QDialog(parent),
-	Ui::CleanUpDialog()
+	Ui::CleanUpDialog(),
+	mSettings{settings}
 {
 	setupUi(this);
-
-	mSettings = settings;
 
 	QAction* deleteRowAct = new QAction(QIcon(":/images/removeemptylines.png"), tr("Delete &row"),
 	                                    this);
