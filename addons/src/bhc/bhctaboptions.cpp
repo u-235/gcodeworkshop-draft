@@ -17,22 +17,24 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <QSettings>    // for QSettings
-#include <QVariant>     // for QVariant
+#include <QLatin1String>    // for QLatin1String
+#include <QSettings>        // for QSettings
+#include <QString>          // for QString
+#include <QVariant>         // for QVariant
 
 #include "bhctaboptions.h"
 
 
-#define CFG_KEY_COMMON  "Common"
-#define CFG_KEY_COUNT   "Count"
-#define CFG_KEY_DIAM    "Diameter"
-#define CFG_KEY_MIRRORX "MirrorX"
-#define CFG_KEY_MIRRORY "MirrorY"
-#define CFG_KEY_ROTATE  "Rotate"
-#define CFG_KEY_START   "Start"
-#define CFG_KEY_STEP    "Step"
-#define CFG_KEY_X       "XCenter"
-#define CFG_KEY_Y       "YCenter"
+#define CFG_KEY_COMMON  (QLatin1String{"Common"})
+#define CFG_KEY_COUNT   (QLatin1String{"Count"})
+#define CFG_KEY_DIAM    (QLatin1String{"Diameter"})
+#define CFG_KEY_MIRRORX (QLatin1String{"MirrorX"})
+#define CFG_KEY_MIRRORY (QLatin1String{"MirrorY"})
+#define CFG_KEY_ROTATE  (QLatin1String{"Rotate"})
+#define CFG_KEY_START   (QLatin1String{"Start"})
+#define CFG_KEY_STEP    (QLatin1String{"Step"})
+#define CFG_KEY_X       (QLatin1String{"XCenter"})
+#define CFG_KEY_Y       (QLatin1String{"YCenter"})
 
 
 BHCTabOptions::BHCTabOptions() :

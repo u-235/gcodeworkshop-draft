@@ -17,23 +17,24 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <QSettings>    // for QSettings
-#include <QVariant>     // for QVariant
+#include <QLatin1String>    // for QLatin1String
+#include <QSettings>        // for QSettings
+#include <QVariant>         // for QVariant
 
 #include "swapaxesoptions.h"
 
 
-#define CFG_KEY_CONVERT_ENABLE      "ConvertEnable"
-#define CFG_KEY_CONVERT_OPERATION   "ConvertOperation"
-#define CFG_KEY_CONVERT_VALUE       "ConvertValue"
-#define CFG_KEY_FROM                "From"
-#define CFG_KEY_FROM_LIST           "FromList"
-#define CFG_KEY_LIMIT_ENABLE        "LimitEnable"
-#define CFG_KEY_LIMIT_MAX           "LimitMax"
-#define CFG_KEY_LIMIT_MIN           "LimitMin"
-#define CFG_KEY_TO                  "To"
-#define CFG_KEY_TO_LIST             "ToList"
-#define CFG_KEY_PRECISION           "Precision"
+#define CFG_KEY_CONVERT_ENABLE      (QLatin1String{"ConvertEnable"})
+#define CFG_KEY_CONVERT_OPERATION   (QLatin1String{"ConvertOperation"})
+#define CFG_KEY_CONVERT_VALUE       (QLatin1String{"ConvertValue"})
+#define CFG_KEY_FROM                (QLatin1String{"From"})
+#define CFG_KEY_FROM_LIST           (QLatin1String{"FromList"})
+#define CFG_KEY_LIMIT_ENABLE        (QLatin1String{"LimitEnable"})
+#define CFG_KEY_LIMIT_MAX           (QLatin1String{"LimitMax"})
+#define CFG_KEY_LIMIT_MIN           (QLatin1String{"LimitMin"})
+#define CFG_KEY_TO                  (QLatin1String{"To"})
+#define CFG_KEY_TO_LIST             (QLatin1String{"ToList"})
+#define CFG_KEY_PRECISION           (QLatin1String{"Precision"})
 
 
 SwapAxesOptions::SwapAxesOptions() :

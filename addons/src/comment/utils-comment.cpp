@@ -17,6 +17,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <QChar>    // for QChar
 #include <QString>  // for QString
 
 #include "utils-comment.h"
@@ -32,14 +33,14 @@ bool Utils::autoComments(QString& text, int mode, const std::function<bool(int)>
 
 	switch (mode) {
 	case ParenthesisComments:
-		if (text.startsWith('(')) {
+		if (text.startsWith(QChar{'('})) {
 			remove = true;
 		}
 
 		break;
 
 	case SemicolonComments:
-		if (text.startsWith(';')) {
+		if (text.startsWith(QChar{';'})) {
 			remove = true;
 		}
 
@@ -50,7 +51,7 @@ bool Utils::autoComments(QString& text, int mode, const std::function<bool(int)>
 	}
 
 	while (substr_end >= 0) {
-		substr_end = text.indexOf('\n', substr_start);
+		substr_end = text.indexOf(QChar{'\n'}, substr_start);
 		QString line = text.mid(substr_start, substr_end - substr_start + 1);
 		substr_start = substr_end + 1;
 		bool localChange = false;
@@ -87,9 +88,9 @@ bool Utils::parenthesisComments(QString& line, bool remove)
 {
 	int oldSize = line.size();
 
-	if (remove && line.startsWith('(')) {
+	if (remove && line.startsWith(QChar{'('})) {
 		line.remove(0, 1);
-		int pli = line.lastIndexOf(')');
+		int pli = line.lastIndexOf(QChar{')'});
 
 		if (pli >= 0) {
 			line.remove(pli, 1);
@@ -98,12 +99,12 @@ bool Utils::parenthesisComments(QString& line, bool remove)
 
 	if (!remove) {
 		line.prepend("(");
-		int eol = line.indexOf('\n');
+		int eol = line.indexOf(QChar{'\n'});
 
 		if (eol < 0) {
-			line.append(')');
+			line.append(QChar{')'});
 		} else {
-			line.insert(eol, ')');
+			line.insert(eol, QChar{')'});
 		}
 	}
 
@@ -114,10 +115,10 @@ bool Utils::semicolonComments(QString& line, bool remove)
 {
 	int oldSize = line.size();
 
-	if (remove && line.startsWith(';')) {
+	if (remove && line.startsWith(QChar{';'})) {
 		line.remove(0, 1);
 	} else {
-		line.prepend(";");
+		line.prepend(QChar{';'});
 	}
 
 	return oldSize != line.size();

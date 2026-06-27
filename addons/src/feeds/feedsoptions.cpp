@@ -17,25 +17,26 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <QSettings>    // for QSettings
-#include <QVariant>     // for QVariant
+#include <QLatin1String>    // for QLatin1String
+#include <QSettings>        // for QSettings
+#include <QVariant>         // for QVariant
 
 #include "feedsoptions.h"
 
 
-#define CFG_KEY_DIAM_VALUE  "Diam"
-#define CFG_KEY_DIAM_IN     "DiamIn"
-#define CFG_KEY_FEED_VALUE  "Feed"
-#define CFG_KEY_FEED_IN     "FeedIn"
-#define CFG_KEY_FZ_VALUE    "Fz"
-#define CFG_KEY_FZ_IN       "FzIn"
-#define CFG_KEY_SPEED_VALUE "Speed"
-#define CFG_KEY_SPEED_IN    "SpeedIn"
-#define CFG_KEY_USE_INCH    "UseInch"
-#define CFG_KEY_VC_VALUE    "Vc"
-#define CFG_KEY_VC_IN       "VcIn"
-#define CFG_KEY_Z_VALUE     "z"
-#define CFG_KEY_Z_IN        "zIn"
+#define CFG_KEY_DIAM_VALUE  (QLatin1String{"Diam"})
+#define CFG_KEY_DIAM_IN     (QLatin1String{"DiamIn"})
+#define CFG_KEY_FEED_VALUE  (QLatin1String{"Feed"})
+#define CFG_KEY_FEED_IN     (QLatin1String{"FeedIn"})
+#define CFG_KEY_FZ_VALUE    (QLatin1String{"Fz"})
+#define CFG_KEY_FZ_IN       (QLatin1String{"FzIn"})
+#define CFG_KEY_SPEED_VALUE (QLatin1String{"Speed"})
+#define CFG_KEY_SPEED_IN    (QLatin1String{"SpeedIn"})
+#define CFG_KEY_USE_INCH    (QLatin1String{"UseInch"})
+#define CFG_KEY_VC_VALUE    (QLatin1String{"Vc"})
+#define CFG_KEY_VC_IN       (QLatin1String{"VcIn"})
+#define CFG_KEY_Z_VALUE     (QLatin1String{"z"})
+#define CFG_KEY_Z_IN        (QLatin1String{"zIn"})
 
 
 FeedsOptions::FeedsOptions() :

@@ -16,22 +16,25 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include <QSettings>    // for QSettings
-#include <QVariant>     // for QVariant
+
+#include <QLatin1String>    // for QLatin1String
+#include <QSettings>        // for QSettings
+#include <QString>          // for QString
+#include <QVariant>         // for QVariant
 
 #include "chamferoptions.h"
 
 
-#define CFG_KEY_ANGLE_VALUE     "Angle"
-#define CFG_KEY_ANGLE_IN        "AngleIn"
-#define CFG_KEY_HEIGHT_VALUE    "Height"
-#define CFG_KEY_HEIGHT_IN       "HeightIn"
-#define CFG_KEY_MAX_DIAM_VALUE  "MaxDiam"
-#define CFG_KEY_MAX_DIAM_IN     "MaxDiamIn"
-#define CFG_KEY_MIN_DIAM_VALUE  "MinDiam"
-#define CFG_KEY_MIN_DIAM_IN     "MinDiamIn"
-#define CFG_KEY_WIDTH_VALUE     "Width"
-#define CFG_KEY_WIDTH_IN        "WidthIn"
+#define CFG_KEY_ANGLE_VALUE     (QLatin1String{"Angle"})
+#define CFG_KEY_ANGLE_IN        (QLatin1String{"AngleIn"})
+#define CFG_KEY_HEIGHT_VALUE    (QLatin1String{"Height"})
+#define CFG_KEY_HEIGHT_IN       (QLatin1String{"HeightIn"})
+#define CFG_KEY_MAX_DIAM_VALUE  (QLatin1String{"MaxDiam"})
+#define CFG_KEY_MAX_DIAM_IN     (QLatin1String{"MaxDiamIn"})
+#define CFG_KEY_MIN_DIAM_VALUE  (QLatin1String{"MinDiam"})
+#define CFG_KEY_MIN_DIAM_IN     (QLatin1String{"MinDiamIn"})
+#define CFG_KEY_WIDTH_VALUE     (QLatin1String{"Width"})
+#define CFG_KEY_WIDTH_IN        (QLatin1String{"WidthIn"})
 
 
 ChamferOptions::ChamferOptions() :

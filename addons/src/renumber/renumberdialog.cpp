@@ -18,16 +18,17 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <QCheckBox>    // for QCheckBox
-#include <QLabel>       // for QLabel
-#include <QPoint>       // for QPoint
-#include <QPushButton>  // for QPushButton
-#include <QRadioButton> // for QRadioButton
-#include <QRect>        // for QRect
-#include <QSettings>    // for QSettings
-#include <QSize>        // for QSize
-#include <QSpinBox>     // for QSpinBox
-#include <QVariant>     // for QVariant
+#include <QCheckBox>        // for QCheckBox
+#include <QLabel>           // for QLabel
+#include <QLatin1String>    // for QLatin1String
+#include <QPoint>           // for QPoint
+#include <QPushButton>      // for QPushButton
+#include <QRadioButton>     // for QRadioButton
+#include <QRect>            // for QRect
+#include <QSettings>        // for QSettings
+#include <QSize>            // for QSize
+#include <QSpinBox>         // for QSpinBox
+#include <QVariant>         // for QVariant
 
 class QWidget;
 
@@ -35,9 +36,9 @@ class QWidget;
 #include "renumberoptions.h"    // for RenumberOptions
 
 
-#define CFG_SECTION  "RenumberDialog"
-#define CFG_KEY_POS  "Position"
-#define CFG_KEY_SIZE "Size"
+#define CFG_SECTION  (QLatin1String{"RenumberDialog"})
+#define CFG_KEY_POS  (QLatin1String{"Position"})
+#define CFG_KEY_SIZE (QLatin1String{"Size"})
 
 
 RenumberDialog::RenumberDialog(QWidget* parent, QSettings* settings) :

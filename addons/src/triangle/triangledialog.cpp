@@ -31,6 +31,7 @@
 #include <QEvent>           // for QEvent
 #include <QKeyEvent>        // for QKeyEvent
 #include <QLabel>           // for QLabel
+#include <QLatin1String>    // for QLatin1String
 #include <QLineEdit>        // for QLineEdit
 #include <QLocale>          // for QLocale
 #include <QPalette>         // for QPalette
@@ -50,9 +51,9 @@ class QWidget;
 #include "triangleoptions.h" // TriangleOptions
 
 
-#define CFG_SECTION  "TriangleDialog"
-#define CFG_KEY_POS  "Position"
-#define CFG_KEY_SIZE "Size"
+#define CFG_SECTION  (QLatin1String{"TriangleDialog"})
+#define CFG_KEY_POS  (QLatin1String{"Position"})
+#define CFG_KEY_SIZE (QLatin1String{"Size"})
 
 
 TriangleDialog::TriangleDialog(QWidget* parent, QSettings* settings) :

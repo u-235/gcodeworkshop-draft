@@ -17,23 +17,24 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <QSettings>    // for QSettings
-#include <QVariant>     // for QVariant
+#include <QLatin1String>    // for QLatin1String
+#include <QSettings>        // for QSettings
+#include <QVariant>         // for QVariant
 
 #include "renumberoptions.h"
 
 
-#define CFG_KEY_APPLY_WIDTH     "ApplyWidth"
-#define CFG_KEY_FROM            "From"
-#define CFG_KEY_INC             "Inc"
-#define CFG_KEY_KEEP_EXISTING   "KeepExisting"
-#define CFG_KEY_MODE            "Mode"
-#define CFG_KEY_RENUM_EMPTY     "RenumEmpty"
-#define CFG_KEY_RENUM_MARKED    "RenumMarked"
-#define CFG_KEY_RENUM_WITH_COMM "RenumWithComm"
-#define CFG_KEY_START           "Start"
-#define CFG_KEY_TO              "To"
-#define CFG_KEY_WIDTH           "Width"
+#define CFG_KEY_APPLY_WIDTH     (QLatin1String{"ApplyWidth"})
+#define CFG_KEY_FROM            (QLatin1String{"From"})
+#define CFG_KEY_INC             (QLatin1String{"Inc"})
+#define CFG_KEY_KEEP_EXISTING   (QLatin1String{"KeepExisting"})
+#define CFG_KEY_MODE            (QLatin1String{"Mode"})
+#define CFG_KEY_RENUM_EMPTY     (QLatin1String{"RenumEmpty"})
+#define CFG_KEY_RENUM_MARKED    (QLatin1String{"RenumMarked"})
+#define CFG_KEY_RENUM_WITH_COMM (QLatin1String{"RenumWithComm"})
+#define CFG_KEY_START           (QLatin1String{"Start"})
+#define CFG_KEY_TO              (QLatin1String{"To"})
+#define CFG_KEY_WIDTH           (QLatin1String{"Width"})
 
 
 RenumberOptions::RenumberOptions() :

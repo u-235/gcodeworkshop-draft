@@ -26,6 +26,7 @@
 
 #include <QCheckBox>        // for QCheckBox
 #include <QColor>           // for QColor
+#include <QLatin1String>    // for QLatin1String
 #include <QLineEdit>        // for QLineEdit
 #include <QLocale>          // for QLocale
 #include <QPoint>           // for QPoint
@@ -53,9 +54,9 @@
 #include "bhctaboptions.h"  // for BHCTabOptions
 
 
-#define CFG_SECTION  "BHCDialog"
-#define CFG_KEY_POS  "Position"
-#define CFG_KEY_SIZE "Size"
+#define CFG_SECTION  (QLatin1String{"BHCDialog"})
+#define CFG_KEY_POS  (QLatin1String{"Position"})
+#define CFG_KEY_SIZE (QLatin1String{"Size"})
 
 
 BHCDialog::BHCDialog(QWidget* parent, QSettings* settings) :

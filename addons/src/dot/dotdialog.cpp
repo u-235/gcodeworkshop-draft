@@ -18,17 +18,18 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <QCheckBox>    // for QCheckBox
-#include <QLineEdit>    // for QLineEdit
-#include <QPoint>       // for QPoint
-#include <QPushButton>  // for QPushButton
-#include <QRect>        // for QRect
-#include <QSettings>    // for QSettings
-#include <QSize>        // for QSize
-#include <QSpinBox>     // for QSpinBox
-#include <QString>      // for QString
-#include <QVariant>     // for QVariant
-#include <QtGlobal>     // for Q_UNUSED
+#include <QCheckBox>        // for QCheckBox
+#include <QLatin1String>    // for QLatin1String
+#include <QLineEdit>        // for QLineEdit
+#include <QPoint>           // for QPoint
+#include <QPushButton>      // for QPushButton
+#include <QRect>            // for QRect
+#include <QSettings>        // for QSettings
+#include <QSize>            // for QSize
+#include <QSpinBox>         // for QSpinBox
+#include <QString>          // for QString
+#include <QVariant>         // for QVariant
+#include <QtGlobal>         // for Q_UNUSED
 
 class QWidget;
 
@@ -36,9 +37,9 @@ class QWidget;
 #include "dotoptions.h" // for DotOptions
 
 
-#define CFG_SECTION  "DotDialog"
-#define CFG_KEY_POS  "Position"
-#define CFG_KEY_SIZE "Size"
+#define CFG_SECTION  (QLatin1String{"DotDialog"})
+#define CFG_KEY_POS  (QLatin1String{"Position"})
+#define CFG_KEY_SIZE (QLatin1String{"Size"})
 
 
 DotDialog::DotDialog(QWidget* parent, QSettings* settings) :

@@ -21,14 +21,21 @@
 #include <QCheckBox>        // for QCheckBox
 #include <QComboBox>        // for QComboBox
 #include <QDoubleSpinBox>   // for QDoubleSpinBox
+#include <QLatin1String>    // for QLatin1String
 #include <QPoint>           // for QPoint
 #include <QRect>            // for QRect
 #include <QSettings>        // for QSettings
 #include <QSize>            // for QSize
 #include <QSpinBox>         // for QSpinBox
-#include <QStringList>      // for QStringList
 #include <QVariant>         // for QVariant
 #include <QtGlobal>         // for Q_UNUSED
+
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+	#include <QStringList>
+#else
+	template<typename T> class QList;
+	using QStringList = QList<QString>;
+#endif
 
 class QWidget;
 
@@ -36,9 +43,9 @@ class QWidget;
 #include "swapaxesoptions.h"    // for SwapAxesOptions
 
 
-#define CFG_SECTION  "SwapAxesDialog"
-#define CFG_KEY_POS  "Position"
-#define CFG_KEY_SIZE "Size"
+#define CFG_SECTION  (QLatin1String{"SwapAxesDialog"})
+#define CFG_KEY_POS  (QLatin1String{"Position"})
+#define CFG_KEY_SIZE (QLatin1String{"Size"})
 
 
 SwapAxesDialog::SwapAxesDialog(QWidget* parent, QSettings* settings) :

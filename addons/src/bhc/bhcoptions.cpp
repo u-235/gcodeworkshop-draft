@@ -17,16 +17,17 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <QSettings>    // for QSettings
+#include <QLatin1String>    // for QLatin1String
+#include <QSettings>        // for QSettings
 
 #include "bhcoptions.h"
 #include "bhctaboptions.h"  // for BHCTabOptions
 
 
-#define CFG_SECTION_GREEN   "GreenTab"
-#define CFG_SECTION_BLUE    "BlueTab"
-#define CFG_SECTION_RED     "RedTab"
-#define CFG_SECTION_YELLOW  "YellowTab"
+#define CFG_SECTION_GREEN   (QLatin1String{"GreenTab"})
+#define CFG_SECTION_BLUE    (QLatin1String{"BlueTab"})
+#define CFG_SECTION_RED     (QLatin1String{"RedTab"})
+#define CFG_SECTION_YELLOW  (QLatin1String{"YellowTab"})
 
 
 BHCOptions::BHCOptions() :

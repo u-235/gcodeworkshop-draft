@@ -17,15 +17,16 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <QSettings>    // for QSettings
-#include <QVariant>     // for QVariant
+#include <QLatin1String>    // for QLatin1String
+#include <QSettings>        // for QSettings
+#include <QVariant>         // for QVariant
 
 #include "dotoptions.h"
 
 
-#define CFG_KEY_AXES    "Axes"
-#define CFG_KEY_CONVERT "Convert"
-#define CFG_KEY_DIVIDER "Divider"
+#define CFG_KEY_AXES    (QLatin1String{"Axes"})
+#define CFG_KEY_CONVERT (QLatin1String{"Convert"})
+#define CFG_KEY_DIVIDER (QLatin1String{"Divider"})
 
 
 DotOptions::DotOptions() :

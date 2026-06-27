@@ -17,6 +17,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <QChar>
 #include <QRegularExpression>               // for QRegularExpression
 #include <QRegularExpressionMatch>          // for QRegularExpressionMatch
 #include <QRegularExpressionMatchIterator>  // for QRegularExpressionMatchIterator
@@ -39,12 +40,12 @@ bool Utils::removeTextByRegExp(QString& tx,
 
 	// Glue multiple regular expressions into one.
 	for (QString exp : expList) {
-		if (replaceDollar && exp.contains('$') && !exp.contains("\\$")) {
-			exp.replace('$', "\\n");
+		if (replaceDollar && exp.contains(QChar{'$'}) && !exp.contains("\\$")) {
+			exp.replace(QChar{'$'}, "\\n");
 		}
 
 		if (!complex.isEmpty()) {
-			complex.append("|");
+			complex.append(QChar{'|'});
 		}
 
 		complex.append(exp);

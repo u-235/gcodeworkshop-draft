@@ -21,6 +21,7 @@
  ***************************************************************************/
 
 #include <QApplication>             // for QApplication, qApp
+#include <QChar>                    // for QChar
 #include <QCheckBox>                // for QCheckBox
 #include <QColor>                   // for QColor
 #include <QComboBox>                // for QComboBox
@@ -409,29 +410,29 @@ bool GUI::FindInFilesPanel::findFiles(const QString startDir, QString mainDir, b
 					textFounded = (pos >= 0);
 
 					if (textFounded && (ui->commentStyle1CheckBox->isChecked() || ui->commentStyle2CheckBox->isChecked())) {
-						int lineStartPos = line.lastIndexOf('\n', pos);
+						int lineStartPos = line.lastIndexOf(QChar('\n'), pos);
 
 						if (lineStartPos < 0) {
 							lineStartPos = pos;
 						}
 
 						if (ui->commentStyle1CheckBox->isChecked() && ui->commentStyle2CheckBox->isChecked()) {
-							commentPos  = line.indexOf('(', lineStartPos);
+							commentPos  = line.indexOf(QChar('('), lineStartPos);
 
 							if (commentPos > pos) {
 								commentPos = -1;
 							}
 
 							if (commentPos < 0) {
-								commentPos  = line.indexOf(';', lineStartPos);
+								commentPos  = line.indexOf(QChar(';'), lineStartPos);
 							}
 						} else {
 							if (ui->commentStyle2CheckBox->isChecked()) {
-								commentPos  = line.indexOf('(', lineStartPos);
+								commentPos  = line.indexOf(QChar('('), lineStartPos);
 							}
 
 							if (ui->commentStyle1CheckBox->isChecked()) {
-								commentPos  = line.indexOf(';', lineStartPos);
+								commentPos  = line.indexOf(QChar(';'), lineStartPos);
 							}
 						}
 
@@ -479,9 +480,9 @@ bool GUI::FindInFilesPanel::findFiles(const QString startDir, QString mainDir, b
 					comment_tx = match.captured();
 
 					if (!comment_tx.contains(";$")) {
-						comment_tx.remove('(');
-						comment_tx.remove(')');
-						comment_tx.remove(';');
+						comment_tx.remove(QChar('('));
+						comment_tx.remove(QChar(')'));
+						comment_tx.remove(QChar(';'));
 						break;
 					}
 
@@ -633,18 +634,18 @@ bool GUI::FindInFilesPanel::findText(const QString& exp, QTextDocument::FindFlag
 			cur_line_column = cursor.columnNumber();
 
 			if (ui->commentStyle1CheckBox->isChecked() && ui->commentStyle2CheckBox->isChecked()) {
-				commentPos  = cur_line.indexOf(';', 0);
+				commentPos  = cur_line.indexOf(QChar(';'), 0);
 
 				if (commentPos < 0) {
-					commentPos  = cur_line.indexOf('(', 0);
+					commentPos  = cur_line.indexOf(QChar('('), 0);
 				}
 			} else {
 				if (ui->commentStyle2CheckBox->isChecked()) {
-					commentPos  = cur_line.indexOf('(', 0);
+					commentPos  = cur_line.indexOf(QChar('('), 0);
 				}
 
 				if (ui->commentStyle1CheckBox->isChecked()) {
-					commentPos  = cur_line.indexOf(';', 0);
+					commentPos  = cur_line.indexOf(QChar(';'), 0);
 				}
 			}
 

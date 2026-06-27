@@ -17,17 +17,18 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <QSettings>    // for QSettings
-#include <QVariant>     // for QVariant
+#include <QLatin1String>    // for QLatin1String
+#include <QSettings>        // for QSettings
+#include <QVariant>         // for QVariant
 
 #include "i2moptions.h"
 
 
-#define CFG_KEY_INCH_VALUE  "inch"
-#define CFG_KEY_INCH_IN     "inchIn"
-#define CFG_KEY_MM_VALUE    "mm"
-#define CFG_KEY_MM_IN       "mmIn"
-#define CFG_KEY_TO_INCH     "ToInch"
+#define CFG_KEY_INCH_VALUE  (QLatin1String{"inch"})
+#define CFG_KEY_INCH_IN     (QLatin1String{"inchIn"})
+#define CFG_KEY_MM_VALUE    (QLatin1String{"mm"})
+#define CFG_KEY_MM_IN       (QLatin1String{"mmIn"})
+#define CFG_KEY_TO_INCH     (QLatin1String{"ToInch"})
 
 
 I2MOptions::I2MOptions() :

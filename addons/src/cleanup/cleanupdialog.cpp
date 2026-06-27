@@ -25,6 +25,7 @@
 #include <QCursor>              // for QCursor
 #include <QIcon>                // for QIcon
 #include <QKeySequence>         // for QKeySequence
+#include <QLatin1String>        // for QLatin1String
 #include <QList>                // for QList
 #include <QMenu>                // for QMenu
 #include <QPlainTextEdit>       // for QPlainTextEdit
@@ -50,9 +51,9 @@
 #include "cleanupoptions.h" // for CleanUpOptions
 
 
-#define CFG_SECTION  "CleanUpDialog"
-#define CFG_KEY_POS  "Position"
-#define CFG_KEY_SIZE "Size"
+#define CFG_SECTION  (QLatin1String{"CleanUpDialog"})
+#define CFG_KEY_POS  (QLatin1String{"Position"})
+#define CFG_KEY_SIZE (QLatin1String{"Size"})
 
 
 CleanUpDialog::CleanUpDialog(QWidget* parent, QSettings* settings) :

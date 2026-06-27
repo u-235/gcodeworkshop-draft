@@ -18,7 +18,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <QLatin1Char>                      // for QLatin1Char
+#include <QChar>                            // for QChar
 #include <QRegularExpression>               // for QRegularExpression, QRegularExpression::CaseInsensitiveOption
 #include <QRegularExpressionMatch>			// for QRegularExpressionMatch
 #include <QRegularExpressionMatchIterator>  // for QRegularExpressionMatchIterator
@@ -66,10 +66,10 @@ int Utils::insertDot(QString& tx,
 
 		if (match.capturedLength(1) > 0) {
 			QString f_tx = match.captured(1);
-			f_tx.remove(' ');
-			f_tx.remove('\t');
+			f_tx.remove(QChar{' '});
+			f_tx.remove(QChar{'\t'});
 
-			if (convert && !f_tx.contains(QLatin1Char('.'))) {
+			if (convert && !f_tx.contains(QChar{'.'})) {
 				bool ok;
 				double it = f_tx.toDouble(&ok);
 
@@ -83,9 +83,9 @@ int Utils::insertDot(QString& tx,
 				}
 			}
 
-			if (!convert && !f_tx.contains(QLatin1Char('.'))) {
+			if (!convert && !f_tx.contains(QChar{'.'})) {
 				result.append(tx.mid(pos, match.capturedEnd(1) - pos));
-				result.append(QLatin1Char('.'));
+				result.append(QChar{'.'});
 				pos = match.capturedEnd(1);
 				count++;
 			}

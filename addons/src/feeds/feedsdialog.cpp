@@ -31,6 +31,7 @@
 #include <QEvent>           // for QEvent, QEvent::KeyPress
 #include <QIntValidator>    // for QIntValidator
 #include <QKeyEvent>        // for QKeyEvent
+#include <QLatin1String>    // for QLatin1String
 #include <QLineEdit>        // for QLineEdit
 #include <QLocale>          // for QLocale
 #include <QPalette>         // for QPalette
@@ -50,9 +51,9 @@ class QWidget;
 #include "feedsoptions.h"   // for FeedsOptions
 
 
-#define CFG_SECTION  "FeedsDialog"
-#define CFG_KEY_POS  "Position"
-#define CFG_KEY_SIZE "Size"
+#define CFG_SECTION  (QLatin1String{"FeedsDialog"})
+#define CFG_KEY_POS  (QLatin1String{"Position"})
+#define CFG_KEY_SIZE (QLatin1String{"Size"})
 
 
 FeedsDialog::FeedsDialog(QWidget* parent, QSettings* settings) :

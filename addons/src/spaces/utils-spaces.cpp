@@ -50,48 +50,48 @@ int Utils::removeSpaces(QString& tx, std::function<bool(int)> interrupt)
 
 		switch (state) {
 		case AFTER_APOSTROPHE:
-			if (currentChar == '\'' || currentChar == '\n') {
+			if (currentChar == QChar{'\''} || currentChar == QChar{'\n'}) {
 				state = NORMAL_FLOW;
 			}
 
 			break;
 
 		case AFTER_PARETHESIS:
-			if (currentChar == ')' || currentChar == '\n') {
+			if (currentChar == QChar{')'} || currentChar == QChar{'\n'}) {
 				state = NORMAL_FLOW;
 			}
 
 			break;
 
 		case AFTER_SEMICOLON:
-			if (currentChar == '\n') {
+			if (currentChar == QChar{'\n'}) {
 				state = NORMAL_FLOW;
 			}
 
 			break;
 
 		default:
-			if (currentChar == '\'') {
+			if (currentChar == QChar{'\''}) {
 				state = AFTER_APOSTROPHE;
-			} else if (currentChar == '(') {
+			} else if (currentChar == QChar{'('}) {
 				state = AFTER_PARETHESIS;
-			} else if (currentChar == ';') {
+			} else if (currentChar == QChar{';'}) {
 				state = AFTER_SEMICOLON;
 			} else {
 				// Some spaces are not removed to avoid merging words.
 				// If there are letters before and after spaces, then one space is left.
-				if (currentChar == ' ' || currentChar == '\t') {
+				if (currentChar == QChar{' '} || currentChar == QChar{'\t'}) {
 					skipChar = true;
 					replaced ++;
 
 					if (wasLetter) {
 						openAddress = true;
 					}
-				} else if ((currentChar >= 'A' && currentChar <= 'Z') ||
-				           (currentChar >= 'a' && currentChar <= 'z') ||
-				           currentChar == '#') {
+				} else if ((currentChar >= QChar{'A'} && currentChar <= QChar{'Z'}) ||
+				           (currentChar >= QChar{'a'} && currentChar <= QChar{'z'}) ||
+				           currentChar == QChar{'#'}) {
 					if (openAddress) {
-						updatedText.append(' ');
+						updatedText.append(QChar{' '});
 					}
 
 					wasLetter = true;
@@ -142,67 +142,67 @@ int Utils::insertSpaces(QString& tx, std::function<bool(int)> interrupt)
 
 		switch (state) {
 		case AFTER_APOSTROPHE:
-			if (currentChar == '\'' || currentChar == '\n') {
+			if (currentChar == QChar{'\''} || currentChar == QChar{'\n'}) {
 				state = NORMAL_FLOW;
 			}
 
 			break;
 
 		case AFTER_PARETHESIS:
-			if (currentChar == ')' || currentChar == '\n') {
+			if (currentChar == QChar{')'} || currentChar == QChar{'\n'}) {
 				state = NORMAL_FLOW;
 			}
 
 			break;
 
 		case AFTER_SEMICOLON:
-			if (currentChar == '\n') {
+			if (currentChar == QChar{'\n'}) {
 				state = NORMAL_FLOW;
 			}
 
 			break;
 
 		default:
-			if (currentChar == '\'') {
+			if (currentChar == QChar{'\''}) {
 				state = AFTER_APOSTROPHE;
 
-				if (previosChar != ' ' && previosChar != '\n') {
+				if (previosChar != QChar{' '} && previosChar != QChar{'\n'}) {
 					insert = true;
 				}
-			} else if (currentChar == '(') {
+			} else if (currentChar == QChar{'('}) {
 				state = AFTER_PARETHESIS;
 
-				if (previosChar != ' ' && previosChar != '\n') {
+				if (previosChar != QChar{' '} && previosChar != QChar{'\n'}) {
 					insert = true;
 				}
-			} else if (currentChar == ';') {
+			} else if (currentChar == QChar{';'}) {
 				state = AFTER_SEMICOLON;
 
-				if (previosChar != ' ' && previosChar != '\n') {
+				if (previosChar != QChar{' '} && previosChar != QChar{'\n'}) {
 					insert = true;
 				}
-			} else if (previosChar == ' ' || currentChar == ' ') {
+			} else if (previosChar == QChar{' '} || currentChar == QChar{' '}) {
 				// do nothing
-			} else if (previosChar == '\n') {
+			} else if (previosChar == QChar{'\n'}) {
 				// do nothing
-			} else if (currentChar == '#' && previosChar != '#' && previosChar != '['
-			           && previosChar != '-' && previosChar != '+' && previosChar != '*'
-			           && previosChar != '/' && previosChar != '=') {
+			} else if (currentChar == QChar{'#'} && previosChar != QChar{'#'} && previosChar != QChar{'['}
+			           && previosChar != QChar{'-'} && previosChar != QChar{'+'} && previosChar != QChar{'*'}
+			           && previosChar != QChar{'/'} && previosChar != QChar{'='}) {
 				insert = true;
-			} else if ((previosChar >= 'A' && previosChar <= 'Z') ||
-			           (previosChar >= 'a' && previosChar <= 'z') ||
-			           previosChar == ',') {
+			} else if ((previosChar >= QChar{'A'} && previosChar <= QChar{'Z'}) ||
+			           (previosChar >= QChar{'a'} && previosChar <= QChar{'z'}) ||
+			           previosChar == QChar{','}) {
 				// do nothing
-			} else if ((currentChar >= 'A' && currentChar <= 'Z') ||
-			           (currentChar >= 'A' && currentChar <= 'Z') ||
-			           currentChar == ',') {
+			} else if ((currentChar >= QChar{'A'} && currentChar <= QChar{'Z'}) ||
+			           (currentChar >= QChar{'A'} && currentChar <= QChar{'Z'}) ||
+			           currentChar == QChar{','}) {
 				insert = true;
 			}
 		}
 
 		if (insert) {
 			replaced++;
-			updatedText.append(' ');
+			updatedText.append(QChar{' '});
 		}
 
 		updatedText.append(currentChar);

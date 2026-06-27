@@ -18,6 +18,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <QChar>        // for QChar
 #include <QCompleter>   // for QCompleter
 #include <QKeyEvent>    // for QKeyEvent
 #include <QLineEdit>    // for QLineEdit
@@ -82,7 +83,7 @@ void InLineCalc::keyPressEvent(QKeyEvent* event)
 void InLineCalc::evaluate()
 {
 	QString result = text();
-	result.replace(',', '.');
+	result.replace(QChar(','), QChar('.'));
 
 	m_wordList.append(result);
 	m_wordList.removeDuplicates();

@@ -41,8 +41,8 @@ void Utils::blockSkip(QString& tx, bool remove, bool inc)
 		if (match.hasMatch()) {
 			QString captured = match.captured();
 			tx.remove(regex);
-			captured.remove('/');
-			captured.remove(' ');
+			captured.remove(QChar{'/'});
+			captured.remove(QChar{' '});
 			bool ok;
 			num = captured.toInt(&ok);
 
@@ -84,14 +84,14 @@ void Utils::blockSkip(QString& tx, bool remove, bool inc)
 
 			if ((i > 1) || (i < 0)) {
 				if (num == 0) {
-					txLine.prepend("/");
+					txLine.prepend(QChar{'/'});
 				} else {
 					txLine.prepend(QString("/%1").arg(num));
 				}
 			}
 		}
 
-		txLine.append("\n");
+		txLine.append(QChar{'\n'});
 		tx.append(txLine);
 	}
 

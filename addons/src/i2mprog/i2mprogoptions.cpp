@@ -17,15 +17,16 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <QSettings>    // for QSettings
-#include <QVariant>     // for QVariant
+#include <QLatin1String>    // for QLatin1String
+#include <QSettings>        // for QSettings
+#include <QVariant>         // for QVariant
 
 #include "i2mprogoptions.h"
 
 
-#define CFG_KEY_AXES      "Axes"
-#define CFG_KEY_PRECISION "Precision"
-#define CFG_KEY_TO_INCH   "ToInch"
+#define CFG_KEY_AXES      (QLatin1String{"Axes"})
+#define CFG_KEY_PRECISION (QLatin1String{"Precision"})
+#define CFG_KEY_TO_INCH   (QLatin1String{"ToInch"})
 
 
 I2MProgOptions::I2MProgOptions() :

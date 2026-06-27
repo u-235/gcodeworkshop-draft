@@ -56,9 +56,9 @@ int Utils::CompileMacro::compile(const QString& tx)
 	while (match.hasMatch() && match.capturedEnd() <= matchEnd.capturedStart()) {
 		int pos = match.capturedEnd();
 		QString param = match.captured();
-		param = param.remove(' ');
-		param = param.remove('{');
-		param = param.remove('=');
+		param = param.remove(QChar{' '});
+		param = param.remove(QChar{'{'});
+		param = param.remove(QChar{'='});
 
 		QString val = "";
 
@@ -66,11 +66,11 @@ int Utils::CompileMacro::compile(const QString& tx)
 			val = val + m_result.at(pos);
 			pos++;
 
-			if (m_result.at(pos) == '\n' || m_result.at(pos) == '{') {
+			if (m_result.at(pos) == QChar{'\n'} || m_result.at(pos) == QChar{'{'}) {
 				m_status = tr("Param list: no bracket \'}\' !");
 				return -1;
 			}
-		} while ((m_result.at(pos) != '}'));
+		} while ((m_result.at(pos) != QChar{'}'}));
 
 		val = val.remove(' ');
 
@@ -91,8 +91,8 @@ int Utils::CompileMacro::compile(const QString& tx)
 	while (match.hasMatch()) {
 		QString param = match.captured();
 		param = param.simplified();
-		param = param.remove(QChar(' '));
-		param = param.replace(',', '.');
+		param = param.remove(QChar{' '});
+		param = param.replace(QChar{','}, QChar{'.'});
 
 		if (!param.isEmpty()) {
 			QString paramTmp = param;
@@ -114,8 +114,8 @@ int Utils::CompileMacro::compile(const QString& tx)
 			}
 
 			QString val = param;
-			val = val.remove('{');
-			val = val.remove('}');
+			val = val.remove(QChar{'{'});
+			val = val.remove(QChar{'}'});
 			m_result.replace(match.capturedStart(), match.capturedLength(), val);
 		}
 

@@ -17,25 +17,26 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <QSettings>    // for QSettings
-#include <QVariant>     // for QVariant
+#include <QLatin1String>    // for QLatin1String
+#include <QSettings>        // for QSettings
+#include <QVariant>         // for QVariant
 
 #include "triangleoptions.h"
 
 
-#define CFG_KEY_ANGLE_A_IN      "AngleAIn"
-#define CFG_KEY_ANGLE_A_VALUE   "AngleAValue"
-#define CFG_KEY_ANGLE_B_IN      "AngleBIn"
-#define CFG_KEY_ANGLE_B_VALUE   "AngleBValue"
-#define CFG_KEY_ANGLE_C_IN      "AngleCIn"
-#define CFG_KEY_ANGLE_C_VALUE   "AngleCValue"
-#define CFG_KEY_SIDE_A_IN       "SideAIn"
-#define CFG_KEY_SIDE_A_VALUE    "SideAValue"
-#define CFG_KEY_SIDE_B_IN       "SideBIn"
-#define CFG_KEY_SIDE_B_VALUE    "SideBValue"
-#define CFG_KEY_SIDE_C_IN       "SideCIn"
-#define CFG_KEY_SIDE_C_VALUE    "SideCValue"
-#define CFG_KEY_RIGHT_TRIANGLE  "RightTriangle"
+#define CFG_KEY_ANGLE_A_IN      (QLatin1String{"AngleAIn"})
+#define CFG_KEY_ANGLE_A_VALUE   (QLatin1String{"AngleAValue"})
+#define CFG_KEY_ANGLE_B_IN      (QLatin1String{"AngleBIn"})
+#define CFG_KEY_ANGLE_B_VALUE   (QLatin1String{"AngleBValue"})
+#define CFG_KEY_ANGLE_C_IN      (QLatin1String{"AngleCIn"})
+#define CFG_KEY_ANGLE_C_VALUE   (QLatin1String{"AngleCValue"})
+#define CFG_KEY_SIDE_A_IN       (QLatin1String{"SideAIn"})
+#define CFG_KEY_SIDE_A_VALUE    (QLatin1String{"SideAValue"})
+#define CFG_KEY_SIDE_B_IN       (QLatin1String{"SideBIn"})
+#define CFG_KEY_SIDE_B_VALUE    (QLatin1String{"SideBValue"})
+#define CFG_KEY_SIDE_C_IN       (QLatin1String{"SideCIn"})
+#define CFG_KEY_SIDE_C_VALUE    (QLatin1String{"SideCValue"})
+#define CFG_KEY_RIGHT_TRIANGLE  (QLatin1String{"RightTriangle"})
 
 
 TriangleOptions::TriangleOptions() :

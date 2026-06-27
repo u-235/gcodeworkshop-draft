@@ -17,16 +17,17 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <QSettings>    // for QSettings
-#include <QStringList>  // for QStringList
-#include <QVariant>     // for QVariant
+#include <QLatin1String>    // for QLatin1String
+#include <QStringList>      // for QStringList
+#include <QSettings>        // for QSettings
+#include <QVariant>         // for QVariant
 
 #include "cleanupoptions.h"
 
 
-#define CFG_KEY_COMMENTS    "Comments"
-#define CFG_KEY_EXPRESSIONS "Expressions"
-#define CFG_KEY_SELECTED    "Selected"
+#define CFG_KEY_COMMENTS    (QLatin1String{"Comments"})
+#define CFG_KEY_EXPRESSIONS (QLatin1String{"Expressions"})
+#define CFG_KEY_SELECTED    (QLatin1String{"Selected"})
 
 
 CleanUpOptions::CleanUpOptions() :
