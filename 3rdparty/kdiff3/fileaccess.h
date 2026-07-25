@@ -16,6 +16,7 @@
 #include <QEventLoop>
 #include <QLabel>
 #include <QProgressBar>
+#include <QString>          // IWYU pragma: keep
 #include <QElapsedTimer>
 #include <QUrl>
 

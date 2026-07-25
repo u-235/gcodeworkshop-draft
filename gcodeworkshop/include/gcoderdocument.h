@@ -23,7 +23,7 @@
 #include <QByteArray>       // for QByteArray
 #include <QList>            // for QList
 #include <QObject>          // for slots, signals, Q_OBJECT
-#include <QString>          // for QString
+#include <QString>          // IWYU pragma: keep
 #include <QTextCursor>      // for QTextCursor
 #include <QTextEdit>        // for QTextEdit::ExtraSelection, QTextEdit
 

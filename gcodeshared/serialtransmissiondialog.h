@@ -27,7 +27,7 @@
 #include <QDialog>      // for QDialog
 #include <QObject>      // for slots, Q_OBJECT
 #include <QSerialPort>  // for QSerialPort
-#include <QString>      // for QString
+#include <QString>      // IWYU pragma: keep
 #include <QStringList>  // for QStringList
 #include <Qt>           // for WindowType, WindowFlags
 #include <QtGlobal>     // for qint64

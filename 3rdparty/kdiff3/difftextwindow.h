@@ -18,6 +18,7 @@
 #ifndef DIFFTEXTWINDOW_H
 #define DIFFTEXTWINDOW_H
 
+#include <QString>      // IWYU pragma: keep
 #include <QStringList>
 #include <QWidget>
 

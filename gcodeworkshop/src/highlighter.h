@@ -26,7 +26,7 @@
 #include <QFont>                // for QFont
 #include <QObject>              // for Q_OBJECT
 #include <QRegularExpression>   // for QRegularExpression
-#include <QString>              // for QString
+#include <QString>              // IWYU pragma: keep
 #include <QSyntaxHighlighter>   // for QSyntaxHighlighter
 #include <QTextCharFormat>      // for QTextCharFormat
 #include <QVector>              // for QVector

@@ -21,7 +21,7 @@
 #define DOCUMENTWIDGETCLOSEEVENTFILTER_H
 
 #include <QObject>  // QObject, Q_OBJECT, signals
-#include <QString>  // for QString
+#include <QString>  // IWYU pragma: keep
 
 class QCloseEvent;
 class QEvent;

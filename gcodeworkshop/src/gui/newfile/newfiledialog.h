@@ -26,7 +26,7 @@
 #include <QDialog>  // for QDialog
 #include <QDir>     // for QDir
 #include <QObject>  // for Q_OBJECT, slots
-#include <QString>  // for QString
+#include <QString>  // IWYU pragma: keep
 
 class QSettings;
 class QWidget;

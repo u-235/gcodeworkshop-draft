@@ -22,6 +22,7 @@
 #include <QPixmap>
 #include <QTimer>
 #include <QStatusBar>
+#include <QString>      // IWYU pragma: keep
 
 #include "diff.h"
 

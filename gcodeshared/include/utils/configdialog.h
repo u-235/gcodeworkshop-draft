@@ -25,7 +25,7 @@
 #include <QList>            // for QList
 #include <QObject>          // for slots, Q_OBJECT, signals
 #include <QSharedPointer>   // for QTypeInfo<>::isLarge, QTypeInfo<>::isStatic
-#include <QString>          // for QString
+#include <QString>          // IWYU pragma: keep
 
 class QStackedLayout;
 class QTreeWidgetItem;

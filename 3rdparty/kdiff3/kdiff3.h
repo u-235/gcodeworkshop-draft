@@ -20,6 +20,7 @@
 
 #include <QSplitter>
 #include <QScrollBar>
+#include <QString>      // IWYU pragma: keep
 #include <QMenu>
 
 #include "diff.h"

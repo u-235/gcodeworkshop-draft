@@ -22,7 +22,7 @@
 #define BHCDTAB_H
 
 #include <QObject>  // for slots, Q_OBJECT, signals
-#include <QString>  // for QString
+#include <QString>  // IWYU pragma: keep
 #include <QWidget>  // for QWidget
 
 class QAbstractItemModel;

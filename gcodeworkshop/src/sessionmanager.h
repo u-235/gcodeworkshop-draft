@@ -22,7 +22,7 @@
 
 #include <QList>        // for QList
 #include <QObject>      // for QObject, Q_OBJECT, signals
-#include <QString>      // for QString
+#include <QString>      // IWYU pragma: keep
 #include <QStringList>  // for QStringList
 
 class QSettings;

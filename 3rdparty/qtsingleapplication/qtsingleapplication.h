@@ -42,6 +42,7 @@
 #define QTSINGLEAPPLICATION_H
 
 #include <QApplication>
+#include <QString>      // IWYU pragma: keep
 
 class QtLocalPeer;
 

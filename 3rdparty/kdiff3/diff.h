@@ -19,6 +19,7 @@
 #define DIFF_H
 
 #include <QPainter>
+#include <QString>  // IWYU pragma: keep
 #include <list>
 #include <vector>
 #include <assert.h>

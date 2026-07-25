@@ -44,6 +44,7 @@
 #include <QLocalServer>
 #include <QLocalSocket>
 #include <QDir>
+#include <QString>      // IWYU pragma: keep
 
 #include "qtlockedfile.h"
 

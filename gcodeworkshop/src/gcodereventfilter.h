@@ -23,7 +23,7 @@
 #include <QHash>                // for QHash
 #include <QObject>              // for QObject, Q_OBJECT, signals
 #include <QRegularExpression>   // for QRegularExpression
-#include <QString>              // for QString
+#include <QString>              // IWYU pragma: keep
 
 class QDragEnterEvent;
 class QDropEvent;

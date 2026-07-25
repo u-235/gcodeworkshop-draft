@@ -25,7 +25,7 @@
 
 #include <QDialog>      // for QDialog
 #include <QObject>      // for slots, Q_OBJECT
-#include <QString>      // for QString
+#include <QString>      // IWYU pragma: keep
 #include <QStringList>  // for QStringList
 #include <Qt>           // for WindowType, WindowFlags
 

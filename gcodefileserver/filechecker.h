@@ -27,7 +27,7 @@
 #include <QDialog>
 #include <QObject>
 #include <QPointer>
-#include <QString>
+#include <QString>      // IWYU pragma: keep
 #include <QStringList>
 
 class QToolButton;

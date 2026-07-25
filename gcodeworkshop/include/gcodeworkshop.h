@@ -26,7 +26,7 @@
 #include <QByteArray>   // for QByteArray
 #include <QObject>      // for slots, signals, QObject, Q_OBJECT
 #include <QPointer>     // for QPointer
-#include <QString>      // for QString
+#include <QString>      // IWYU pragma: keep
 #include <QStringList>  // for QStringList
 
 class QAction;

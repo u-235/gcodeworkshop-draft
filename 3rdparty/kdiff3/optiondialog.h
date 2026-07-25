@@ -27,7 +27,7 @@
 #include <QFont>
 #include <QPoint>
 #include <QSize>
-#include <QString>
+#include <QString>      // IWYU pragma: keep
 #include <QStringList>
 #include <QTabWidget>
 

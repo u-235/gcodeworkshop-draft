@@ -23,7 +23,7 @@
 #include <QList>            // for QList
 #include <QObject>          // for QObject, slots, Q_OBJECT
 #include <QSharedPointer>   // for QSharedPointer, QTypeInfo<>::isLarge, QTypeInfo<>::isStatic, QTypeInfo<>::isComplex
-#include <QString>          // for QString
+#include <QString>          // IWYU pragma: keep
 
 class QWidget;
 

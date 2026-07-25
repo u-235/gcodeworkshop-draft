@@ -21,7 +21,7 @@
 #define FINDTOOLBARACTIONS_H
 
 #include <QObject>  // for QObject, Q_OBJECT, slots
-#include <QString>  // for QString
+#include <QString>  // IWYU pragma: keep
 
 class QAction;
 

@@ -25,7 +25,7 @@
 
 #include <QMainWindow>      // for QMainWindow
 #include <QObject>          // for Q_OBJECT, slots
-#include <QString>          // for QString
+#include <QString>          // IWYU pragma: keep
 #include <QSystemTrayIcon>  // for QSystemTrayIcon
 
 class QAction;

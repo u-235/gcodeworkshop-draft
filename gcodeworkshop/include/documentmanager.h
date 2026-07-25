@@ -24,7 +24,7 @@
 #include <QMap>     // for QMap
 #include <QObject>  // for signals, QObject, Q_OBJECT, slots
 #include <QPointer> // for QPointer
-#include <QString>  // for QString
+#include <QString>  // IWYU pragma: keep
 
 class QMdiArea;
 class QMdiSubWindow;

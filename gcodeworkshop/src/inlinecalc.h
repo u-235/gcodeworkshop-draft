@@ -22,7 +22,7 @@
 
 #include <QLineEdit>    // for QLineEdit
 #include <QObject>      // for Q_OBJECT, signals, slots
-#include <QString>      // for QString
+#include <QString>      // IWYU pragma: keep
 #include <QStringList>  // for QStringList
 
 class QKeyEvent;

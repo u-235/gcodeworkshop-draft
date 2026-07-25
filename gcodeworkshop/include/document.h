@@ -23,7 +23,7 @@
 #include <QByteArray>   // for QByteArray
 #include <QDir>         // for QDir
 #include <QObject>      // for QObject, Q_OBJECT, signals, slots
-#include <QString>      // for QString
+#include <QString>      // IWYU pragma: keep
 
 class QCloseEvent;
 class QMenu;
