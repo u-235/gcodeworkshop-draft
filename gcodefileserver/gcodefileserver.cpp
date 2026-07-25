@@ -34,7 +34,6 @@
 #include <QSettings>        // for QSettings
 #include <QSignalMapper>    // for QSignalMapper
 #include <QString>          // for QString, operator==
-#include <QStringList>      // for QStringList
 #include <QTabBar>          // for QTabBar
 #include <QTimer>           // for QTimer
 #include <QToolBar>         // for QToolBar
@@ -43,6 +42,12 @@
 #include <QWidget>          // for QWidget
 #include <Qt>               // for WidgetAttribute, ToolBarArea, WindowModality, WindowType
 #include <QtGlobal>         // for QForeachContainer, qMakeForeachContainer, QTypeInfo<>::isLarge, QTypeI...
+
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+	#include <QStringList>
+#else
+	using QStringList = QList<QString>;
+#endif
 
 #include <serialportconfigdialog.h>     // for SerialPortConfigDialog
 #include <serialtransmissiondialog.h>   // for SerialTransmissionDialog

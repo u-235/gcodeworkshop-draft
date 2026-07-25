@@ -19,8 +19,15 @@
 #define DIFFTEXTWINDOW_H
 
 #include <QString>      // IWYU pragma: keep
-#include <QStringList>
 #include <QWidget>
+#include <QtGlobal>
+
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+#include <QStringList>
+#else
+#include <QList>
+using QStringList = QList<QString>;
+#endif
 
 #include "diff.h"
 #include "mergeresultwindow.h"

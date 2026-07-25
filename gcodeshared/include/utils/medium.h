@@ -26,7 +26,13 @@
 #include <QList>        // for QList
 #include <QObject>      // for QObject, Q_OBJECT, signals
 #include <QString>      // IWYU pragma: keep
-#include <QStringList>  // for QStringList
+#include <QtGlobal>
+
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+	#include <QStringList>
+#else
+	using QStringList = QList<QString>;
+#endif
 
 class QLocale;
 class QSettings;

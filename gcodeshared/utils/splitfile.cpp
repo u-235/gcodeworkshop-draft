@@ -24,8 +24,13 @@
 #include <QRegularExpression>       // for QRegularExpression
 #include <QRegularExpressionMatch>  // for QRegularExpressionMatch
 #include <QString>                  // for QString
-#include <QStringList>              // for QStringList
 #include <QtGlobal>                 // for QTypeInfo<>::isLarge, QTypeInfo<>::isStatic, QForeachContainer, QTypeInfo...
+
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+	#include <QStringList>
+#else
+	using QStringList = QList<QString>;
+#endif
 
 #include <utils/splitfile.h>    // IWYU pragma: associated
 

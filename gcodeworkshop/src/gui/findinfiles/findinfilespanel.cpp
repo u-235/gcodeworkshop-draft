@@ -41,7 +41,6 @@
 #include <QSettings>                // for QSettings
 #include <QSplitter>                // for QSplitter
 #include <QString>                  // for QString, operator+, QCharRef
-#include <QStringList>              // for QStringList
 #include <QTableWidget>             // for QTableWidget
 #include <QTableWidgetItem>         // for QTableWidgetItem
 #include <QTextBlock>               // for QTextBlock
@@ -54,6 +53,13 @@
 #include <QVariant>                 // for QVariant
 #include <Qt>                       // for operator|, AlignVCenter, KeyboardModifiers, AlignLeft, NoModifier, AlignR...
 #include <QtGlobal>                 // for QFlags, qMakeForeachContainer, Q_UNUSED, foreach, qint64
+
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+	#include <QStringList>
+#else
+	#include <QList>
+	using QStringList = QList<QString>;
+#endif
 
 #include <gcoderstyle.h>    // for HighlightColors
 #include <utils/medium.h>   // for Medium

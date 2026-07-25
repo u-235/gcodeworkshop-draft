@@ -28,9 +28,16 @@
 #include <QLineEdit>    // for QLineEdit
 #include <QPushButton>  // for QPushButton
 #include <QSettings>    // for QSettings
-#include <QStringList>  // for QStringList
+#include <QString>      // for QString
 #include <QVariant>     // for QVariant
 #include <QtGlobal>     // for QFlags
+
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+	#include <QStringList>
+#else
+	#include <QList>
+	using QStringList = QList<QString>;
+#endif
 
 #include <utils/medium.h>   // for Medium
 

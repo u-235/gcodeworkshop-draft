@@ -27,7 +27,14 @@
 #include <QObject>      // for slots, signals, QObject, Q_OBJECT
 #include <QPointer>     // for QPointer
 #include <QString>      // IWYU pragma: keep
-#include <QStringList>  // for QStringList
+#include <QtGlobal>
+
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+	#include <QStringList>
+#else
+	#include <QList>
+	using QStringList = QList<QString>;
+#endif
 
 class QAction;
 class QDir;

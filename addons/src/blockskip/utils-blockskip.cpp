@@ -22,8 +22,14 @@
 #include <QRegularExpression>       // for QRegularExpression
 #include <QRegularExpressionMatch>  // for QRegularExpressionMatch
 #include <QString>                  // for QString
-#include <QStringList>              // for QStringList
 #include <QtGlobal>                 // for QForeachContainer, qMakeForeachContainer, foreach
+
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+	#include <QStringList>
+#else
+	#include <QList>
+	using QStringList = QList<QString>;
+#endif
 
 #include "utils-blockskip.h"
 

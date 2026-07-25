@@ -49,7 +49,6 @@
 #include <QSettings>            // for QSettings
 #include <QStatusBar>           // for QStatusBar
 #include <QString>              // for QString, operator+, operator!=, operator==
-#include <QStringList>          // for QStringList
 #include <QTextStream>          // for QTextStream
 #include <QUrl>                 // for QUrl
 #include <QVariant>             // for QVariant
@@ -57,10 +56,12 @@
 #include <Qt>                   // for WindowType, CursorShape, ConnectionType, CaseSensitivity, SplitBehavi...
 #include <QtGlobal>             // for QTypeInfo<>::isLarge, QTypeInfo<>::isStatic, QT_VERSION, QT_VERSION_C...
 
-class QPoint;
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+	#include <QStringList>
+#else
+	using QStringList = QList<QString>;
+#endif
 
-#include <gcodeworkshop.h>
-#include <addons-actions.h>             // for Actions
 #include <document.h>                   // for Document
 #include <documentinfo.h>               // for DocumentInfo
 #include <documentmanager.h>            // for DocumentManager
@@ -70,6 +71,7 @@ class QPoint;
 #include <gcoderdocument.h>             // for GCoderDocument
 #include <gcoderstyle.h>                // for GCoderStyle
 #include <gcoderwidgetproperties.h>     // for GCoderWidgetProperties
+#include <gcodeworkshop.h>
 #include <kdiff3/common.h>              // for getFilters
 #include <utils/gcode-converter.h>      // for Converter
 #include <utils/medium.h>               // for Medium

@@ -22,12 +22,19 @@
 #include <QAction>          // for QAction
 #include <QApplication>     // for QApplication
 #include <QIcon>            // for QIcon
-#include <QList>            // for QList<>::iterator
 #include <QLatin1String>    // for QLatin1String
 #include <QMainWindow>      // for QMainWindow
 #include <QMessageBox>      // for QMessageBox
-#include <QStringList>      // for QStringList
+#include <QString>          // for QString
 #include <Qt>               // for BusyCursor
+#include <QtGlobal>
+
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+	#include <QStringList>
+#else
+	#include <QList>
+	using QStringList = QList<QString>;
+#endif
 
 #include <gui/actions/actionkit.h>      // for ActionKit
 #include <addons-actions.h>             // IWYU pragma: associated

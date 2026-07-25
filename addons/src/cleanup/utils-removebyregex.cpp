@@ -22,7 +22,14 @@
 #include <QRegularExpressionMatch>          // for QRegularExpressionMatch
 #include <QRegularExpressionMatchIterator>  // for QRegularExpressionMatchIterator
 #include <QString>                          // for QString
-#include <QStringList>                      // for QStringList
+#include <QtGlobal>
+
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+	#include <QStringList>
+#else
+	#include <QList>
+	using QStringList = QList<QString>;
+#endif
 
 #include "utils-removebyregex.h"
 

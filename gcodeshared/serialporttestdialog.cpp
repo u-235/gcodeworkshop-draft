@@ -34,7 +34,6 @@
 #include <QSerialPort>      // for QSerialPort
 #include <QSettings>        // for QSettings
 #include <QString>          // for QString, QCharRef
-#include <QStringList>      // for QStringList
 #include <QTextCharFormat>  // for QTextCharFormat
 #include <QTextCursor>      // for QTextCursor
 #include <QTimer>           // for QTimer
@@ -42,6 +41,13 @@
 #include <QVariant>         // for QVariant
 #include <Qt>               // for GlobalColor, FocusReason, WidgetAttribute, WindowFlags
 #include <QtGlobal>         // for QFlags, Q_UNUSED, Q_OS_WIN32
+
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+	#include <QStringList>
+#else
+	#include <QList>
+	using QStringList = QList<QString>;
+#endif
 
 class QWidget;
 

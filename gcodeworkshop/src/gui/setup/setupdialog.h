@@ -26,8 +26,15 @@
 #include <QDialog>      // for QDialog
 #include <QObject>      // for slots, Q_OBJECT
 #include <QString>      // IWYU pragma: keep
-#include <QStringList>  // for QStringList
 #include <Qt>           // for WindowType, WindowFlags
+#include <QtGlobal>
+
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+	#include <QStringList>
+#else
+	#include <QList>
+	using QStringList = QList<QString>;
+#endif
 
 class QAbstractButton;
 class QButtonGroup;
