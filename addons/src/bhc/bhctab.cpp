@@ -38,11 +38,17 @@
 #include <QPalette>             // for QPalette
 #include <QSpinBox>             // for QSpinBox
 #include <QString>              // for QString, operator+
-#include <QStringList>          // for QStringList
 #include <QTableWidget>         // for QTableWidget
 #include <QTableWidgetItem>     // for QTableWidgetItem
 #include <Qt>                   // for Key, KeyboardModifier, ContextMenuPolicy, GlobalColor
 #include <QtGlobal>             // for Q_UNUSED
+
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+	#include <QStringList>
+#else
+	#include <QList>
+	using QStringList = QList<QString>;
+#endif
 
 class QValidator;
 

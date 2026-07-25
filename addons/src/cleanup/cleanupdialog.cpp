@@ -35,7 +35,6 @@
 #include <QSettings>            // for QSettings
 #include <QSize>                // for QSize
 #include <QString>              // for QString, operator==
-#include <QStringList>          // for QStringList
 #include <QTableWidget>         // for QTableWidget
 #include <QTableWidgetItem>     // for QTableWidgetItem
 #include <QTextCharFormat>      // for QTextCharFormat
@@ -45,6 +44,12 @@
 #include <QVariant>             // for QVariant
 #include <Qt>                   // for operator|, AlignmentFlag, CheckState, ItemFlag, ContextMenuPolicy, GlobalColor
 #include <QtGlobal>             // for QFlags, QTypeInfo<>::isLarge, QTypeInfo<>::isStatic, QTypeInfo<>::isComplex
+
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+	#include <QStringList>
+#else
+	using QStringList = QList<QString>;
+#endif
 
 #include "cleanupdialog.h"
 #include "cleanupoptions.h" // for CleanUpOptions

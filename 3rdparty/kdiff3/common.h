@@ -84,7 +84,15 @@ T minMaxLimiter(T d, T minimum, T maximum)
 }
 
 #include <map>
-#include <QStringList>
+#include <QtGlobal>
+
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+	#include <QStringList>
+#else
+	#include <QList>
+	#include <QString>
+	using QStringList = QList<QString>;
+#endif
 
 class QFont;
 class QColor;

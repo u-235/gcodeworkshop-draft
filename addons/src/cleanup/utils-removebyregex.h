@@ -22,9 +22,16 @@
 
 #include <functional>   // for function
 
-#include <QStringList>  // for QStringList
+#include <QtGlobal>
 
-class QString;
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+	class QString;
+	#include <QStringList>
+#else
+	#include <QString>
+	template<typename T> class QList;
+	using QStringList = QList<QString>;
+#endif
 
 
 namespace Utils {

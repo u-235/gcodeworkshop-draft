@@ -20,7 +20,15 @@
 #ifndef CLEANUPOPTIONS_H
 #define CLEANUPOPTIONS_H
 
-#include <QStringList>  // for QStringList
+#include <QtGlobal>
+
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+	#include <QStringList>
+#else
+	#include <QList>
+	#include <QString>
+	using QStringList = QList<QString>;
+#endif
 
 class QSettings;
 

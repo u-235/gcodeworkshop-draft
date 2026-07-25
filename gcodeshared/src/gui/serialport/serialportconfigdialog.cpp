@@ -32,7 +32,6 @@
 #include <QIcon>                        // for QIcon
 #include <QIntValidator>                // for QIntValidator
 #include <QLineEdit>                    // for QLineEdit
-#include <QList>                        // for QList
 #include <QListWidget>                  // for QListWidget
 #include <QPalette>                     // for QPalette
 #include <QPushButton>                  // for QPushButton
@@ -43,12 +42,18 @@
 #include <QSettings>                    // for QSettings
 #include <QSpinBox>                     // for QSpinBox
 #include <QString>                      // for QString
-#include <QStringList>                  // for QStringList
 #include <QTabWidget>                   // for QTabWidget
 #include <QToolButton>                  // for QToolButton
 #include <QUrl>                         // for QUrl
 #include <QVariant>                     // for QVariant
 #include <QtGlobal>                     // for QForeachContainer, QTypeInfo<>::isLarge, QTypeInfo<>::isStatic, Q_OS_...
+
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+	#include <QStringList>
+#else
+	#include <QList>
+	using QStringList = QList<QString>;
+#endif
 
 class QWidget;
 

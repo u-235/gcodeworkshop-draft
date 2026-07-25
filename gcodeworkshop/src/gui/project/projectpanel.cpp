@@ -34,12 +34,18 @@
 #include <QSettings>            // for QSettings
 #include <QStandardItemModel>   // for QStandardItem, QStandardItemModel
 #include <QStatusBar>           // for QStatusBar
-#include <QStringList>          // for QStringList
 #include <QToolButton>          // for QToolButton
 #include <QTreeView>            // for QTreeView
 #include <QVariant>             // for QVariant
 #include <Qt>                   // for MatchFlag, operator|, WindowType
 #include <QtGlobal>             // for QTypeInfo<>::isLarge, QTypeInfo<>::isStatic, QFlags
+
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+	#include <QStringList>
+#else
+	#include <QString>
+	using QStringList = QList<QString>;
+#endif
 
 #include <gcodeworkshop.h>
 
