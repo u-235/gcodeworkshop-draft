@@ -49,6 +49,14 @@
 #include <QtAlgorithms>                 // for qDeleteAll
 #include <QtGlobal>                     // for QTypeInfo<>::isLarge, QTypeInfo<>::isStatic, Q_OS_WIN32
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+	#include <QStringList>
+#else
+	#include <QString>
+	using QStringList = QList<QString>;
+	using QStringListIterator = QListIterator<QString>;
+#endif
+
 class QValidator;
 class QWidget;
 

@@ -27,13 +27,18 @@
 #include <QMessageBox>      // for QMessageBox
 #include <QSettings>        // for QSettings
 #include <QString>          // for QString
-#include <QStringList>      // for QStringList
 #include <QTimer>           // for QTimer
 #include <QUrl>             // for QUrl
 #include <QVariant>         // for QVariant
 #include <QWidget>          // for QWidget
 #include <Qt>               // for WidgetAttribute, WindowType
 #include <QtGlobal>         // for QTypeInfo<>::isLarge, QTypeInfo<>::isStatic
+
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+	#include <QStringList>
+#else
+	using QStringList = QList<QString>;
+#endif
 
 #include <gcodefileserver.h>                            // IWYU pragma: associated
 #include <gui/serialport/serialportconfigdialog.h>      // for SerialPortConfigDialog

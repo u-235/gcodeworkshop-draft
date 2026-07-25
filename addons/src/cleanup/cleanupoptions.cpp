@@ -17,9 +17,17 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <QSettings>    // for QSettings
-#include <QStringList>  // for QStringList
-#include <QVariant>     // for QVariant
+#include <QString>          // for QString
+#include <QSettings>        // for QSettings
+#include <QVariant>         // for QVariant
+#include <QtGlobal>
+
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+	#include <QStringList>
+#else
+	#include <QList>
+	using QStringList = QList<QString>;
+#endif
 
 #include "cleanupoptions.h"
 

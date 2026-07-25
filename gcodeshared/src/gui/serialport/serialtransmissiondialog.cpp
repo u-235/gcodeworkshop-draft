@@ -42,12 +42,19 @@
 #include <QSerialPort>              // for QSerialPort
 #include <QSettings>                // for QSettings
 #include <QString>                  // for QString, operator+, operator==
-#include <QStringList>              // for QStringList
 #include <QTextStream>              // for QTextStream
 #include <QTimer>                   // for QTimer
 #include <QVariant>                 // for QVariant
 #include <Qt>                       // for SplitBehaviorFlags, WidgetAttribute, WindowFlags
 #include <QtDebug>                  // for qDebug
+#include <QtGlobal>
+
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+	#include <QStringList>
+#else
+	#include <QList>
+	using QStringList = QList<QString>;
+#endif
 
 class QWidget;
 

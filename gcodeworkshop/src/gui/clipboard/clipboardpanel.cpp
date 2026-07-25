@@ -27,12 +27,18 @@
 #include <QModelIndexList>      // for QModelIndexList
 #include <QSettings>            // for QSettings
 #include <QStandardItemModel>   // for QStandardItem, QStandardItemModel
-#include <QStringList>          // for QStringList
 #include <QToolButton>          // for QToolButton
 #include <QTreeView>            // for QTreeView
 #include <QVariant>             // for QVariant
 #include <Qt>                   // for ContextMenuPolicy, SortOrder
-#include <QtGlobal>             // for Q_UNUSED
+#include <QtGlobal>             // for QT_VERSION, QT_VERSION_CHECK
+
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+	#include <QStringList>
+#else
+	#include <QString>
+	using QStringList = QList<QString>;
+#endif
 
 #include <utils/medium.h>       // for Medium
 

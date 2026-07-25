@@ -53,7 +53,6 @@
 #include <QSettings>            // for QSettings, QSettings::IniFormat, QSettings::NoError
 #include <QStatusBar>           // for QStatusBar
 #include <QString>              // for QString, operator+, operator!=, operator==
-#include <QStringList>          // for QStringList
 #include <QTextStream>          // for QTextStream
 #include <QUrl>                 // for QUrl, QUrl::TolerantMode
 #include <QVariant>             // for QVariant
@@ -61,7 +60,13 @@
 #include <Qt>                   // for operator|, red, WindowStates, BusyCursor, Dialog, MouseFocusReason
 #include <QtGlobal>             // for QFlags, QT_VERSION, QT_VERSION_CHECK, qMakeForeachContainer, Q_OS_LINUX
 
-#include <addons-actions.h>             // for Addons::Actions
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+	#include <QStringList>
+#else
+	using QStringList = QList<QString>;
+#endif
+
+#include <addons-actions.h>             // for Actions
 #include <document.h>                   // for Document
 #include <documentinfo.h>               // for DocumentInfo::Ptr, DocumentInfo
 #include <documentmanager.h>            // for DocumentManager

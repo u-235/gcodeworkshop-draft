@@ -40,7 +40,7 @@
 #include <QRegularExpression>       // for QRegularExpression, QRegularExpression::CaseInsensitiveOption
 #include <QRegularExpressionMatch>  // for QRegularExpressionMatch
 #include <QSettings>                // for QSettings, QSettings::IniFormat
-#include <QStringList>              // for QStringList
+#include <QString>                  // for QString
 #include <QTextBlock>               // for QTextBlock
 #include <QTextCharFormat>          // for QTextCharFormat, QTextCharFormat::DotLine, QTextCharFormat::NoUnderline
 #include <QTextDocument>            // for QTextDocument, QTextDocument::FindFlags, operator|, QTextDocument::FindB...
@@ -50,6 +50,13 @@
 #include <QWidget>                  // for QWidget
 #include <Qt>                       // for CaseInsensitive, CaseSensitive, CaseSensitivity, WA_DeleteOnClose, Custo...
 #include <QtGlobal>                 // for QFlags, QFlags<>::enum_type, qDebug, QT_VERSION, QT_VERSION_CHECK
+
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+	#include <QStringList>
+#else
+	#include <QList>
+	using QStringList = QList<QString>;
+#endif
 
 class QMenu;
 

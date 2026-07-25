@@ -27,6 +27,14 @@
 #include <QDir>     // for QDir
 #include <QObject>  // for Q_OBJECT, slots
 #include <QString>  // for QString
+#include <QtGlobal> // QT_VERSION, QT_VERSION_CHECK
+
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+	#include <QStringList>
+#else
+	template<typename T> class QList;
+	using QStringList = QList<QString>;
+#endif
 
 class QSettings;
 class QWidget;

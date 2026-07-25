@@ -24,8 +24,15 @@
 #include <QDialog>          // for QDialog, QDialog::Accepted
 #include <QObject>          // for QObject
 #include <QString>          // for QString
-#include <QStringList>      // for QStringList
 #include <QWidget>          // for QWidget
+#include <QtGlobal>
+
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+	#include <QStringList>
+#else
+	#include <QList>
+	using QStringList = QList<QString>;
+#endif
 
 #include <gui/longjobhelper.h>  // for GUI::LongJobHelper, GUI::LongJobHelper::CANCEL
 
