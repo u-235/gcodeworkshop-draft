@@ -467,6 +467,12 @@ Document* GCodeWorkShop::newFile()
 //
 //**************************************************************************************************
 
+bool GCodeWorkShop::isFileSuitable(const QString& fileName)
+{
+	QFileInfo info(fileName);
+	return m_extensions.contains("*." + info.suffix());
+}
+
 void GCodeWorkShop::open(const QDir& dir)
 {
 	const QString& filters = getFilters(m_extensions);

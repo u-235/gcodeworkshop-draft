@@ -63,6 +63,7 @@ HEADERS += \
     src/ui/actions/helpactions.h \
     src/ui/actions/toolactions.h \
     src/ui/actions/windowactions.h \
+    src/ui/filebrowser/filebrowser.h \
     src/ui/findtoolbar/findtoolbar.h \
     src/ui/findtoolbar/findtoolbaractions.h \
     src/ui/defaultkeysequences.h
@@ -99,6 +100,7 @@ SOURCES += \
     src/ui/actions/knownactions.cpp \
     src/ui/actions/toolactions.cpp \
     src/ui/actions/windowactions.cpp \
+    src/ui/filebrowser/filebrowser.cpp \
     src/ui/findtoolbar/findtoolbar.cpp \
     src/ui/findtoolbar/findtoolbaractions.cpp \
     src/ui/defaultkeysequences.cpp \
@@ -111,7 +113,8 @@ FORMS += \
     src/newfiledialog.ui \
     src/sessiondialog.ui \
     src/sessionnamedialog.ui \
-    src/setupdialog.ui
+    src/setupdialog.ui \
+    src/ui/filebrowser/filebrowser.ui
 
 
 # target platforms dependencies

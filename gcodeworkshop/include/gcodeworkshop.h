@@ -148,6 +148,7 @@ protected:
 	Ui::Actions::WindowActions* m_windowActions;
 
 public:
+	bool isFileSuitable(const QString& fileName);
 	void openFile(const QString& fileName);
 	void diffTwoFiles(const QString& filename1, const QString& filename2);
 
