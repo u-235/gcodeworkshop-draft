@@ -41,8 +41,6 @@ class QComboBox;
 class QDir;
 class QDragEnterEvent;
 class QDropEvent;
-class QEvent;
-class QFileSystemModel;
 class QFileSystemWatcher;
 class QLabel;
 template <class Key, class T> class QMap;
@@ -53,6 +51,7 @@ class QMoveEvent;
 class QPrinter;
 class QProcess;
 class QResizeEvent;
+class QSettings;
 class QStandardItem;
 class QStandardItemModel;
 class QToolBar;
@@ -73,6 +72,7 @@ class SessionManager;
 
 
 namespace GUI {
+class FileBrowserPanel;
 class FindToolBar;
 
 namespace WorkShop {
@@ -166,7 +166,6 @@ public slots:
 
 protected:
 	void closeEvent(QCloseEvent* event);
-	bool event(QEvent* event);
 	void setLastOpenedPath(const QString& path);
 
 	bool saveDocument(Document* doc, bool forceSaveAs);
@@ -262,7 +261,6 @@ private slots:
 	void projectSaveAs();
 	void projectNew();
 	void projectTreeViewDoubleClicked(const QModelIndex& index);
-	void fileTreeViewDoubleClicked(const QModelIndex& index);
 	void hidePanel();
 	void projectTreeRemoveItem();
 	void projectLoad(const QString& projectName);
@@ -327,9 +325,9 @@ private:
 	int defaultHighlightMode(const QString& filePath);
 	QString projectSelectName();
 	bool maybeSaveProject();
-	void createFileBrowseTabs();
-	void fileTreeViewChangeRootDir();
-	void fileTreeViewChangeRootDir(const QString& path);
+	void setupToolTabs();
+	GUI::FileBrowserPanel* createFileBrowserPanel();
+	void fireCurrentDirChanged();
 	Document* findDocument(const QString& fileName);
 	void createDiffApp();
 	void openFilesFromSession();
@@ -363,7 +361,6 @@ private:
 
 	KDiff3App* diffApp;
 
-	QFileSystemModel* dirModel;
 	QStandardItemModel* model;
 	QStandardItemModel* clipboardModel;
 	QStandardItem* currentProject;

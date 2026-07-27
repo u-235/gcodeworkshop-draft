@@ -48,6 +48,7 @@ HEADERS += \
     src/gcodereventfilter.h \
     src/gcoderinfo.h \
     src/gcoderproducer.h \
+    src/gui/filebrowser/filebrowserpanel.h \
     src/gui/findtoolbar/findtoolbar.h \
     src/gui/findtoolbar/findtoolbaractions.h \
     src/gui/workshop/defaultkeysequences.h \
@@ -84,6 +85,7 @@ SOURCES += \
     src/gcoderstyle.cpp \
     src/gcoderwidgetproperties.cpp \
     src/gcodeworkshop.cpp \
+    src/gui/filebrowser/filebrowserpanel.cpp \
     src/gui/findtoolbar/findtoolbar.cpp \
     src/gui/findtoolbar/findtoolbaractions.cpp \
     src/gui/workshop/defaultkeysequences.cpp \
@@ -108,6 +110,7 @@ SOURCES += \
 FORMS += \
     src/findinfilesdialog.ui \
     src/gcodeworkshop.ui \
+    src/gui/filebrowser/filebrowserpanel.ui \
     src/newfiledialog.ui \
     src/sessiondialog.ui \
     src/sessionnamedialog.ui \
