@@ -25,7 +25,6 @@
 #include <QActionGroup>         // for QActionGroup
 #include <QApplication>         // for QApplication, qApp
 #include <QByteArray>           // for QByteArray
-#include <QCheckBox>            // for QCheckBox
 #include <QClipboard>           // for QClipboard
 #include <QCloseEvent>          // for QCloseEvent
 #include <QComboBox>            // for QComboBox, QComboBox::AdjustToContents
@@ -34,7 +33,6 @@
 #include <QDir>                 // for QDir, operator|, QDir::Files, QDir::Hidden, QDir::Name, QDir::NoSymLinks
 #include <QDragEnterEvent>      // for QDragEnterEvent
 #include <QDropEvent>           // for QDropEvent
-#include <QEvent>               // for QEvent, QEvent::ToolTip
 #include <QFile>                // for QFile
 #include <QFileDialog>          // for QFileDialog, QFileDialog::DontConfirmOverwrite
 #include <QFileIconProvider>    // for QFileIconProvider
@@ -44,7 +42,6 @@
 #include <QFont>                // for QFont
 #include <QFrame>               // for QFrame, QFrame::Box, QFrame::Sunken
 #include <QHeaderView>          // for QHeaderView, QHeaderView::ResizeToContents, QHeaderView::Stretch, QHea...
-#include <QHelpEvent>           // for QHelpEvent
 #include <QIODevice>            // for QIODevice, QIODevice::ReadWrite, operator|, QIODevice::ReadOnly, QIODe...
 #include <QIcon>                // for QIcon
 #include <QItemSelectionModel>  // for QItemSelectionModel
@@ -73,7 +70,6 @@
 #include <QResizeEvent>         // for QResizeEvent
 #include <QSettings>            // for QSettings, QSettings::IniFormat, QSettings::NoError
 #include <QSize>                // for QSize
-#include <QSpinBox>             // for QSpinBox
 #include <QSplitter>            // for QSplitter
 #include <QStandardItemModel>   // for QStandardItem, QStandardItemModel
 #include <QStatusBar>           // for QStatusBar
@@ -86,7 +82,6 @@
 #include <QTextStream>          // for QTextStream
 #include <QToolBar>             // for QToolBar
 #include <QToolButton>          // for QToolButton
-#include <QToolTip>             // for QToolTip
 #include <QTreeView>            // for QTreeView
 #include <QUrl>                 // for QUrl, QUrl::TolerantMode
 #include <QVariant>             // for QVariant
@@ -125,6 +120,7 @@
 #include "gui/actions/toolactions.h"        // for ToolActions
 #include "gui/actions/windowactions.h"      // for WindowActions
 #include "gui/defaultkeysequences.h"
+#include "gui/filebrowser/filebrowserpanel.h"
 #include "gui/findtoolbar/findtoolbar.h"    // for FindToolBar
 #include "highlightmode.h"                  // for MODE_AUTO, MODE_FANUC, MODE_HEIDENHAIN, MODE_HEIDENHAIN_ISO, MODE_LINU...
 #include "newfiledialog.h"                  // for newFileDialog
@@ -165,7 +161,6 @@ GCodeWorkShop::GCodeWorkShop(Medium* medium)
 	serialToolBar = nullptr;
 	diffApp = nullptr;
 	findFiles = nullptr;
-	dirModel = nullptr;
 	m_fileServer = nullptr;
 
 	m_MdiWidgetsMaximized = true;
@@ -225,7 +220,11 @@ GCodeWorkShop::GCodeWorkShop(Medium* medium)
 	createActions();
 	createToolBars();
 	createStatusBar();
-	createFileBrowseTabs();
+	setupToolTabs();
+
+	connect(ui->openFileTableWidget, SIGNAL(cellClicked(int, int)), this,
+	        SLOT(openFileTableWidgetClicked(int, int)));
+	ui->openFileTableWidget->setToolTip(tr("Open files"));
 
 	connect(ui->mdiArea, SIGNAL(subWindowActivated(QMdiSubWindow*)), this,
 	        SLOT(activeWindowChanged(QMdiSubWindow*)));
@@ -884,10 +883,6 @@ void GCodeWorkShop::config()
 		m_disableFileChangeMonitor = config.disableFileChangeMonitor;
 		m_startEmpty = config.startEmpty;
 
-		if (dirModel != nullptr) {
-			dirModel->setNameFilters(m_extensions);
-		}
-
 		m_documentManager->updateDocuments(GCoder::DOCUMENT_TYPE);
 
 		for (Document* doc : m_documentManager->documentList()) {
@@ -1163,7 +1158,7 @@ void GCodeWorkShop::activeWindowChanged(QMdiSubWindow* window)
 
 	updateCurrentSerialConfig();
 	updateOpenFileList();
-	fileTreeViewChangeRootDir();
+	fireCurrentDirChanged();
 }
 
 void GCodeWorkShop::about()
@@ -1746,9 +1741,6 @@ void GCodeWorkShop::readSettings()
 		openFilesFromSession();
 	}
 
-	ui->fileTreeView->header()->restoreState(settings.value("FileTreeViewState",
-	        QByteArray()).toByteArray());
-
 	ui->vSplitter->restoreState(settings.value("VSplitterState", QByteArray()).toByteArray());
 
 	currentProjectName = settings.value("CurrentProjectName", "").toString();
@@ -1765,9 +1757,6 @@ void GCodeWorkShop::readSettings()
 	}
 
 	ui->tabWidget->setCurrentIndex(settings.value("TabCurrentIndex", 0).toInt());
-	ui->currentPathCheckBox->setChecked(settings.value("FileBrowserShowCurrentFileDir",
-	                                    false).toBool());
-	ui->filePreviewSpinBox->setValue(settings.value("FilePreviewNo", 10).toInt());
 }
 
 void GCodeWorkShop::writeSettings()
@@ -1802,10 +1791,8 @@ void GCodeWorkShop::writeSettings()
 
 	settings.setValue("CurrentProjectName", currentProjectName);
 
-	settings.setValue("FileTreeViewState", ui->fileTreeView->header()->saveState());
 	settings.setValue("VSplitterState", ui->vSplitter->saveState());
 	settings.setValue("TabCurrentIndex", ui->tabWidget->currentIndex());
-	settings.setValue("FilePreviewNo", ui->filePreviewSpinBox->value());
 
 	if (panelHidden) {
 		settings.setValue("ProjectPanelState", panelState);
@@ -1814,7 +1801,6 @@ void GCodeWorkShop::writeSettings()
 	}
 
 	settings.setValue("PanelHidden", panelHidden);
-	settings.setValue("FileBrowserShowCurrentFileDir", ui->currentPathCheckBox->isChecked());
 
 	settings.setValue("FindToolBarShown", !m_findToolBar->isHidden());
 	m_findToolBar->saveSettings(&settings);
@@ -1914,7 +1900,7 @@ void GCodeWorkShop::loadFile(const DocumentInfo::Ptr& info, bool checkAlreadyLoa
 		setLastOpenedPath(file.path());
 		updateStatusBar();
 		m_recentFiles->add(info->filePath);
-		fileTreeViewChangeRootDir();
+		fireCurrentDirChanged();
 	} else {
 		QMessageBox::warning(mainWindow(), tr("GCodeWorkShop"), tr("Cannot read file \"%1\".\n %2")
 		                     .arg(doc->filePath()).arg(doc->ioErrorString()));
@@ -2430,41 +2416,6 @@ void GCodeWorkShop::projectTreeViewDoubleClicked(const QModelIndex& index)
 	}
 }
 
-void GCodeWorkShop::fileTreeViewDoubleClicked(const QModelIndex& index)
-{
-	QFileInfo file;
-
-	if (!index.isValid()) {
-		return;
-	}
-
-	file.setFile(dirModel->filePath(index));
-
-	if ((file.exists()) && (file.isReadable())) {
-		if (file.isDir()) {
-			QString path = dirModel->filePath(index);
-
-			if (path.endsWith("..")) {
-				int idx = path.lastIndexOf('/');
-
-				if (idx > 0) {
-					idx = path.lastIndexOf('/', idx - 1);
-
-					if (idx > 0) {
-						path.remove(idx, (path.length() - idx));
-					}
-				}
-			}
-
-			fileTreeViewChangeRootDir(path);
-		} else if (m_extensions.contains("*." + file.suffix())) {
-			openFile(file.canonicalFilePath());
-		} else {
-			QDesktopServices::openUrl(QUrl("file:///" + file.absoluteFilePath(), QUrl::TolerantMode));
-		}
-	}
-}
-
 QString GCodeWorkShop::projectSelectName()
 {
 	QString filters = tr("GCodeWorkShop project file (*.ncp)");
@@ -2511,7 +2462,7 @@ void GCodeWorkShop::hidePanel()
 		panelHidden = true;
 	} else {
 		panelHidden = false;
-		fileTreeViewChangeRootDir();
+		fireCurrentDirChanged();
 		ui->frame->setMaximumWidth(16777215);
 		ui->vSplitter->show();
 		//openFileTableWidget->show();
@@ -2648,26 +2599,23 @@ bool GCodeWorkShop::maybeSaveProject()
 	return true;
 }
 
-void GCodeWorkShop::createFileBrowseTabs()
+void GCodeWorkShop::setupToolTabs()
 {
-	dirModel = new QFileSystemModel();
-	dirModel->setResolveSymlinks(true);
+	ui->tabWidget->insertTab(1, createFileBrowserPanel(), QIcon(":/images/folder.png"), "");
+	ui->tabWidget->setTabToolTip(1, tr("Browse files"));
+}
 
-	//dirModel->setRootPath(lastDir.absolutePath());
-	//fileTreeViewChangeRootDir();
-
-	dirModel->setNameFilters(m_extensions); //QStringList("*.nc")
-	dirModel->setNameFilterDisables(false);
-	dirModel->setFilter(QDir::Files | QDir::AllDirs | QDir::Drives | QDir::NoDot);
-
-	ui->fileTreeView->setModel(dirModel);
-	fileTreeViewChangeRootDir();
-
-	connect(ui->fileTreeView, SIGNAL(doubleClicked(QModelIndex)), this,
-	        SLOT(fileTreeViewDoubleClicked(QModelIndex)));
-	connect(ui->openFileTableWidget, SIGNAL(cellClicked(int, int)), this,
-	        SLOT(openFileTableWidgetClicked(int, int)));
-	ui->openFileTableWidget->setToolTip(tr("Open files"));
+GUI::FileBrowserPanel* GCodeWorkShop::createFileBrowserPanel()
+{
+	GUI::FileBrowserPanel* fileBrowser = new GUI::FileBrowserPanel(this);
+	fileBrowser->setNameFilters(m_extensions);
+	connect(this, &GCodeWorkShop::updateTranslations, fileBrowser, &GUI::FileBrowserPanel::loadTranslations);
+	connect(this, &GCodeWorkShop::loadSettings, fileBrowser, &GUI::FileBrowserPanel::loadSettings);
+	connect(this, &GCodeWorkShop::saveSettings, fileBrowser, &GUI::FileBrowserPanel::saveSettings);
+	connect(this, &GCodeWorkShop::currentDirChanged, fileBrowser, &GUI::FileBrowserPanel::currentDirChanged);
+	connect(this, &GCodeWorkShop::fileFilterChanged, fileBrowser, &GUI::FileBrowserPanel::setNameFilters);
+	connect(fileBrowser, &GUI::FileBrowserPanel::fileClicked, this, &GCodeWorkShop::openFile);
+	return fileBrowser;
 }
 
 void GCodeWorkShop::updateOpenFileList()
@@ -2747,7 +2695,7 @@ void GCodeWorkShop::openFileTableWidgetClicked(int x, int y)
 	}
 }
 
-void GCodeWorkShop::fileTreeViewChangeRootDir()
+void GCodeWorkShop::fireCurrentDirChanged()
 {
 	QString path;
 
@@ -2755,15 +2703,7 @@ void GCodeWorkShop::fileTreeViewChangeRootDir()
 		return;
 	}
 
-	if (ui->tabWidget->currentIndex() != 1) {
-		return;
-	}
-
-	if ((ui->fileTreeView == nullptr) || (dirModel == nullptr)) {
-		return;
-	}
-
-	if (ui->currentPathCheckBox->isChecked() && (activeDocument() != nullptr) && !activeDocument()->isUntitled()) {
+	if ((activeDocument() != nullptr) && !activeDocument()->isUntitled()) {
 		path = activeDocument()->filePath();
 
 		if (QFileInfo(path).exists()) {
@@ -2779,95 +2719,7 @@ void GCodeWorkShop::fileTreeViewChangeRootDir()
 		return;
 	}
 
-	if (dirModel->rootPath() == path) {
-		return;
-	}
-
-	fileTreeViewChangeRootDir(path);
-}
-
-void GCodeWorkShop::fileTreeViewChangeRootDir(const QString& path)
-{
-	ui->fileTreeView->setRootIndex(dirModel->index(path));
-	dirModel->setRootPath(path);
-	//ui->fileTreeView->setToolTip(path);
-	ui->fileTreeView->setSortingEnabled(true);
-	ui->fileTreeView->header()->setSectionResizeMode(0, QHeaderView::ResizeToContents);
-	ui->fileTreeView->resizeColumnToContents(0);
-	ui->fileTreeView->resizeColumnToContents(1);
-	ui->fileTreeView->setColumnHidden(2, true);
-	ui->fileTreeView->resizeColumnToContents(3);
-}
-
-bool GCodeWorkShop::event(QEvent* event)
-{
-	QString key, text;
-	QModelIndex index;
-	QFile file;
-	QString fileName;
-
-	if ((event->type() == QEvent::ToolTip)) {
-		if (panelHidden) {
-			return true;
-		}
-
-		QHelpEvent* helpEvent = static_cast<QHelpEvent*>(event);
-
-		QPoint pos = ui->fileTreeView->viewport()->mapFromGlobal(helpEvent->globalPos());
-
-		if ((pos.y() >= ui->fileTreeView->viewport()->height()) ||
-		        (pos.x() >= ui->fileTreeView->viewport()->width()) || (ui->tabWidget->currentIndex() != 1)) {
-			return true;
-		}
-
-		index = ui->fileTreeView->indexAt(pos);
-
-		if (!index.isValid()) {
-			return true;
-		}
-
-		fileName = dirModel->filePath(index);
-		file.setFileName(fileName);
-		text = "<b>" + QDir::toNativeSeparators(fileName) + "</b>";
-
-		if (ui->filePreviewSpinBox->value() > 0) {
-			text.append("<br />");
-
-			if (file.open(QIODevice::ReadOnly)) {
-				for (int i = 0; i < ui->filePreviewSpinBox->value(); i++) {
-					char buf[1024];
-					qint64 lineLength = file.readLine(buf, sizeof(buf));
-
-					if (lineLength != -1) {
-						text.append(buf);
-					}
-				}
-
-				file.close();
-
-				if (text.endsWith('\n')) {
-					text.remove(text.size() - 1, 1);
-				}
-			}
-		}
-
-		if (!text.isEmpty()) {
-			if (text.length() < fileName.size()) {
-				key = "<p style='white-space:normal'>";
-			} else {
-				key = "<p style='white-space:pre'>";
-			}
-
-			QToolTip::showText(helpEvent->globalPos(), key + text, mainWindow(), QRect());
-		} else {
-			QToolTip::hideText();
-			event->ignore();
-		}
-
-		return true;
-	}
-
-	return QWidget::event(event);
+	emit currentDirChanged(path);
 }
 
 void GCodeWorkShop::updateSessionMenus(const QStringList& sessionList)
