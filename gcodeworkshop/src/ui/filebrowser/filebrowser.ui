@@ -10,6 +10,16 @@
     <height>225</height>
    </rect>
   </property>
+  <attribute name="icon">
+   <iconset resource="../../../../gcodeshared/application.qrc">
+    <normaloff>:/images/folder.png</normaloff>:/images/folder.png</iconset>
+  </attribute>
+  <attribute name="title">
+   <string/>
+  </attribute>
+  <attribute name="toolTip">
+   <string>Browse files</string>
+  </attribute>
   <layout class="QVBoxLayout" name="verticalLayout">
    <property name="spacing">
     <number>0</number>

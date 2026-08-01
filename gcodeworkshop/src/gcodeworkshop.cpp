@@ -133,6 +133,7 @@
 #include "ui/actions/helpactions.h"         // for HelpActions
 #include "ui/actions/toolactions.h"         // for ToolActions
 #include "ui/actions/windowactions.h"       // for WindowActions
+#include "ui/filebrowser/filebrowser.h"
 #include "ui/findtoolbar/findtoolbar.h"     // for FindToolBar
 #include "ui/defaultkeysequences.h"
 
