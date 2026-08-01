@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
+  <style>
+    .bit {
+      fill: #101060;
+      stroke: #000030;
+      stroke-width: 5;
+      rx: 15;
+      ry: 15;
+    }
+    .sync {
+      fill: #505050;
+      stroke: #303030;
+      stroke-width: 3;
+      rx: 7;
+      ry: 7;
+    }
+  </style>
+ <!-- Created with SVG-edit - https://github.com/SVG-Edit/svgedit-->
+ <g class="layer">
+  <title>Layer 1</title>
+  <rect x="55" y="0" width="402" height="512" fill="#e0e0e0" stroke="#000000" stroke-width="3"/>
+
+  <ellipse cx="301" cy="25" class="sync"/>
+  <ellipse cx="301" cy="75" class="sync"/>
+  <ellipse cx="301" cy="125" class="sync"/>
+  <ellipse cx="301" cy="175" class="sync"/>
+  <ellipse cx="301" cy="225" class="sync"/>
+  <ellipse cx="301" cy="275" class="sync"/>
+  <ellipse cx="301" cy="325" class="sync"/>
+  <ellipse cx="301" cy="375" class="sync"/>
+  <ellipse cx="301" cy="425" class="sync"/>
+  <ellipse cx="301" cy="475" class="sync"/>
+
+  <ellipse cx="125" cy="25" class="bit"/>
+  <ellipse cx="170" cy="25" class="bit"/>
+  <ellipse cx="215" cy="25" class="bit"/>
+  <ellipse cx="260" cy="25" class="bit"/>
+  <ellipse cx="342" cy="25" class="bit"/>
+  <ellipse cx="387" cy="25" class="bit"/>
+
+  <ellipse cx="80" cy="75" class="bit"/>
+  <ellipse cx="125" cy="75" class="bit"/>
+  <ellipse cx="170" cy="75" class="bit"/>
+  <ellipse cx="215" cy="75" class="bit"/>
+  <ellipse cx="260" cy="75" class="bit"/>
+  <ellipse cx="342" cy="75" class="bit"/>
+  <ellipse cx="387" cy="75" class="bit"/>
+  <ellipse cx="432" cy="75" class="bit"/>
+
+  <ellipse cx="80" cy="125" class="bit"/>
+  <ellipse cx="125" cy="125" class="bit"/>
+  <ellipse cx="387" cy="125" class="bit"/>
+  <ellipse cx="432" cy="125" class="bit"/>
+
+  <ellipse cx="80" cy="175" class="bit"/>
+  <ellipse cx="125" cy="175" class="bit"/>
+
+  <ellipse cx="80" cy="225" class="bit"/>
+  <ellipse cx="125" cy="225" class="bit"/>
+  <ellipse cx="260" cy="225" class="bit"/>
+  <ellipse cx="342" cy="225" class="bit"/>
+  <ellipse cx="387" cy="225" class="bit"/>
+
+  <ellipse cx="80" cy="275" class="bit"/>
+  <ellipse cx="125" cy="275" class="bit"/>
+  <ellipse cx="260" cy="275" class="bit"/>
+  <ellipse cx="342" cy="275" class="bit"/>
+  <ellipse cx="387" cy="275" class="bit"/>
+  <ellipse cx="432" cy="275" class="bit"/>
+
+  <ellipse cx="80" cy="325" class="bit"/>
+  <ellipse cx="125" cy="325" class="bit"/>
+  <ellipse cx="387" cy="325" class="bit"/>
+  <ellipse cx="432" cy="325" class="bit"/>
+
+  <ellipse cx="80" cy="375" class="bit"/>
+  <ellipse cx="125" cy="375" class="bit"/>
+  <ellipse cx="387" cy="375" class="bit"/>
+  <ellipse cx="432" cy="375" class="bit"/>
+
+  <ellipse cx="80" cy="425" class="bit"/>
+  <ellipse cx="125" cy="425" class="bit"/>
+  <ellipse cx="170" cy="425" class="bit"/>
+  <ellipse cx="215" cy="425" class="bit"/>
+  <ellipse cx="260" cy="425" class="bit"/>
+  <ellipse cx="342" cy="425" class="bit"/>
+  <ellipse cx="387" cy="425" class="bit"/>
+  <ellipse cx="432" cy="425" class="bit"/>
+
+  <ellipse cx="125" cy="475" class="bit"/>
+  <ellipse cx="170" cy="475" class="bit"/>
+  <ellipse cx="215" cy="475" class="bit"/>
+  <ellipse cx="260" cy="475" class="bit"/>
+  <ellipse cx="342" cy="475" class="bit"/>
+  <ellipse cx="387" cy="475" class="bit"/>
+ </g>
+</svg>
