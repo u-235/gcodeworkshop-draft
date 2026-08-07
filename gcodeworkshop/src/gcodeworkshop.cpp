@@ -35,9 +35,7 @@
 #include <QDropEvent>           // for QDropEvent
 #include <QFile>                // for QFile
 #include <QFileDialog>          // for QFileDialog, QFileDialog::DontConfirmOverwrite
-#include <QFileIconProvider>    // for QFileIconProvider
 #include <QFileInfo>            // for QFileInfo, QFileInfoList
-#include <QFileSystemModel>     // for QFileSystemModel
 #include <QFileSystemWatcher>   // for QFileSystemWatcher
 #include <QFont>                // for QFont
 #include <QFrame>               // for QFrame, QFrame::Box, QFrame::Sunken
@@ -122,6 +120,7 @@
 #include "gui/defaultkeysequences.h"
 #include "gui/filebrowser/filebrowserpanel.h"
 #include "gui/findtoolbar/findtoolbar.h"    // for FindToolBar
+#include "gui/project/projectpanel.h"
 #include "highlightmode.h"                  // for MODE_AUTO, MODE_FANUC, MODE_HEIDENHAIN, MODE_HEIDENHAIN_ISO, MODE_LINU...
 #include "newfiledialog.h"                  // for newFileDialog
 #include "recentfiles.h"                    // for RecentFiles
@@ -177,19 +176,6 @@ GCodeWorkShop::GCodeWorkShop(Medium* medium)
 	clipboard = QApplication::clipboard();
 	connect(clipboard, SIGNAL(dataChanged()), this, SLOT(clipboardChanged()));
 
-	model = new QStandardItemModel();
-	ui->projectTreeView->setModel(model);
-	currentProject = nullptr;
-
-	connect(ui->projectTreeView, SIGNAL(doubleClicked(QModelIndex)), this,
-	        SLOT(projectTreeViewDoubleClicked(QModelIndex)));
-	connect(ui->projectNewButton, SIGNAL(clicked()), this, SLOT(projectNew()));
-	connect(ui->projectAddButton, SIGNAL(clicked()), this, SLOT(projectAdd()));
-	connect(ui->projectSaveButton, SIGNAL(clicked()), this, SLOT(projectSave()));
-	connect(ui->projectSaveAsButton, SIGNAL(clicked()), this, SLOT(projectSaveAs()));
-	connect(ui->projectLoadButton, SIGNAL(clicked()), this, SLOT(projectOpen()));
-	connect(ui->projectRemoveButton, SIGNAL(clicked()), this, SLOT(projectTreeRemoveItem()));
-
 	clipboardModel = new QStandardItemModel();
 	ui->clipboardTreeView->setModel(clipboardModel);
 	ui->clipboardTreeView->setRootIsDecorated(false);
@@ -201,8 +187,6 @@ GCodeWorkShop::GCodeWorkShop(Medium* medium)
 	        SLOT(clipboardTreeViewContextMenu(const QPoint&)));
 
 	connect(ui->hideButton, SIGNAL(clicked()), this, SLOT(hidePanel()));
-
-	currentProjectModified = false;
 
 	m_recentFiles = new RecentFiles(this);
 	connect(m_recentFiles, SIGNAL(fileListChanged(QStringList)), this, SLOT(updateRecentFilesMenu(QStringList)));
@@ -418,7 +402,7 @@ void GCodeWorkShop::closeEvent(QCloseEvent* event)
 		}
 	}
 
-	if (!maybeSaveProject() || !maybeSaveAll()) {
+	if (!m_projectPanel->maybeSave() || !maybeSaveAll()) {
 		event->ignore();
 		return;
 	}
@@ -1743,9 +1727,6 @@ void GCodeWorkShop::readSettings()
 
 	ui->vSplitter->restoreState(settings.value("VSplitterState", QByteArray()).toByteArray());
 
-	currentProjectName = settings.value("CurrentProjectName", "").toString();
-	projectLoad(currentProjectName);
-
 	panelState = settings.value("ProjectPanelState", QByteArray()).toByteArray();
 	ui->hSplitter->restoreState(panelState);
 	panelHidden = settings.value("PanelHidden", false).toBool();
@@ -1788,8 +1769,6 @@ void GCodeWorkShop::writeSettings()
 		settings.setValue("CurrentSerialPortSettings", configBox->currentText());
 		settings.endGroup();
 	}
-
-	settings.setValue("CurrentProjectName", currentProjectName);
 
 	settings.setValue("VSplitterState", ui->vSplitter->saveState());
 	settings.setValue("TabCurrentIndex", ui->tabWidget->currentIndex());
@@ -2218,236 +2197,6 @@ int GCodeWorkShop::defaultHighlightMode(const QString& filePath)
 	return MODE_AUTO;
 }
 
-void GCodeWorkShop::projectAdd()
-{
-	QFileInfo file;
-	QStandardItem* item;
-	QIcon icon;
-
-	if (currentProject == nullptr) {
-		return;
-	}
-
-
-	QString filters = tr("All files (*.* *);;"
-	                     "CNC programs files (*.nc);;"
-	                     "CNC programs files (*.nc *.ngc *.min *.anc *.cnc);;"
-	                     "Documents (*.odf *.odt *.pdf *.doc *.docx  *.xls *.xlsx);;"
-	                     "Drawings (*.dwg *.dxf);;"
-	                     "Pictures (*.jpg *.bmp *.svg);;"
-	                     "Text files (*.txt)");
-	QStringList files = QFileDialog::getOpenFileNames(
-	                        mainWindow(),
-	                        tr("Add files to project"),
-	                        lastOpenedPath(),
-	                        filters, 0);
-
-	QStringList list = files;
-
-	if (list.isEmpty()) {
-		return;
-	}
-
-	QStringList::Iterator it = list.begin();
-
-	QStandardItem* parentItem = currentProject;
-
-	if (it != list.end()) {
-		file.setFile(*it);
-
-		if ((file.absoluteDir().exists()) && (file.absoluteDir().isReadable())) {
-
-			QList<QStandardItem*> items = model->findItems(QDir::toNativeSeparators(
-			                                  file.absoluteDir().canonicalPath()),
-			                              Qt::MatchFixedString | Qt::MatchCaseSensitive | Qt::MatchRecursive, 0);
-
-			if (!items.isEmpty()) {
-				item = items.at(0);
-
-				if (item->text() != file.absoluteDir().canonicalPath()) {
-					item = new QStandardItem(QIcon(":/images/folder.png"),
-					                         QDir::toNativeSeparators(file.absoluteDir().canonicalPath()));
-					parentItem->appendRow(item);
-				}
-			} else {
-				item = new QStandardItem(QIcon(":/images/folder.png"),
-				                         QDir::toNativeSeparators(file.absoluteDir().canonicalPath()));
-				parentItem->appendRow(item);
-			}
-
-			parentItem = item;
-		} else {
-			return;
-		}
-	}
-
-	QFileSystemModel* fModel = new QFileSystemModel;
-
-	while (it != list.end()) {
-		file.setFile(*it);
-
-		if ((file.exists()) && (file.isReadable())) {
-			icon = fModel->iconProvider()->icon(file);
-
-			if (icon.isNull()) {
-				icon = QIcon(":/images/ncfile.png");
-			}
-
-			item = new QStandardItem(icon, file.fileName());
-			parentItem->appendRow(item);
-		}
-
-		++it;
-	}
-
-	ui->projectTreeView->expandAll(); //model->indexFromItem(currentProject));
-
-	currentProjectModified = true;
-	statusBar()->showMessage(tr("Project opened"), 5000);
-}
-
-void GCodeWorkShop::projectSave()
-{
-	QString path, fileName;
-	int fileCount;
-	QStandardItem* item;
-
-
-	if (currentProjectName.isEmpty() || currentProject == nullptr) {
-		return;
-	}
-
-	QSettings settings(currentProjectName, QSettings::IniFormat);
-
-	settings.remove("ProjectFiles");
-	settings.beginWriteArray("ProjectFiles");
-
-	fileCount = 0;
-
-	for (int i = 0; i < currentProject->rowCount(); i++) {
-		item = currentProject->child(i, 0);
-		path = item->text();
-
-		for (int j = 0; j < item->rowCount(); j++) {
-			fileName = item->child(j, 0)->text();
-
-			//qDebug() << path;
-			//qDebug() << fileName;
-			settings.setArrayIndex(fileCount);
-			settings.setValue("File", QFileInfo(path, fileName).absoluteFilePath());
-			fileCount++;
-		}
-	}
-
-	settings.endArray();
-
-	if (settings.status() == QSettings::NoError) {
-		currentProjectModified = false;
-		statusBar()->showMessage(tr("Project saved"), 5000);
-	}
-}
-
-void GCodeWorkShop::projectSaveAs()
-{
-	QString fileName = projectSelectName();
-
-	if (fileName.isEmpty()) {
-		return;
-	}
-
-	currentProjectName = fileName;
-	QStandardItem* parentItem = model->invisibleRootItem();
-	parentItem->child(0, 0)->setText(QFileInfo(currentProjectName).fileName());
-	parentItem->child(0, 0)->setToolTip(QDir::toNativeSeparators(QFileInfo(
-	                                        currentProjectName).absoluteFilePath()));
-	projectSave();
-}
-
-void GCodeWorkShop::projectNew()
-{
-	if (!maybeSaveProject()) {
-		return;
-	}
-
-	QString fileName = projectSelectName();
-
-	if (fileName.isEmpty()) {
-		return;
-	}
-
-	currentProjectName = fileName;
-
-	QStandardItem* parentItem = model->invisibleRootItem();
-	QStandardItem* item = new QStandardItem(QIcon(":/images/edytornc.png"),
-	                                        QFileInfo(currentProjectName).fileName());
-
-	parentItem->appendRow(item);
-
-	currentProject = item;
-	currentProjectModified = true;
-}
-
-void GCodeWorkShop::projectTreeViewDoubleClicked(const QModelIndex& index)
-{
-	QFileInfo file;
-
-	if ((!index.isValid())) {
-		return;
-	}
-
-	QStandardItem* item = model->itemFromIndex(index);
-
-	if (item == nullptr || item->parent() == nullptr) {
-		return;
-	}
-
-	if (item->hasChildren()) {
-		return;
-	}
-
-	file.setFile(item->parent()->text(), item->text());
-
-	if ((file.exists()) && (file.isReadable())) {
-		if (m_extensions.contains("*." + file.suffix())) {
-			openFile(file.canonicalFilePath());
-		} else {
-			QDesktopServices::openUrl(QUrl("file:///" + file.absoluteFilePath(), QUrl::TolerantMode));
-		}
-	}
-}
-
-QString GCodeWorkShop::projectSelectName()
-{
-	QString filters = tr("GCodeWorkShop project file (*.ncp)");
-	QString file = QFileDialog::getSaveFileName(
-	                   mainWindow(),
-	                   tr("Select the project name and location..."),
-	                   currentProjectName,
-	                   filters);
-
-	return file;
-}
-
-void GCodeWorkShop::projectOpen()
-{
-	if (!maybeSaveProject()) {
-		return;
-	}
-
-	QString filters = tr("GCodeWorkShop project file (*.ncp)");
-	QString fileName = QFileDialog::getOpenFileName(
-	                       mainWindow(),
-	                       tr("Open the project file..."),
-	                       currentProjectName,
-	                       filters);
-
-	if (fileName.isEmpty()) {
-		return;
-	}
-
-	projectLoad(fileName);
-}
-
 void GCodeWorkShop::hidePanel()
 {
 	ui->hSplitter->setUpdatesEnabled(false);
@@ -2475,132 +2224,10 @@ void GCodeWorkShop::hidePanel()
 	ui->hSplitter->setUpdatesEnabled(true);
 }
 
-void GCodeWorkShop::projectTreeRemoveItem()
-{
-	QModelIndexList list = ui->projectTreeView->selectionModel()->selectedIndexes();
-
-	for (QModelIndex it : list) {
-		QStandardItem* item = model->itemFromIndex(it);
-
-		if (item == nullptr) {
-			return;
-		}
-
-		if (!item->hasChildren()) {
-			currentProjectModified = model->removeRow(item->row(), model->indexFromItem(item->parent()));
-		}
-	}
-}
-
-void GCodeWorkShop::projectLoad(const QString& projectName)
-{
-	QFileInfo file;
-	QIcon icon;
-
-
-	if (projectName.isEmpty()) {
-		return;
-	}
-
-	currentProjectName = projectName;
-
-	model->clear();
-
-	QSettings settings(currentProjectName, QSettings::IniFormat);
-
-	QStandardItem* item = new QStandardItem(QIcon(":/images/edytornc.png"),
-	                                        QFileInfo(currentProjectName).fileName());
-	item->setToolTip(QDir::toNativeSeparators(currentProjectName));
-
-	model->invisibleRootItem()->appendRow(item);
-
-	currentProject = item;
-
-	QFileSystemModel* fModel = new QFileSystemModel;
-
-	int max = settings.beginReadArray("ProjectFiles");
-
-	for (int i = 0; i < max; ++i) {
-		settings.setArrayIndex(i);
-		file.setFile(settings.value("File", "").toString());
-
-		if ((file.absoluteDir().exists()) && (file.absoluteDir().isReadable())) {
-			QList<QStandardItem*> items = model->findItems(file.absoluteDir().canonicalPath(),
-			                              Qt::MatchFixedString | Qt::MatchCaseSensitive | Qt::MatchRecursive, 0);
-
-			if (!items.isEmpty()) {
-				item = items.at(0);
-
-				if (item->text() != file.absoluteDir().canonicalPath()) {
-					item = new QStandardItem(QIcon(":/images/folder.png"), file.absoluteDir().canonicalPath());
-					item->setToolTip(QDir::toNativeSeparators(file.absoluteDir().canonicalPath()));
-					currentProject->appendRow(item);
-				}
-			} else {
-				item = new QStandardItem(QIcon(":/images/folder.png"), file.absoluteDir().canonicalPath());
-				item->setToolTip(QDir::toNativeSeparators(file.absoluteDir().canonicalPath()));
-				currentProject->appendRow(item);
-			}
-
-			if ((file.exists()) && (file.isReadable())) {
-				icon = fModel->iconProvider()->icon(file);
-
-				if (icon.isNull()) {
-					icon = QIcon(":/images/ncfile.png");
-				}
-
-				QStandardItem* childItem = new QStandardItem(icon, file.fileName());
-				childItem->setToolTip(file.fileName());
-				item->appendRow(childItem);
-			}
-		}
-	}
-
-	settings.endArray();
-
-	ui->projectTreeView->expandAll();
-
-	currentProjectModified = false;
-}
-
-bool GCodeWorkShop::maybeSaveProject()
-{
-	if (currentProjectModified) {
-		QMessageBox msgBox;
-		msgBox.setParent(mainWindow(), Qt::Dialog);
-		msgBox.setText(tr("<b>Project: \"%1\"\n has been modified.</b>").arg(currentProjectName));
-		msgBox.setInformativeText(tr("Do you want to save your changes ?"));
-		msgBox.setStandardButtons(QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
-		msgBox.setDefaultButton(QMessageBox::Save);
-		msgBox.setIcon(QMessageBox::Warning);
-		int ret = msgBox.exec();
-
-		switch (ret) {
-		case QMessageBox::Save:
-			projectSave();
-			return true;
-			break;
-
-		case QMessageBox::Discard:
-			currentProjectModified = false;
-			return true;
-			break;
-
-		case QMessageBox::Cancel:
-			return false;
-			break;
-
-		default:
-			return true;
-			break;
-		}
-	}
-
-	return true;
-}
-
 void GCodeWorkShop::setupToolTabs()
 {
+	ui->tabWidget->insertTab(0, createProjectPanel(), QIcon(":/images/project_new.png"), "");
+	ui->tabWidget->setTabToolTip(0, tr("Manage project"));
 	ui->tabWidget->insertTab(1, createFileBrowserPanel(), QIcon(":/images/folder.png"), "");
 	ui->tabWidget->setTabToolTip(1, tr("Browse files"));
 }
@@ -2616,6 +2243,17 @@ GUI::FileBrowserPanel* GCodeWorkShop::createFileBrowserPanel()
 	connect(this, &GCodeWorkShop::fileFilterChanged, fileBrowser, &GUI::FileBrowserPanel::setNameFilters);
 	connect(fileBrowser, &GUI::FileBrowserPanel::fileClicked, this, &GCodeWorkShop::openFile);
 	return fileBrowser;
+}
+
+GUI::ProjectPanel* GCodeWorkShop::createProjectPanel()
+{
+	m_projectPanel = new GUI::ProjectPanel(this);
+	connect(this, &GCodeWorkShop::updateTranslations, m_projectPanel, &GUI::ProjectPanel::loadTranslations);
+	connect(this, &GCodeWorkShop::updateIcons, m_projectPanel, &GUI::ProjectPanel::loadIcons);
+	connect(this, &GCodeWorkShop::loadSettings, m_projectPanel, &GUI::ProjectPanel::loadSettings);
+	connect(this, &GCodeWorkShop::saveSettings, m_projectPanel, &GUI::ProjectPanel::saveSettings);
+	connect(m_projectPanel, &GUI::ProjectPanel::fileClicked, this, &GCodeWorkShop::openFile);
+	return m_projectPanel;
 }
 
 void GCodeWorkShop::updateOpenFileList()
