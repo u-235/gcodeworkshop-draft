@@ -52,7 +52,6 @@ class QPrinter;
 class QProcess;
 class QResizeEvent;
 class QSettings;
-class QStandardItem;
 class QStandardItemModel;
 class QToolBar;
 class QToolButton;
@@ -74,6 +73,7 @@ class SessionManager;
 namespace GUI {
 class FileBrowserPanel;
 class FindToolBar;
+class ProjectPanel;
 
 namespace WorkShop {
 class EditActions;
@@ -256,15 +256,7 @@ public slots:
 	void doDiff();
 
 private slots:
-	void projectAdd();
-	void projectSave();
-	void projectSaveAs();
-	void projectNew();
-	void projectTreeViewDoubleClicked(const QModelIndex& index);
 	void hidePanel();
-	void projectTreeRemoveItem();
-	void projectLoad(const QString& projectName);
-	void projectOpen();
 	void updateOpenFileList();
 	void openFileTableWidgetClicked(int x, int y);
 
@@ -323,10 +315,9 @@ private:
 	void updateCurrentSerialConfig();
 	void attachHighlighterToDirButtonClicked(bool attach);
 	int defaultHighlightMode(const QString& filePath);
-	QString projectSelectName();
-	bool maybeSaveProject();
 	void setupToolTabs();
 	GUI::FileBrowserPanel* createFileBrowserPanel();
+	GUI::ProjectPanel* createProjectPanel();
 	void fireCurrentDirChanged();
 	Document* findDocument(const QString& fileName);
 	void createDiffApp();
@@ -361,11 +352,7 @@ private:
 
 	KDiff3App* diffApp;
 
-	QStandardItemModel* model;
 	QStandardItemModel* clipboardModel;
-	QStandardItem* currentProject;
-	bool currentProjectModified;
-	QString currentProjectName;
 
 	RecentFiles* m_recentFiles;
 
@@ -395,6 +382,7 @@ private:
 	QToolButton* deAttachHighlightButton;
 
 	GUI::FindToolBar* m_findToolBar;
+	GUI::ProjectPanel* m_projectPanel;
 
 	QPointer<QToolBar> serialToolBar;
 	QAction* configPortAct;
