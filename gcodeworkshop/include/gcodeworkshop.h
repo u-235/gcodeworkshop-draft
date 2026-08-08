@@ -60,8 +60,10 @@ class QStandardItemModel;
 class QToolBar;
 class QToolButton;
 
-#include <documentinfo.h>   // for DocumentInfo, DocumentInfo::Ptr
+#include <documentinfo.h>           // for DocumentInfo, DocumentInfo::Ptr
+#include <utils/keysequencemap.h>   // for KeySequenceMap
 
+class ActionKit;
 class Document;
 class DocumentManager;
 class FindInFiles;
@@ -112,6 +114,8 @@ signals:
 	void updateTranslations();
 	void updateIcons();
 	void updateShortcuts(const QMap<QString, QKeySequence>&);
+	void loadSettings(QSettings* cfg);
+	void saveSettings(QSettings* cfg);
 
 protected:
 	Ui::GCodeWorkShop* ui;
@@ -126,6 +130,7 @@ protected:
 		QSize size;
 	} mMWConfig;
 
+	KeySequenceMap m_shortcuts;
 	Addons::Actions* m_addonsActions;
 
 public:
