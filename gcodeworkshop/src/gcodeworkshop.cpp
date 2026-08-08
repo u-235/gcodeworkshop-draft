@@ -384,6 +384,17 @@ void GCodeWorkShop::setMdiTabbedMode(bool tabbed)
 	}
 }
 
+QStringList GCodeWorkShop::fileFilter() const
+{
+	return m_extensions;
+}
+
+void GCodeWorkShop::setFileFilter(const QStringList& extensions)
+{
+	m_extensions = extensions;
+	emit fileFilterChanged(m_extensions);
+}
+
 void GCodeWorkShop::closeCurrentWindow()
 {
 	ui->mdiArea->closeActiveSubWindow();
@@ -852,7 +863,7 @@ void GCodeWorkShop::config()
 		m_documentManager->setDocumentStyle(DocumentStyle::Ptr(new GCoderStyle(config.codeStyle)));
 		config.codeStyle.save(cfg);
 		m_calcBinary = config.calcBinary;
-		m_extensions = config.extensions;
+		setFileFilter(config.extensions);
 		m_saveExtension = config.saveExtension;
 		m_saveDirectory = config.saveDirectory;
 		setMdiTabbedMode(config.mdiTabbedMode);
@@ -1674,7 +1685,7 @@ void GCodeWorkShop::readSettings()
 	}
 
 	m_lastOpenedPath = settings.value("LastDir",  m_lastOpenedPath).toString();
-	m_extensions = settings.value("Extensions", m_extensions).toStringList();
+	setFileFilter(settings.value("Extensions", m_extensions).toStringList());
 	m_saveExtension = settings.value("DefaultSaveExtension", m_saveExtension).toString();
 	m_saveDirectory = settings.value("DefaultSaveDirectory", m_saveDirectory).toString();
 	m_startEmpty = settings.value("StartEmpty", false).toBool();
