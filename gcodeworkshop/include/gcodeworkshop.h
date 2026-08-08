@@ -130,6 +130,8 @@ signals:
 	void updateShortcuts(const QMap<QString, QKeySequence>&);
 	void loadSettings(QSettings* cfg);
 	void saveSettings(QSettings* cfg);
+	void fileFilterChanged(const QStringList& extensions);
+	void currentDirChanged(const QString& path);
 
 protected:
 	Ui::GCodeWorkShop* ui;
@@ -170,6 +172,12 @@ protected:
 	bool saveDocument(Document* doc, bool forceSaveAs);
 
 	void setMdiTabbedMode(bool tabbed);
+
+public:
+	QStringList fileFilter() const;
+
+protected:
+	void setFileFilter(const QStringList& extensions);
 
 public slots:
 	Document* newFileFromTemplate();
