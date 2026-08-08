@@ -20,7 +20,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <QAbstractItemModel>   // for QTypeInfo<>::isLarge, QTypeInfo<>::isStatic
 #include <QAbstractPrintDialog> // for QAbstractPrintDialog, QAbstractPrintDialog::PrintSelection
 #include <QAction>              // for QAction
 #include <QActionGroup>         // for QActionGroup
@@ -118,6 +117,7 @@
 #include <serialportconfigdialog.h>     // SerialPortConfigDialog
 #include <serialporttestdialog.h>       // SerialPortTestDialog
 #include <serialtransmissiondialog.h>   // SerialTransmissionDialog
+#include <utils/keysequencemap.h>       // for KeySequenceMap
 #include <utils/medium.h>               // Medium
 #include <utils/gcode-converter.h>      // for Converter
 #include <version.h>
@@ -127,6 +127,7 @@
 #include "gcoder.h"                 // for DOCUMENT_TYPE
 #include "gcoderinfo.h"             // for GCoderInfo
 #include "gcoderproducer.h"         // for GCoderProducer
+#include "gui/defaultkeysequences.h"
 #include "highlightmode.h"          // for MODE_AUTO, MODE_FANUC, MODE_HEIDENHAIN, MODE_HEIDENHAIN_ISO, MODE_LINU...
 #include "newfiledialog.h"          // for newFileDialog
 #include "recentfiles.h"            // for RecentFiles
@@ -214,6 +215,15 @@ GCodeWorkShop::GCodeWorkShop(Medium* medium)
 	connect(m_recentFiles, SIGNAL(fileListChanged(QStringList)), this, SLOT(updateRecentFilesMenu(QStringList)));
 	connect(m_recentFiles, SIGNAL(saveRequest()), this, SLOT(recentFilesChanged()));
 
+	m_shortcuts.insert(GUI::defaultKeySequence());
+	connect(this, &GCodeWorkShop::loadSettings, [this](QSettings * cfg) {
+		m_shortcuts.load(cfg);
+		updateShortcuts(m_shortcuts);
+	});
+	connect(this, &GCodeWorkShop::saveSettings, [this](QSettings * cfg) {
+		m_shortcuts.save(cfg);
+	});
+
 	m_addonsActions = new Addons::Actions(this);
 	createActions();
 	createToolBars();
@@ -250,6 +260,7 @@ GCodeWorkShop::GCodeWorkShop(Medium* medium)
 	setWindowTitle(tr("GCodeWorkShop"));
 	setWindowIcon(QIcon(":/images/edytornc.png"));
 
+	emit loadSettings(Medium::instance().settings());
 	readSettings();
 	clipboardLoad();
 }
@@ -374,6 +385,7 @@ void GCodeWorkShop::closeEvent(QCloseEvent* event)
 		return;
 	}
 
+	emit saveSettings(Medium::instance().settings());
 	writeSettings();
 	clipboardSave();
 	closeAllMdiWindows();
