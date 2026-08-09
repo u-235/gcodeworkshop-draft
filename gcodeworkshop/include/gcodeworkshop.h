@@ -155,11 +155,10 @@ protected:
 	GUI::WorkShop::ToolActions* m_toolActions;
 	GUI::WorkShop::WindowActions* m_windowActions;
 
-public:
-	void openFile(const QString& fileName);
+public slots:
+	void openFile(const QString& fileName, const QString& mime = QString());
 	void diffTwoFiles(const QString& filename1, const QString& filename2);
 
-public slots:
 	void messReceived(const QString& text = "");
 	Document* newFile();
 	bool maybeSave(Document* doc);

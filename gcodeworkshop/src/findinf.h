@@ -92,7 +92,7 @@ private:
 	QSplitter* f_parent;
 
 signals:
-	void fileClicked(const QString&);
+	void fileClicked(const QString& file, const QString& mime);
 };
 
 #endif // FINDINFILES_H
