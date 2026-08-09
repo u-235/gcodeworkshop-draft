@@ -522,13 +522,26 @@ void GCodeWorkShop::openExample()
 	statusBar()->showMessage(tr("File loaded"), 5000);
 }
 
-void GCodeWorkShop::openFile(const QString& fileName)
+void GCodeWorkShop::openFile(const QString& fileName, const QString& mime)
 {
-	GCoderInfo* info = new GCoderInfo();
-	info->filePath = fileName;
-	info->readOnly = m_defaultReadOnly;
-	info->highlightMode = defaultHighlightMode(QFileInfo(fileName).absolutePath());
-	loadFile(DocumentInfo::Ptr(info), true);
+	QFileInfo info(fileName);
+	bool gcode = true;
+
+	if (mime.isEmpty()) {
+		gcode = m_extensions.contains("*." + info.suffix(), Qt::CaseInsensitive);
+	} else {
+		gcode = mime.contains("gcode");
+	}
+
+	if (gcode) {
+		GCoderInfo* info = new GCoderInfo();
+		info->filePath = fileName;
+		info->readOnly = m_defaultReadOnly;
+		info->highlightMode = defaultHighlightMode(QFileInfo(fileName).absolutePath());
+		loadFile(DocumentInfo::Ptr(info), true);
+	} else {
+		QDesktopServices::openUrl(QUrl("file:///" + fileName, QUrl::TolerantMode));
+	}
 }
 
 bool GCodeWorkShop::saveDocument(Document* doc, bool forceSaveAs)
