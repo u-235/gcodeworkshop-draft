@@ -18,14 +18,13 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <QChar>                    // for QChar, operator==, operator!=
+#include <QChar>                    // for QChar, operator==
 #include <QDragEnterEvent>          // for QDragEnterEvent
 #include <QDropEvent>               // for QDropEvent
 #include <QEvent>                   // for QEvent, QEvent::KeyPress, QEvent::MouseButtonDblClick, QEvent::ToolTip
 #include <QHelpEvent>               // for QHelpEvent
 #include <QKeyEvent>                // for QKeyEvent
 #include <QLatin1Char>              // for QLatin1Char
-#include <QLatin1String>            // for QLatin1String
 #include <QMimeData>                // for QMimeData
 #include <QMouseEvent>              // for QMouseEvent
 #include <QPlainTextEdit>           // for QPlainTextEdit

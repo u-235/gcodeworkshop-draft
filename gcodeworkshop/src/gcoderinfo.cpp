@@ -19,7 +19,6 @@
 
 #include  <typeinfo>    // for bad_cast
 
-#include <QLatin1String>    // for QLatin1String
 #include <QSettings>        // for QSettings
 #include <QString>          // for QString
 #include <QVariant>         // for QVariant

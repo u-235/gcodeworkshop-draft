@@ -47,7 +47,27 @@ The following additional parameters are possible:
       IWYU_EXTRA_FLAGS='-Xiwyu --update_comments'
 
 
-Additional links:
+**Ignored proposals**
+
+IWYU v0.21
+
+* Add `#include <memory>` for `__shared_ptr_access` (Qt5.15 & Qt6.4)
+  - gcodeworkshop/src/document.cpp
+  - gcodeworkshop/src/documentmanager.cpp
+  - gcodeworkshop/src/documentproducer.cpp
+  - gcodeworkshop/src/gcoderdocument.cpp
+  - gcodeworkshop/src/gcodeworkshop.cpp
+* Add `#include <algorithm>` for `std::max` (Qt5.15)
+  - gcodeshared/src/utils/gcode-converter.cpp
+* Remove `#include <QObject>`
+  - gcodeworkshop/src/highlighter.h (Qt6.4)
+* Replace `#include <QSharedPointer>` with `template <class T> class QSharedPointer`
+  - gcodeshared/include/utils/configdialog.h (Qt6.4)
+* Replace `class QMdiArea` with `#include <QMdiArea>`
+  - gcodeworkshop/include/documentmanager.h (Qt6.4)
+
+
+**Additional links:**
 
 * https://github.com/include-what-you-use/include-what-you-use/blob/master/docs/IWYUMappings.md
 * https://github.com/include-what-you-use/include-what-you-use/blob/master/docs/IWYUPragmas.md

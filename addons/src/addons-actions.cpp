@@ -22,7 +22,6 @@
 #include <QAction>          // for QAction
 #include <QApplication>     // for QApplication
 #include <QIcon>            // for QIcon
-#include <QKeySequence>     // for QTypeInfo<>::isComplex, QTypeInfo<>::isPointer
 #include <QMainWindow>      // for QMainWindow
 #include <QMessageBox>      // for QMessageBox
 #include <QString>          // for QString
@@ -32,7 +31,9 @@
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 	#include <QStringList>
 #else
+	#include <QKeySequence>
 	#include <QList>
+	#include <QMap>
 	using QStringList = QList<QString>;
 #endif
 

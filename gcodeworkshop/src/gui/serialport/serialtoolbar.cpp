@@ -26,12 +26,14 @@
 #include <QSettings>    // for QSettings
 #include <QVariant>     // for QVariant
 #include <Qt>           // for CursorShape
-#include <QtGlobal>     // for Q_UNUSED
+#include <QtGlobal>     // for Q_UNUSED, QT_VERSION, QT_VERSION_CHECK
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 	#include <QStringList>
 #else
+	#include <QKeySequence>
 	#include <QList>
+	#include <QMap>
 	using QStringList = QList<QString>;
 #endif
 

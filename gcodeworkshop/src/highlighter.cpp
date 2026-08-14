@@ -20,7 +20,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <QBrush>                   // for QBrush
 #include <QChar>                    // for QChar, operator==, operator<=, operator>=
 #include <QColor>                   // for QColor
 #include <QFont>                    // for QFont

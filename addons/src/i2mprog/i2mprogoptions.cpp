@@ -18,6 +18,7 @@
  */
 
 #include <QSettings>    // for QSettings
+#include <QString>      // for QString
 #include <QVariant>     // for QVariant
 
 #include "i2mprogoptions.h"

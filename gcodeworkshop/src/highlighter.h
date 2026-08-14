@@ -24,12 +24,12 @@
 #define HIGHLIGHTER_H
 
 #include <QFont>                // for QFont
+#include <QList>                // for QList
 #include <QObject>              // for Q_OBJECT
 #include <QRegularExpression>   // for QRegularExpression
 #include <QString>              // for QString
 #include <QSyntaxHighlighter>   // for QSyntaxHighlighter
 #include <QTextCharFormat>      // for QTextCharFormat
-#include <QVector>              // for QVector
 
 class QTextDocument;
 
@@ -72,8 +72,8 @@ private:
 		QTextCharFormat format;
 	};
 
-	QVector<HighlightingRule> highlightRules;
-	QVector<HighlightingRule> commentHighlightRules;
+	QList<HighlightingRule> highlightRules;
+	QList<HighlightingRule> commentHighlightRules;
 
 	struct ProgNameHighlightingRule {
 		QRegularExpression pattern;
@@ -81,7 +81,7 @@ private:
 		int mode;
 	};
 
-	QVector<ProgNameHighlightingRule> progNameHighlightRules;
+	QList<ProgNameHighlightingRule> progNameHighlightRules;
 
 	QRegularExpression commentStartExpression;
 	QRegularExpression commentEndExpression;

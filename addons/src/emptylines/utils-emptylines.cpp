@@ -17,9 +17,10 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <QLatin1String>        // for QLatin1String
-#include <QRegularExpression>   // for QRegularExpression
-#include <QString>              // for QString
+#include <QRegularExpression>               // for QRegularExpression
+#include <QRegularExpressionMatch>          // for QRegularExpressionMatch
+#include <QRegularExpressionMatchIterator>  // for QRegularExpressionMatchIterator
+#include <QString>                          // for QString
 
 #include "utils-emptylines.h"
 

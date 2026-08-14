@@ -34,13 +34,12 @@
 #include <QPixmap>      // for QPixmap
 #include <QPointF>      // for QPointF
 #include <QRect>        // for QRect
-#include <QString>      // for QString
 #include <Qt>           // for PenStyle, GlobalColor, BrushStyle, MouseButton, WidgetAttribute, WindowFlags
-#include <QtGlobal>     // for qMin, qreal
+#include <QtGlobal>     // for qMin, qreal, QT_VERSION, QT_VERSION_CHECK
 
-class QFocusEvent;
-class QMouseEvent;
-class QPaintEvent;
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+	#include <QString>
+#endif
 
 #include "bhcdraw.h"
 

@@ -20,12 +20,13 @@
 #include <QList>            // for QList, QList<>::const_iterator, QList<>::iterator
 #include <QMap>             // for QMap, QMap<>::const_iterator
 #include <QMdiArea>         // for QMdiArea, QMdiArea::StackingOrder
-#include <QMdiSubWindow>    // for QMdiSubWindow
+#include <QMdiSubWindow>    // IWYU pragma: keep
 #include <QObject>          // for emit, SIGNAL, SLOT, QObject
 #include <QPointer>         // for QPointer
 #include <QString>          // for QString, operator==
 #include <Qt>               // for ConnectionType, DirectConnection
 #include <QtDebug>          // for QDebug
+#include <QtGlobal>         // for qWarning
 
 #include <document.h>                   // for Document
 #include <documentinfo.h>               // for DocumentInfo

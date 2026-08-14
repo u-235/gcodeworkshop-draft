@@ -33,7 +33,6 @@
 #include <QFileInfo>            // for QFileInfo, QFileInfoList
 #include <QFileSystemWatcher>   // for QFileSystemWatcher
 #include <QIODevice>            // for QIODevice, QIODevice::ReadWrite, operator|, QIODevice::ReadOnly, QIODe...
-#include <QLatin1String>        // for QLatin1String
 #include <QList>                // for QList, QList<>::iterator, QList<>::const_iterator, QList<>::Iterator
 #include <QMainWindow>          // for QMainWindow
 #include <QMdiArea>             // for QMdiArea, QMdiArea::SubWindowView, QMdiArea::TabbedView
@@ -72,7 +71,6 @@
 #include <documentmanager.h>            // for DocumentManager
 #include <documentstyle.h>              // for DocumentStyle::Ptr, DocumentStyle
 #include <documentwidgetproperties.h>   // for DocumentWidgetProperties::Ptr, DocumentWidgetProperties
-#include <gcodefileserver.h>            // for GCodeFileServer
 #include <gcoderdocument.h>             // for GCoderDocument
 #include <gcoderstyle.h>                // for GCoderStyle
 #include <gcoderwidgetproperties.h>     // for GCoderWidgetProperties

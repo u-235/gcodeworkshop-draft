@@ -21,7 +21,6 @@
  ***************************************************************************/
 
 #include <QApplication>     // for QApplication, qApp
-#include <QBrush>           // for QBrush
 #include <QChar>            // for QChar
 #include <QComboBox>        // for QComboBox
 #include <QIODevice>        // for QIODevice
@@ -55,6 +54,7 @@ class QWidget;
 
 #include <gui/serialport/serialportconfigdialog.h>  //  for SerialPortConfigDialog
 #include <gui/serialport/serialporttestdialog.h>
+#include <serialportsettings.h>
 
 #include "ui_serialporttestdialog.h"    // for Ui::SerialPortTestDialog
 

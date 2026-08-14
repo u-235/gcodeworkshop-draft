@@ -18,7 +18,6 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <QAbstractItemModel>   // for QTypeInfo<>::isLarge, QTypeInfo<>::isStatic
 #include <QDir>                 // for QDir
 #include <QFileDialog>          // for QFileDialog
 #include <QFileIconProvider>    // for QFileIconProvider
@@ -41,6 +40,7 @@
 #include <QtGlobal>             // for QTypeInfo<>::isLarge, QTypeInfo<>::isStatic, QFlags
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+	#include <QAbstractItemModel>
 	#include <QStringList>
 #else
 	#include <QString>

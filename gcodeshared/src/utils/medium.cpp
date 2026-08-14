@@ -20,12 +20,14 @@
  *      along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include <cstdlib> // getenv()
+#ifdef _WIN32
+	#include <cstdlib> // getenv()
+#endif
 
 #include <QApplication>             // for QApplication
 #include <QCoreApplication>         // for QCoreApplication
+#include <QDebug>                   // for QDebug, operator<<
 #include <QDir>                     // for QDir
-#include <QLatin1String>            // for QLatin1String
 #include <QLibraryInfo>             // for QLibraryInfo
 #include <QList>                    // for QList
 #include <QLocale>                  // for QLocale, QTypeInfo<>::isLarge, QTypeInfo<>::isStatic, QTypeInfo<>::isComplex
@@ -33,8 +35,7 @@
 #include <QRegularExpressionMatch>  // for QRegularExpressionMatch
 #include <QSettings>                // for QSettings
 #include <QStandardPaths>           // for QStandardPaths
-#include <QtDebug>                  // for QNoDebug, qDebug
-#include <QtGlobal>                 // for QForeachContainer, qMakeForeachContainer, QTypeInfo<>::isLarge, QTypeInfo...
+#include <QtGlobal>                 // for QT_VERSION, QT_VERSION_CHECK, QTypeInfo<>::isLarge, QTypeInfo...
 #include <QTranslator>              // for QTranslator
 
 #include <utils/medium.h>   // IWYU pragma: associated

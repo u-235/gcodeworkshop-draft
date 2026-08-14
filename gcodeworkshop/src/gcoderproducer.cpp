@@ -17,7 +17,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <QLatin1String>    // for QLatin1String
+#include <QString>          // for QString
 
 #include <documentproducer.h>       // for DocumentProducer
 #include <gcoderdocument.h>         // for GCoderDocument
@@ -27,12 +27,6 @@
 #include "gcoder.h"         // for DOCUMENT_TYPE
 #include "gcoderinfo.h"     // for GCoderInfo
 #include "gcoderproducer.h"
-
-
-class Document;
-class DocumentInfo;
-class DocumentStyle;
-class DocumentWidgetProperties;
 
 
 GCoderProducer::GCoderProducer() : DocumentProducer(new GCoderStyle(), new GCoderWidgetProperties)

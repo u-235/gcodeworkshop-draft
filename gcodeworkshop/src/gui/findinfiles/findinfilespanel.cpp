@@ -25,7 +25,6 @@
 #include <QCheckBox>                // for QCheckBox
 #include <QColor>                   // for QColor
 #include <QComboBox>                // for QComboBox
-#include <QDateTime>                // for QDateTime
 #include <QDir>                     // for QDir, operator|, QDir::NoSymLinks, QDir::Readable, QDir::AllDirs, QDir::F...
 #include <QFile>                    // for QFile
 #include <QFileDialog>              // for QFileDialog
@@ -57,6 +56,7 @@
 #include <QtGlobal>                 // for QFlags, qMakeForeachContainer, Q_UNUSED, foreach, qint64
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+	#include <QDateTime>
 	#include <QStringList>
 #else
 	#include <QList>
