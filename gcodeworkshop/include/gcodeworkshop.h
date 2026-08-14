@@ -54,7 +54,6 @@ class QSettings;
 
 class Document;
 class DocumentManager;
-class GCodeFileServer;
 class GCoderDocument;
 class Medium;
 class RecentFiles;

@@ -21,11 +21,11 @@
  ***************************************************************************/
 
 #include <QApplication>             // for QApplication, qApp
+#include <QBrush>                   // for QBrush
 #include <QChar>                    // for QChar
 #include <QCheckBox>                // for QCheckBox
 #include <QColor>                   // for QColor
 #include <QComboBox>                // for QComboBox
-#include <QDateTime>                // for QDateTime
 #include <QDir>                     // for QDir, operator|, QDir::NoSymLinks, QDir::Readable, QDir::AllDirs, QDir::F...
 #include <QFile>                    // for QFile
 #include <QFileDialog>              // for QFileDialog
@@ -33,12 +33,14 @@
 #include <QFont>                    // for QFont, QFont::Normal
 #include <QFrame>                   // for QFrame
 #include <QIODevice>                // for QIODevice, QIODevice::ReadOnly
+#include <QIcon>                    // for QIcon
 #include <QPlainTextEdit>           // for QPlainTextEdit
 #include <QProgressDialog>          // for QProgressDialog
 #include <QPushButton>              // for QPushButton
 #include <QRegularExpression>       // for QRegularExpression, QRegularExpression::CaseInsensitiveOption
 #include <QRegularExpressionMatch>  // for QRegularExpressionMatch
 #include <QSettings>                // for QSettings
+#include <QSize>                    // for QSize
 #include <QSplitter>                // for QSplitter
 #include <QString>                  // for QString, operator+, QCharRef
 #include <QTableWidget>             // for QTableWidget
@@ -55,6 +57,7 @@
 #include <QtGlobal>                 // for QFlags, qMakeForeachContainer, Q_UNUSED, foreach, qint64
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+	#include <QDateTime>
 	#include <QStringList>
 #else
 	#include <QList>
@@ -62,7 +65,6 @@
 #endif
 
 #include <gcoderstyle.h>    // for HighlightColors
-#include <utils/medium.h>   // for Medium
 
 #include "capslockeventfilter.h"
 #include "findinfilespanel.h"

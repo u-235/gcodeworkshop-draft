@@ -20,17 +20,27 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <QApplication>         // for main
 #include <QMainWindow>          // for QMainWindow
 #include <QObject>              // for QObject, SIGNAL, SLOT
 #include <QString>              // for QString
-#include <QtGlobal>             // for Q_INIT_RESOURCE
+#include <QtGlobal>             // for Q_INIT_RESOURCE, QT_VERSION, QT_VERSION_CHECK
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 7, 0)
+	#include <QGuiApplication>  // for QGuiApplication
+#endif
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+	#include <QCoreApplication> // for QCoreApplication
+	#include <Qt>               // for ApplicationAttribute, HighDpiScaleFactorRoundingPolicy
+
 	#include <QStringList>
 #else
 	#include <QList>
 	using QStringList = QList<QString>;
+#endif
+
+#ifdef Q_OS_WIN
+	#include <QApplication> // for main
 #endif
 
 #include <gcodeworkshop.h>      // for GCodeWorkShop

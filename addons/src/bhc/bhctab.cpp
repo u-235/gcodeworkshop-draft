@@ -45,12 +45,11 @@
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 	#include <QStringList>
+	class QValidator;
 #else
 	#include <QList>
 	using QStringList = QList<QString>;
 #endif
-
-class QValidator;
 
 #include <utils/removezeros.h>  // Utils::removeZeros()
 

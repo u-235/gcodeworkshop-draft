@@ -41,7 +41,6 @@
 #include <QSerialPort>                  // for QSerialPort
 #include <QSerialPortInfo>              // for QSerialPortInfo
 #include <QSettings>                    // for QSettings
-#include <QSpinBox>                     // for QSpinBox
 #include <QString>                      // for QString
 #include <QTabWidget>                   // for QTabWidget
 #include <QToolButton>                  // for QToolButton
@@ -50,6 +49,7 @@
 #include <QtGlobal>                     // for QForeachContainer, QTypeInfo<>::isLarge, QTypeInfo<>::isStatic, Q_OS_...
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+	#include <QSpinBox>
 	#include <QStringList>
 #else
 	using QStringList = QList<QString>;

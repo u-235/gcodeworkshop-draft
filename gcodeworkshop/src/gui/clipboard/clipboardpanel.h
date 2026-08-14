@@ -25,6 +25,8 @@
 #include <QString>      // for QString
 #include <QWidget>      // for QWidget
 
+class QModelIndex;
+class QPoint;
 class QSettings;
 class QStandardItemModel;
 

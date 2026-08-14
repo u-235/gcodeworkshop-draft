@@ -38,7 +38,6 @@
 	using QStringList = QList<QString>;
 #endif
 
-class QCloseEvent;
 class QTimer;
 class QWidget;
 

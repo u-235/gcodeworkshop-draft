@@ -42,8 +42,12 @@
 #include <QSize>            // for QSize
 #include <QVariant>         // for QVariant
 #include <Qt>               // for GlobalColor, Key, KeyboardModifier, WidgetAttribute
+#include <QtGlobal>         // for QT_VERSION, QT_VERSION_CHECK
 
-class QValidator;
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+	class QValidator;
+#endif
+
 class QWidget;
 
 #include "triangledialog.h"

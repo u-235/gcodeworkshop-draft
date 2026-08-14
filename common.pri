@@ -100,7 +100,9 @@ contains(USE, check_iwyu) {
         IWYU_FLAGS += -I$$include
     }
 
+    IWYU_EXTRA_FLAGS += -Xiwyu --verbose=3
     IWYU_EXTRA_FLAGS += -Xiwyu --max_line_length=120 -Xiwyu --mapping_file=$${PROJECT_ROOT_PATH}/tools/iwyu.imp
+    greaterThan(QT_MAJOR_VERSION, 5): IWYU_EXTRA_FLAGS += -Xiwyu --mapping_file=$${PROJECT_ROOT_PATH}/tools/iwyu_qt6_extra.imp
 
     iwyu.output_function  = iwyu_out
     iwyu.commands = $${PROJECT_ROOT_PATH}/tools/iwyu_comp.sh $${IWYU_EXTRA_FLAGS} $${IWYU_FLAGS} ${QMAKE_FILE_NAME}

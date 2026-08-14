@@ -31,16 +31,16 @@
 #include <QWidget>          // for QWidget
 #include <QtGlobal>         // for QT_VERSION, QT_VERSION_CHECK
 
-class QDir;
-class QProgressDialog;
-class QSplitter;
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 	class QStringList;
 #else
 	using QStringList = QList<QString>;
 #endif
 
+class QDir;
+class QProgressDialog;
 class QSettings;
+class QSplitter;
 
 #include <gcoderstyle.h>    // for HighlightColors
 

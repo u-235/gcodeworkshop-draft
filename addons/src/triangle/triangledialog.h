@@ -28,7 +28,6 @@
 #include <QtGlobal> // for uint
 
 class QDoubleValidator;
-class QEvent;
 class QPixmap;
 class QSettings;
 class QWidget;

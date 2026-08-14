@@ -17,7 +17,6 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <QCoreApplication> // for translate
 #include <QKeySequence>     // for QKeySequence
 #include <QString>          // for QString, operator<
 

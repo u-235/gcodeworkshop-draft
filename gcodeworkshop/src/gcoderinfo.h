@@ -20,10 +20,6 @@
 #ifndef GCODERINFO_H
 #define GCODERINFO_H
 
-#include <QString>  // for QString
-
-class QSettings;
-
 #include <documentinfo.h>   // for DocumentInfo
 
 

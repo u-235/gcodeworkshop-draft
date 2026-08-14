@@ -42,8 +42,12 @@
 #include <QString>          // for QString
 #include <QVariant>         // for QVariant
 #include <Qt>               // for Key, KeyboardModifier, GlobalColor, WidgetAttribute
+#include <QtGlobal>         // for QT_VERSION, QT_VERSION_CHECK
 
-class QValidator;
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+	class QValidator;
+#endif
+
 class QWidget;
 
 #include "feedsdialog.h"

@@ -23,13 +23,13 @@
 
 #include <QObject>  // for QObject, Q_OBJECT, slots
 #include <QString>  // for QString
-#include <QToolBar>
-#include <QWidget>
+#include <QToolBar> // for QToolBar
 
 class QCheckBox;
 class QLabel;
 class QLineEdit;
 class QSettings;
+class QWidget;
 
 class CapsLockEventFilter;
 class GCoderDocument;

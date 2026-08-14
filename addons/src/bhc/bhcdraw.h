@@ -28,9 +28,6 @@
 #include <Qt>       // for WindowType, operator|, GlobalColor, WindowFlags
 #include <QtGlobal> // for qreal, QFlags
 
-class QFocusEvent;
-class QMouseEvent;
-class QPaintEvent;
 class QPixmap;
 
 

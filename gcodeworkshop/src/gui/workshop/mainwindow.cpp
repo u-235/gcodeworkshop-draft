@@ -66,6 +66,8 @@
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 	#include <QStringList>
 #else
+	#include <QChar>
+	#include <QFlags>
 	using QStringList = QList<QString>;
 #endif
 
@@ -79,7 +81,6 @@
 #include <gcoderstyle.h>                // for GCoderStyle, HighlightColors
 #include <gcoderwidgetproperties.h>     // for GCoderWidgetProperties
 #include <kdiff3/kdiff3.h>              // for KDiff3App
-#include <utils/keysequencemap.h>       // for KeySequenceMap
 #include <utils/medium.h>               // for Medium
 
 #include "gcoder.h"                             // for DOCUMENT_TYPE

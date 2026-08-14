@@ -28,7 +28,6 @@
 class QAbstractItemModel;
 class QAction;
 class QActionGroup;
-class QEvent;
 class QMenu;
 class QPoint;
 

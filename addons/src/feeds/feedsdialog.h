@@ -26,7 +26,6 @@
 #include <QPointer> // for QPointer
 #include <QString>  // for QString
 
-class QEvent;
 class QSettings;
 class QWidget;
 

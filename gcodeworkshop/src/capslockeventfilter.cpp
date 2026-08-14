@@ -23,7 +23,11 @@
 #include <QEvent>       // for QEvent, QEvent::KeyPress
 #include <QKeyEvent>    // for QKeyEvent
 #include <Qt>           // for KeyboardModifier, Key
-#include <QtGlobal>     // for Q_UNUSED
+#include <QtGlobal>     // for Q_UNUSED, QT_VERSION, QT_VERSION_CHECK
+
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+	#include <QFlags>
+#endif
 
 #include "capslockeventfilter.h"
 

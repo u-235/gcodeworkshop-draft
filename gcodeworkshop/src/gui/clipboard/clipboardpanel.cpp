@@ -18,7 +18,6 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <QAbstractItemModel>   // for QTypeInfo<>::isLarge, QTypeInfo<>::isStatic
 #include <QFont>                // for QFont
 #include <QIcon>                // for QIcon
 #include <QItemSelectionModel>  // for QItemSelectionModel
@@ -34,11 +33,14 @@
 #include <QtGlobal>             // for QT_VERSION, QT_VERSION_CHECK
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+	#include <QAbstractItemModel>
 	#include <QStringList>
 #else
 	#include <QString>
 	using QStringList = QList<QString>;
 #endif
+
+class QPoint;
 
 #include <utils/medium.h>       // for Medium
 

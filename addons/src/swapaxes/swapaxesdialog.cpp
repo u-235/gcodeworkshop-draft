@@ -25,12 +25,12 @@
 #include <QRect>            // for QRect
 #include <QSettings>        // for QSettings
 #include <QSize>            // for QSize
-#include <QSpinBox>         // for QSpinBox
 #include <QString>          // for QString
 #include <QVariant>         // for QVariant
 #include <QtGlobal>         // for Q_UNUSED
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+	#include <QSpinBox>
 	#include <QStringList>
 #else
 	#include <QList>

@@ -17,7 +17,6 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <QAction>          // for QAction
 #include <QIcon>            // for QIcon
 #include <QLatin1String>    // for QLatin1String
 

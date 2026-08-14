@@ -19,11 +19,11 @@
 
 #include  <typeinfo>    // for bad_cast
 
-#include <QtGlobal>         // for Q_OS_WIN32 // IWYU pragma: keep
 #include <QLatin1String>    // for QLatin1String
 #include <QSettings>        // for QSettings
 #include <QString>          // for QString
 #include <QVariant>         // for QVariant
+#include <QtGlobal>         // for Q_OS_WIN32 // IWYU pragma: keep
 
 #include <documentstyle.h>  // for DocumentStyle
 #include <gcoderstyle.h>    // IWYU pragma: associated

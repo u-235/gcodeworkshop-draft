@@ -1,10 +1,12 @@
 [
-    { include: ['<qcoreevent.h>', 'private', '<QEvent>', 'public'] },
-    { include: ['"qcoreevent.h"', 'private', '<QEvent>', 'public'] },
+#    { include: ['<qcoreevent.h>', 'private', '<QEvent>', 'public'] },
+#    { include: ['"qcoreevent.h"', 'private', '<QEvent>', 'public'] },
     { include: ['<qtmetamacros.h>', 'private', '<QObject>', 'public'] },
     { include: ['"qtmetamacros.h"', 'private', '<QObject>', 'public'] },
     { include: ['<qobjectdefs.h>', 'private', '<QObject>', 'public'] },
     { include: ['"qobjectdefs.h"', 'private', '<QObject>', 'public'] },
+    { include: ['<QtCore/qobjectdefs.h>', 'private', '<QObject>', 'public'] },
+    { include: ['"QtCore/qobjectdefs.h"', 'private', '<QObject>', 'public'] },
     { include: ['<QtCore/qsharedpointer.h>', 'private', '<QSharedPointer>', 'public'] },
     { include: ['"QtCore/qsharedpointer.h"', 'private', '<QSharedPointer>', 'public'] },
     { include: ['<qnamespace.h>', 'private', '<Qt>', 'public'] },
@@ -17,9 +19,36 @@
     { include: ['"qglobal.h"', 'private', '<QtGlobal>', 'public'] },
     { include: ['<QtCore/qglobal.h>', 'private', '<QtGlobal>', 'public'] },
     { include: ['"QtCore/qglobal.h"', 'private', '<QtGlobal>', 'public'] },
-    { include: ['"qtypeinfo.h"', 'private', '<QtGlobal>', 'public'] },
-    { include: ['<qtypeinfo.h>', 'private', '<QtGlobal>', 'public'] },
+    { include: ['"qconfig.h"', 'private', '"qglobal.h"', 'private'] },
+    { include: ['"qconfig-64.h"', 'private', '"qconfig.h"', 'private'] },
 
+    { symbol: ['QTypeInfo', 'private', '<qtypeinfo.h>', 'private'] },
+    # Usage Q_DECLARE_TYPEINFO macro
+    { include: ['"qtypeinfo.h"', 'private', '"qabstracttextdocumentlayout.h"', 'private'] },
+    { include: ['"qtypeinfo.h"', 'private', '"qchar.h"', 'private'] },
+    { include: ['"qtypeinfo.h"', 'private', '"qcolor.h"', 'private'] },
+    { include: ['"qtypeinfo.h"', 'private', '"qdatetime.h"', 'private'] },
+    { include: ['"qtypeinfo.h"', 'private', '"qevint.h"', 'private'] },
+    { include: ['"qtypeinfo.h"', 'private', '"qflags.h"', 'private'] },
+    { include: ['"qtypeinfo.h"', 'private', '"qhash.h"', 'private'] },
+    { include: ['"qtypeinfo.h"', 'private', '"qitemselectionmodel.h"', 'private'] },
+    { include: ['"qtypeinfo.h"', 'private', '<QKeySequence>', 'public'] },
+    { include: ['"qtypeinfo.h"', 'private', '"qline.h"', 'private'] },
+    { include: ['"qtypeinfo.h"', 'private', '"qlist.h"', 'private'] },
+    { include: ['"qtypeinfo.h"', 'private', '"qmap.h"', 'private'] },
+    { include: ['"qtypeinfo.h"', 'private', '"qmargins.h"', 'private'] },
+    { include: ['"qtypeinfo.h"', 'private', '"qmatrix.h"', 'private'] },
+    { include: ['"qtypeinfo.h"', 'private', '"qmetatype.h"', 'private'] },
+    { include: ['"qtypeinfo.h"', 'private', '"qpoint.h"', 'private'] },
+    { include: ['"qtypeinfo.h"', 'private', '"qrect.h"', 'private'] },
+    { include: ['"qtypeinfo.h"', 'private', '"qregexp.h"', 'private'] },
+    { include: ['"qtypeinfo.h"', 'private', '"qstring.h"', 'private'] },
+    { include: ['"qtypeinfo.h"', 'private', '"qsize.h"', 'private'] },
+    { include: ['"qtypeinfo.h"', 'private', '"qstringlist.h"', 'private'] },
+    { include: ['"qtypeinfo.h"', 'private', '"qstringwiev.h"', 'private'] },
+    { include: ['"qtypeinfo.h"', 'private', '<QVariant>', 'public'] },
+    { include: ['"qtypeinfo.h"', 'private', '<QVector>', 'public'] },
+    { include: ['"qtypeinfo.h"', 'private', '"qversionnumber.h"', 'private'] },
 
     { symbol:  ['main', 'private', '<QApplication>', 'public'] },
 
@@ -42,6 +71,7 @@
     { symbol:  ['QContextMenuEvent', 'private', '<QContextMenuEvent>', 'public'] },
     { symbol:  ['QDragEnterEvent', 'private', '<QDragEnterEvent>', 'public'] },
     { symbol:  ['QDropEvent', 'private', '<QDropEvent>', 'public'] },
+    { symbol:  ['QEvent', 'private', '<QEvent>', 'public'] },
     { symbol:  ['QFileOpenEvent', 'private', '<QFileOpenEvent>', 'public'] },
     { symbol:  ['QFocusEvent', 'private', '<QFocusEvent>', 'public'] },
     { symbol:  ['QHelpEvent', 'private', '<QHelpEvent>', 'public'] },
@@ -62,6 +92,7 @@
     { symbol:  ['QObjectData', 'private', '<QObjectData>', 'public'] },
     { symbol:  ['QPaintEvent', 'private', '<QPaintEvent>', 'public'] },
     { symbol:  ['QPointF', 'private', '<QPointF>', 'public'] },
+    { symbol:  ['QRegularExpression', 'private', '<QRegularExpression>', 'public'] },
     { symbol:  ['QRegularExpressionIterator', 'private', '<QRegularExpressionIterator>', 'public'] },
     { symbol:  ['QRegularExpressionMatch', 'private', '<QRegularExpressionMatch>', 'public'] },
     { symbol:  ['QRegularExpressionMatchIterator', 'private', '<QRegularExpressionMatchIterator>', 'public'] },
@@ -90,5 +121,13 @@
 
     { symbol:  ['QDoubleValidator', 'private', '<QDoubleValidator>', 'public'] },
     { symbol:  ['QIntValidator', 'private', '<QIntValidator>', 'public'] },
-    { symbol:  ['QValidator', 'private', '<QValidator>', 'public'] }
+    { symbol:  ['QValidator', 'private', '<QValidator>', 'public'] },
+
+    { symbol:  ['QVector', 'private', '<QVector>', 'public'] },
+
+    # std::pair
+    { include: ['<utility>', 'public', '"qmap.h"', 'private'] },
+
+    # std::forward in QObject::connect
+    { include: ['<utility>', 'public', '"qobject.h"', 'private'] },
 ]

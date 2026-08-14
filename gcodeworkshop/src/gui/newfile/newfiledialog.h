@@ -32,7 +32,7 @@
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 	#include <QStringList>
 #else
-	template<typename T> class QList;
+	#include <QList>
 	using QStringList = QList<QString>;
 #endif
 

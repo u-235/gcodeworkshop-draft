@@ -24,7 +24,6 @@
 #include <QString>  // for QString
 
 class QCloseEvent;
-class QEvent;
 
 
 class DocumentWidgetCloseEventFilter : public QObject

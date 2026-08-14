@@ -16,8 +16,14 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 #include <QSettings>    // for QSettings
 #include <QVariant>     // for QVariant
+#include <QtGlobal>     // for QT_VERSION, QT_VERSION_CHECK
+
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+	#include <QString>
+#endif
 
 #include "chamferoptions.h"
 

@@ -18,7 +18,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <QChar>                    // for QChar, operator==, operator!=
+#include <QChar>                    // for QChar, operator==
 #include <QDragEnterEvent>          // for QDragEnterEvent
 #include <QDropEvent>               // for QDropEvent
 #include <QEvent>                   // for QEvent, QEvent::KeyPress, QEvent::MouseButtonDblClick, QEvent::ToolTip
@@ -36,6 +36,11 @@
 #include <QToolTip>                 // for QToolTip
 #include <QWidget>                  // for QWidget
 #include <Qt>                       // for KeyboardModifiers, NoModifier, ShiftModifier, ControlModifier, Key_Comma
+#include <QtGlobal>                 // for Q_UNUSED, QT_VERSION, QT_VERSION_CHECK
+
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+	#include <QFlags>
+#endif
 
 #include "gcodereventfilter.h"
 

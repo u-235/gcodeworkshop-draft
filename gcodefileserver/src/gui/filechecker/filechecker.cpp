@@ -24,7 +24,6 @@
 #include <QByteArray>               // for QByteArray
 #include <QChar>                    // for QChar
 #include <QComboBox>                // for QComboBox
-#include <QDateTime>                // for QDateTime
 #include <QDir>                     // for QDir, operator|
 #include <QFile>                    // for QFile
 #include <QFileInfo>                // for QFileInfo
@@ -45,6 +44,10 @@
 #include <QVariant>                 // for QVariant
 #include <Qt>                       // for AlignmentFlag, operator|, AspectRatioMode, TransformationMode, ItemDataRole
 #include <QtGlobal>                 // for QFlags, Q_UNUSED, QTypeInfo<>::isLarge, QTypeInfo<>::isStatic, QTypeInfo<...
+
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+	#include <QDateTime>
+#endif
 
 #include <kdiff3/kdiff3.h> // for KDiff3App
 #include <utils/medium.h>  // for Medium

@@ -34,6 +34,7 @@
 	#include <QStringList>
 #else
 	#include <QList>
+	#include <QMap>
 	using QStringList = QList<QString>;
 #endif
 

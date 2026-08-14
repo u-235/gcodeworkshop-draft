@@ -21,10 +21,6 @@
 #ifndef GCODERWIDGETPROPERTIES_H
 #define GCODERWIDGETPROPERTIES_H
 
-#include <QString>  // for QString
-
-class QSettings;
-
 #include <documentwidgetproperties.h>   // for DocumentWidgetProperties
 
 

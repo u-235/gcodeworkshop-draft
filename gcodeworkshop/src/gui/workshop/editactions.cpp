@@ -19,7 +19,13 @@
 
 #include <QAction>          // for QAction
 #include <QIcon>            // for QIcon
+#include <QKeySequence>     // for QTypeInfo<>::isComplex, QTypeInfo<>::isPointer
 #include <QLatin1String>    // for QLatin1String
+#include <QtGlobal>         // for QT_VERSION, QT_VERSION_CHECK
+
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+	#include <QMap>
+#endif
 
 #include <gcodeworkshop.h>
 #include <gui/actions/actionkit.h>      // for ActionKit

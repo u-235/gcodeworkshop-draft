@@ -1,0 +1,132 @@
+[
+    { include: ['"qtypes.h"', 'private', '<QtGlobal>', 'public'] },
+    { include: ['<qtypes.h>', 'private', '<QtGlobal>', 'public'] },
+    { include: ['"qforeach.h"', 'private', '<QtGlobal>', 'public'] },
+    { include: ['<qforeach.h>', 'private', '<QtGlobal>', 'public'] },
+    { include: ['"qtversion.h"', 'private', '<QtGlobal>', 'public'] },
+    { include: ['<qtversion.h>', 'private', '<QtGlobal>', 'public'] },
+    { include: ['"qtversionchecks.h"', 'private', '<QtGlobal>', 'public'] },
+    { include: ['<qtversionchecks.h>', 'private', '<QtGlobal>', 'public'] },
+    { include: ['"qsystemdetection.h"', 'private', '<QtGlobal>', 'public'] },
+    { include: ['<qsystemdetection.h>', 'private', '<QtGlobal>', 'public'] },
+    { include: ['"qsysinfo.h"', 'private', '<QtGlobal>', 'public'] },
+    { include: ['<qsysinfo.h>', 'private', '<QtGlobal>', 'public'] },
+    { include: ['"qminmax.h"', 'private', '<QtGlobal>', 'public'] },
+    { include: ['<qminmax.h>', 'private', '<QtGlobal>', 'public'] },
+    { include: ['"qttranslation.h"', 'private', '<QtGlobal>', 'public'] },
+    { include: ['<qttranslation.h>', 'private', '<QtGlobal>', 'public'] },
+    { include: ['"qttypetraits.h"', 'private', '<QtGlobal>', 'public'] },
+    { include: ['<qttypetraits.h>', 'private', '<QtGlobal>', 'public'] },
+
+    { symbol:  ['Q_INIT_RESOURCE', 'private', '<QtGlobal>', 'public'] },
+    { symbol:  ['Q_UNUSED', 'private', '<QtGlobal>', 'public'] },
+    { symbol:  ['uint', 'private', '<QtGlobal>', 'public'] },
+    { symbol:  ['QFlags', 'private', '<QtGlobal>', 'public'] },
+
+    { symbol:  ['QChar', 'public', '<QChar>', 'public'] },
+    { symbol:  ['QList', 'public', '<QList>', 'public'] },
+    { symbol:  ['QListWidget', 'public', '<QListWidget>', 'public'] },
+    { symbol:  ['QListWidgetItem', 'public', '<QListWidgetItem>', 'public'] },
+    { symbol:  ['QTextCharFormat', 'public', '<QTextCharFormat>', 'public'] },
+    { symbol:  ['QTextFormat', 'public', '<QTextFormat>', 'public'] },
+    { symbol:  ['QTextOption', 'public', '<QTextOption>', 'public'] },
+
+    # operator<<(QDebug, const QKeySequence &)
+    { include: ['"qdebug.h"', 'private', '"qkeysequence.h"', 'private'] },
+    { include: ['"qabstractfileiconprovider.h"', 'private', '"qfileiconprovider.h"', 'private'] },
+
+    # usage qt_ptr_swap and qSwap
+    { include: ['"qswap.h"', 'private', '"qabstractitemmodel.h"', 'private'] },
+    { include: ['"qswap.h"', 'private', '"qdebug.h"', 'private'] },
+    { include: ['"qswap.h"', 'private', '"qhash.h"', 'private'] },
+    { include: ['"qswap.h"', 'private', '"qobjectdefs.h"', 'private'] },
+    { include: ['"qswap.h"', 'private', '"qurl.h"', 'private'] },
+    { include: ['"qswap.h"', 'private', '"qregexp.h"', 'private'] },
+    { include: ['"qswap.h"', 'private', '"qcursor.h"', 'private'] },
+    { include: ['"qswap.h"', 'private', '"qicon.h"', 'private'] },
+    { include: ['"qswap.h"', 'private', '"qkeysequence.h"', 'private'] },
+    { include: ['"qswap.h"', 'private', '"qpalette.h"', 'private'] },
+    { include: ['"qswap.h"', 'private', '"qregion.h"', 'private'] },
+    { include: ['"qswap.h"', 'private', '"qimage.h"', 'private'] },
+    #   { include: ['"qswap.h"', 'private', '"qarraydatapointer.h"', 'private'] },
+        { include: ['"qswap.h"', 'private', '"qbytearray.h"', 'private'] },
+        { include: ['"qswap.h"', 'private', '"qlist.h"', 'private'] },
+        { include: ['"qswap.h"', 'private', '"qstring.h"', 'private'] },
+    #   { include: ['"qswap.h"', 'private', '"qshareddata.h"', 'private'] },
+        { include: ['"qswap.h"', 'private', '"qdir.h"', 'private'] },
+        { include: ['"qswap.h"', 'private', '"qfileinfo.h"', 'private'] },
+        { include: ['"qswap.h"', 'private', '"qlocale.h"', 'private'] },
+        { include: ['"qswap.h"', 'private', '"qpagesize.h"', 'private'] },
+        { include: ['"qswap.h"', 'private', '"qtextcursor.h"', 'private'] },
+        { include: ['"qswap.h"', 'private', '"qtextformat.h"', 'private'] },
+    #   { include: ['"qswap.h"', 'private', '"qshareddata_impl.h"', 'private'] },
+        { include: ['"qswap.h"', 'private', '"qmap.h"', 'private'] },
+    #   { include: ['"qswap.h"', 'private', '"qsharedpointer_impl.h"', 'private'] },
+
+    { include: ['<qcompare.h>', 'private', '"qcompare.h"', 'private'] },
+    { include: ['"QtCore/qcompare.h"', 'private', '"qcompare.h"', 'private'] },
+    { include: ['<QtCore/qcompare.h>', 'private', '"qcompare.h"', 'private'] },
+    # partial_ordering
+    { include: ['"qcompare.h"', 'private', '"qdebug.h"', 'private'] },
+    { include: ['"qcompare.h"', 'private', '"qfloat16.h"', 'private'] },
+    # strong_ordering
+    { include: ['"qcompare.h"', 'private', '"qabstractitemmodel.h"', 'private'] },
+    { include: ['"qcompare.h"', 'private', '"qanystringview.h"', 'private'] },
+    { include: ['"qcompare.h"', 'private', '"qbytearray.h"', 'private'] },
+    { include: ['"qcompare.h"', 'private', '"qchar.h"', 'private'] },
+    { include: ['"qcompare.h"', 'private', '"qdatetime.h"', 'private'] },
+    { include: ['"qcompare.h"', 'private', '"qlatin1stringview.h"', 'private'] },
+    #   { include: ['"qcompare.h"', 'private', '"qshareddata.h"', 'private'] },
+        { include: ['"qcompare.h"', 'private', '"qdir.h"', 'private'] },
+        { include: ['"qcompare.h"', 'private', '"qfileinfo.h"', 'private'] },
+        { include: ['"qcompare.h"', 'private', '"qlocale.h"', 'private'] },
+        { include: ['"qcompare.h"', 'private', '"qpagesize.h"', 'private'] },
+        { include: ['"qcompare.h"', 'private', '"qprocess.h"', 'private'] },
+        { include: ['"qcompare.h"', 'private', '"qtextcursor.h"', 'private'] },
+        { include: ['"qcompare.h"', 'private', '"qtextformat.h"', 'private'] },
+    { include: ['"qcompare.h"', 'private', '"qsharedpointer.h"', 'private'] },
+    { include: ['"qcompare.h"', 'private', '"qstring.h"', 'private'] },
+    { include: ['"qcompare.h"', 'private', '"qstringview.h"', 'private'] },
+    { include: ['"qcompare.h"', 'private', '"qtyperevision.h"', 'private'] },
+    { include: ['"qcompare.h"', 'private', '"qutf8stringview.h"', 'private'] },
+    { include: ['"qcompare.h"', 'private', '"qversionnumber.h"', 'private'] },
+    { include: ['"qcompare.h"', 'private', '"qfont.h"', 'private'] },
+    # weak_ordering
+    { include: ['"qcompare.h"', 'private', '"qdatetime.h"', 'private'] },
+    { include: ['"qcompare.h"', 'private', '"qurl.h"', 'private'] },
+    #   { include: ['"qcompare.h"', 'private', '"qcomparehelpers.h"', 'private'] },
+        { include: ['"qcomparehelpers.h"', 'private', '"qlist.h"', 'private'] },
+
+    # Dangerous zone
+    ##################
+
+    { include: ['"qminmax.h"', 'private', '"qlist.h"', 'private'] },
+    # std::rotate
+    #{ include: ['<algorithm>', 'public', '"qlist.h"', 'private'] },
+
+    # typedef iterator Iterator
+    { include: ['<iterator>', 'public', '"qbytearray.h"', 'private'] },
+    { include: ['<iterator>', 'public', '"qhash.h"', 'private'] },
+    { include: ['<iterator>', 'public', '"qmap.h"', 'private'] },
+    { include: ['<iterator>', 'public', '"qset.h"', 'private'] },
+    { include: ['<iterator>', 'public', '"qstring.h"', 'private'] },
+    { include: ['<iterator>', 'public', '"qtextobject.h"', 'private'] },
+
+    # std::forward
+    { include: ['<utility>', 'public', '"qforeach.h"', 'private'] },
+    { include: ['<string.h>', 'public', '"qforeach.h"', 'private'] },
+
+    # std::is_convertible_v
+    #   { include: ['<type_traits>', 'public', '"qarraydatapointer.h"', 'private'] },
+        { include: ['<type_traits>', 'public', '"qbytearray.h"', 'private'] },
+        { include: ['<type_traits>', 'public', '"qlist.h"', 'private'] },
+        { include: ['<type_traits>', 'public', '"qstring.h"', 'private'] },
+    { include: ['<type_traits>', 'public', '"qlist.h"', 'private'] },
+    { include: ['<type_traits>', 'public', '"qpointer.h"', 'private'] },
+    { include: ['<type_traits>', 'public', '"qstring.h"', 'private'] },
+
+
+    { include: ['"qstringalgorithms.h"', 'private', '<QString>', 'public'] },
+    { include: ['<qstringalgorithms.h>', 'private', '<QString>', 'public'] },
+    { symbol: ['Q_OBJECT', 'private', '<QString>', 'public'] }
+]

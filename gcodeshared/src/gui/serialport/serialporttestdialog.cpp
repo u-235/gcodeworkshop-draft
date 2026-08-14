@@ -55,6 +55,7 @@ class QWidget;
 
 #include <gui/serialport/serialportconfigdialog.h>  //  for SerialPortConfigDialog
 #include <gui/serialport/serialporttestdialog.h>
+#include <serialportsettings.h>
 
 #include "ui_serialporttestdialog.h"    // for Ui::SerialPortTestDialog
 

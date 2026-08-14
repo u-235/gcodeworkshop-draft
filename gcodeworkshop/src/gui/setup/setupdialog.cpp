@@ -51,13 +51,13 @@
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 	#include <QStringList>
+	class QValidator;
 #else
 	#include <QString>
 	using QStringList = QList<QString>;
 	using QStringListIterator = QListIterator<QString>;
 #endif
 
-class QValidator;
 class QWidget;
 
 #include <gcoderstyle.h>            // for GCoderStyle, HighlightColors

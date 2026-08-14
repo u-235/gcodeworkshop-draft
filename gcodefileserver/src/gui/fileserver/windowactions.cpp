@@ -24,6 +24,10 @@
 #include <QMainWindow>      // for QMainWindow
 #include <QtGlobal>         // for QTypeInfo<>::isComplex, QTypeInfo<>::isRelocatable
 
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+	#include <QMap>
+#endif
+
 #include <gcodefileserver.h>                // for GCodeFileServer
 #include <gui/actions/actionkit.h>          // for ActionKit
 #include <gui/fileserver/knownactions.h>    // for KnownActions

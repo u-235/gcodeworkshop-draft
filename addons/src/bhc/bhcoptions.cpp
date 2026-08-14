@@ -18,6 +18,11 @@
  */
 
 #include <QSettings>    // for QSettings
+#include <QtGlobal>     // for QT_VERSION, QT_VERSION_CHECK
+
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+	#include <QString>
+#endif
 
 #include "bhcoptions.h"
 #include "bhctaboptions.h"  // for BHCTabOptions

@@ -20,14 +20,7 @@
 #ifndef GCODERPRODUCER_H
 #define GCODERPRODUCER_H
 
-#include <QString>  // for QString
-
 #include <documentproducer.h>   // for DocumentProducer
-
-class Document;
-class DocumentInfo;
-class DocumentStyle;
-class DocumentWidgetProperties;
 
 
 class GCoderProducer : public DocumentProducer

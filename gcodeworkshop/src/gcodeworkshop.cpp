@@ -72,7 +72,6 @@
 #include <documentmanager.h>            // for DocumentManager
 #include <documentstyle.h>              // for DocumentStyle::Ptr, DocumentStyle
 #include <documentwidgetproperties.h>   // for DocumentWidgetProperties::Ptr, DocumentWidgetProperties
-#include <gcodefileserver.h>            // for GCodeFileServer
 #include <gcoderdocument.h>             // for GCoderDocument
 #include <gcoderstyle.h>                // for GCoderStyle
 #include <gcoderwidgetproperties.h>     // for GCoderWidgetProperties

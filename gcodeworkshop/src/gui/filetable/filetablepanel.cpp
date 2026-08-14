@@ -25,11 +25,9 @@
 #include <QIcon>                // for QIcon
 #include <QList>                // for QList
 #include <QSize>                // for QSize
-#include <QStringList>          // for QStringList
 #include <QTableWidgetItem>     // for QTableWidgetItem
 #include <QVariant>             // for QVariant
 #include <Qt>                   // for ContextMenuPolicy, PenStyle
-#include <QtGlobal>             // for QTypeInfo<>::isLarge, QTypeInfo<>::isStatic
 
 class QWidget;
 

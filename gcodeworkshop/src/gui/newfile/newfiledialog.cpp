@@ -39,8 +39,6 @@
 	using QStringList = QList<QString>;
 #endif
 
-#include <utils/medium.h>   // for Medium
-
 #include "newfiledialog.h"
 #include "ui_newfiledialog.h"   // for Ui::newFileDialog
 
