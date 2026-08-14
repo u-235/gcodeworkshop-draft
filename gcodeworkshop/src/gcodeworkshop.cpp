@@ -37,12 +37,10 @@
 #include <QFileDialog>          // for QFileDialog, QFileDialog::DontConfirmOverwrite
 #include <QFileInfo>            // for QFileInfo, QFileInfoList
 #include <QFileSystemWatcher>   // for QFileSystemWatcher
-#include <QFont>                // for QFont
 #include <QFrame>               // for QFrame, QFrame::Box, QFrame::Sunken
 #include <QHeaderView>          // for QHeaderView, QHeaderView::ResizeToContents, QHeaderView::Stretch, QHea...
 #include <QIODevice>            // for QIODevice, QIODevice::ReadWrite, operator|, QIODevice::ReadOnly, QIODe...
 #include <QIcon>                // for QIcon
-#include <QItemSelectionModel>  // for QItemSelectionModel
 #include <QLabel>               // for QLabel
 #include <QList>                // for QList, QList<>::iterator, QList<>::const_iterator, QList<>::Iterator
 #include <QMainWindow>          // for QMainWindow
@@ -52,8 +50,6 @@
 #include <QMenuBar>             // for QMenuBar
 #include <QMessageBox>          // for QMessageBox, operator|, QMessageBox::Save, QMessageBox::Discard, QMess...
 #include <QMimeData>            // for QMimeData
-#include <QModelIndex>          // for QModelIndex
-#include <QModelIndexList>      // for QModelIndexList
 #include <QObject>              // for SIGNAL, SLOT, qobject_cast, emit
 #include <QPageLayout>          // for QPageLayout, QPageLayout::Orientation
 #include <QPageSize>            // for QPageSize, QPageSize::A4, QPageSize::PageSizeId
@@ -69,7 +65,6 @@
 #include <QSettings>            // for QSettings, QSettings::IniFormat, QSettings::NoError
 #include <QSize>                // for QSize
 #include <QSplitter>            // for QSplitter
-#include <QStandardItemModel>   // for QStandardItem, QStandardItemModel
 #include <QStatusBar>           // for QStatusBar
 #include <QString>              // for QString, operator+, operator!=, operator==
 #include <QStringList>          // for QStringList
@@ -80,7 +75,6 @@
 #include <QTextStream>          // for QTextStream
 #include <QToolBar>             // for QToolBar
 #include <QToolButton>          // for QToolButton
-#include <QTreeView>            // for QTreeView
 #include <QUrl>                 // for QUrl, QUrl::TolerantMode
 #include <QVariant>             // for QVariant
 #include <QWidget>              // for QWidget
@@ -117,6 +111,7 @@
 #include "gui/actions/helpactions.h"        // for HelpActions
 #include "gui/actions/toolactions.h"        // for ToolActions
 #include "gui/actions/windowactions.h"      // for WindowActions
+#include "gui/clipboard/clipboardpanel.h"
 #include "gui/defaultkeysequences.h"
 #include "gui/filebrowser/filebrowserpanel.h"
 #include "gui/findtoolbar/findtoolbar.h"    // for FindToolBar
@@ -175,16 +170,6 @@ GCodeWorkShop::GCodeWorkShop(Medium* medium)
 
 	clipboard = QApplication::clipboard();
 	connect(clipboard, SIGNAL(dataChanged()), this, SLOT(clipboardChanged()));
-
-	clipboardModel = new QStandardItemModel();
-	ui->clipboardTreeView->setModel(clipboardModel);
-	ui->clipboardTreeView->setRootIsDecorated(false);
-	ui->clipboardTreeView->setContextMenuPolicy(Qt::CustomContextMenu);
-
-	connect(ui->deleteFromClipboardButton, SIGNAL(clicked()), this,
-	        SLOT(deleteFromClipboardButtonClicked()));
-	connect(ui->clipboardTreeView, SIGNAL(customContextMenuRequested(const QPoint&)), this,
-	        SLOT(clipboardTreeViewContextMenu(const QPoint&)));
 
 	connect(ui->hideButton, SIGNAL(clicked()), this, SLOT(hidePanel()));
 
@@ -248,7 +233,6 @@ GCodeWorkShop::GCodeWorkShop(Medium* medium)
 
 	emit loadSettings(Medium::instance().settings());
 	readSettings();
-	clipboardLoad();
 }
 
 GCodeWorkShop::~GCodeWorkShop()
@@ -409,7 +393,6 @@ void GCodeWorkShop::closeEvent(QCloseEvent* event)
 
 	emit saveSettings(Medium::instance().settings());
 	writeSettings();
-	clipboardSave();
 	closeAllMdiWindows();
 
 	if (findFiles != nullptr) {
@@ -2230,6 +2213,8 @@ void GCodeWorkShop::setupToolTabs()
 	ui->tabWidget->setTabToolTip(0, tr("Manage project"));
 	ui->tabWidget->insertTab(1, createFileBrowserPanel(), QIcon(":/images/folder.png"), "");
 	ui->tabWidget->setTabToolTip(1, tr("Browse files"));
+	ui->tabWidget->insertTab(2, createClipboardPanel(), QIcon(":/images/clipboard.png"), tr("Clipboard"));
+	ui->tabWidget->setTabToolTip(2, tr("Clipboard"));
 }
 
 GUI::FileBrowserPanel* GCodeWorkShop::createFileBrowserPanel()
@@ -2254,6 +2239,18 @@ GUI::ProjectPanel* GCodeWorkShop::createProjectPanel()
 	connect(this, &GCodeWorkShop::saveSettings, m_projectPanel, &GUI::ProjectPanel::saveSettings);
 	connect(m_projectPanel, &GUI::ProjectPanel::fileClicked, this, &GCodeWorkShop::openFile);
 	return m_projectPanel;
+}
+
+GUI::ClipboardPanel* GCodeWorkShop::createClipboardPanel()
+{
+	GUI::ClipboardPanel* clipboardPanel = new GUI::ClipboardPanel(this);
+	connect(this, &GCodeWorkShop::updateTranslations, clipboardPanel, &GUI::ClipboardPanel::loadTranslations);
+	connect(this, &GCodeWorkShop::updateIcons, clipboardPanel, &GUI::ClipboardPanel::loadIcons);
+	connect(this, &GCodeWorkShop::loadSettings, clipboardPanel, &GUI::ClipboardPanel::loadSettings);
+	connect(this, &GCodeWorkShop::saveSettings, clipboardPanel, &GUI::ClipboardPanel::saveSettings);
+	connect(this, &GCodeWorkShop::clipboardTextChanged, clipboardPanel, &GUI::ClipboardPanel::addText);
+	connect(clipboardPanel, &GUI::ClipboardPanel::hitText, this, &GCodeWorkShop::clipboardSetText);
+	return clipboardPanel;
 }
 
 void GCodeWorkShop::updateOpenFileList()
@@ -2690,104 +2687,18 @@ void GCodeWorkShop::activatePreviousSubWindow()
 
 void GCodeWorkShop::clipboardChanged()
 {
-	QStandardItem* item;
-	QFont font;
-	bool notFound = true;
-
 	if (!mainWindow()->isActiveWindow()) {
 		return;
 	}
 
 	updateMenus();
-
-	QString text = clipboard->text();
-
-	if (text.isEmpty()) {
-		return;
-	}
-
-	QStandardItem* parentItem = clipboardModel->invisibleRootItem();
-
-	for (int i = 0; i < parentItem->rowCount(); i++) { // check that text is already in clipboard
-		item = parentItem->child(i, 0);
-
-		if (text == item->child(0, 0)->text()) {
-			notFound = false;
-			break;
-		}
-
-	}
-
-	if (notFound) {
-		ui->clipboardTreeView->setSortingEnabled(false);
-
-		if (parentItem->rowCount() >= 5) {
-			item = parentItem->child(5, 0);
-
-			if (item) {
-				if (item->text() == "") {
-					parentItem->removeRow(5);
-				}
-			}
-		}
-
-		item = new QStandardItem(QIcon(":/images/editpaste.png"), "");
-		item->setEditable(true);
-		font = item->font();
-		font.setBold(true);
-		font.setPointSize(font.pointSize() + 1);
-		item->setFont(font);
-		parentItem->insertRow(0, item);
-		parentItem = item;
-
-		item = new QStandardItem(text);
-		item->setEditable(false);
-		font = item->font();
-		font.setFixedPitch(true);
-		//font.setFamily("Courier");
-		item->setFont(font);
-		parentItem->appendRow(item);
-
-		ui->clipboardTreeView->setSortingEnabled(true);
-	}
-
-	ui->clipboardTreeView->expandAll();
+	emit clipboardTextChanged(clipboard->text());
 }
 
-void GCodeWorkShop::clipboardTreeViewContextMenu(const QPoint& point)
+void GCodeWorkShop::clipboardSetText(const QString& text)
 {
-	Q_UNUSED(point);
-
-	QStandardItem* item;
-	QString text;
-
-	QModelIndexList list = ui->clipboardTreeView->selectionModel()->selectedIndexes();
-	QModelIndexList::Iterator it = list.begin();
-
-	while (it != list.end()) {
-		item = clipboardModel->itemFromIndex(*it);
-
-		if (item == nullptr) {
-			return;
-		}
-
-		if (item->hasChildren()) {
-			item = item->child(0, 0);
-
-			if (item) {
-				text = item->text();
-			}
-		} else {
-			text = item->text();
-		}
-
-		if (!text.isEmpty()) {
-			disconnect(clipboard, SIGNAL(dataChanged()), this, SLOT(clipboardChanged()));
-			clipboard->setText(text);
-			connect(clipboard, SIGNAL(dataChanged()), this, SLOT(clipboardChanged()));
-		}
-
-		++it;
+	if (!text.isEmpty()) {
+		clipboard->setText(text);
 	}
 }
 
@@ -2822,90 +2733,6 @@ QMenu* GCodeWorkShop::doContextMenuGCoder(GCoderDocument* doc, const QPoint& pos
 	menu->addSeparator();
 	menu->addAction(toolActions()->inLineCalc());
 	return menu;
-}
-
-void GCodeWorkShop::deleteFromClipboardButtonClicked()
-{
-	QModelIndexList list = ui->clipboardTreeView->selectionModel()->selectedIndexes();
-
-	for (QModelIndex it : list) {
-		QStandardItem* item = clipboardModel->itemFromIndex(it);
-
-		if (item == nullptr) {
-			return;
-		}
-
-		ui->clipboardTreeView->setSortingEnabled(false);
-		clipboardModel->removeRow(item->row(), clipboardModel->invisibleRootItem()->index());
-		ui->clipboardTreeView->setSortingEnabled(true);
-	}
-}
-
-void GCodeWorkShop::clipboardSave()
-{
-	QSettings settings(Medium::instance().settingsDir() + "/clipboard", QSettings::IniFormat);
-
-	settings.remove("ClipboardItems");
-	settings.beginWriteArray("ClipboardItems");
-
-	QStandardItem* parentItem = clipboardModel->invisibleRootItem();
-
-	for (int i = 0; i < parentItem->rowCount(); i++) {
-		QStandardItem* item = parentItem->child(i, 0);
-
-		settings.setArrayIndex(i);
-		settings.setValue("Title", item->text());
-		settings.setValue("ItemText", item->child(0, 0)->text());
-	}
-
-	settings.endArray();
-}
-
-void GCodeWorkShop::clipboardLoad()
-{
-	QString itemText;
-	QStandardItem* item;
-	QFont font;
-
-	ui->clipboardTreeView->setSortingEnabled(false);
-	clipboardModel->clear();
-	clipboardModel->setColumnCount(1);
-	clipboardModel->setHorizontalHeaderLabels(QStringList() << "Clipboard");
-
-	QSettings settings(Medium::instance().settingsDir() + "/clipboard", QSettings::IniFormat);
-
-	int max = settings.beginReadArray("ClipboardItems");
-
-	for (int i = 0; i < max; ++i) {
-		settings.setArrayIndex(i);
-		itemText = settings.value("Title", "").toString();
-
-		QStandardItem* parentItem = clipboardModel->invisibleRootItem();
-		item = new QStandardItem(QIcon(":/images/editpaste.png"), itemText);
-		item->setEditable(true);
-		font = item->font();
-		font.setBold(true);
-		font.setPointSize(font.pointSize() + 1);
-		item->setFont(font);
-		parentItem->insertRow(0, item);
-		parentItem = item;
-
-		itemText = settings.value("ItemText", "").toString();
-		item = new QStandardItem(itemText);
-		item->setEditable(false);
-		font = item->font();
-		font.setFixedPitch(true);
-		//font.setFamily("Courier");
-		item->setFont(font);
-		parentItem->appendRow(item);
-
-	}
-
-	settings.endArray();
-
-	ui->clipboardTreeView->setSortingEnabled(true);
-	clipboardModel->sort(Qt::AscendingOrder);
-	ui->clipboardTreeView->expandAll();
 }
 
 void GCodeWorkShop::doShowInLineCalc()

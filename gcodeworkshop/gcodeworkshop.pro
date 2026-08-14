@@ -54,6 +54,7 @@ HEADERS += \
     src/gui/actions/helpactions.h \
     src/gui/actions/toolactions.h \
     src/gui/actions/windowactions.h \
+    src/gui/clipboard/clipboardpanel.h \
     src/gui/defaultkeysequences.h \
     src/gui/filebrowser/filebrowserpanel.h \
     src/gui/findtoolbar/findtoolbar.h \
@@ -94,6 +95,7 @@ SOURCES += \
     src/gui/actions/knownactions.cpp \
     src/gui/actions/toolactions.cpp \
     src/gui/actions/windowactions.cpp \
+    src/gui/clipboard/clipboardpanel.cpp \
     src/gui/defaultkeysequences.cpp \
     src/gui/filebrowser/filebrowserpanel.cpp \
     src/gui/findtoolbar/findtoolbar.cpp \
@@ -114,6 +116,7 @@ SOURCES += \
 FORMS += \
     src/findinfilesdialog.ui \
     src/gcodeworkshop.ui \
+    src/gui/clipboard/clipboardpanel.ui \
     src/gui/filebrowser/filebrowserpanel.ui \
     src/gui/project/projectpanel.ui \
     src/newfiledialog.ui \

@@ -45,13 +45,11 @@ class QLabel;
 template <class Key, class T> class QMap;
 class QMdiSubWindow;
 class QMenu;
-class QModelIndex;
 class QMoveEvent;
 class QPrinter;
 class QProcess;
 class QResizeEvent;
 class QSettings;
-class QStandardItemModel;
 class QToolBar;
 class QToolButton;
 
@@ -70,6 +68,7 @@ class SessionManager;
 
 
 namespace GUI {
+class ClipboardPanel;
 class FileBrowserPanel;
 class FindToolBar;
 class ProjectPanel;
@@ -132,6 +131,7 @@ signals:
 	void saveSettings(QSettings* cfg);
 	void fileFilterChanged(const QStringList& extensions);
 	void currentDirChanged(const QString& path);
+	void clipboardTextChanged(const QString& text);
 
 protected:
 	Ui::GCodeWorkShop* ui;
@@ -287,8 +287,7 @@ public slots:
 
 private slots:
 	void clipboardChanged();
-	void deleteFromClipboardButtonClicked();
-	void clipboardTreeViewContextMenu(const QPoint& point);
+	void clipboardSetText(const QString& text);
 	void customContextMenuRequest(Document* doc, const QPoint& pos);
 	QMenu* doContextMenuGCoder(GCoderDocument* doc, const QPoint& pos);
 
@@ -317,6 +316,7 @@ private:
 	void setupToolTabs();
 	GUI::FileBrowserPanel* createFileBrowserPanel();
 	GUI::ProjectPanel* createProjectPanel();
+	GUI::ClipboardPanel* createClipboardPanel();
 	void fireCurrentDirChanged();
 	Document* findDocument(const QString& fileName);
 	void createDiffApp();
@@ -324,8 +324,6 @@ private:
 	void storeFileInfoInSession();
 	void savePrinterSettings(QPrinter* printer);
 	void loadPrinterSettings(QPrinter* printer);
-	void clipboardSave();
-	void clipboardLoad();
 
 	SessionManager* m_sessionManager;
 
@@ -350,8 +348,6 @@ private:
 	QByteArray fileDialogState;
 
 	KDiff3App* diffApp;
-
-	QStandardItemModel* clipboardModel;
 
 	RecentFiles* m_recentFiles;
 
