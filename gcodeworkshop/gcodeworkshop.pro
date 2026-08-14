@@ -48,6 +48,7 @@ HEADERS += \
     src/gcodereventfilter.h \
     src/gcoderinfo.h \
     src/gcoderproducer.h \
+    src/gui/clipboard/clipboardpanel.h \
     src/gui/filebrowser/filebrowserpanel.h \
     src/gui/findtoolbar/findtoolbar.h \
     src/gui/findtoolbar/findtoolbaractions.h \
@@ -86,6 +87,7 @@ SOURCES += \
     src/gcoderstyle.cpp \
     src/gcoderwidgetproperties.cpp \
     src/gcodeworkshop.cpp \
+    src/gui/clipboard/clipboardpanel.cpp \
     src/gui/filebrowser/filebrowserpanel.cpp \
     src/gui/findtoolbar/findtoolbar.cpp \
     src/gui/findtoolbar/findtoolbaractions.cpp \
@@ -112,6 +114,7 @@ SOURCES += \
 FORMS += \
     src/findinfilesdialog.ui \
     src/gcodeworkshop.ui \
+    src/gui/clipboard/clipboardpanel.ui \
     src/gui/filebrowser/filebrowserpanel.ui \
     src/gui/project/projectpanel.ui \
     src/newfiledialog.ui \
