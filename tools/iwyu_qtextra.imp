@@ -1,10 +1,12 @@
 [
-    { include: ['<qcoreevent.h>', 'private', '<QEvent>', 'public'] },
-    { include: ['"qcoreevent.h"', 'private', '<QEvent>', 'public'] },
+#    { include: ['<qcoreevent.h>', 'private', '<QEvent>', 'public'] },
+#    { include: ['"qcoreevent.h"', 'private', '<QEvent>', 'public'] },
     { include: ['<qtmetamacros.h>', 'private', '<QObject>', 'public'] },
     { include: ['"qtmetamacros.h"', 'private', '<QObject>', 'public'] },
     { include: ['<qobjectdefs.h>', 'private', '<QObject>', 'public'] },
     { include: ['"qobjectdefs.h"', 'private', '<QObject>', 'public'] },
+    { include: ['<QtCore/qobjectdefs.h>', 'private', '<QObject>', 'public'] },
+    { include: ['"QtCore/qobjectdefs.h"', 'private', '<QObject>', 'public'] },
     { include: ['<QtCore/qsharedpointer.h>', 'private', '<QSharedPointer>', 'public'] },
     { include: ['"QtCore/qsharedpointer.h"', 'private', '<QSharedPointer>', 'public'] },
     { include: ['<qnamespace.h>', 'private', '<Qt>', 'public'] },
@@ -19,6 +21,18 @@
     { include: ['"QtCore/qglobal.h"', 'private', '<QtGlobal>', 'public'] },
     { include: ['"qtypeinfo.h"', 'private', '<QtGlobal>', 'public'] },
     { include: ['<qtypeinfo.h>', 'private', '<QtGlobal>', 'public'] },
+    { include: ['"qforeach.h"', 'private', '<QtGlobal>', 'public'] },
+    { include: ['<qforeach.h>', 'private', '<QtGlobal>', 'public'] },
+    { include: ['"qstringalgorithms.h"', 'private', '<QString>', 'public'] },
+    { include: ['<qstringalgorithms.h>', 'private', '<QString>', 'public'] },
+    { include: ['"qminmax.h"', 'private', '<QString>', 'public'] },
+    { include: ['<qminmax.h>', 'private', '<QString>', 'public'] },
+    { include: ['"qtypes.h"', 'private', '<QString>', 'public'] },
+    { include: ['<qtypes.h>', 'private', '<QString>', 'public'] },
+    { include: ['"qflags.h"', 'private', '<QString>', 'public'] },
+    { include: ['<qflags.h>', 'private', '<QString>', 'public'] },
+    { include: ['"qswap.h"', 'private', '<QString>', 'public'] },
+    { include: ['<qswap.h>', 'private', '<QString>', 'public'] },
 
 
     { symbol:  ['main', 'private', '<QApplication>', 'public'] },
@@ -32,6 +46,18 @@
     { symbol:  ['qFatal', 'private', '<QtGlobal>', 'public'] },
     { symbol:  ['qInfo', 'private', '<QtGlobal>', 'public'] },
     { symbol:  ['qWarning', 'private', '<QtGlobal>', 'public'] },
+    { symbol:  ['Q_INIT_RESOURCE', 'private', '<QtGlobal>', 'public'] },
+    { symbol:  ['Q_OS_LINUX', 'private', '<QtGlobal>', 'public'] },
+    { symbol:  ['Q_OS_WIN', 'private', '<QtGlobal>', 'public'] },
+    { symbol:  ['QT_VERSION', 'private', '<QtGlobal>', 'public'] },
+    { symbol:  ['QT_VERSION_CHECK', 'private', '<QtGlobal>', 'public'] },
+    { symbol:  ['QT_VERSION_MAJOR', 'private', '<QtGlobal>', 'public'] },
+    { symbol:  ['Q_UNUSED', 'private', '<QtGlobal>', 'public'] },
+    { symbol:  ['qMax', 'private', '<QtGlobal>', 'public'] },
+    { symbol:  ['qMin', 'private', '<QtGlobal>', 'public'] },
+    { symbol:  ['qreal', 'private', '<QtGlobal>', 'public'] },
+    { symbol:  ['uint', 'private', '<QtGlobal>', 'public'] },
+    { symbol:  ['QFlags', 'private', '<QtGlobal>', 'public'] },
 
     { symbol:  ['QDoubleSpinBox', 'private', '<QDoubleSpinBox>', 'public'] },
     { symbol: ['QVBoxLayout', 'private', '<QVBoxLayout>', 'public'] },
@@ -42,6 +68,7 @@
     { symbol:  ['QContextMenuEvent', 'private', '<QContextMenuEvent>', 'public'] },
     { symbol:  ['QDragEnterEvent', 'private', '<QDragEnterEvent>', 'public'] },
     { symbol:  ['QDropEvent', 'private', '<QDropEvent>', 'public'] },
+    { symbol:  ['QEvent', 'private', '<QEvent>', 'public'] },
     { symbol:  ['QFileOpenEvent', 'private', '<QFileOpenEvent>', 'public'] },
     { symbol:  ['QFocusEvent', 'private', '<QFocusEvent>', 'public'] },
     { symbol:  ['QHelpEvent', 'private', '<QHelpEvent>', 'public'] },
@@ -62,6 +89,7 @@
     { symbol:  ['QObjectData', 'private', '<QObjectData>', 'public'] },
     { symbol:  ['QPaintEvent', 'private', '<QPaintEvent>', 'public'] },
     { symbol:  ['QPointF', 'private', '<QPointF>', 'public'] },
+    { symbol:  ['QRegularExpression', 'private', '<QRegularExpression>', 'public'] },
     { symbol:  ['QRegularExpressionIterator', 'private', '<QRegularExpressionIterator>', 'public'] },
     { symbol:  ['QRegularExpressionMatch', 'private', '<QRegularExpressionMatch>', 'public'] },
     { symbol:  ['QRegularExpressionMatchIterator', 'private', '<QRegularExpressionMatchIterator>', 'public'] },
@@ -90,5 +118,7 @@
 
     { symbol:  ['QDoubleValidator', 'private', '<QDoubleValidator>', 'public'] },
     { symbol:  ['QIntValidator', 'private', '<QIntValidator>', 'public'] },
-    { symbol:  ['QValidator', 'private', '<QValidator>', 'public'] }
+    { symbol:  ['QValidator', 'private', '<QValidator>', 'public'] },
+
+    { symbol:  ['QVector', 'private', '<QVector>', 'public'] }
 ]

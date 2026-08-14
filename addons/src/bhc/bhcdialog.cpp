@@ -35,7 +35,7 @@
 #include <QSettings>        // for QSettings
 #include <QSize>            // for QSize
 #include <QSpinBox>         // for QSpinBox
-#include <QString>          // for QString
+#include <QString>          // IWYU pragma: keep
 #include <QTabWidget>       // for QTabWidget
 #include <QTableWidget>     // for QTableWidget
 #include <QTableWidgetItem> // for QTableWidgetItem

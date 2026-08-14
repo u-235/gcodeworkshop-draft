@@ -26,7 +26,6 @@
 #include <QPointer> // for QPointer
 #include <QString>  // IWYU pragma: keep
 
-class QEvent;
 class QSettings;
 class QWidget;
 

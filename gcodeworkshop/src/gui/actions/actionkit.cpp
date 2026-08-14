@@ -18,6 +18,7 @@
  */
 
 #include <QAction>      // for QAction
+#include <QtGlobal>     // for QTypeInfo<>::isComplex
 
 #include <gui/actions/actionkit.h>  // IWYU pragma: associated
 

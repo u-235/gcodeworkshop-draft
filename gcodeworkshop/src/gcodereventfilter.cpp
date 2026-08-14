@@ -18,7 +18,6 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <QChar>                    // for QChar, operator==, operator!=
 #include <QDragEnterEvent>          // for QDragEnterEvent
 #include <QDropEvent>               // for QDropEvent
 #include <QEvent>                   // for QEvent, QEvent::KeyPress, QEvent::MouseButtonDblClick, QEvent::ToolTip

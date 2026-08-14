@@ -24,7 +24,6 @@
 #include <QString>  // IWYU pragma: keep
 
 class QCloseEvent;
-class QEvent;
 
 
 class DocumentWidgetCloseEventFilter : public QObject

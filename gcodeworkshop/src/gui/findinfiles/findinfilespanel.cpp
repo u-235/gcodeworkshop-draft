@@ -21,6 +21,7 @@
  ***************************************************************************/
 
 #include <QApplication>             // for QApplication, qApp
+#include <QBrush>                   // for QBrush
 #include <QChar>                    // for QChar
 #include <QCheckBox>                // for QCheckBox
 #include <QColor>                   // for QColor

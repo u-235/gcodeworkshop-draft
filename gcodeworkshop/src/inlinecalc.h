@@ -32,7 +32,6 @@
 	using QStringList = QList<QString>;
 #endif
 
-class QKeyEvent;
 class QRect;
 class QWidget;
 

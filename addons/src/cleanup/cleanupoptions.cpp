@@ -18,8 +18,8 @@
  */
 
 #include <QLatin1String>    // for QLatin1String
-#include <QString>          // for QString
 #include <QSettings>        // for QSettings
+#include <QString>          // IWYU pragma: keep
 #include <QVariant>         // for QVariant
 #include <QtGlobal>
 

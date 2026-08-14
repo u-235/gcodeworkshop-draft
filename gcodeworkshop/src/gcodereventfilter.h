@@ -27,7 +27,6 @@
 
 class QDragEnterEvent;
 class QDropEvent;
-class QEvent;
 class QHelpEvent;
 class QKeyEvent;
 class QMouseEvent;

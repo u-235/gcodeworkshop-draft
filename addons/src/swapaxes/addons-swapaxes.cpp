@@ -20,9 +20,10 @@
 
 #include <functional>   // for function
 
-#include <QDialog>  // for QDialog, QDialog::Accepted
-#include <QString>  // for QString
-#include <QWidget>  // for QWidget
+#include <QCoreApplication>     // for QCoreApplication
+#include <QDialog>              // for QDialog, QDialog::Accepted
+#include <QString>              // for QString
+#include <QWidget>              // for QWidget
 
 #include <ui/longjobhelper.h>   // for LongJobHelper, LongJobHelper::CANCEL
 

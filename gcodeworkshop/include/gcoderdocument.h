@@ -20,7 +20,6 @@
 #ifndef GCODERDOCUMENT_H
 #define GCODERDOCUMENT_H
 
-#include <QByteArray>       // for QByteArray
 #include <QList>            // for QList
 #include <QObject>          // for slots, signals, Q_OBJECT
 #include <QString>          // IWYU pragma: keep
@@ -29,9 +28,7 @@
 
 class QCloseEvent;
 template <class Key, class T> class QHash;
-class QMenu;
 class QPlainTextEdit;
-class QPoint;
 class QPrinter;
 class QTextDocument;
 

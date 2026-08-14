@@ -18,10 +18,11 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <memory>   // for shared_ptr<>::element_type
 #include <typeinfo> // for bad_cast
 
 #include <QApplication>             // for QApplication, qApp
+#include <QBrush>                   // for QBrush
+#include <QByteArray>               // for QByteArray
 #include <QChar>                    // for operator==, QChar
 #include <QColor>                   // for QColor
 #include <QDateTime>                // for QDate
@@ -57,8 +58,6 @@
 	#include <QList>
 	using QStringList = QList<QString>;
 #endif
-
-class QMenu;
 
 #include <document.h>
 #include <documentinfo.h>               // for DocumentInfo, DocumentInfo::Ptr

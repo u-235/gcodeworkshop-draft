@@ -19,7 +19,7 @@
 
 #include <QLatin1String>    // for QLatin1String
 #include <QSettings>        // for QSettings
-#include <QString>          // for QString
+#include <QString>          // IWYU pragma: keep
 #include <QVariant>         // for QVariant
 
 #include "bhctaboptions.h"

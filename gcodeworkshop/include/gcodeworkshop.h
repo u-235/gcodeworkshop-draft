@@ -37,6 +37,8 @@
 #endif
 
 class QAction;
+class QClipboard;
+class QComboBox;
 class QDir;
 class QFileSystemWatcher;
 class QKeySequence;

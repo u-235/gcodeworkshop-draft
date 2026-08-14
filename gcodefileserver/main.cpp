@@ -20,10 +20,13 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <QApplication> // for main
 #include <QObject>      // for QObject, SIGNAL, SLOT
 #include <QString>      // for QString
 #include <QtGlobal>     // for Q_INIT_RESOURCE
+
+#ifdef Q_OS_WIN
+	#include <QApplication> // for main
+#endif
 
 #include <QtSingleApplication>  // QtSingleApplication
 #include <utils/medium.h>       // Medium

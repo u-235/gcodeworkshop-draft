@@ -34,13 +34,9 @@
 #include <QPixmap>      // for QPixmap
 #include <QPointF>      // for QPointF
 #include <QRect>        // for QRect
-#include <QString>      // for QString
+#include <QString>      // IWYU pragma: keep
 #include <Qt>           // for PenStyle, GlobalColor, BrushStyle, MouseButton, WidgetAttribute, WindowFlags
 #include <QtGlobal>     // for qMin, qreal
-
-class QFocusEvent;
-class QMouseEvent;
-class QPaintEvent;
 
 #include "bhcdraw.h"
 

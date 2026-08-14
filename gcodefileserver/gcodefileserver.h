@@ -29,7 +29,6 @@
 #include <QSystemTrayIcon>  // for QSystemTrayIcon
 
 class QAction;
-class QCloseEvent;
 class QComboBox;
 class QMdiSubWindow;
 class QMenu;

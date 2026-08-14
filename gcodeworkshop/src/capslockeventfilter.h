@@ -23,7 +23,6 @@
 #include <QObject>  // for QObject, Q_OBJECT, slots
 #include <QString>  // IWYU pragma: keep
 
-class QEvent;
 class QKeyEvent;
 
 

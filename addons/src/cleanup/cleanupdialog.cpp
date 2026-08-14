@@ -21,6 +21,7 @@
 #include <QAbstractItemView>    // for QAbstractItemView
 #include <QAction>              // for QAction
 #include <QApplication>         // for QApplication
+#include <QBrush>               // for QBrush
 #include <QColor>               // for QColor
 #include <QCursor>              // for QCursor
 #include <QIcon>                // for QIcon

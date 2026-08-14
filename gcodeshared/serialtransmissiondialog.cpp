@@ -25,6 +25,7 @@
 #include <QChar>                    // for QChar
 #include <QCloseEvent>              // for QCloseEvent
 #include <QDateTime>                // for QDate, QTime
+#include <QDebug>                   // for QDebug, operator<<
 #include <QFile>                    // for QFile
 #include <QFileInfo>                // for QFileInfo
 #include <QFrame>                   // for QFrame
@@ -33,6 +34,7 @@
 #include <QLabel>                   // for QLabel
 #include <QLocale>                  // for QLocale
 #include <QMessageBox>              // for QMessageBox
+#include <QMetaType>                // for IsQEnumHelper<>::Value
 #include <QPixmap>                  // for QPixmap
 #include <QPlainTextEdit>           // for QPlainTextEdit
 #include <QProgressBar>             // for QProgressBar
@@ -46,7 +48,6 @@
 #include <QTimer>                   // for QTimer
 #include <QVariant>                 // for QVariant
 #include <Qt>                       // for SplitBehaviorFlags, WidgetAttribute, WindowFlags
-#include <QtDebug>                  // for qDebug
 #include <QtGlobal>
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)

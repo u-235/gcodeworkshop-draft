@@ -19,6 +19,7 @@
 
 #include <QLatin1String>    // for QLatin1String
 #include <QSettings>        // for QSettings
+#include <QString>          // IWYU pragma: keep
 #include <QVariant>         // for QVariant
 
 #include "i2mprogoptions.h"

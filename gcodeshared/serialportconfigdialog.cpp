@@ -30,8 +30,8 @@
 #include <QFileDialog>                  // for QFileDialog
 #include <QFileInfo>                    // for QFileInfo
 #include <QIntValidator>                // for QIntValidator
-#include <QLineEdit>                    // for QLineEdit
 #include <QList>                        // for QList
+#include <QLineEdit>                    // for QLineEdit
 #include <QListWidget>                  // for QListWidget
 #include <QPalette>                     // for QPalette
 #include <QPushButton>                  // for QPushButton
@@ -40,7 +40,6 @@
 #include <QSerialPort>                  // for QSerialPort
 #include <QSerialPortInfo>              // for QSerialPortInfo
 #include <QSettings>                    // for QSettings
-#include <QSpinBox>                     // for QSpinBox
 #include <QString>                      // for QString
 #include <QTabWidget>                   // for QTabWidget
 #include <QToolButton>                  // for QToolButton
