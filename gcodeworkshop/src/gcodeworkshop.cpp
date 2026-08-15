@@ -114,6 +114,7 @@
 #include "gui/clipboard/clipboardpanel.h"
 #include "gui/defaultkeysequences.h"
 #include "gui/filebrowser/filebrowserpanel.h"
+#include "gui/filetable/filetablepanel.h"
 #include "gui/findtoolbar/findtoolbar.h"    // for FindToolBar
 #include "gui/project/projectpanel.h"
 #include "highlightmode.h"                  // for MODE_AUTO, MODE_FANUC, MODE_HEIDENHAIN, MODE_HEIDENHAIN_ISO, MODE_LINU...
@@ -191,10 +192,6 @@ GCodeWorkShop::GCodeWorkShop(Medium* medium)
 	createStatusBar();
 	setupToolTabs();
 
-	connect(ui->openFileTableWidget, SIGNAL(cellClicked(int, int)), this,
-	        SLOT(openFileTableWidgetClicked(int, int)));
-	ui->openFileTableWidget->setToolTip(tr("Open files"));
-
 	connect(ui->mdiArea, SIGNAL(subWindowActivated(QMdiSubWindow*)), this,
 	        SLOT(activeWindowChanged(QMdiSubWindow*)));
 
@@ -204,10 +201,7 @@ GCodeWorkShop::GCodeWorkShop(Medium* medium)
 	connect(m_documentManager, SIGNAL(activeDocumentChanged(Document*)), this, SLOT(updateMenus()));
 	connect(m_documentManager, SIGNAL(cursorPositionChanged()), this, SLOT(updateStatusBar()));
 	connect(m_documentManager, SIGNAL(modificationChanged(bool)), this, SLOT(updateMenus()));
-	connect(m_documentManager, SIGNAL(modificationChanged(bool)), this, SLOT(updateOpenFileList()));
 	connect(m_documentManager, SIGNAL(selectionChanged()), this, SLOT(updateMenus()));
-	connect(m_documentManager, SIGNAL(briefChanged(Document*)), this, SLOT(updateOpenFileList()));
-	connect(m_documentManager, SIGNAL(documentListChanged()), this, SLOT(updateOpenFileList()));
 	connect(m_documentManager, SIGNAL(closeRequested(Document*)), this, SLOT(maybeSave(Document*)),
 	        Qt::ConnectionType::DirectConnection);
 	connect(m_documentManager, SIGNAL(redoAvailable(bool)), m_editActions->redo(), SLOT(setEnabled(bool)));
@@ -227,6 +221,7 @@ GCodeWorkShop::GCodeWorkShop(Medium* medium)
 	createMenus();
 	updateWindowMenu();
 	updateMenus();
+	ui->vSplitter->addWidget(createFileTablePanel());
 
 	setWindowTitle(tr("GCodeWorkShop"));
 	setWindowIcon(QIcon(":/images/edytornc.png"));
@@ -1124,7 +1119,6 @@ void GCodeWorkShop::activeWindowChanged(QMdiSubWindow* window)
 	}
 
 	updateCurrentSerialConfig();
-	updateOpenFileList();
 	fireCurrentDirChanged();
 }
 
@@ -2253,81 +2247,17 @@ GUI::ClipboardPanel* GCodeWorkShop::createClipboardPanel()
 	return clipboardPanel;
 }
 
-void GCodeWorkShop::updateOpenFileList()
+GUI::FileTablePanel* GCodeWorkShop::createFileTablePanel()
 {
-	QFileInfo file;
-	QStringList labels;
-
-	ui->openFileTableWidget->setUpdatesEnabled(false);
-
-	ui->openFileTableWidget->clear();
-	labels << tr("Info") << tr("File Name") << "";
-	ui->openFileTableWidget->setHorizontalHeaderLabels(labels);
-	ui->openFileTableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
-
-	QList<Document*> docList = m_documentManager->documentList();
-
-	ui->openFileTableWidget->setSortingEnabled(false);
-	ui->openFileTableWidget->setRowCount(docList.size());
-
-	for (int i = 0; i < docList.size(); ++i) {
-		Document* doc = docList.at(i);
-
-		file.setFile(doc->filePath());
-
-		QTableWidgetItem* newItem = new QTableWidgetItem(file.fileName() + (doc->isModified() ? "*" : ""));
-
-		if (file.canonicalFilePath().isEmpty()) {
-			newItem->setToolTip(doc->filePath());
-		} else {
-			newItem->setToolTip(QDir::toNativeSeparators(file.canonicalFilePath()));
-		}
-
-		ui->openFileTableWidget->setItem(i, 1, newItem);
-
-		newItem = new QTableWidgetItem(doc->brief());
-		newItem->setToolTip(doc->brief() + " --> " + QDir::toNativeSeparators(
-		                        file.canonicalFilePath()));
-		ui->openFileTableWidget->setItem(i, 0, newItem);
-
-		newItem = new QTableWidgetItem(QIcon(":/images/fileclose_small.png"), "",
-		                               QTableWidgetItem::UserType);
-		newItem->setToolTip(tr("Close"));
-		ui->openFileTableWidget->setItem(i, 2, newItem);
-
-		if (doc == activeDocument()) {
-			ui->openFileTableWidget->selectRow(i);
-		}
-	}
-
-	ui->openFileTableWidget->setVisible(false);
-	ui->openFileTableWidget->resizeRowsToContents();
-
-	ui->openFileTableWidget->horizontalHeader()->setSectionResizeMode(2, QHeaderView::Fixed);
-	ui->openFileTableWidget->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
-	ui->openFileTableWidget->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Stretch);
-
-	//ui->openFileTableWidget->resizeColumnsToContents();
-	ui->openFileTableWidget->setSortingEnabled(true);
-	ui->openFileTableWidget->setVisible(true);
-
-	ui->openFileTableWidget->setUpdatesEnabled(true);
-}
-
-void GCodeWorkShop::openFileTableWidgetClicked(int x, int y)
-{
-	QTableWidgetItem* item = ui->openFileTableWidget->item(x, 1);
-
-	Document* existing = findDocument(item->toolTip());
-
-	if (existing) {
-		if (y == 2) {
-			existing->close();
-			updateOpenFileList();
-		} else {
-			setActiveDocument(existing);
-		}
-	}
+	GUI::FileTablePanel* fileTablePanel = new GUI::FileTablePanel(m_documentManager);
+	connect(this, &GCodeWorkShop::updateTranslations, fileTablePanel, &GUI::FileTablePanel::loadTranslations);
+	connect(this, &GCodeWorkShop::updateIcons, fileTablePanel, &GUI::FileTablePanel::loadIcons);
+	connect(m_documentManager, &DocumentManager::modificationChanged, fileTablePanel, &GUI::FileTablePanel::updateFileList);
+	connect(m_documentManager, &DocumentManager::briefChanged, fileTablePanel, &GUI::FileTablePanel::updateFileList);
+	connect(m_documentManager, &DocumentManager::documentListChanged, fileTablePanel, &GUI::FileTablePanel::updateFileList);
+	connect(m_documentManager, &DocumentManager::activeDocumentChanged, fileTablePanel,
+	        &GUI::FileTablePanel::updateFileList);
+	return fileTablePanel;
 }
 
 void GCodeWorkShop::fireCurrentDirChanged()
