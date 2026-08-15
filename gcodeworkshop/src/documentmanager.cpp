@@ -352,9 +352,7 @@ void DocumentManager::activeWindowChanged(QMdiSubWindow* window)
 
 void DocumentManager::documentModificationChanged(Document* doc, bool mod)
 {
-	if (isActiveDocument(doc)) {
-		emit modificationChanged(mod);
-	}
+	emit modificationChanged(doc, mod);
 }
 
 void DocumentManager::documentCursorPositionChanged(Document* doc)

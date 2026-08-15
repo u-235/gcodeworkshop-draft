@@ -165,7 +165,7 @@ public:
 
 signals:
 	void documentListChanged();
-	void modificationChanged(bool mod);
+	void modificationChanged(Document* doc, bool mod);
 	void cursorPositionChanged();
 	void selectionChanged();
 	void briefChanged(Document* doc);

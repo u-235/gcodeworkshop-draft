@@ -71,6 +71,7 @@ class SessionManager;
 namespace GUI {
 class ClipboardPanel;
 class FileBrowserPanel;
+class FileTablePanel;
 class FindToolBar;
 class ProjectPanel;
 
@@ -257,8 +258,6 @@ public slots:
 
 private slots:
 	void hidePanel();
-	void updateOpenFileList();
-	void openFileTableWidgetClicked(int x, int y);
 
 public slots:
 	void diffEditorFile();
@@ -318,6 +317,7 @@ private:
 	GUI::FileBrowserPanel* createFileBrowserPanel();
 	GUI::ProjectPanel* createProjectPanel();
 	GUI::ClipboardPanel* createClipboardPanel();
+	GUI::FileTablePanel* createFileTablePanel();
 	void fireCurrentDirChanged();
 	Document* findDocument(const QString& fileName);
 	void createDiffApp();
