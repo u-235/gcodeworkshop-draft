@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>FindInFiles</class>
+ <class>FindInFilesPanel</class>
  <widget class="QWidget" name="FindInFiles">
   <property name="geometry">
    <rect>
