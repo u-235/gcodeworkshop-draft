@@ -20,8 +20,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef FINDINFILES_H
-#define FINDINFILES_H
+#ifndef FINDINFILESPANEL_H
+#define FINDINFILESPANEL_H
 
 #include <QList>            // for QList
 #include <QObject>          // for slots, Q_OBJECT, signals
@@ -46,15 +46,16 @@ class QSplitter;
 
 class Highlighter;
 
-#include "ui_findinfilesdialog.h"   // for Ui::FindInFiles
+#include "ui_findinfilespanel.h"     // for Ui::FindInFilesPanel
 
 
-class FindInFiles : public QWidget, private Ui::FindInFiles
+namespace GUI {
+class FindInFilesPanel : public QWidget, private Ui::FindInFilesPanel
 {
 	Q_OBJECT
 
 public:
-	FindInFiles(QSplitter* parent = 0);
+	FindInFilesPanel(QSplitter* parent = 0);
 
 public slots:
 	void setHighlightColors(const HighlightColors colors);
@@ -94,5 +95,6 @@ private:
 signals:
 	void fileClicked(const QString&);
 };
+} // namespace GUI
 
-#endif // FINDINFILES_H
+#endif // FINDINFILESPANEL_H

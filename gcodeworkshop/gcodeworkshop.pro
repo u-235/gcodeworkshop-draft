@@ -58,6 +58,7 @@ HEADERS += \
     src/gui/defaultkeysequences.h \
     src/gui/filebrowser/filebrowserpanel.h \
     src/gui/filetable/filetablepanel.h \
+    src/gui/findinfiles/findinfilespanel.h \
     src/gui/findtoolbar/findtoolbar.h \
     src/gui/findtoolbar/findtoolbaractions.h \
     src/gui/project/projectpanel.h \
@@ -83,7 +84,6 @@ SOURCES += \
     src/documentstyle.cpp \
     src/documentwidgetcloseeventfilter.cpp \
     src/documentwidgetproperties.cpp \
-    src/findinf.cpp \
     src/gcoderdocument.cpp \
     src/gcodereventfilter.cpp \
     src/gcoderinfo.cpp \
@@ -102,6 +102,7 @@ SOURCES += \
     src/gui/defaultkeysequences.cpp \
     src/gui/filebrowser/filebrowserpanel.cpp \
     src/gui/filetable/filetablepanel.cpp \
+    src/gui/findinfiles/findinfilespanel.cpp \
     src/gui/findtoolbar/findtoolbar.cpp \
     src/gui/findtoolbar/findtoolbaractions.cpp \
     src/gui/project/projectpanel.cpp \
@@ -120,10 +121,10 @@ SOURCES += \
     src/utils/removezeros.cpp
 
 FORMS += \
-    src/findinfilesdialog.ui \
     src/gcodeworkshop.ui \
     src/gui/clipboard/clipboardpanel.ui \
     src/gui/filebrowser/filebrowserpanel.ui \
+    src/gui/findinfiles/findinfilespanel.ui \
     src/gui/project/projectpanel.ui \
     src/newfiledialog.ui \
     src/sessiondialog.ui \

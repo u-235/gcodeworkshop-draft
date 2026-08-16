@@ -58,7 +58,6 @@ class QToolButton;
 
 class Document;
 class DocumentManager;
-class FindInFiles;
 class GCoderDocument;
 class GCodeFileServer;
 class KDiff3App;
@@ -71,6 +70,7 @@ namespace GUI {
 class ClipboardPanel;
 class FileBrowserPanel;
 class FileTablePanel;
+class FindInFilesPanel;
 class FindToolBar;
 class ProjectPanel;
 class SerialToolBar;
@@ -335,7 +335,7 @@ private:
 	bool m_startEmpty;
 	bool m_disableFileChangeMonitor;
 	bool m_findInFilesHighlightEnable;
-	FindInFiles* findFiles;
+	GUI::FindInFilesPanel* findFiles;
 
 	bool panelHidden;
 	QByteArray panelState;

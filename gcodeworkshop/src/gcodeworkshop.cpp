@@ -102,7 +102,6 @@
 #include <utils/gcode-converter.h>      // for Converter
 #include <version.h>
 
-#include "findinf.h"                        // for FindInFiles
 #include "gcoder.h"                         // for DOCUMENT_TYPE
 #include "gcoderinfo.h"                     // for GCoderInfo
 #include "gcoderproducer.h"                 // for GCoderProducer
@@ -115,6 +114,7 @@
 #include "gui/defaultkeysequences.h"
 #include "gui/filebrowser/filebrowserpanel.h"
 #include "gui/filetable/filetablepanel.h"
+#include "gui/findinfiles/findinfilespanel.h"    // for FindInFiles
 #include "gui/findtoolbar/findtoolbar.h"    // for FindToolBar
 #include "gui/project/projectpanel.h"
 #include "gui/serialport/serialtoolbar.h"
@@ -779,7 +779,7 @@ void GCodeWorkShop::copy()
 void GCodeWorkShop::findInFl()
 {
 	if (findFiles == nullptr) {
-		findFiles = new FindInFiles(ui->splitter);
+		findFiles = new GUI::FindInFilesPanel(ui->splitter);
 
 		if (m_findInFilesHighlightEnable) {
 			GCoderStyle* style = dynamic_cast<GCoderStyle*>(m_documentManager->documentStyle(GCoder::DOCUMENT_TYPE).get());

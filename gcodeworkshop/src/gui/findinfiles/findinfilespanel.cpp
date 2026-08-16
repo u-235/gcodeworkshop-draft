@@ -60,13 +60,13 @@
 #include <gcoderstyle.h>    // for HighlightColors
 #include <utils/medium.h>   // for Medium
 
-#include "findinf.h"
-#include "highlighter.h" //  for Highlighter, autoDetectHighligthMode
+#include "findinfilespanel.h"
+#include "highlighter.h"        //  for Highlighter, autoDetectHighligthMode
 
 
 #define MAXLISTS        20
 
-FindInFiles::FindInFiles(QSplitter* parent): QWidget(parent)
+GUI::FindInFilesPanel::FindInFilesPanel(QSplitter* parent): QWidget(parent)
 {
 	f_parent = parent;
 	setupUi(this);
@@ -92,13 +92,13 @@ FindInFiles::FindInFiles(QSplitter* parent): QWidget(parent)
 	readSettings();
 }
 
-void FindInFiles::closeDialog()
+void GUI::FindInFilesPanel::closeDialog()
 {
 	setAttribute(Qt::WA_DeleteOnClose);
 	close();
 }
 
-void FindInFiles::hideDlg()
+void GUI::FindInFilesPanel::hideDlg()
 {
 	QList<int> list;
 	list = f_parent->sizes();
@@ -126,7 +126,7 @@ void FindInFiles::hideDlg()
 	f_parent->setUpdatesEnabled(true);
 }
 
-void FindInFiles::browse()
+void GUI::FindInFilesPanel::browse()
 {
 	QString directory = QFileDialog::getExistingDirectory(this, tr("Find Files"),
 	                    directoryComboBox->currentText());
@@ -138,7 +138,7 @@ void FindInFiles::browse()
 	}
 }
 
-void FindInFiles::find()
+void GUI::FindInFilesPanel::find()
 {
 	;
 	bool notFound;
@@ -194,8 +194,8 @@ void FindInFiles::find()
 	QApplication::restoreOverrideCursor();
 }
 
-bool FindInFiles::findFiles(const QString startDir, QString mainDir, bool notFound,
-                            const QString findText, QString fileFilter, QProgressDialog* progressDialog)
+bool GUI::FindInFilesPanel::findFiles(const QString startDir, QString mainDir, bool notFound,
+                                      const QString findText, QString fileFilter, QProgressDialog* progressDialog)
 {
 	int pos;
 	QRegularExpression regex;
@@ -387,7 +387,7 @@ bool FindInFiles::findFiles(const QString startDir, QString mainDir, bool notFou
 	return notFound;
 }
 
-void FindInFiles::createFilesTable()
+void GUI::FindInFilesPanel::createFilesTable()
 {
 	QStringList labels;
 	labels << tr("File Name") << tr("Info") << tr("Size") << tr("Modified");
@@ -397,7 +397,7 @@ void FindInFiles::createFilesTable()
 	connect(filesTable, SIGNAL(cellClicked(int, int)), this, SLOT(filePreview(int, int)));
 }
 
-void FindInFiles::closeEvent(QCloseEvent* event)
+void GUI::FindInFilesPanel::closeEvent(QCloseEvent* event)
 {
 	QStringList list;
 	QString item;
@@ -472,7 +472,7 @@ void FindInFiles::closeEvent(QCloseEvent* event)
 	event->accept();
 }
 
-void FindInFiles::readSettings()
+void GUI::FindInFilesPanel::readSettings()
 {
 	QStringList list;
 	QString item;
@@ -522,7 +522,7 @@ void FindInFiles::readSettings()
 	settings.endGroup();
 }
 
-void FindInFiles::filesTableClicked(int x, int y)
+void GUI::FindInFilesPanel::filesTableClicked(int x, int y)
 {
 	Q_UNUSED(y);
 
@@ -537,7 +537,7 @@ void FindInFiles::filesTableClicked(int x, int y)
 	emit fileClicked(dir + item->text());
 }
 
-void FindInFiles::filePreview(int x, int y)
+void GUI::FindInFilesPanel::filePreview(int x, int y)
 {
 	Q_UNUSED(y);
 
@@ -597,8 +597,8 @@ void FindInFiles::filePreview(int x, int y)
 	QApplication::restoreOverrideCursor();
 }
 
-bool FindInFiles::findText(const QString& exp, QTextDocument::FindFlags options,
-                           bool ignoreComments)
+bool GUI::FindInFilesPanel::findText(const QString& exp, QTextDocument::FindFlags options,
+                                     bool ignoreComments)
 {
 	bool found = false;
 	QTextCursor cursor;
@@ -656,19 +656,19 @@ bool FindInFiles::findText(const QString& exp, QTextDocument::FindFlags options,
 	return found;
 }
 
-void FindInFiles::setHighlightColors(const HighlightColors colors)
+void GUI::FindInFilesPanel::setHighlightColors(const HighlightColors colors)
 {
 	highlight = true;
 	highlighterColors = colors;
 }
 
-void FindInFiles::setDir(const QString dir)
+void GUI::FindInFilesPanel::setDir(const QString dir)
 {
 	directoryComboBox->addItem(QDir::toNativeSeparators(dir));
 	directoryComboBox->setCurrentIndex(directoryComboBox->findText(QDir::toNativeSeparators(dir)));
 }
 
-void FindInFiles::highlightFindText(QString searchString, QTextDocument::FindFlags options)
+void GUI::FindInFilesPanel::highlightFindText(QString searchString, QTextDocument::FindFlags options)
 {
 	findTextExtraSelections.clear();
 	QColor lineColor = QColor(Qt::yellow).lighter(155);
@@ -697,7 +697,7 @@ void FindInFiles::highlightFindText(QString searchString, QTextDocument::FindFla
 	preview->setExtraSelections(findTextExtraSelections);
 }
 
-bool FindInFiles::eventFilter(QObject* obj, QEvent* ev)
+bool GUI::FindInFilesPanel::eventFilter(QObject* obj, QEvent* ev)
 {
 	if (obj == textComboBox) {
 		if (ev->type() == QEvent::KeyPress) {
