@@ -46,16 +46,19 @@ class QSplitter;
 class CapsLockEventFilter;
 class Highlighter;
 
-#include "ui_findinfilespanel.h"     // for Ui::FindInFilesPanel
+namespace Ui {
+class FindInFilesPanel;
+}
 
 
 namespace GUI {
-class FindInFilesPanel : public QWidget, private Ui::FindInFilesPanel
+class FindInFilesPanel : public QWidget
 {
 	Q_OBJECT
 
 public:
 	FindInFilesPanel(QSplitter* parent = 0);
+	~FindInFilesPanel();
 
 public slots:
 	void setCapsLockEnable(bool enable);
@@ -92,6 +95,7 @@ private:
 	QList<int> currentHeight;
 	QSplitter* f_parent;
 	CapsLockEventFilter* m_textComboBoxEventFilter;
+	Ui::FindInFilesPanel* ui;
 
 signals:
 	void fileClicked(const QString&);
