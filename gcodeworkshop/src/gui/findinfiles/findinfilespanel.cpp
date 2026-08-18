@@ -62,34 +62,43 @@
 #include "findinfilespanel.h"
 #include "highlighter.h"        //  for Highlighter, autoDetectHighligthMode
 
+#include "ui_findinfilespanel.h"     // for Ui::FindInFilesPanel
+
 
 #define MAXLISTS        20
 
-GUI::FindInFilesPanel::FindInFilesPanel(QSplitter* parent): QWidget(parent)
+GUI::FindInFilesPanel::FindInFilesPanel(QSplitter* parent):
+	QWidget(parent),
+	ui(new Ui::FindInFilesPanel())
 {
 	f_parent = parent;
-	setupUi(this);
+	ui->setupUi(this);
 	setAttribute(Qt::WA_DeleteOnClose);
 	setObjectName("FindInFiles");
 
 	highlighter = nullptr;
 	highlight = false;
 
-	connect(browseButton, SIGNAL(clicked()), SLOT(browse()));
-	connect(findButton, SIGNAL(clicked()), SLOT(find()));
-	connect(hideToolButton, SIGNAL(clicked()), SLOT(hideDlg()));
+	connect(ui->browseButton, SIGNAL(clicked()), SLOT(browse()));
+	connect(ui->findButton, SIGNAL(clicked()), SLOT(find()));
+	connect(ui->hideToolButton, SIGNAL(clicked()), SLOT(hideDlg()));
 	//connect(closeToolButton, SIGNAL(clicked()), SLOT(close()));
 
 	createFilesTable();
 
-	m_textComboBoxEventFilter = new CapsLockEventFilter(textComboBox);
-	textComboBox->installEventFilter(m_textComboBoxEventFilter);
+	m_textComboBoxEventFilter = new CapsLockEventFilter(ui->textComboBox);
+	ui->textComboBox->installEventFilter(m_textComboBoxEventFilter);
 
-	preview->setReadOnly(true);
-	preview->setWordWrapMode(QTextOption::NoWrap);
-	preview->setFont(QFont("Courier", 12, QFont::Normal));
+	ui->preview->setReadOnly(true);
+	ui->preview->setWordWrapMode(QTextOption::NoWrap);
+	ui->preview->setFont(QFont("Courier", 12, QFont::Normal));
 
 	readSettings();
+}
+
+GUI::FindInFilesPanel::~FindInFilesPanel()
+{
+	delete ui;
 }
 
 void GUI::FindInFilesPanel::setCapsLockEnable(bool enable)
@@ -111,18 +120,18 @@ void GUI::FindInFilesPanel::hideDlg()
 
 	f_parent->setUpdatesEnabled(false);
 
-	if (hideToolButton->isChecked()) {
+	if (ui->hideToolButton->isChecked()) {
 		currentHeight = list;
 		list[id] = 18;
 		list[0] = list[0] + (currentHeight[id] - list[id]);
-		splitter->hide();
-		frame->hide();
-		hideToolButton->setChecked(true);
+		ui->splitter->hide();
+		ui->frame->hide();
+		ui->hideToolButton->setChecked(true);
 	} else {
 		list = currentHeight;
-		splitter->show();
-		frame->show();
-		hideToolButton->setChecked(false);
+		ui->splitter->show();
+		ui->frame->show();
+		ui->hideToolButton->setChecked(false);
 	}
 
 	//qApp->processEvents();
@@ -134,12 +143,12 @@ void GUI::FindInFilesPanel::hideDlg()
 void GUI::FindInFilesPanel::browse()
 {
 	QString directory = QFileDialog::getExistingDirectory(this, tr("Find Files"),
-	                    directoryComboBox->currentText());
+	                    ui->directoryComboBox->currentText());
 
 	if (!directory.isEmpty()) {
-		directoryComboBox->addItem(QDir::toNativeSeparators(directory));
-		directoryComboBox->setCurrentIndex(directoryComboBox->findText(QDir::toNativeSeparators(
-		                                       directory)));
+		ui->directoryComboBox->addItem(QDir::toNativeSeparators(directory));
+		ui->directoryComboBox->setCurrentIndex(ui->directoryComboBox->findText(QDir::toNativeSeparators(
+		        directory)));
 	}
 }
 
@@ -148,19 +157,19 @@ void GUI::FindInFilesPanel::find()
 	;
 	bool notFound;
 
-	QString text = textComboBox->currentText();
+	QString text = ui->textComboBox->currentText();
 
 	if (text.isEmpty()) {
 		return;
 	}
 
-	filesTable->setRowCount(0);
-	preview->clear();
+	ui->filesTable->setRowCount(0);
+	ui->preview->clear();
 
-	QString fileName = fileComboBox->currentText();
-	QString path = QDir(directoryComboBox->currentText()).absolutePath();
+	QString fileName = ui->fileComboBox->currentText();
+	QString path = QDir(ui->directoryComboBox->currentText()).absolutePath();
 
-	findButton->setEnabled(false);
+	ui->findButton->setEnabled(false);
 	QApplication::setOverrideCursor(Qt::BusyCursor);
 	qApp->processEvents();
 
@@ -186,16 +195,16 @@ void GUI::FindInFilesPanel::find()
 		infoNameItem->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
 		QTableWidgetItem* sizeItem = new QTableWidgetItem(tr("found."));
 		sizeItem->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-		filesTable->insertRow(0);
-		filesTable->setItem(0, 0, fileNameItem);
-		filesTable->setItem(0, 1, infoNameItem);
-		filesTable->setItem(0, 2, sizeItem);
+		ui->filesTable->insertRow(0);
+		ui->filesTable->setItem(0, 0, fileNameItem);
+		ui->filesTable->setItem(0, 1, infoNameItem);
+		ui->filesTable->setItem(0, 2, sizeItem);
 	}
 
-	filesTable->resizeRowsToContents();
-	filesTable->resizeColumnsToContents();
+	ui->filesTable->resizeRowsToContents();
+	ui->filesTable->resizeColumnsToContents();
 
-	findButton->setEnabled(true);
+	ui->findButton->setEnabled(true);
 	QApplication::restoreOverrideCursor();
 }
 
@@ -227,7 +236,7 @@ bool GUI::FindInFilesPanel::findFiles(const QString startDir, QString mainDir, b
 	QDir directory = QDir(startDir);
 	//qDebug() << startDir << directory.absolutePath();
 
-	if (subFoldersCheckBox->isChecked()) {
+	if (ui->subFoldersCheckBox->isChecked()) {
 		dirs.append(directory.entryList(QStringList("*"),
 		                                QDir::AllDirs | QDir::NoSymLinks | QDir::Readable | QDir::NoDotAndDotDot));
 	}
@@ -271,14 +280,14 @@ bool GUI::FindInFilesPanel::findFiles(const QString startDir, QString mainDir, b
 					pos = line.indexOf(findText, pos, Qt::CaseInsensitive);
 					textFounded = (pos >= 0);
 
-					if (textFounded && (commentStyle1CheckBox->isChecked() || commentStyle2CheckBox->isChecked())) {
+					if (textFounded && (ui->commentStyle1CheckBox->isChecked() || ui->commentStyle2CheckBox->isChecked())) {
 						int lineStartPos = line.lastIndexOf('\n', pos);
 
 						if (lineStartPos < 0) {
 							lineStartPos = pos;
 						}
 
-						if (commentStyle1CheckBox->isChecked() && commentStyle2CheckBox->isChecked()) {
+						if (ui->commentStyle1CheckBox->isChecked() && ui->commentStyle2CheckBox->isChecked()) {
 							commentPos  = line.indexOf('(', lineStartPos);
 
 							if (commentPos > pos) {
@@ -289,11 +298,11 @@ bool GUI::FindInFilesPanel::findFiles(const QString startDir, QString mainDir, b
 								commentPos  = line.indexOf(';', lineStartPos);
 							}
 						} else {
-							if (commentStyle2CheckBox->isChecked()) {
+							if (ui->commentStyle2CheckBox->isChecked()) {
 								commentPos  = line.indexOf('(', lineStartPos);
 							}
 
-							if (commentStyle1CheckBox->isChecked()) {
+							if (ui->commentStyle1CheckBox->isChecked()) {
 								commentPos  = line.indexOf(';', lineStartPos);
 							}
 						}
@@ -315,7 +324,7 @@ bool GUI::FindInFilesPanel::findFiles(const QString startDir, QString mainDir, b
 
 			pos--;
 
-			if (textFounded && wholeWordsCheckBox->isChecked()) {
+			if (textFounded && ui->wholeWordsCheckBox->isChecked()) {
 				if (pos > 0)
 					if (line[pos - 1].isLetterOrNumber()) {
 						word = true;
@@ -331,8 +340,8 @@ bool GUI::FindInFilesPanel::findFiles(const QString startDir, QString mainDir, b
 
 			size = file.size();
 
-			if ((textFounded && (!wholeWordsCheckBox->isChecked())) ||
-			        (textFounded && (wholeWordsCheckBox->isChecked() && !word))) {
+			if ((textFounded && (!ui->wholeWordsCheckBox->isChecked())) ||
+			        (textFounded && (ui->wholeWordsCheckBox->isChecked() && !word))) {
 				notFound = false;
 				textFounded = false;
 				word = false;
@@ -377,12 +386,12 @@ bool GUI::FindInFilesPanel::findFiles(const QString startDir, QString mainDir, b
 				dateItem->setData(Qt::DisplayRole, QFileInfo(file).lastModified());
 
 
-				int row = filesTable->rowCount();
-				filesTable->insertRow(row);
-				filesTable->setItem(row, 0, fileNameItem);
-				filesTable->setItem(row, 1, infoNameItem);
-				filesTable->setItem(row, 2, sizeItem);
-				filesTable->setItem(row, 3, dateItem);
+				int row = ui->filesTable->rowCount();
+				ui->filesTable->insertRow(row);
+				ui->filesTable->setItem(row, 0, fileNameItem);
+				ui->filesTable->setItem(row, 1, infoNameItem);
+				ui->filesTable->setItem(row, 2, sizeItem);
+				ui->filesTable->setItem(row, 3, dateItem);
 			}
 
 			file.close();
@@ -396,10 +405,9 @@ void GUI::FindInFilesPanel::createFilesTable()
 {
 	QStringList labels;
 	labels << tr("File Name") << tr("Info") << tr("Size") << tr("Modified");
-	filesTable->setHorizontalHeaderLabels(labels);
-	connect(filesTable, SIGNAL(cellDoubleClicked(int, int)), this, SLOT(filesTableClicked(int,
-	        int)));
-	connect(filesTable, SIGNAL(cellClicked(int, int)), this, SLOT(filePreview(int, int)));
+	ui->filesTable->setHorizontalHeaderLabels(labels);
+	connect(ui->filesTable, SIGNAL(cellDoubleClicked(int, int)), this, SLOT(filesTableClicked(int, int)));
+	connect(ui->filesTable, SIGNAL(cellClicked(int, int)), this, SLOT(filePreview(int, int)));
 }
 
 void GUI::FindInFilesPanel::closeEvent(QCloseEvent* event)
@@ -410,16 +418,16 @@ void GUI::FindInFilesPanel::closeEvent(QCloseEvent* event)
 	QSettings& settings = *Medium::instance().settings();
 	settings.beginGroup("FindFileDialog");
 
-	settings.setValue("WholeWords", wholeWordsCheckBox->isChecked());
-	settings.setValue("SubFolders", subFoldersCheckBox->isChecked());
-	settings.setValue("CommentStyle1", commentStyle1CheckBox->isChecked());
-	settings.setValue("CommentStyle2", commentStyle2CheckBox->isChecked());
+	settings.setValue("WholeWords", ui->wholeWordsCheckBox->isChecked());
+	settings.setValue("SubFolders", ui->subFoldersCheckBox->isChecked());
+	settings.setValue("CommentStyle1", ui->commentStyle1CheckBox->isChecked());
+	settings.setValue("CommentStyle2", ui->commentStyle2CheckBox->isChecked());
 
 	list.clear();
-	list.append(directoryComboBox->currentText());
+	list.append(ui->directoryComboBox->currentText());
 
-	for (int i = 0; i <= directoryComboBox->count(); i++) {
-		item = directoryComboBox->itemText(i);
+	for (int i = 0; i <= ui->directoryComboBox->count(); i++) {
+		item = ui->directoryComboBox->itemText(i);
 
 		if (!item.isEmpty())
 			if (!list.contains(item)) {
@@ -432,13 +440,13 @@ void GUI::FindInFilesPanel::closeEvent(QCloseEvent* event)
 	}
 
 	settings.setValue("Dirs", list);
-	settings.setValue("SelectedDir", directoryComboBox->currentText());
+	settings.setValue("SelectedDir", ui->directoryComboBox->currentText());
 
 	list.clear();
-	list.append(fileComboBox->currentText());
+	list.append(ui->fileComboBox->currentText());
 
-	for (int i = 0; i <= fileComboBox->count(); i++) {
-		item = fileComboBox->itemText(i);
+	for (int i = 0; i <= ui->fileComboBox->count(); i++) {
+		item = ui->fileComboBox->itemText(i);
 
 		if (!item.isEmpty())
 			if (!list.contains(item)) {
@@ -451,13 +459,13 @@ void GUI::FindInFilesPanel::closeEvent(QCloseEvent* event)
 	}
 
 	settings.setValue("Filters", list);
-	settings.setValue("SelectedFilter", fileComboBox->currentText());
+	settings.setValue("SelectedFilter", ui->fileComboBox->currentText());
 
 	list.clear();
-	list.append(textComboBox->currentText());
+	list.append(ui->textComboBox->currentText());
 
-	for (int i = 0; i <= textComboBox->count(); i++) {
-		item = textComboBox->itemText(i);
+	for (int i = 0; i <= ui->textComboBox->count(); i++) {
+		item = ui->textComboBox->itemText(i);
 
 		if (!item.isEmpty())
 			if (!list.contains(item, Qt::CaseInsensitive)) {
@@ -470,7 +478,7 @@ void GUI::FindInFilesPanel::closeEvent(QCloseEvent* event)
 	}
 
 	settings.setValue("Texts", list);
-	settings.setValue("SelectedText", textComboBox->currentText());
+	settings.setValue("SelectedText", ui->textComboBox->currentText());
 
 	settings.endGroup();
 
@@ -483,9 +491,9 @@ void GUI::FindInFilesPanel::readSettings()
 	QString item;
 	int i;
 
-	textComboBox->clear();
-	directoryComboBox->clear();
-	fileComboBox->clear();
+	ui->textComboBox->clear();
+	ui->directoryComboBox->clear();
+	ui->fileComboBox->clear();
 
 	QSettings& settings = *Medium::instance().settings();
 
@@ -496,31 +504,31 @@ void GUI::FindInFilesPanel::readSettings()
 	list.append(settings.value("Filters", "*.nc").toStringList());
 	list.removeDuplicates();
 	list.sort();
-	fileComboBox->addItems(list);
+	ui->fileComboBox->addItems(list);
 	item = settings.value("SelectedFilter", QString("*.nc")).toString();
-	i = fileComboBox->findText(item);
-	fileComboBox->setCurrentIndex(i);
+	i = ui->fileComboBox->findText(item);
+	ui->fileComboBox->setCurrentIndex(i);
 
-	wholeWordsCheckBox->setChecked(settings.value("WholeWords", false).toBool());
-	subFoldersCheckBox->setChecked(settings.value("SubFolders", false).toBool());
-	commentStyle1CheckBox->setChecked(settings.value("CommentStyle1", false).toBool());
-	commentStyle2CheckBox->setChecked(settings.value("CommentStyle2", false).toBool());
+	ui->wholeWordsCheckBox->setChecked(settings.value("WholeWords", false).toBool());
+	ui->subFoldersCheckBox->setChecked(settings.value("SubFolders", false).toBool());
+	ui->commentStyle1CheckBox->setChecked(settings.value("CommentStyle1", false).toBool());
+	ui->commentStyle2CheckBox->setChecked(settings.value("CommentStyle2", false).toBool());
 
 	list = settings.value("Dirs", QStringList(QDir::homePath())).toStringList();
 	list.removeDuplicates();
 	list.sort();
-	directoryComboBox->addItems(list);
+	ui->directoryComboBox->addItems(list);
 	item = settings.value("SelectedDir", QDir::toNativeSeparators(QDir::homePath())).toString();
-	i = directoryComboBox->findText(item);
-	directoryComboBox->setCurrentIndex(i);
+	i = ui->directoryComboBox->findText(item);
+	ui->directoryComboBox->setCurrentIndex(i);
 
 	list = settings.value("Texts", QStringList()).toStringList();
 	list.removeDuplicates();
 	list.sort();
-	textComboBox->addItems(list);
+	ui->textComboBox->addItems(list);
 	item = settings.value("SelectedText", QString("*")).toString();
-	i = textComboBox->findText(item, Qt::MatchExactly);
-	textComboBox->setCurrentIndex(i);
+	i = ui->textComboBox->findText(item, Qt::MatchExactly);
+	ui->textComboBox->setCurrentIndex(i);
 
 	settings.endGroup();
 }
@@ -529,9 +537,9 @@ void GUI::FindInFilesPanel::filesTableClicked(int x, int y)
 {
 	Q_UNUSED(y);
 
-	QTableWidgetItem* item = filesTable->item(x, 0);
+	QTableWidgetItem* item = ui->filesTable->item(x, 0);
 
-	QString dir = directoryComboBox->currentText();
+	QString dir = ui->directoryComboBox->currentText();
 
 	if (!dir.endsWith("/")) {
 		dir = dir + "/";
@@ -544,20 +552,20 @@ void GUI::FindInFilesPanel::filePreview(int x, int y)
 {
 	Q_UNUSED(y);
 
-	QTableWidgetItem* item = filesTable->item(x, 0);
+	QTableWidgetItem* item = ui->filesTable->item(x, 0);
 
 	QApplication::setOverrideCursor(Qt::BusyCursor);
 
-	QTextCursor cursor = preview->textCursor();
+	QTextCursor cursor = ui->preview->textCursor();
 
 	if (!cursor.isNull()) {
 		QTextCharFormat format = cursor.charFormat();
 		format.setFontPointSize(12);
 		cursor.mergeCharFormat(format);
-		preview->setTextCursor(cursor);
+		ui->preview->setTextCursor(cursor);
 	}
 
-	QString dir = directoryComboBox->currentText();
+	QString dir = ui->directoryComboBox->currentText();
 
 	if (!dir.endsWith("/")) {
 		dir = dir + "/";
@@ -567,32 +575,32 @@ void GUI::FindInFilesPanel::filePreview(int x, int y)
 
 	if (file.open(QIODevice::ReadOnly)) {
 		QTextStream in(&file);
-		preview->setPlainText(in.readAll());
+		ui->preview->setPlainText(in.readAll());
 		file.close();
 
 		if (highlight) {
 			if (highlighter == nullptr) {
-				highlighter = new Highlighter(preview->document());
+				highlighter = new Highlighter(ui->preview->document());
 			}
 
 			if (highlighter != nullptr) {
-				int mode = autoDetectHighligthMode(preview->toPlainText().toUpper());
+				int mode = autoDetectHighligthMode(ui->preview->toPlainText().toUpper());
 				highlighter->setHighlightMode(mode);
-				highlighter->setHColors(highlighterColors, preview->font());
+				highlighter->setHColors(highlighterColors, ui->preview->font());
 				highlighter->rehighlight();
 			}
 		}
 
 		qApp->processEvents();
 
-		if ((!textComboBox->currentText().isEmpty()) && !(textComboBox->currentText() == "*")) {
-			highlightFindText(textComboBox->currentText(),
-			                  (wholeWordsCheckBox->isChecked() ? QTextDocument::FindWholeWords : QTextDocument::FindFlags()));
+		if ((!ui->textComboBox->currentText().isEmpty()) && !(ui->textComboBox->currentText() == "*")) {
+			highlightFindText(ui->textComboBox->currentText(),
+			                  (ui->wholeWordsCheckBox->isChecked() ? QTextDocument::FindWholeWords : QTextDocument::FindFlags()));
 
-			if (findText(textComboBox->currentText(),
-			             (wholeWordsCheckBox->isChecked() ? QTextDocument::FindWholeWords : QTextDocument::FindFlags())),
-			        (commentStyle1CheckBox->isChecked() || commentStyle2CheckBox->isChecked())) {
-				preview->centerCursor();
+			if (findText(ui->textComboBox->currentText(),
+			             (ui->wholeWordsCheckBox->isChecked() ? QTextDocument::FindWholeWords : QTextDocument::FindFlags())),
+			        (ui->commentStyle1CheckBox->isChecked() || ui->commentStyle2CheckBox->isChecked())) {
+				ui->preview->centerCursor();
 			}
 		}
 	}
@@ -610,31 +618,31 @@ bool GUI::FindInFilesPanel::findText(const QString& exp, QTextDocument::FindFlag
 	int cur_line_column;
 	int commentPos;
 
-	preview->setUpdatesEnabled(false);
+	ui->preview->setUpdatesEnabled(false);
 
 	commentPos = -1;
 
 	do {
-		found = preview->find(exp, options);
+		found = ui->preview->find(exp, options);
 
 		if (found && ignoreComments) {
-			cursor = preview->textCursor();
+			cursor = ui->preview->textCursor();
 			cur_line = cursor.block().text();
 
 			cur_line_column = cursor.columnNumber();
 
-			if (commentStyle1CheckBox->isChecked() && commentStyle2CheckBox->isChecked()) {
+			if (ui->commentStyle1CheckBox->isChecked() && ui->commentStyle2CheckBox->isChecked()) {
 				commentPos  = cur_line.indexOf(';', 0);
 
 				if (commentPos < 0) {
 					commentPos  = cur_line.indexOf('(', 0);
 				}
 			} else {
-				if (commentStyle2CheckBox->isChecked()) {
+				if (ui->commentStyle2CheckBox->isChecked()) {
 					commentPos  = cur_line.indexOf('(', 0);
 				}
 
-				if (commentStyle1CheckBox->isChecked()) {
+				if (ui->commentStyle1CheckBox->isChecked()) {
 					commentPos  = cur_line.indexOf(';', 0);
 				}
 			}
@@ -652,10 +660,10 @@ bool GUI::FindInFilesPanel::findText(const QString& exp, QTextDocument::FindFlag
 
 	if (!found) {
 		cursor.clearSelection();
-		preview->setTextCursor(cursor);
+		ui->preview->setTextCursor(cursor);
 	}
 
-	preview->setUpdatesEnabled(true);
+	ui->preview->setUpdatesEnabled(true);
 	return found;
 }
 
@@ -667,8 +675,8 @@ void GUI::FindInFilesPanel::setHighlightColors(const HighlightColors colors)
 
 void GUI::FindInFilesPanel::setDir(const QString dir)
 {
-	directoryComboBox->addItem(QDir::toNativeSeparators(dir));
-	directoryComboBox->setCurrentIndex(directoryComboBox->findText(QDir::toNativeSeparators(dir)));
+	ui->directoryComboBox->addItem(QDir::toNativeSeparators(dir));
+	ui->directoryComboBox->setCurrentIndex(ui->directoryComboBox->findText(QDir::toNativeSeparators(dir)));
 }
 
 void GUI::FindInFilesPanel::highlightFindText(QString searchString, QTextDocument::FindFlags options)
@@ -677,8 +685,8 @@ void GUI::FindInFilesPanel::highlightFindText(QString searchString, QTextDocumen
 	QColor lineColor = QColor(Qt::yellow).lighter(155);
 	selection.format.setBackground(lineColor);
 
-	QTextDocument* doc = preview->document();
-	QTextCursor cursor = preview->textCursor();
+	QTextDocument* doc = ui->preview->document();
+	QTextCursor cursor = ui->preview->textCursor();
 	cursor.setPosition(0);
 
 	do {
@@ -697,5 +705,5 @@ void GUI::FindInFilesPanel::highlightFindText(QString searchString, QTextDocumen
 		}
 	} while (!cursor.isNull());
 
-	preview->setExtraSelections(findTextExtraSelections);
+	ui->preview->setExtraSelections(findTextExtraSelections);
 }
