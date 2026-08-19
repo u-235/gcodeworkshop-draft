@@ -72,6 +72,7 @@ GUI::FindInFilesPanel::FindInFilesPanel(QSplitter* parent):
 {
 	f_parent = parent;
 	ui->setupUi(this);
+	loadIcons();
 	setAttribute(Qt::WA_DeleteOnClose);
 	setObjectName("FindInFiles");
 
@@ -101,6 +102,22 @@ GUI::FindInFilesPanel::~FindInFilesPanel()
 void GUI::FindInFilesPanel::setCapsLockEnable(bool enable)
 {
 	m_textComboBoxEventFilter->setCapsLockEnable(enable);
+}
+
+void GUI::FindInFilesPanel::loadTranslations()
+{
+	ui->retranslateUi(this);
+}
+
+void GUI::FindInFilesPanel::loadIcons()
+{
+	ui->browseButton->setIcon(QIcon(":/images/browse.png"));
+	ui->findButton->setIcon(QIcon(":/images/findnext.png"));
+	ui->title->setIcon(QIcon(":/images/filefind.png"));
+	QIcon hideOrShowIcon;
+	hideOrShowIcon.addFile(":/images/arrow-down.png", QSize(), QIcon::Normal, QIcon::Off);
+	hideOrShowIcon.addFile(":/images/arrow-up.png", QSize(), QIcon::Normal, QIcon::On);
+	ui->hideToolButton->setIcon(hideOrShowIcon);
 }
 
 void GUI::FindInFilesPanel::loadSettings(QSettings* cfg)
