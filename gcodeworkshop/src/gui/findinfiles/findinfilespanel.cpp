@@ -22,7 +22,6 @@
 
 #include <QApplication>             // for QApplication, qApp
 #include <QCheckBox>                // for QCheckBox
-#include <QCloseEvent>              // for QCloseEvent
 #include <QColor>                   // for QColor
 #include <QComboBox>                // for QComboBox
 #include <QDateTime>                // for QDateTime
@@ -92,8 +91,6 @@ GUI::FindInFilesPanel::FindInFilesPanel(QSplitter* parent):
 	ui->preview->setReadOnly(true);
 	ui->preview->setWordWrapMode(QTextOption::NoWrap);
 	ui->preview->setFont(QFont("Courier", 12, QFont::Normal));
-
-	readSettings();
 }
 
 GUI::FindInFilesPanel::~FindInFilesPanel()
@@ -104,6 +101,124 @@ GUI::FindInFilesPanel::~FindInFilesPanel()
 void GUI::FindInFilesPanel::setCapsLockEnable(bool enable)
 {
 	m_textComboBoxEventFilter->setCapsLockEnable(enable);
+}
+
+void GUI::FindInFilesPanel::loadSettings(QSettings* cfg)
+{
+	QStringList list;
+	QString item;
+	int i;
+
+	ui->textComboBox->clear();
+	ui->directoryComboBox->clear();
+	ui->fileComboBox->clear();
+
+	list = cfg->value("Extensions", "").toStringList();
+
+	cfg->beginGroup("FindFileDialog");
+
+	list.append(cfg->value("Filters", "*.nc").toStringList());
+	list.removeDuplicates();
+	list.sort();
+	ui->fileComboBox->addItems(list);
+	item = cfg->value("SelectedFilter", QString("*.nc")).toString();
+	i = ui->fileComboBox->findText(item);
+	ui->fileComboBox->setCurrentIndex(i);
+
+	ui->wholeWordsCheckBox->setChecked(cfg->value("WholeWords", false).toBool());
+	ui->subFoldersCheckBox->setChecked(cfg->value("SubFolders", false).toBool());
+	ui->commentStyle1CheckBox->setChecked(cfg->value("CommentStyle1", false).toBool());
+	ui->commentStyle2CheckBox->setChecked(cfg->value("CommentStyle2", false).toBool());
+
+	list = cfg->value("Dirs", QStringList(QDir::homePath())).toStringList();
+	list.removeDuplicates();
+	list.sort();
+	ui->directoryComboBox->addItems(list);
+	item = cfg->value("SelectedDir", QDir::toNativeSeparators(QDir::homePath())).toString();
+	i = ui->directoryComboBox->findText(item);
+	ui->directoryComboBox->setCurrentIndex(i);
+
+	list = cfg->value("Texts", QStringList()).toStringList();
+	list.removeDuplicates();
+	list.sort();
+	ui->textComboBox->addItems(list);
+	item = cfg->value("SelectedText", QString("*")).toString();
+	i = ui->textComboBox->findText(item, Qt::MatchExactly);
+	ui->textComboBox->setCurrentIndex(i);
+
+	cfg->endGroup();
+}
+
+void GUI::FindInFilesPanel::saveSettings(QSettings* cfg) const
+{
+	QStringList list;
+	QString item;
+
+	cfg->beginGroup("FindFileDialog");
+
+	cfg->setValue("WholeWords", ui->wholeWordsCheckBox->isChecked());
+	cfg->setValue("SubFolders", ui->subFoldersCheckBox->isChecked());
+	cfg->setValue("CommentStyle1", ui->commentStyle1CheckBox->isChecked());
+	cfg->setValue("CommentStyle2", ui->commentStyle2CheckBox->isChecked());
+
+	list.clear();
+	list.append(ui->directoryComboBox->currentText());
+
+	for (int i = 0; i <= ui->directoryComboBox->count(); i++) {
+		item = ui->directoryComboBox->itemText(i);
+
+		if (!item.isEmpty())
+			if (!list.contains(item)) {
+				list.append(item);
+			}
+	}
+
+	while (list.size() > MAXLISTS) {
+		list.removeLast();
+	}
+
+	cfg->setValue("Dirs", list);
+	cfg->setValue("SelectedDir", ui->directoryComboBox->currentText());
+
+	list.clear();
+	list.append(ui->fileComboBox->currentText());
+
+	for (int i = 0; i <= ui->fileComboBox->count(); i++) {
+		item = ui->fileComboBox->itemText(i);
+
+		if (!item.isEmpty())
+			if (!list.contains(item)) {
+				list.append(item);
+			}
+	}
+
+	while (list.size() > MAXLISTS) {
+		list.removeLast();
+	}
+
+	cfg->setValue("Filters", list);
+	cfg->setValue("SelectedFilter", ui->fileComboBox->currentText());
+
+	list.clear();
+	list.append(ui->textComboBox->currentText());
+
+	for (int i = 0; i <= ui->textComboBox->count(); i++) {
+		item = ui->textComboBox->itemText(i);
+
+		if (!item.isEmpty())
+			if (!list.contains(item, Qt::CaseInsensitive)) {
+				list.append(item);
+			}
+	}
+
+	while (list.size() > MAXLISTS) {
+		list.removeLast();
+	}
+
+	cfg->setValue("Texts", list);
+	cfg->setValue("SelectedText", ui->textComboBox->currentText());
+
+	cfg->endGroup();
 }
 
 void GUI::FindInFilesPanel::closeDialog()
@@ -408,129 +523,6 @@ void GUI::FindInFilesPanel::createFilesTable()
 	ui->filesTable->setHorizontalHeaderLabels(labels);
 	connect(ui->filesTable, SIGNAL(cellDoubleClicked(int, int)), this, SLOT(filesTableClicked(int, int)));
 	connect(ui->filesTable, SIGNAL(cellClicked(int, int)), this, SLOT(filePreview(int, int)));
-}
-
-void GUI::FindInFilesPanel::closeEvent(QCloseEvent* event)
-{
-	QStringList list;
-	QString item;
-
-	QSettings& settings = *Medium::instance().settings();
-	settings.beginGroup("FindFileDialog");
-
-	settings.setValue("WholeWords", ui->wholeWordsCheckBox->isChecked());
-	settings.setValue("SubFolders", ui->subFoldersCheckBox->isChecked());
-	settings.setValue("CommentStyle1", ui->commentStyle1CheckBox->isChecked());
-	settings.setValue("CommentStyle2", ui->commentStyle2CheckBox->isChecked());
-
-	list.clear();
-	list.append(ui->directoryComboBox->currentText());
-
-	for (int i = 0; i <= ui->directoryComboBox->count(); i++) {
-		item = ui->directoryComboBox->itemText(i);
-
-		if (!item.isEmpty())
-			if (!list.contains(item)) {
-				list.append(item);
-			}
-	}
-
-	while (list.size() > MAXLISTS) {
-		list.removeLast();
-	}
-
-	settings.setValue("Dirs", list);
-	settings.setValue("SelectedDir", ui->directoryComboBox->currentText());
-
-	list.clear();
-	list.append(ui->fileComboBox->currentText());
-
-	for (int i = 0; i <= ui->fileComboBox->count(); i++) {
-		item = ui->fileComboBox->itemText(i);
-
-		if (!item.isEmpty())
-			if (!list.contains(item)) {
-				list.append(item);
-			}
-	}
-
-	while (list.size() > MAXLISTS) {
-		list.removeLast();
-	}
-
-	settings.setValue("Filters", list);
-	settings.setValue("SelectedFilter", ui->fileComboBox->currentText());
-
-	list.clear();
-	list.append(ui->textComboBox->currentText());
-
-	for (int i = 0; i <= ui->textComboBox->count(); i++) {
-		item = ui->textComboBox->itemText(i);
-
-		if (!item.isEmpty())
-			if (!list.contains(item, Qt::CaseInsensitive)) {
-				list.append(item);
-			}
-	}
-
-	while (list.size() > MAXLISTS) {
-		list.removeLast();
-	}
-
-	settings.setValue("Texts", list);
-	settings.setValue("SelectedText", ui->textComboBox->currentText());
-
-	settings.endGroup();
-
-	event->accept();
-}
-
-void GUI::FindInFilesPanel::readSettings()
-{
-	QStringList list;
-	QString item;
-	int i;
-
-	ui->textComboBox->clear();
-	ui->directoryComboBox->clear();
-	ui->fileComboBox->clear();
-
-	QSettings& settings = *Medium::instance().settings();
-
-	list = settings.value("Extensions", "").toStringList();
-
-	settings.beginGroup("FindFileDialog");
-
-	list.append(settings.value("Filters", "*.nc").toStringList());
-	list.removeDuplicates();
-	list.sort();
-	ui->fileComboBox->addItems(list);
-	item = settings.value("SelectedFilter", QString("*.nc")).toString();
-	i = ui->fileComboBox->findText(item);
-	ui->fileComboBox->setCurrentIndex(i);
-
-	ui->wholeWordsCheckBox->setChecked(settings.value("WholeWords", false).toBool());
-	ui->subFoldersCheckBox->setChecked(settings.value("SubFolders", false).toBool());
-	ui->commentStyle1CheckBox->setChecked(settings.value("CommentStyle1", false).toBool());
-	ui->commentStyle2CheckBox->setChecked(settings.value("CommentStyle2", false).toBool());
-
-	list = settings.value("Dirs", QStringList(QDir::homePath())).toStringList();
-	list.removeDuplicates();
-	list.sort();
-	ui->directoryComboBox->addItems(list);
-	item = settings.value("SelectedDir", QDir::toNativeSeparators(QDir::homePath())).toString();
-	i = ui->directoryComboBox->findText(item);
-	ui->directoryComboBox->setCurrentIndex(i);
-
-	list = settings.value("Texts", QStringList()).toStringList();
-	list.removeDuplicates();
-	list.sort();
-	ui->textComboBox->addItems(list);
-	item = settings.value("SelectedText", QString("*")).toString();
-	i = ui->textComboBox->findText(item, Qt::MatchExactly);
-	ui->textComboBox->setCurrentIndex(i);
-
-	settings.endGroup();
 }
 
 void GUI::FindInFilesPanel::filesTableClicked(int x, int y)

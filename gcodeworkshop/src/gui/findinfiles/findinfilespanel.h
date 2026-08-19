@@ -31,7 +31,6 @@
 #include <QWidget>          // for QWidget
 #include <QtGlobal>         // for QT_VERSION, QT_VERSION_CHECK
 
-class QCloseEvent;
 class QDir;
 class QProgressDialog;
 class QSplitter;
@@ -40,6 +39,8 @@ class QSplitter;
 #else
 	using QStringList = QList<QString>;
 #endif
+
+class QSettings;
 
 #include <gcoderstyle.h>    // for HighlightColors
 
@@ -63,6 +64,9 @@ public:
 public slots:
 	void setCapsLockEnable(bool enable);
 
+	void loadSettings(QSettings* cfg);
+	void saveSettings(QSettings* cfg) const;
+
 	void setHighlightColors(const HighlightColors colors);
 	void setDir(const QString dir);
 
@@ -74,15 +78,11 @@ private slots:
 	void filePreview(int x, int y);
 	void hideDlg();
 
-protected:
-	void closeEvent(QCloseEvent* event);
-
 private:
 	bool findFiles(const QString startDir, QString mainDir, bool notFound,
 	               const QString findText, QString fileFilter, QProgressDialog* progressDialog);
 	void showFiles(const QDir& directory, const QStringList& files);
 	void createFilesTable();
-	void readSettings();
 	void highlightFindText(QString searchString,
 	                       QTextDocument::FindFlags options = QTextDocument::FindFlags());
 	bool findText(const QString& exp, QTextDocument::FindFlags options, bool ignoreComments = true);
