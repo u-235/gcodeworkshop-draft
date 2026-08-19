@@ -390,11 +390,6 @@ void GCodeWorkShop::closeEvent(QCloseEvent* event)
 	emit saveSettings(Medium::instance().settings());
 	writeSettings();
 	closeAllMdiWindows();
-
-	if (findFiles != nullptr) {
-		findFiles->close();
-		findFiles = nullptr;
-	}
 }
 
 Document* GCodeWorkShop::newFileFromTemplate()
