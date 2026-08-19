@@ -64,6 +64,9 @@ public:
 public slots:
 	void setCapsLockEnable(bool enable);
 
+	void loadTranslations();
+	void loadIcons();
+
 	void loadSettings(QSettings* cfg);
 	void saveSettings(QSettings* cfg) const;
 
