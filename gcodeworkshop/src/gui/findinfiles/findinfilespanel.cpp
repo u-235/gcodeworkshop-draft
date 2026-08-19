@@ -80,13 +80,11 @@ GUI::FindInFilesPanel::FindInFilesPanel(QSplitter* parent):
 {
 	ui->setupUi(this);
 	loadIcons();
-	setAttribute(Qt::WA_DeleteOnClose);
 	setObjectName("FindInFiles");
 
 	connect(ui->browseButton, &QPushButton::clicked, this, &GUI::FindInFilesPanel::browse);
 	connect(ui->findButton, &QPushButton::clicked, this, &GUI::FindInFilesPanel::find);
 	connect(ui->hideToolButton, &QPushButton::clicked, this,  &GUI::FindInFilesPanel::hideDlg);
-	//connect(closeToolButton, SIGNAL(clicked()), SLOT(close()));
 
 	createFilesTable();
 
@@ -95,6 +93,7 @@ GUI::FindInFilesPanel::FindInFilesPanel(QSplitter* parent):
 
 	ui->preview->setReadOnly(true);
 	ui->preview->setWordWrapMode(QTextOption::NoWrap);
+	// TODO: Add a settings
 	ui->preview->setFont(QFont("Courier", 12, QFont::Normal));
 }
 
@@ -133,7 +132,7 @@ void GUI::FindInFilesPanel::loadSettings(QSettings* cfg)
 	ui->textComboBox->clear();
 	ui->directoryComboBox->clear();
 	ui->fileComboBox->clear();
-
+	// TODO: Add the setNameFilters(const QStringList& filters);
 	list = cfg->value("Extensions", "").toStringList();
 
 	cfg->beginGroup("FindFileDialog");
@@ -242,12 +241,6 @@ void GUI::FindInFilesPanel::saveSettings(QSettings* cfg) const
 	cfg->endGroup();
 }
 
-void GUI::FindInFilesPanel::closeDialog()
-{
-	setAttribute(Qt::WA_DeleteOnClose);
-	close();
-}
-
 void GUI::FindInFilesPanel::hideDlg()
 {
 	QList<int> list;
@@ -270,7 +263,6 @@ void GUI::FindInFilesPanel::hideDlg()
 		ui->hideToolButton->setChecked(false);
 	}
 
-	//qApp->processEvents();
 	f_parent->setSizes(list);
 	f_parent->updateGeometry();
 	f_parent->setUpdatesEnabled(true);
@@ -317,7 +309,6 @@ void GUI::FindInFilesPanel::find()
 	progressDialog->setCancelButtonText(tr("&Cancel"));
 	progressDialog->setRange(0, 100);
 	progressDialog->setWindowTitle(tr("Find Files"));
-	//progressDialog->setLabelText(tr("Searching in folder: \"%1\"").arg(QDir(path).absolutePath()));
 	qApp->processEvents();
 
 	notFound = findFiles(path, path, true, text, fileName, progressDialog);
@@ -370,7 +361,6 @@ bool GUI::FindInFilesPanel::findFiles(const QString startDir, QString mainDir, b
 	dirs.clear();
 
 	QDir directory = QDir(startDir);
-	//qDebug() << startDir << directory.absolutePath();
 
 	if (ui->subFoldersCheckBox->isChecked()) {
 		dirs.append(directory.entryList(QStringList("*"),
@@ -402,7 +392,6 @@ bool GUI::FindInFilesPanel::findFiles(const QString startDir, QString mainDir, b
 		if (file.open(QIODevice::ReadOnly)) {
 			QTextStream in(&file);
 
-			textFounded = false;
 			word = false;
 			line = in.readAll();
 
@@ -479,8 +468,6 @@ bool GUI::FindInFilesPanel::findFiles(const QString startDir, QString mainDir, b
 			if ((textFounded && (!ui->wholeWordsCheckBox->isChecked())) ||
 			        (textFounded && (ui->wholeWordsCheckBox->isChecked() && !word))) {
 				notFound = false;
-				textFounded = false;
-				word = false;
 
 				comment_tx.clear();
 				auto match = regex.match(line);
@@ -515,8 +502,6 @@ bool GUI::FindInFilesPanel::findFiles(const QString startDir, QString mainDir, b
 				QTableWidgetItem* sizeItem = new QTableWidgetItem(tr("%1 KB").arg(int((size + 1023) / 1024)));
 				sizeItem->setTextAlignment(Qt::AlignRight | Qt::AlignVCenter);
 
-				//QTableWidgetItem *dateItem = new QTableWidgetItem(QFileInfo(file).lastModified().toString(Qt::SystemLocaleShortDate));
-				//dateItem->setTextAlignment(Qt::AlignRight | Qt::AlignVCenter);
 				QTableWidgetItem* dateItem = new QTableWidgetItem();
 				dateItem->setTextAlignment(Qt::AlignRight | Qt::AlignVCenter);
 				dateItem->setData(Qt::DisplayRole, QFileInfo(file).lastModified());

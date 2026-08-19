@@ -76,7 +76,6 @@ public slots:
 private slots:
 	void browse();
 	void find();
-	void closeDialog();
 	void filesTableClicked(int x, int y);
 	void filePreview(int x, int y);
 	void hideDlg();
