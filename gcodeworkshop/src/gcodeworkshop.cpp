@@ -783,6 +783,10 @@ void GCodeWorkShop::findInFl()
 			findFiles->setCapsLockEnable(prop->intCapsLock);
 		}
 
+		findFiles->loadSettings(Medium::instance().settings());
+		connect(this, &GCodeWorkShop::loadSettings, findFiles, &GUI::FindInFilesPanel::loadSettings);
+		connect(this, &GCodeWorkShop::saveSettings, findFiles, &GUI::FindInFilesPanel::saveSettings);
+
 		if (m_findInFilesHighlightEnable) {
 			GCoderStyle* style = dynamic_cast<GCoderStyle*>(m_documentManager->documentStyle(GCoder::DOCUMENT_TYPE).get());
 
@@ -797,6 +801,7 @@ void GCodeWorkShop::findInFl()
 
 		connect(findFiles, SIGNAL(fileClicked(QString)), this, SLOT(loadFoundedFile(QString)));
 	} else if (!m_fileActions->findFiles()->isChecked()) {
+		findFiles->saveSettings(Medium::instance().settings());
 		findFiles->close();
 		findFiles = nullptr;
 	} else {
