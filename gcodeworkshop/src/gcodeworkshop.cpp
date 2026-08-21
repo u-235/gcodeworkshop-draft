@@ -1887,36 +1887,38 @@ void GCodeWorkShop::setLastOpenedPath(const QString& path)
 
 void GCodeWorkShop::loadFile(const DocumentInfo::Ptr& info, bool checkAlreadyLoaded)
 {
-	QFileInfo file;
+	QFileInfo file(info->filePath);
+
+	if (!file.exists() || !file.isFile() || !file.isReadable()) {
+		return;
+	}
+
+	info->filePath = file.canonicalFilePath();
 
 	if (checkAlreadyLoaded && setActiveDocument(info->filePath)) {
 		return;
 	}
 
-	file.setFile(info->filePath);
+	Document* doc = createDocument(info->documentType());
 
-	if ((file.exists()) && (file.isReadable()) && file.isFile()) {
-		Document* doc = createDocument(info->documentType());
+	if (!doc) {
+		return;
+	}
 
-		if (!doc) {
-			return;
-		}
+	doc->setDocumentInfo(info);
+	QApplication::setOverrideCursor(Qt::WaitCursor);
+	bool status = doc->load();
+	QApplication::restoreOverrideCursor();
 
-		doc->setDocumentInfo(info);
-		QApplication::setOverrideCursor(Qt::WaitCursor);
-		bool status = doc->load();
-		QApplication::restoreOverrideCursor();
-
-		if (status) {
-			setLastOpenedPath(file.path());
-			updateStatusBar();
-			m_recentFiles->add(info->filePath);
-			fileTreeViewChangeRootDir();
-		} else {
-			QMessageBox::warning(mainWindow(), tr("GCodeWorkShop"), tr("Cannot read file \"%1\".\n %2")
-			                     .arg(doc->filePath()).arg(doc->ioErrorString()));
-			doc->close();
-		}
+	if (status) {
+		setLastOpenedPath(file.path());
+		updateStatusBar();
+		m_recentFiles->add(info->filePath);
+		fileTreeViewChangeRootDir();
+	} else {
+		QMessageBox::warning(mainWindow(), tr("GCodeWorkShop"), tr("Cannot read file \"%1\".\n %2")
+		                     .arg(doc->filePath()).arg(doc->ioErrorString()));
+		doc->close();
 	}
 }
 
