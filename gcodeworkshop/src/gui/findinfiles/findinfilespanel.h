@@ -33,7 +33,6 @@
 
 class QCloseEvent;
 class QDir;
-class QEvent;
 class QProgressDialog;
 class QSplitter;
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
@@ -44,6 +43,7 @@ class QSplitter;
 
 #include <gcoderstyle.h>    // for HighlightColors
 
+class CapsLockEventFilter;
 class Highlighter;
 
 #include "ui_findinfilespanel.h"     // for Ui::FindInFilesPanel
@@ -58,6 +58,8 @@ public:
 	FindInFilesPanel(QSplitter* parent = 0);
 
 public slots:
+	void setCapsLockEnable(bool enable);
+
 	void setHighlightColors(const HighlightColors colors);
 	void setDir(const QString dir);
 
@@ -71,7 +73,6 @@ private slots:
 
 protected:
 	void closeEvent(QCloseEvent* event);
-	bool eventFilter(QObject* obj, QEvent* ev);
 
 private:
 	bool findFiles(const QString startDir, QString mainDir, bool notFound,
@@ -86,11 +87,11 @@ private:
 	Highlighter* highlighter;
 	QList<QTextEdit::ExtraSelection> findTextExtraSelections;
 	QTextEdit::ExtraSelection selection;
-	bool intCapsLock;
 	HighlightColors highlighterColors;
 	bool highlight;
 	QList<int> currentHeight;
 	QSplitter* f_parent;
+	CapsLockEventFilter* m_textComboBoxEventFilter;
 
 signals:
 	void fileClicked(const QString&);

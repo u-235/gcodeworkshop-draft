@@ -780,6 +780,13 @@ void GCodeWorkShop::findInFl()
 {
 	if (findFiles == nullptr) {
 		findFiles = new GUI::FindInFilesPanel(ui->splitter);
+		connect(this, &GCodeWorkShop::intCapsLockChanged, findFiles, &GUI::FindInFilesPanel::setCapsLockEnable);
+		auto prop = dynamic_cast<GCoderWidgetProperties*>(m_documentManager->documentWidgetProperties(
+		                GCoder::DOCUMENT_TYPE).get());
+
+		if (prop) {
+			findFiles->setCapsLockEnable(prop->intCapsLock);
+		}
 
 		if (m_findInFilesHighlightEnable) {
 			GCoderStyle* style = dynamic_cast<GCoderStyle*>(m_documentManager->documentStyle(GCoder::DOCUMENT_TYPE).get());
