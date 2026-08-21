@@ -27,14 +27,12 @@
 #include <QComboBox>                // for QComboBox
 #include <QDateTime>                // for QDateTime
 #include <QDir>                     // for QDir, operator|, QDir::NoSymLinks, QDir::Readable, QDir::AllDirs, QDir::F...
-#include <QEvent>                   // for QEvent, QEvent::KeyPress
 #include <QFile>                    // for QFile
 #include <QFileDialog>              // for QFileDialog
 #include <QFileInfo>                // for QFileInfo
 #include <QFont>                    // for QFont, QFont::Normal
 #include <QFrame>                   // for QFrame
 #include <QIODevice>                // for QIODevice, QIODevice::ReadOnly
-#include <QKeyEvent>                // for QKeyEvent
 #include <QPlainTextEdit>           // for QPlainTextEdit
 #include <QProgressDialog>          // for QProgressDialog
 #include <QPushButton>              // for QPushButton
@@ -60,6 +58,7 @@
 #include <gcoderstyle.h>    // for HighlightColors
 #include <utils/medium.h>   // for Medium
 
+#include "capslockeventfilter.h"
 #include "findinfilespanel.h"
 #include "highlighter.h"        //  for Highlighter, autoDetectHighligthMode
 
@@ -83,13 +82,19 @@ GUI::FindInFilesPanel::FindInFilesPanel(QSplitter* parent): QWidget(parent)
 
 	createFilesTable();
 
-	textComboBox->installEventFilter(this);
+	m_textComboBoxEventFilter = new CapsLockEventFilter(textComboBox);
+	textComboBox->installEventFilter(m_textComboBoxEventFilter);
 
 	preview->setReadOnly(true);
 	preview->setWordWrapMode(QTextOption::NoWrap);
 	preview->setFont(QFont("Courier", 12, QFont::Normal));
 
 	readSettings();
+}
+
+void GUI::FindInFilesPanel::setCapsLockEnable(bool enable)
+{
+	m_textComboBoxEventFilter->setCapsLockEnable(enable);
 }
 
 void GUI::FindInFilesPanel::closeDialog()
@@ -484,8 +489,6 @@ void GUI::FindInFilesPanel::readSettings()
 
 	QSettings& settings = *Medium::instance().settings();
 
-	intCapsLock = settings.value("IntCapsLock", true).toBool();
-
 	list = settings.value("Extensions", "").toStringList();
 
 	settings.beginGroup("FindFileDialog");
@@ -695,46 +698,4 @@ void GUI::FindInFilesPanel::highlightFindText(QString searchString, QTextDocumen
 	} while (!cursor.isNull());
 
 	preview->setExtraSelections(findTextExtraSelections);
-}
-
-bool GUI::FindInFilesPanel::eventFilter(QObject* obj, QEvent* ev)
-{
-	if (obj == textComboBox) {
-		if (ev->type() == QEvent::KeyPress) {
-			QKeyEvent* k = (QKeyEvent*) ev;
-
-			if ((k->key() == Qt::Key_Return) || (k->key() == Qt::Key_Enter)) {
-				find();
-				return false;
-			}
-
-			if (k->key() == Qt::Key_Comma) { //Keypad comma should always prints period
-				if ((k->modifiers() == Qt::KeypadModifier)
-				        || (k->nativeScanCode() == 0x53)) { // !!! Qt::KeypadModifier - Not working for keypad comma !!!
-					QApplication::sendEvent(obj, new QKeyEvent(QEvent::KeyPress, Qt::Key_Period, Qt::NoModifier,
-					                        ".", false, 1));
-					return true;
-				}
-			}
-
-			if (intCapsLock) {
-				if (k->text()[0].isLower() && (k->modifiers() == Qt::NoModifier)) {
-					QApplication::sendEvent(obj, new QKeyEvent(QEvent::KeyPress, k->key(), Qt::NoModifier,
-					                        k->text().toUpper(), false, 1));
-					return true;
-				}
-
-				if (k->text()[0].isUpper() && (k->modifiers() == Qt::ShiftModifier)) {
-					QApplication::sendEvent(obj, new QKeyEvent(QEvent::KeyPress, k->key(), Qt::ShiftModifier,
-					                        k->text().toLower(), false, 1));
-					return true;
-				}
-			}
-		}
-
-		return false;
-	} else {
-		// pass the event on to the parent class
-		return eventFilter(obj, ev);
-	}
 }
