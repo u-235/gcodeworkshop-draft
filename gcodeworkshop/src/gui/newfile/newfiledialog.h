@@ -28,6 +28,7 @@
 #include <QObject>  // for Q_OBJECT, slots
 #include <QString>  // for QString
 
+class QSettings;
 class QWidget;
 
 namespace Ui {
@@ -52,6 +53,9 @@ public slots:
 	void loadTranslations();
 	void loadIcons();
 
+	void loadSettings(QSettings* cfg);
+	void saveSettings(QSettings* cfg) const;
+
 private:
 	QStringList m_filters;
 	Ui::NewFileDialog* ui;
@@ -59,7 +63,6 @@ private:
 
 private slots:
 	void fillFileCombo();
-	void saveSettings();
 	void browseButtonClicked();
 };
 } // namespace GUI
