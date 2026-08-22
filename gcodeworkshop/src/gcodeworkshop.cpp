@@ -397,6 +397,7 @@ Document* GCodeWorkShop::newFileFromTemplate()
 	Document* doc = 0;
 
 	GUI::NewFileDialog* newFileDlg = new GUI::NewFileDialog(mainWindow());
+	newFileDlg->setNameFilters(m_extensions);
 	int result = newFileDlg->exec();
 
 	if (result == QDialog::Accepted) {
