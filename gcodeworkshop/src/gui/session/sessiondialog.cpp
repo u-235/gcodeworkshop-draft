@@ -34,7 +34,7 @@ class QWidget;
 #include "sessionnamedialog.h"  // for SessionNameDialog
 
 
-SessionDialog::SessionDialog(QWidget* parent, SessionManager* sessions) : QDialog(parent, Qt::Dialog)
+GUI::SessionDialog::SessionDialog(QWidget* parent, SessionManager* sessions) : QDialog(parent, Qt::Dialog)
 {
 	m_sessions = sessions;
 	setupUi(this);
@@ -54,13 +54,13 @@ SessionDialog::SessionDialog(QWidget* parent, SessionManager* sessions) : QDialo
 	updateSessionList(m_sessions->sessionList());
 }
 
-SessionDialog::~SessionDialog()
+GUI::SessionDialog::~SessionDialog()
 {
 }
 
-void SessionDialog::newButtonClicked()
+void GUI::SessionDialog::newButtonClicked()
 {
-	SessionNameDialog* newSesDialog = new SessionNameDialog(this);
+	GUI::SessionNameDialog* newSesDialog = new GUI::SessionNameDialog(this);
 	newSesDialog->setName("");
 	int result = newSesDialog->exec();
 
@@ -75,10 +75,10 @@ void SessionDialog::newButtonClicked()
 	delete newSesDialog;
 }
 
-void SessionDialog::renameButtonClicked()
+void GUI::SessionDialog::renameButtonClicked()
 {
 	QString currName = sessionListWidget->currentItem()->text();
-	SessionNameDialog* newSesDialog = new SessionNameDialog(this);
+	GUI::SessionNameDialog* newSesDialog = new GUI::SessionNameDialog(this);
 	newSesDialog->setName(currName);
 	int result = newSesDialog->exec();
 
@@ -93,10 +93,10 @@ void SessionDialog::renameButtonClicked()
 	delete newSesDialog;
 }
 
-void SessionDialog::cloneButtonClicked()
+void GUI::SessionDialog::cloneButtonClicked()
 {
 	QString currName = sessionListWidget->currentItem()->text();
-	SessionNameDialog* newSesDialog = new SessionNameDialog(this);
+	GUI::SessionNameDialog* newSesDialog = new GUI::SessionNameDialog(this);
 	newSesDialog->setName(currName);
 	int result = newSesDialog->exec();
 
@@ -111,7 +111,7 @@ void SessionDialog::cloneButtonClicked()
 	delete newSesDialog;
 }
 
-void SessionDialog::deleteButtonClicked()
+void GUI::SessionDialog::deleteButtonClicked()
 {
 	const QList<QListWidgetItem*>& selected = sessionListWidget->selectedItems();
 
@@ -120,13 +120,13 @@ void SessionDialog::deleteButtonClicked()
 	}
 }
 
-void SessionDialog::switchButtonClicked()
+void GUI::SessionDialog::switchButtonClicked()
 {
 	m_sessions->setCurrentSession(sessionListWidget->currentItem()->text());
 	accept();
 }
 
-void SessionDialog::sessionListItemSelectionChanged()
+void GUI::SessionDialog::sessionListItemSelectionChanged()
 {
 	bool hasSelection = sessionListWidget->selectedItems().size() == 1;
 	deletePushButton->setEnabled(hasSelection);
@@ -135,7 +135,7 @@ void SessionDialog::sessionListItemSelectionChanged()
 	switchPushButton->setEnabled(hasSelection);
 }
 
-void SessionDialog::updateSessionList(const QStringList& list)
+void GUI::SessionDialog::updateSessionList(const QStringList& list)
 {
 	sessionListWidget->clear();
 	sessionListWidget->addItems(list);

@@ -119,9 +119,9 @@
 #include "gui/newfile/newfiledialog.h"      // for newFileDialog
 #include "gui/project/projectpanel.h"
 #include "gui/serialport/serialtoolbar.h"
+#include "gui/session/sessiondialog.h"      // for SessionDialog
 #include "highlightmode.h"                  // for MODE_AUTO, MODE_FANUC, MODE_HEIDENHAIN, MODE_HEIDENHAIN_ISO, MODE_LINU...
 #include "recentfiles.h"                    // for RecentFiles
-#include "sessiondialog.h"                  // for SessionDialog
 #include "sessionmanager.h"                 // for SessionManager
 #include "setupdialog.h"                    // for AppConfig, SetupDialog
 #include "tooltips.h"                       // for writeTooltipFile
@@ -2287,7 +2287,7 @@ void GCodeWorkShop::storeFileInfoInSession()
 
 void GCodeWorkShop::showSessionDialog()
 {
-	SessionDialog sesDialog(mainWindow(), m_sessionManager);
+	GUI::SessionDialog sesDialog(mainWindow(), m_sessionManager);
 	sesDialog.exec();
 }
 

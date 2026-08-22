@@ -65,13 +65,13 @@ HEADERS += \
     src/gui/project/projectpanel.h \
     src/gui/serialport/serialtoolbar.h \
     src/gui/serialport/serialtoolbaractions.h \
+    src/gui/session/sessiondialog.h \
+    src/gui/session/sessionnamedialog.h \
     src/highlighter.h \
     src/highlightmode.h \
     src/inlinecalc.h \
     src/recentfiles.h \
-    src/sessiondialog.h \
     src/sessionmanager.h \
-    src/sessionnamedialog.h \
     src/setupdialog.h \
     src/tooltips.h
 
@@ -109,13 +109,13 @@ SOURCES += \
     src/gui/project/projectpanel.cpp \
     src/gui/serialport/serialtoolbar.cpp \
     src/gui/serialport/serialtoolbaractions.cpp \
+    src/gui/session/sessiondialog.cpp \
+    src/gui/session/sessionnamedialog.cpp \
     src/highlighter.cpp \
     src/inlinecalc.cpp \
     src/main.cpp \
     src/recentfiles.cpp \
-    src/sessiondialog.cpp \
     src/sessionmanager.cpp \
-    src/sessionnamedialog.cpp \
     src/setupdialog.cpp \
     src/utils/expressionparser.cpp \
     src/utils/removezeros.cpp
@@ -127,8 +127,8 @@ FORMS += \
     src/gui/findinfiles/findinfilespanel.ui \
     src/gui/newfile/newfiledialog.ui \
     src/gui/project/projectpanel.ui \
-    src/sessiondialog.ui \
-    src/sessionnamedialog.ui \
+    src/gui/session/sessiondialog.ui \
+    src/gui/session/sessionnamedialog.ui \
     src/setupdialog.ui
 
 
