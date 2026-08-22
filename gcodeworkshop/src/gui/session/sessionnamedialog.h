@@ -30,11 +30,13 @@
 
 class QWidget;
 
-#include "ui_sessionnamedialog.h"  // for Ui::SessionNameDialog
+namespace Ui {
+class SessionNameDialog;
+}
 
 
 namespace GUI {
-class SessionNameDialog: public QDialog, private Ui::SessionNameDialog
+class SessionNameDialog: public QDialog
 {
 	Q_OBJECT
 
@@ -45,6 +47,9 @@ public:
 public slots:
 	QString getName();
 	void setName(QString name);
+
+private:
+	Ui::SessionNameDialog* ui;
 };
 } // namespace GUI
 

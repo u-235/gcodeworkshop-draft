@@ -32,11 +32,13 @@ class QWidget;
 
 class SessionManager;
 
-#include "ui_sessiondialog.h"  // for Ui::SessionDialog
+namespace Ui {
+class SessionDialog;
+}
 
 
 namespace GUI {
-class SessionDialog: public QDialog, private Ui::SessionDialog
+class SessionDialog: public QDialog
 {
 	Q_OBJECT
 
@@ -55,6 +57,7 @@ private slots:
 
 private:
 	SessionManager* m_sessions;
+	Ui::SessionDialog* ui;
 };
 } // namespace GUI
 
