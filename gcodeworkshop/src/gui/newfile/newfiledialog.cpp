@@ -141,8 +141,3 @@ void GUI::NewFileDialog::fillFileCombo()
 	ui->fileComboBox->addItem(tr("EMPTY FILE"));
 	ui->fileComboBox->addItems(files);
 }
-
-int GUI::NewFileDialog::exec()
-{
-	return QDialog::exec();
-}
