@@ -41,6 +41,9 @@
 // TODO: change a path to the file
 #define TEMPLATE_PATH             "/usr/share/gcodeworkshop/TEMPLATE"
 
+#define CFG_SECTION           "NewFileDialog"
+#define CFG_KEY_TEMPLATE_PATH "TemplatePath"
+
 
 GUI::NewFileDialog::NewFileDialog(QWidget* parent) :
 	QDialog(parent),
@@ -60,21 +63,11 @@ GUI::NewFileDialog::NewFileDialog(QWidget* parent) :
 		m_templatePath.setPath(QDir::homePath());
 	}
 
-	QSettings& settings = *Medium::instance().settings();
-
-	QDir savedPath(settings.value("TemplatePath", m_templatePath.canonicalPath()).toString());
-
-	if (savedPath.exists()) {
-		m_templatePath = savedPath;
-	}
-
 	ui->pathLineEdit->setText(m_templatePath.canonicalPath());
 
 	fillFileCombo();
 
 	connect(ui->browsePushButton, SIGNAL(clicked()), this, SLOT(browseButtonClicked()));
-
-	connect(this, SIGNAL(accepted()), this, SLOT(saveSettings()));
 }
 
 GUI::NewFileDialog::~NewFileDialog()
@@ -109,6 +102,27 @@ void GUI::NewFileDialog::loadIcons()
 	ui->browsePushButton->setIcon(QIcon(":/images/browse.png"));
 }
 
+void GUI::NewFileDialog::loadSettings(QSettings* cfg)
+{
+	cfg->beginGroup(CFG_SECTION);
+	QDir path(cfg->value(CFG_KEY_TEMPLATE_PATH, m_templatePath.canonicalPath()).toString());
+	cfg->endGroup();
+
+	if (path.exists()) {
+		m_templatePath = path;
+		fillFileCombo();
+	}
+}
+
+void GUI::NewFileDialog::saveSettings(QSettings* cfg) const
+{
+	cfg->beginGroup(CFG_SECTION);
+	cfg->setValue(CFG_KEY_TEMPLATE_PATH, m_templatePath.canonicalPath());
+	cfg->endGroup();
+	// Remove the old settings
+	cfg->remove("TemplatePath");
+}
+
 void GUI::NewFileDialog::browseButtonClicked()
 {
 	QString directory = QFileDialog::getExistingDirectory(this, tr("Choose template path"),
@@ -129,13 +143,6 @@ void GUI::NewFileDialog::fillFileCombo()
 	ui->fileComboBox->clear();
 	ui->fileComboBox->addItem(tr("EMPTY FILE"));
 	ui->fileComboBox->addItems(files);
-}
-
-void GUI::NewFileDialog::saveSettings()
-{
-	QSettings& settings = *Medium::instance().settings();
-
-	settings.setValue("TemplatePath", m_templatePath.canonicalPath());
 }
 
 int GUI::NewFileDialog::exec()

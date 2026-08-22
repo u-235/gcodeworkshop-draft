@@ -398,9 +398,11 @@ Document* GCodeWorkShop::newFileFromTemplate()
 
 	GUI::NewFileDialog* newFileDlg = new GUI::NewFileDialog(mainWindow());
 	newFileDlg->setNameFilters(m_extensions);
+	newFileDlg->loadSettings(Medium::instance().settings());
 	int result = newFileDlg->exec();
 
 	if (result == QDialog::Accepted) {
+		newFileDlg->saveSettings(Medium::instance().settings());
 		const QString& fileName = newFileDlg->getChosenFile();
 		doc = createDocument(GCoder::DOCUMENT_TYPE);
 
