@@ -29,15 +29,19 @@ class QWidget;
 
 #include "sessionnamedialog.h"
 
+#include "ui_sessionnamedialog.h"  // for Ui::SessionNameDialog
 
-GUI::SessionNameDialog::SessionNameDialog(QWidget* parent, Qt::WindowFlags f) : QDialog(parent, f)
+
+GUI::SessionNameDialog::SessionNameDialog(QWidget* parent, Qt::WindowFlags f) :
+	QDialog(parent, f),
+	ui(new Ui::SessionNameDialog())
 {
-	setupUi(this);
+	ui->setupUi(this);
 	setWindowTitle(tr("New session..."));
 	setModal(true);
 
-	connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-	connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+	connect(ui->buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+	connect(ui->buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
 }
 
 GUI::SessionNameDialog::~SessionNameDialog()
@@ -46,10 +50,10 @@ GUI::SessionNameDialog::~SessionNameDialog()
 
 QString GUI::SessionNameDialog::getName()
 {
-	return lineEdit->text();
+	return ui->lineEdit->text();
 }
 
 void GUI::SessionNameDialog::setName(QString name)
 {
-	lineEdit->setText(name);
+	ui->lineEdit->setText(name);
 }
