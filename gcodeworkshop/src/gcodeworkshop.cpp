@@ -116,10 +116,10 @@
 #include "gui/filetable/filetablepanel.h"
 #include "gui/findinfiles/findinfilespanel.h"    // for FindInFiles
 #include "gui/findtoolbar/findtoolbar.h"    // for FindToolBar
+#include "gui/newfile/newfiledialog.h"      // for newFileDialog
 #include "gui/project/projectpanel.h"
 #include "gui/serialport/serialtoolbar.h"
 #include "highlightmode.h"                  // for MODE_AUTO, MODE_FANUC, MODE_HEIDENHAIN, MODE_HEIDENHAIN_ISO, MODE_LINU...
-#include "newfiledialog.h"                  // for newFileDialog
 #include "recentfiles.h"                    // for RecentFiles
 #include "sessiondialog.h"                  // for SessionDialog
 #include "sessionmanager.h"                 // for SessionManager
@@ -396,7 +396,7 @@ Document* GCodeWorkShop::newFileFromTemplate()
 {
 	Document* doc = 0;
 
-	newFileDialog* newFileDlg = new newFileDialog(mainWindow());
+	GUI::NewFileDialog* newFileDlg = new GUI::NewFileDialog(mainWindow());
 	int result = newFileDlg->exec();
 
 	if (result == QDialog::Accepted) {

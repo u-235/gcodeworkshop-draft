@@ -20,8 +20,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef NEWFILEDIALOG_H
-#define NEWFILEDIALOG_H
+#ifndef GUI_NEWFILEDIALOG_H
+#define GUI_NEWFILEDIALOG_H
 
 #include <QDialog>  // for QDialog
 #include <QDir>     // for QDir
@@ -31,25 +31,23 @@
 class QWidget;
 
 namespace Ui {
-// TODO: rename with NewFileDialog
-class newFileDialog;
+class NewFileDialog;
 }
 
-
-// TODO: rename with NewFileDialog
-class newFileDialog : public QDialog
+namespace GUI {
+class NewFileDialog : public QDialog
 {
 	Q_OBJECT
 
 public:
-	explicit newFileDialog(QWidget* parent = 0);
-	~newFileDialog();
+	explicit NewFileDialog(QWidget* parent = 0);
+	~NewFileDialog();
 
 	int exec();
 	QString getChosenFile();
 
 private:
-	Ui::newFileDialog* ui;
+	Ui::NewFileDialog* ui;
 
 	QDir path;
 
@@ -58,5 +56,6 @@ private slots:
 	void saveSettings();
 	void browseButtonClicked();
 };
+} // namespace GUI
 
-#endif // NEWFILEDIALOG_H
+#endif // GUI_NEWFILEDIALOG_H

@@ -61,13 +61,13 @@ HEADERS += \
     src/gui/findinfiles/findinfilespanel.h \
     src/gui/findtoolbar/findtoolbar.h \
     src/gui/findtoolbar/findtoolbaractions.h \
+    src/gui/newfile/newfiledialog.h \
     src/gui/project/projectpanel.h \
     src/gui/serialport/serialtoolbar.h \
     src/gui/serialport/serialtoolbaractions.h \
     src/highlighter.h \
     src/highlightmode.h \
     src/inlinecalc.h \
-    src/newfiledialog.h \
     src/recentfiles.h \
     src/sessiondialog.h \
     src/sessionmanager.h \
@@ -105,13 +105,13 @@ SOURCES += \
     src/gui/findinfiles/findinfilespanel.cpp \
     src/gui/findtoolbar/findtoolbar.cpp \
     src/gui/findtoolbar/findtoolbaractions.cpp \
+    src/gui/newfile/newfiledialog.cpp \
     src/gui/project/projectpanel.cpp \
     src/gui/serialport/serialtoolbar.cpp \
     src/gui/serialport/serialtoolbaractions.cpp \
     src/highlighter.cpp \
     src/inlinecalc.cpp \
     src/main.cpp \
-    src/newfiledialog.cpp \
     src/recentfiles.cpp \
     src/sessiondialog.cpp \
     src/sessionmanager.cpp \
@@ -125,8 +125,8 @@ FORMS += \
     src/gui/clipboard/clipboardpanel.ui \
     src/gui/filebrowser/filebrowserpanel.ui \
     src/gui/findinfiles/findinfilespanel.ui \
+    src/gui/newfile/newfiledialog.ui \
     src/gui/project/projectpanel.ui \
-    src/newfiledialog.ui \
     src/sessiondialog.ui \
     src/sessionnamedialog.ui \
     src/setupdialog.ui
