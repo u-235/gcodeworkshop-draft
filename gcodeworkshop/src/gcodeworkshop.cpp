@@ -2287,8 +2287,9 @@ void GCodeWorkShop::storeFileInfoInSession()
 
 void GCodeWorkShop::showSessionDialog()
 {
-	GUI::SessionDialog sesDialog(mainWindow(), m_sessionManager);
-	sesDialog.exec();
+	GUI::SessionDialog* sesDialog = new GUI::SessionDialog(mainWindow(), m_sessionManager);
+	sesDialog->exec();
+	sesDialog->deleteLater();
 }
 
 void GCodeWorkShop::savePrinterSettings(QPrinter* printer)

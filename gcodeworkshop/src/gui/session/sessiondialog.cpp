@@ -45,16 +45,15 @@ GUI::SessionDialog::SessionDialog(QWidget* parent, SessionManager* sessions) :
 	setWindowTitle(tr("Session manager"));
 	setModal(true);
 
-	connect(ui->newPushButton, SIGNAL(clicked()), this, SLOT(newButtonClicked()));
-	connect(ui->renamePushButton, SIGNAL(clicked()), this, SLOT(renameButtonClicked()));
-	connect(ui->clonePushButton, SIGNAL(clicked()), this, SLOT(cloneButtonClicked()));
-	connect(ui->deletePushButton, SIGNAL(clicked()), this, SLOT(deleteButtonClicked()));
-	connect(ui->switchPushButton, SIGNAL(clicked()), this, SLOT(switchButtonClicked()));
+	connect(ui->newPushButton, &QPushButton::clicked, this, &GUI::SessionDialog::newButtonClicked);
+	connect(ui->renamePushButton, &QPushButton::clicked, this, &GUI::SessionDialog::renameButtonClicked);
+	connect(ui->clonePushButton, &QPushButton::clicked, this, &GUI::SessionDialog::cloneButtonClicked);
+	connect(ui->deletePushButton, &QPushButton::clicked, this, &GUI::SessionDialog::deleteButtonClicked);
+	connect(ui->switchPushButton, &QPushButton::clicked, this, &GUI::SessionDialog::switchButtonClicked);
+	connect(ui->sessionListWidget, &QListWidget::itemSelectionChanged, this,
+	        &GUI::SessionDialog::sessionListItemSelectionChanged);
 
-	connect(ui->sessionListWidget, SIGNAL(itemSelectionChanged()), this,
-	        SLOT(sessionListItemSelectionChanged()));
-
-	connect(m_sessions, SIGNAL(sessionListChanged(QStringList)), this, SLOT(updateSessionList(QStringList)));
+	connect(m_sessions, &SessionManager::sessionListChanged, this, &GUI::SessionDialog::updateSessionList);
 	updateSessionList(m_sessions->sessionList());
 }
 
@@ -76,7 +75,7 @@ void GUI::SessionDialog::newButtonClicked()
 		}
 	}
 
-	delete newSesDialog;
+	newSesDialog->deleteLater();
 }
 
 void GUI::SessionDialog::renameButtonClicked()
@@ -94,7 +93,7 @@ void GUI::SessionDialog::renameButtonClicked()
 		}
 	}
 
-	delete newSesDialog;
+	newSesDialog->deleteLater();
 }
 
 void GUI::SessionDialog::cloneButtonClicked()
@@ -112,7 +111,7 @@ void GUI::SessionDialog::cloneButtonClicked()
 		}
 	}
 
-	delete newSesDialog;
+	newSesDialog->deleteLater();
 }
 
 void GUI::SessionDialog::deleteButtonClicked()
