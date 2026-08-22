@@ -43,6 +43,7 @@
 
 GUI::NewFileDialog::NewFileDialog(QWidget* parent) :
 	QDialog(parent),
+	m_filters("*.nc"),
 	ui(new Ui::NewFileDialog)
 {
 	ui->setupUi(this);
@@ -90,6 +91,12 @@ QString GUI::NewFileDialog::getChosenFile()
 	}
 }
 
+void GUI::NewFileDialog::setNameFilters(const QStringList& filters)
+{
+	m_filters = filters;
+	fillFileCombo();
+}
+
 void GUI::NewFileDialog::browseButtonClicked()
 {
 	QString directory = QFileDialog::getExistingDirectory(this, tr("Choose template path"),
@@ -104,7 +111,7 @@ void GUI::NewFileDialog::browseButtonClicked()
 
 void GUI::NewFileDialog::fillFileCombo()
 {
-	QStringList files = m_templatePath.entryList((QStringList() << "*.nc"),
+	QStringList files = m_templatePath.entryList(m_filters,
 	                    QDir::Files | QDir::NoDotAndDotDot | QDir::Readable,
 	                    QDir::Name | QDir::IgnoreCase);
 	ui->fileComboBox->clear();

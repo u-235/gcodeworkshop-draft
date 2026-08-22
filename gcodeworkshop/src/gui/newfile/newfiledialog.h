@@ -46,7 +46,11 @@ public:
 	int exec();
 	QString getChosenFile();
 
+public slots:
+	void setNameFilters(const QStringList& filters);
+
 private:
+	QStringList m_filters;
 	Ui::NewFileDialog* ui;
 	QDir m_templatePath;
 
