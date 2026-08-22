@@ -67,12 +67,12 @@ HEADERS += \
     src/gui/serialport/serialtoolbaractions.h \
     src/gui/session/sessiondialog.h \
     src/gui/session/sessionnamedialog.h \
+    src/gui/setup/setupdialog.h \
     src/highlighter.h \
     src/highlightmode.h \
     src/inlinecalc.h \
     src/recentfiles.h \
     src/sessionmanager.h \
-    src/setupdialog.h \
     src/tooltips.h
 
 SOURCES += \
@@ -111,12 +111,12 @@ SOURCES += \
     src/gui/serialport/serialtoolbaractions.cpp \
     src/gui/session/sessiondialog.cpp \
     src/gui/session/sessionnamedialog.cpp \
+    src/gui/setup/setupdialog.cpp \
     src/highlighter.cpp \
     src/inlinecalc.cpp \
     src/main.cpp \
     src/recentfiles.cpp \
     src/sessionmanager.cpp \
-    src/setupdialog.cpp \
     src/utils/expressionparser.cpp \
     src/utils/removezeros.cpp
 
@@ -129,7 +129,7 @@ FORMS += \
     src/gui/project/projectpanel.ui \
     src/gui/session/sessiondialog.ui \
     src/gui/session/sessionnamedialog.ui \
-    src/setupdialog.ui
+    src/gui/setup/setupdialog.ui
 
 
 # target platforms dependencies
