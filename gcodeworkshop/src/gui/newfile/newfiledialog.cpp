@@ -41,9 +41,9 @@
 #define TEMPLATE_PATH             "/usr/share/gcodeworkshop/TEMPLATE"
 
 
-newFileDialog::newFileDialog(QWidget* parent) :
+GUI::NewFileDialog::NewFileDialog(QWidget* parent) :
 	QDialog(parent),
-	ui(new Ui::newFileDialog)
+	ui(new Ui::NewFileDialog)
 {
 	ui->setupUi(this);
 
@@ -74,12 +74,12 @@ newFileDialog::newFileDialog(QWidget* parent) :
 	connect(this, SIGNAL(accepted()), this, SLOT(saveSettings()));
 }
 
-newFileDialog::~newFileDialog()
+GUI::NewFileDialog::~NewFileDialog()
 {
 	delete ui;
 }
 
-void newFileDialog::browseButtonClicked()
+void GUI::NewFileDialog::browseButtonClicked()
 {
 	QString directory = QFileDialog::getExistingDirectory(this, tr("Choose template path"),
 	                    path.canonicalPath());
@@ -91,7 +91,7 @@ void newFileDialog::browseButtonClicked()
 	}
 }
 
-void newFileDialog::fillFileCombo()
+void GUI::NewFileDialog::fillFileCombo()
 {
 	QStringList files = path.entryList((QStringList() << "*.nc"),
 	                                   QDir::Files | QDir::NoDotAndDotDot | QDir::Readable,
@@ -101,14 +101,14 @@ void newFileDialog::fillFileCombo()
 	ui->fileComboBox->addItems(files);
 }
 
-void newFileDialog::saveSettings()
+void GUI::NewFileDialog::saveSettings()
 {
 	QSettings& settings = *Medium::instance().settings();
 
 	settings.setValue("TemplatePath", path.canonicalPath());
 }
 
-QString newFileDialog::getChosenFile()
+QString GUI::NewFileDialog::getChosenFile()
 {
 	QFile file(path.canonicalPath() + "/" + ui->fileComboBox->currentText());
 
@@ -119,7 +119,7 @@ QString newFileDialog::getChosenFile()
 	}
 }
 
-int newFileDialog::exec()
+int GUI::NewFileDialog::exec()
 {
 	return QDialog::exec();
 }
