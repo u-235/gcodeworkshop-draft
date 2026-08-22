@@ -48,8 +48,7 @@ public:
 
 private:
 	Ui::NewFileDialog* ui;
-
-	QDir path;
+	QDir m_templatePath;
 
 private slots:
 	void fillFileCombo();
