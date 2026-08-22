@@ -26,7 +26,6 @@
 #include <QDialog>  // for QDialog
 #include <QObject>  // for Q_OBJECT, slots
 #include <QString>  // for QString
-#include <Qt>       // for WindowFlags, Dialog
 
 class QWidget;
 
@@ -41,7 +40,7 @@ class SessionNameDialog: public QDialog
 	Q_OBJECT
 
 public:
-	SessionNameDialog(QWidget* parent = 0, Qt::WindowFlags f = Qt::Dialog);
+	SessionNameDialog(QWidget* parent = nullptr);
 	~SessionNameDialog();
 
 public slots:

@@ -23,7 +23,7 @@
 #include <QDialogButtonBox> // for QDialogButtonBox
 #include <QLineEdit>        // for QLineEdit
 #include <QString>          // for QString
-#include <Qt>               // for WindowFlags
+#include <Qt>               // for WindowFlags, Dialog
 
 class QWidget;
 
@@ -32,8 +32,8 @@ class QWidget;
 #include "ui_sessionnamedialog.h"  // for Ui::SessionNameDialog
 
 
-GUI::SessionNameDialog::SessionNameDialog(QWidget* parent, Qt::WindowFlags f) :
-	QDialog(parent, f),
+GUI::SessionNameDialog::SessionNameDialog(QWidget* parent) :
+	QDialog(parent, Qt::Dialog),
 	ui(new Ui::SessionNameDialog())
 {
 	ui->setupUi(this);
