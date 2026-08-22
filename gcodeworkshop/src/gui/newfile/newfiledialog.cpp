@@ -24,14 +24,13 @@
 #include <QComboBox>    // for QComboBox
 #include <QFile>        // for QFile
 #include <QFileDialog>  // for QFileDialog
+#include <QIcon>        //  for QIcon
 #include <QLineEdit>    // for QLineEdit
 #include <QPushButton>  // for QPushButton
 #include <QSettings>    // for QSettings
 #include <QStringList>  // for QStringList
 #include <QVariant>     // for QVariant
 #include <QtGlobal>     // for QFlags
-
-#include <utils/medium.h>   // for Medium
 
 #include "newfiledialog.h"
 #include "ui_newfiledialog.h"   // for Ui::newFileDialog
@@ -47,6 +46,7 @@ GUI::NewFileDialog::NewFileDialog(QWidget* parent) :
 	ui(new Ui::NewFileDialog)
 {
 	ui->setupUi(this);
+	loadIcons();
 
 	m_templatePath.setPath(TEMPLATE_PATH);
 
@@ -95,6 +95,16 @@ void GUI::NewFileDialog::setNameFilters(const QStringList& filters)
 {
 	m_filters = filters;
 	fillFileCombo();
+}
+
+void GUI::NewFileDialog::loadTranslations()
+{
+	ui->retranslateUi(this);
+}
+
+void GUI::NewFileDialog::loadIcons()
+{
+	ui->browsePushButton->setIcon(QIcon(":/images/browse.png"));
 }
 
 void GUI::NewFileDialog::browseButtonClicked()

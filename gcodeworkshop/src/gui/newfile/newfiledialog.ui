@@ -39,10 +39,6 @@
            <property name="text">
             <string>Browse...</string>
            </property>
-           <property name="icon">
-            <iconset resource="../../gcodeshared/application.qrc">
-             <normaloff>:/images/browse.png</normaloff>:/images/browse.png</iconset>
-           </property>
           </widget>
          </item>
         </layout>
@@ -141,9 +137,7 @@
    </item>
   </layout>
  </widget>
- <resources>
-  <include location="../../gcodeshared/application.qrc"/>
- </resources>
+ <resources/>
  <connections>
   <connection>
    <sender>buttonBox</sender>
