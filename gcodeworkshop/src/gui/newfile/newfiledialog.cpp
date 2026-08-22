@@ -79,6 +79,17 @@ GUI::NewFileDialog::~NewFileDialog()
 	delete ui;
 }
 
+QString GUI::NewFileDialog::getChosenFile()
+{
+	QFile file(path.canonicalPath() + "/" + ui->fileComboBox->currentText());
+
+	if (file.exists()) {
+		return file.fileName();
+	} else {
+		return tr("EMPTY FILE");
+	}
+}
+
 void GUI::NewFileDialog::browseButtonClicked()
 {
 	QString directory = QFileDialog::getExistingDirectory(this, tr("Choose template path"),
@@ -106,17 +117,6 @@ void GUI::NewFileDialog::saveSettings()
 	QSettings& settings = *Medium::instance().settings();
 
 	settings.setValue("TemplatePath", path.canonicalPath());
-}
-
-QString GUI::NewFileDialog::getChosenFile()
-{
-	QFile file(path.canonicalPath() + "/" + ui->fileComboBox->currentText());
-
-	if (file.exists()) {
-		return file.fileName();
-	} else {
-		return tr("EMPTY FILE");
-	}
 }
 
 int GUI::NewFileDialog::exec()
