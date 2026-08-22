@@ -416,8 +416,7 @@ Document* GCodeWorkShop::newFileFromTemplate()
 		doc->setDocumentInfo(info);
 	}
 
-	delete (newFileDlg);
-
+	newFileDlg->deleteLater();
 	return doc;
 }
 

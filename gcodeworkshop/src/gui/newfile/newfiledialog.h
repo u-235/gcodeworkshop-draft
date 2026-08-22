@@ -35,16 +35,16 @@ namespace Ui {
 class NewFileDialog;
 }
 
+
 namespace GUI {
 class NewFileDialog : public QDialog
 {
 	Q_OBJECT
 
 public:
-	explicit NewFileDialog(QWidget* parent = 0);
+	explicit NewFileDialog(QWidget* parent = nullptr);
 	~NewFileDialog();
 
-	int exec();
 	QString getChosenFile();
 
 public slots:
