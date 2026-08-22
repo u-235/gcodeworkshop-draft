@@ -75,7 +75,7 @@ void GUI::SessionDialog::newButtonClicked()
 		}
 	}
 
-	delete newSesDialog;
+	newSesDialog->deleteLater();
 }
 
 void GUI::SessionDialog::renameButtonClicked()
@@ -93,7 +93,7 @@ void GUI::SessionDialog::renameButtonClicked()
 		}
 	}
 
-	delete newSesDialog;
+	newSesDialog->deleteLater();
 }
 
 void GUI::SessionDialog::cloneButtonClicked()
@@ -111,7 +111,7 @@ void GUI::SessionDialog::cloneButtonClicked()
 		}
 	}
 
-	delete newSesDialog;
+	newSesDialog->deleteLater();
 }
 
 void GUI::SessionDialog::deleteButtonClicked()
