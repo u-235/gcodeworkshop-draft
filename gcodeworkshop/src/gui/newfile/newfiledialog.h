@@ -49,6 +49,9 @@ public:
 public slots:
 	void setNameFilters(const QStringList& filters);
 
+	void loadTranslations();
+	void loadIcons();
+
 private:
 	QStringList m_filters;
 	Ui::NewFileDialog* ui;
