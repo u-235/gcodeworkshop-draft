@@ -20,8 +20,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef SETUPDIALOG_H
-#define SETUPDIALOG_H
+#ifndef GUI_SETUPDIALOG_H
+#define GUI_SETUPDIALOG_H
 
 #include <QDialog>      // for QDialog
 #include <QObject>      // for slots, Q_OBJECT
@@ -54,7 +54,7 @@ struct AppConfig  {
 	GCode::Converter::Options gcodeConverterOptions;
 };
 
-
+namespace GUI {
 /**
  * @brief The SetupDialog class
  */
@@ -85,5 +85,6 @@ private:
 	AppConfig editProp;
 	QButtonGroup* colorButtons;
 };
+} // namespace GUI
 
-#endif // SETUPDIALOG_H
+#endif // GUI_SETUPDIALOG_H

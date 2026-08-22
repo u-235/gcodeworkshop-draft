@@ -59,8 +59,8 @@ class QWidget;
 #include "setupdialog.h"
 
 
-SetupDialog::SetupDialog(QWidget* parent, const AppConfig* prop,
-                         Qt::WindowFlags f) : QDialog(parent, f)
+GUI::SetupDialog::SetupDialog(QWidget* parent, const AppConfig* prop,
+                              Qt::WindowFlags f) : QDialog(parent, f)
 {
 	QPalette palette;
 
@@ -266,11 +266,11 @@ SetupDialog::SetupDialog(QWidget* parent, const AppConfig* prop,
 	connect(cancelButton, SIGNAL(clicked()), SLOT(close()));
 
 	connect(ui_showAllCodecs, &QCheckBox::stateChanged,
-	        this, &SetupDialog::showAllCodecsClicked);
+	        this, &GUI::SetupDialog::showAllCodecsClicked);
 	connect(ui_showAllCodecs, &QCheckBox::stateChanged,
-	        this, &SetupDialog::fillCodecs);
+	        this, &GUI::SetupDialog::fillCodecs);
 	connect(ui_showAliases, &QCheckBox::stateChanged,
-	        this, &SetupDialog::fillCodecs);
+	        this, &GUI::SetupDialog::fillCodecs);
 	ui_dropControl->setChecked(prop->gcodeConverterOptions.dropControll);
 	ui_dropExtra->setChecked(prop->gcodeConverterOptions.dropExtented);
 	ui_dropEmptyLine->setChecked(prop->gcodeConverterOptions.dropEmptyLine);
@@ -278,11 +278,11 @@ SetupDialog::SetupDialog(QWidget* parent, const AppConfig* prop,
 	fillCodecs();
 }
 
-SetupDialog::~SetupDialog()
+GUI::SetupDialog::~SetupDialog()
 {
 }
 
-void SetupDialog::changeFont()
+void GUI::SetupDialog::changeFont()
 {
 	bool ok;
 	QFont font = QFontDialog::getFont(&ok, QFont(editProp.codeStyle.fontName, editProp.codeStyle.fontSize), this);
@@ -296,7 +296,7 @@ void SetupDialog::changeFont()
 	}
 }
 
-void SetupDialog::browseButtonClicked()
+void GUI::SetupDialog::browseButtonClicked()
 {
 #ifdef Q_OS_WIN32
 	QString filter = tr("Executables (*.exe)");
@@ -317,7 +317,7 @@ void SetupDialog::browseButtonClicked()
 	}
 }
 
-AppConfig SetupDialog::getSettings()
+AppConfig GUI::SetupDialog::getSettings()
 {
 	QPalette palette;
 	int r, g, b;
@@ -463,7 +463,7 @@ AppConfig SetupDialog::getSettings()
 	return (editProp);
 }
 
-void SetupDialog::changeColor(QAbstractButton* button)
+void GUI::SetupDialog::changeColor(QAbstractButton* button)
 {
 	QPalette palette;
 
@@ -556,7 +556,7 @@ void SetupDialog::changeColor(QAbstractButton* button)
 	curLineColorButton->setPalette(palette);
 }
 
-void SetupDialog::setDefaultProp()
+void GUI::SetupDialog::setDefaultProp()
 {
 	QPalette palette;
 
@@ -662,7 +662,7 @@ void SetupDialog::setDefaultProp()
 	edtSaveExtension->setText("*.nc");
 }
 
-void SetupDialog::on_btnAddExtension_clicked()
+void GUI::SetupDialog::on_btnAddExtension_clicked()
 {
 	QString ext = edtExtension->text();
 	ext.remove(" ");
@@ -676,12 +676,12 @@ void SetupDialog::on_btnAddExtension_clicked()
 	edtExtension->setText("*.");
 }
 
-void SetupDialog::on_btnDeleteExtension_clicked()
+void GUI::SetupDialog::on_btnDeleteExtension_clicked()
 {
 	qDeleteAll(lstExtensions->selectedItems());
 }
 
-void SetupDialog::on_btnBrowseDirectory_clicked()
+void GUI::SetupDialog::on_btnBrowseDirectory_clicked()
 {
 	QString dir = edtSaveDirectory->text();
 
@@ -699,12 +699,12 @@ void SetupDialog::on_btnBrowseDirectory_clicked()
 	}
 }
 
-void SetupDialog::showAllCodecsClicked()
+void GUI::SetupDialog::showAllCodecsClicked()
 {
 	ui_showAliases->setEnabled(ui_showAllCodecs->isChecked());
 }
 
-void SetupDialog::fillCodecs()
+void GUI::SetupDialog::fillCodecs()
 {
 	ui_encodingCombo->clear();
 	ui_encodingCombo->setEditable(!ui_showAllCodecs->isChecked());

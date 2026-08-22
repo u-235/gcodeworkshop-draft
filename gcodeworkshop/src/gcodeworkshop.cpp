@@ -108,6 +108,7 @@
 #include "gui/project/projectpanel.h"
 #include "gui/serialport/serialtoolbar.h"
 #include "gui/session/sessiondialog.h"      // for SessionDialog
+#include "gui/setup/setupdialog.h"          // for AppConfig, SetupDialog
 #include "gui/workshop/defaultkeysequences.h"
 #include "gui/workshop/editactions.h"       // for EditActions
 #include "gui/workshop/fileactions.h"       // for FileActions
@@ -118,7 +119,6 @@
 #include "highlightmode.h"                  // for MODE_AUTO, MODE_FANUC, MODE_HEIDENHAIN, MODE_HEIDENHAIN_ISO, MODE_LINU...
 #include "recentfiles.h"                    // for RecentFiles
 #include "sessionmanager.h"                 // for SessionManager
-#include "setupdialog.h"                    // for AppConfig, SetupDialog
 #include "tooltips.h"                       // for writeTooltipFile
 #include "ui_gcodeworkshop.h"               // for Ui::GCodeWorkShop
 
@@ -830,7 +830,7 @@ void GCodeWorkShop::config()
 	config.disableFileChangeMonitor = m_disableFileChangeMonitor;
 	config.startEmpty = m_startEmpty;
 	config.gcodeConverterOptions = GCode::Converter::defaultOptions();
-	SetupDialog* setUpDialog = new SetupDialog(mainWindow(), &config);
+	GUI::SetupDialog* setUpDialog = new GUI::SetupDialog(mainWindow(), &config);
 
 	if (setUpDialog->exec() == QDialog::Accepted) {
 		config = setUpDialog->getSettings();
