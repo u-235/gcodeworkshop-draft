@@ -20,8 +20,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef SESSIONDIALOG_H
-#define SESSIONDIALOG_H
+#ifndef GUI_SESSIONDIALOG_H
+#define GUI_SESSIONDIALOG_H
 
 #include <QDialog>      // for QDialog
 #include <QObject>      // for Q_OBJECT, slots
@@ -35,6 +35,7 @@ class SessionManager;
 #include "ui_sessiondialog.h"  // for Ui::SessionDialog
 
 
+namespace GUI {
 class SessionDialog: public QDialog, private Ui::SessionDialog
 {
 	Q_OBJECT
@@ -55,5 +56,6 @@ private slots:
 private:
 	SessionManager* m_sessions;
 };
+} // namespace GUI
 
-#endif // SESSIONDIALOG_H
+#endif // GUI_SESSIONDIALOG_H

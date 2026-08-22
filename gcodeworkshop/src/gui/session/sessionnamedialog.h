@@ -20,36 +20,32 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <QDialogButtonBox> // for QDialogButtonBox
-#include <QLineEdit>        // for QLineEdit
-#include <QString>          // for QString
-#include <Qt>               // for WindowFlags
+#ifndef GUI_SESSIONNAMEDIALOG_H
+#define GUI_SESSIONNAMEDIALOG_H
+
+#include <QDialog>  // for QDialog
+#include <QObject>  // for Q_OBJECT, slots
+#include <QString>  // for QString
+#include <Qt>       // for WindowFlags, Dialog
 
 class QWidget;
 
-#include "sessionnamedialog.h"
+#include "ui_sessionnamedialog.h"  // for Ui::SessionNameDialog
 
 
-SessionNameDialog::SessionNameDialog(QWidget* parent, Qt::WindowFlags f) : QDialog(parent, f)
+namespace GUI {
+class SessionNameDialog: public QDialog, private Ui::SessionNameDialog
 {
-	setupUi(this);
-	setWindowTitle(tr("New session..."));
-	setModal(true);
+	Q_OBJECT
 
-	connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-	connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
-}
+public:
+	SessionNameDialog(QWidget* parent = 0, Qt::WindowFlags f = Qt::Dialog);
+	~SessionNameDialog();
 
-SessionNameDialog::~SessionNameDialog()
-{
-}
+public slots:
+	QString getName();
+	void setName(QString name);
+};
+} // namespace GUI
 
-QString SessionNameDialog::getName()
-{
-	return lineEdit->text();
-}
-
-void SessionNameDialog::setName(QString name)
-{
-	lineEdit->setText(name);
-}
+#endif // GUI_SESSIONNAMEDIALOG_H
