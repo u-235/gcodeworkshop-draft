@@ -37,7 +37,9 @@ class QWidget;
 #include <gcoderwidgetproperties.h> // for GCoderWidgetProperties
 #include <utils/gcode-converter.h>
 
-#include "ui_setupdialog.h" // for Ui::SetupDialog
+namespace Ui {
+class SetupDialog;
+}
 
 
 struct AppConfig  {
@@ -58,7 +60,7 @@ namespace GUI {
 /**
  * @brief The SetupDialog class
  */
-class SetupDialog : public QDialog, private Ui::SetupDialog
+class SetupDialog : public QDialog
 {
 	Q_OBJECT
 
@@ -82,6 +84,7 @@ private slots:
 	void fillCodecs();
 
 private:
+	Ui::SetupDialog* ui;
 	AppConfig editProp;
 	QButtonGroup* colorButtons;
 };

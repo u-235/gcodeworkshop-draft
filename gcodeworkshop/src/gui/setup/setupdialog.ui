@@ -426,13 +426,13 @@
       </attribute>
       <layout class="QHBoxLayout" name="horizontalLayout_11">
        <item>
-        <widget class="QGroupBox" name="ui_openGroup">
+        <widget class="QGroupBox" name="openGroup">
          <property name="title">
           <string>When open file:</string>
          </property>
          <layout class="QGridLayout" name="gridLayout_3">
           <item row="2" column="0">
-           <widget class="QCheckBox" name="ui_dropControl">
+           <widget class="QCheckBox" name="dropControl">
             <property name="toolTip">
              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Older CNC systems could add control characters (&lt;code&gt;0x00&lt;/code&gt;-&lt;code&gt;0x1f&lt;/code&gt;) when uploading a file via the serial port, which looks like mojibake. The editor can delete such characters, leaving only carriage and newline characters.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
@@ -442,7 +442,7 @@
            </widget>
           </item>
           <item row="0" column="0">
-           <widget class="QCheckBox" name="ui_dropEmptyLine">
+           <widget class="QCheckBox" name="dropEmptyLine">
             <property name="toolTip">
              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;In some cases, the CNC inserts additional blank lines when the file is unloaded. The editor can recognise such lines and delete them.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
@@ -452,7 +452,7 @@
            </widget>
           </item>
           <item row="1" column="0">
-           <widget class="QCheckBox" name="ui_dropExtra">
+           <widget class="QCheckBox" name="dropExtra">
             <property name="toolTip">
              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Discard the upper 128 code points commonly used for national alphabets.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
@@ -478,7 +478,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QGroupBox" name="ui_encodingGroup">
+        <widget class="QGroupBox" name="encodingGroup">
          <property name="title">
           <string>Use encoding:</string>
          </property>
@@ -497,7 +497,7 @@
            </spacer>
           </item>
           <item row="2" column="0">
-           <widget class="QComboBox" name="ui_encodingCombo">
+           <widget class="QComboBox" name="encodingCombo">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
               <horstretch>0</horstretch>
@@ -510,14 +510,14 @@
            </widget>
           </item>
           <item row="0" column="0">
-           <widget class="QCheckBox" name="ui_showAllCodecs">
+           <widget class="QCheckBox" name="showAllCodecs">
             <property name="text">
              <string>Show all available codecs</string>
             </property>
            </widget>
           </item>
           <item row="1" column="0">
-           <widget class="QCheckBox" name="ui_showAliases">
+           <widget class="QCheckBox" name="showAliases">
             <property name="text">
              <string>Show aliases</string>
             </property>

@@ -58,34 +58,37 @@ class QWidget;
 #include "highlightmode.h"  // for HighlightMode
 #include "setupdialog.h"
 
+#include "ui_setupdialog.h" // for Ui::SetupDialog
 
-GUI::SetupDialog::SetupDialog(QWidget* parent, const AppConfig* prop,
-                              Qt::WindowFlags f) : QDialog(parent, f)
+
+GUI::SetupDialog::SetupDialog(QWidget* parent, const AppConfig* prop, Qt::WindowFlags f) :
+	QDialog(parent, f),
+	ui(new Ui::SetupDialog())
 {
 	QPalette palette;
 
-	setupUi(this);
+	ui->setupUi(this);
 	setWindowTitle(tr("GCodeWorkShop configuration"));
 
 	editProp = *prop;
 
-	readOnlyModeCheckBox->setChecked(editProp.defaultReadOnly);
+	ui->readOnlyModeCheckBox->setChecked(editProp.defaultReadOnly);
 
-	fontLabel->setText(QString(tr("Current font : <b>\"%1\", %2 pt.<\b>")
-	                           .arg(editProp.codeStyle.fontName).arg(editProp.codeStyle.fontSize)));
-	fontLabel->setFont(QFont(editProp.codeStyle.fontName, editProp.codeStyle.fontSize));
+	ui->fontLabel->setText(QString(tr("Current font : <b>\"%1\", %2 pt.<\b>")
+	                               .arg(editProp.codeStyle.fontName).arg(editProp.codeStyle.fontSize)));
+	ui->fontLabel->setFont(QFont(editProp.codeStyle.fontName, editProp.codeStyle.fontSize));
 
-	connect(changeFontButton, SIGNAL(clicked()), SLOT(changeFont()));
-	connect(browseButton, SIGNAL(clicked()), SLOT(browseButtonClicked()));
+	connect(ui->changeFontButton, SIGNAL(clicked()), SLOT(changeFont()));
+	connect(ui->browseButton, SIGNAL(clicked()), SLOT(ui->browseButtonClicked()));
 
 	colorButtons = new QButtonGroup(this);
 	connect(colorButtons, SIGNAL(buttonClicked(QAbstractButton*)),
 	        SLOT(changeColor(QAbstractButton*)));
 
-	palette.setColor(backgroundColorButton->foregroundRole(), editProp.codeStyle.hColors.backgroundColor);
-	backgroundColorButton->setPalette(palette);
-	backgroundColorButton->setAutoFillBackground(true);
-	colorButtons->addButton(backgroundColorButton);
+	palette.setColor(ui->backgroundColorButton->foregroundRole(), editProp.codeStyle.hColors.backgroundColor);
+	ui->backgroundColorButton->setPalette(palette);
+	ui->backgroundColorButton->setAutoFillBackground(true);
+	colorButtons->addButton(ui->backgroundColorButton);
 
 	QColor color = editProp.codeStyle.hColors.backgroundColor;
 
@@ -96,164 +99,164 @@ GUI::SetupDialog::SetupDialog(QWidget* parent, const AppConfig* prop,
 	palette.setColor(QPalette::Midlight, color);
 	palette.setColor(QPalette::Base, color);
 
-	palette.setColor(fontColorButton->foregroundRole(), editProp.codeStyle.hColors.defaultColor);
-	fontColorButton->setPalette(palette);
-	fontColorButton->setAutoFillBackground(true);
-	fontColorButton->setBackgroundRole(QPalette::Base);
-	colorButtons->addButton(fontColorButton);
+	palette.setColor(ui->fontColorButton->foregroundRole(), editProp.codeStyle.hColors.defaultColor);
+	ui->fontColorButton->setPalette(palette);
+	ui->fontColorButton->setAutoFillBackground(true);
+	ui->fontColorButton->setBackgroundRole(QPalette::Base);
+	colorButtons->addButton(ui->fontColorButton);
 
-	palette.setColor(commentColorButton->foregroundRole(), editProp.codeStyle.hColors.commentColor);
-	commentColorButton->setPalette(palette);
-	commentColorButton->setAutoFillBackground(true);
-	commentColorButton->setBackgroundRole(QPalette::Base);
-	colorButtons->addButton(commentColorButton);
+	palette.setColor(ui->commentColorButton->foregroundRole(), editProp.codeStyle.hColors.commentColor);
+	ui->commentColorButton->setPalette(palette);
+	ui->commentColorButton->setAutoFillBackground(true);
+	ui->commentColorButton->setBackgroundRole(QPalette::Base);
+	colorButtons->addButton(ui->commentColorButton);
 
-	palette.setColor(gColorButton->foregroundRole(), editProp.codeStyle.hColors.gColor);
-	gColorButton->setPalette(palette);
-	gColorButton->setAutoFillBackground(true);
-	gColorButton->setBackgroundRole(QPalette::Base);
-	colorButtons->addButton(gColorButton);
+	palette.setColor(ui->gColorButton->foregroundRole(), editProp.codeStyle.hColors.gColor);
+	ui->gColorButton->setPalette(palette);
+	ui->gColorButton->setAutoFillBackground(true);
+	ui->gColorButton->setBackgroundRole(QPalette::Base);
+	colorButtons->addButton(ui->gColorButton);
 
-	palette.setColor(mColorButton->foregroundRole(), editProp.codeStyle.hColors.mColor);
-	mColorButton->setPalette(palette);
-	mColorButton->setAutoFillBackground(true);
-	mColorButton->setBackgroundRole(QPalette::Base);
-	colorButtons->addButton(mColorButton);
+	palette.setColor(ui->mColorButton->foregroundRole(), editProp.codeStyle.hColors.mColor);
+	ui->mColorButton->setPalette(palette);
+	ui->mColorButton->setAutoFillBackground(true);
+	ui->mColorButton->setBackgroundRole(QPalette::Base);
+	colorButtons->addButton(ui->mColorButton);
 
-	palette.setColor(nColorButton->foregroundRole(), editProp.codeStyle.hColors.nColor);
-	nColorButton->setPalette(palette);
-	nColorButton->setAutoFillBackground(true);
-	nColorButton->setBackgroundRole(QPalette::Base);
-	colorButtons->addButton(nColorButton);
+	palette.setColor(ui->nColorButton->foregroundRole(), editProp.codeStyle.hColors.nColor);
+	ui->nColorButton->setPalette(palette);
+	ui->nColorButton->setAutoFillBackground(true);
+	ui->nColorButton->setBackgroundRole(QPalette::Base);
+	colorButtons->addButton(ui->nColorButton);
 
-	palette.setColor(lColorButton->foregroundRole(), editProp.codeStyle.hColors.lColor);
-	lColorButton->setPalette(palette);
-	lColorButton->setAutoFillBackground(true);
-	lColorButton->setBackgroundRole(QPalette::Base);
-	colorButtons->addButton(lColorButton);
+	palette.setColor(ui->lColorButton->foregroundRole(), editProp.codeStyle.hColors.lColor);
+	ui->lColorButton->setPalette(palette);
+	ui->lColorButton->setAutoFillBackground(true);
+	ui->lColorButton->setBackgroundRole(QPalette::Base);
+	colorButtons->addButton(ui->lColorButton);
 
-	palette.setColor(fsColorButton->foregroundRole(), editProp.codeStyle.hColors.fsColor);
-	fsColorButton->setPalette(palette);
-	fsColorButton->setAutoFillBackground(true);
-	fsColorButton->setBackgroundRole(QPalette::Base);
-	colorButtons->addButton(fsColorButton);
+	palette.setColor(ui->fsColorButton->foregroundRole(), editProp.codeStyle.hColors.fsColor);
+	ui->fsColorButton->setPalette(palette);
+	ui->fsColorButton->setAutoFillBackground(true);
+	ui->fsColorButton->setBackgroundRole(QPalette::Base);
+	colorButtons->addButton(ui->fsColorButton);
 
-	palette.setColor(dhtColorButton->foregroundRole(), editProp.codeStyle.hColors.dhtColor);
-	dhtColorButton->setPalette(palette);
-	dhtColorButton->setAutoFillBackground(true);
-	dhtColorButton->setBackgroundRole(QPalette::Base);
-	colorButtons->addButton(dhtColorButton);
+	palette.setColor(ui->dhtColorButton->foregroundRole(), editProp.codeStyle.hColors.dhtColor);
+	ui->dhtColorButton->setPalette(palette);
+	ui->dhtColorButton->setAutoFillBackground(true);
+	ui->dhtColorButton->setBackgroundRole(QPalette::Base);
+	colorButtons->addButton(ui->dhtColorButton);
 
-	palette.setColor(rColorButton->foregroundRole(), editProp.codeStyle.hColors.rColor);
-	rColorButton->setPalette(palette);
-	rColorButton->setAutoFillBackground(true);
-	rColorButton->setBackgroundRole(QPalette::Base);
-	colorButtons->addButton(rColorButton);
+	palette.setColor(ui->rColorButton->foregroundRole(), editProp.codeStyle.hColors.rColor);
+	ui->rColorButton->setPalette(palette);
+	ui->rColorButton->setAutoFillBackground(true);
+	ui->rColorButton->setBackgroundRole(QPalette::Base);
+	colorButtons->addButton(ui->rColorButton);
 
-	palette.setColor(macroColorButton->foregroundRole(), editProp.codeStyle.hColors.macroColor);
-	macroColorButton->setPalette(palette);
-	macroColorButton->setAutoFillBackground(true);
-	macroColorButton->setBackgroundRole(QPalette::Base);
-	colorButtons->addButton(macroColorButton);
+	palette.setColor(ui->macroColorButton->foregroundRole(), editProp.codeStyle.hColors.macroColor);
+	ui->macroColorButton->setPalette(palette);
+	ui->macroColorButton->setAutoFillBackground(true);
+	ui->macroColorButton->setBackgroundRole(QPalette::Base);
+	colorButtons->addButton(ui->macroColorButton);
 
-	palette.setColor(keyWordColorButton->foregroundRole(), editProp.codeStyle.hColors.keyWordColor);
-	keyWordColorButton->setPalette(palette);
-	keyWordColorButton->setAutoFillBackground(true);
-	keyWordColorButton->setBackgroundRole(QPalette::Base);
-	colorButtons->addButton(keyWordColorButton);
+	palette.setColor(ui->keyWordColorButton->foregroundRole(), editProp.codeStyle.hColors.keyWordColor);
+	ui->keyWordColorButton->setPalette(palette);
+	ui->keyWordColorButton->setAutoFillBackground(true);
+	ui->keyWordColorButton->setBackgroundRole(QPalette::Base);
+	colorButtons->addButton(ui->keyWordColorButton);
 
-	palette.setColor(progNameColorButton->foregroundRole(), editProp.codeStyle.hColors.progNameColor);
-	progNameColorButton->setPalette(palette);
-	progNameColorButton->setAutoFillBackground(true);
-	progNameColorButton->setBackgroundRole(QPalette::Base);
-	colorButtons->addButton(progNameColorButton);
+	palette.setColor(ui->progNameColorButton->foregroundRole(), editProp.codeStyle.hColors.progNameColor);
+	ui->progNameColorButton->setPalette(palette);
+	ui->progNameColorButton->setAutoFillBackground(true);
+	ui->progNameColorButton->setBackgroundRole(QPalette::Base);
+	colorButtons->addButton(ui->progNameColorButton);
 
-	palette.setColor(operatorColorButton->foregroundRole(), editProp.codeStyle.hColors.operatorColor);
-	operatorColorButton->setPalette(palette);
-	operatorColorButton->setAutoFillBackground(true);
-	operatorColorButton->setBackgroundRole(QPalette::Base);
-	colorButtons->addButton(operatorColorButton);
+	palette.setColor(ui->operatorColorButton->foregroundRole(), editProp.codeStyle.hColors.operatorColor);
+	ui->operatorColorButton->setPalette(palette);
+	ui->operatorColorButton->setAutoFillBackground(true);
+	ui->operatorColorButton->setBackgroundRole(QPalette::Base);
+	colorButtons->addButton(ui->operatorColorButton);
 
-	palette.setColor(zColorButton->foregroundRole(), editProp.codeStyle.hColors.zColor);
-	zColorButton->setPalette(palette);
-	zColorButton->setAutoFillBackground(true);
-	zColorButton->setBackgroundRole(QPalette::Base);
-	colorButtons->addButton(zColorButton);
+	palette.setColor(ui->zColorButton->foregroundRole(), editProp.codeStyle.hColors.zColor);
+	ui->zColorButton->setPalette(palette);
+	ui->zColorButton->setAutoFillBackground(true);
+	ui->zColorButton->setBackgroundRole(QPalette::Base);
+	colorButtons->addButton(ui->zColorButton);
 
-	palette.setColor(aColorButton->foregroundRole(), editProp.codeStyle.hColors.aColor);
-	aColorButton->setPalette(palette);
-	aColorButton->setAutoFillBackground(true);
-	aColorButton->setBackgroundRole(QPalette::Base);
-	colorButtons->addButton(aColorButton);
+	palette.setColor(ui->aColorButton->foregroundRole(), editProp.codeStyle.hColors.aColor);
+	ui->aColorButton->setPalette(palette);
+	ui->aColorButton->setAutoFillBackground(true);
+	ui->aColorButton->setBackgroundRole(QPalette::Base);
+	colorButtons->addButton(ui->aColorButton);
 
-	palette.setColor(bColorButton->foregroundRole(), editProp.codeStyle.hColors.bColor);
-	bColorButton->setPalette(palette);
-	bColorButton->setAutoFillBackground(true);
-	bColorButton->setBackgroundRole(QPalette::Base);
-	colorButtons->addButton(bColorButton);
+	palette.setColor(ui->bColorButton->foregroundRole(), editProp.codeStyle.hColors.bColor);
+	ui->bColorButton->setPalette(palette);
+	ui->bColorButton->setAutoFillBackground(true);
+	ui->bColorButton->setBackgroundRole(QPalette::Base);
+	colorButtons->addButton(ui->bColorButton);
 
-	palette.setColor(underlineColorButton->foregroundRole(), editProp.codeStyle.underlineColor);
-	underlineColorButton->setPalette(palette);
-	underlineColorButton->setAutoFillBackground(true);
-	underlineColorButton->setBackgroundRole(QPalette::Base);
-	colorButtons->addButton(underlineColorButton);
+	palette.setColor(ui->underlineColorButton->foregroundRole(), editProp.codeStyle.underlineColor);
+	ui->underlineColorButton->setPalette(palette);
+	ui->underlineColorButton->setAutoFillBackground(true);
+	ui->underlineColorButton->setBackgroundRole(QPalette::Base);
+	colorButtons->addButton(ui->underlineColorButton);
 
-	palette.setColor(curLineColorButton->foregroundRole(), editProp.codeStyle.lineColor);
-	curLineColorButton->setPalette(palette);
-	curLineColorButton->setAutoFillBackground(true);
-	curLineColorButton->setBackgroundRole(QPalette::Base);
-	colorButtons->addButton(curLineColorButton);
+	palette.setColor(ui->curLineColorButton->foregroundRole(), editProp.codeStyle.lineColor);
+	ui->curLineColorButton->setPalette(palette);
+	ui->curLineColorButton->setAutoFillBackground(true);
+	ui->curLineColorButton->setBackgroundRole(QPalette::Base);
+	colorButtons->addButton(ui->curLineColorButton);
 
-	capsLockCheckBox->setChecked(editProp.editorProperties.intCapsLock);
-	syntaxHCheckBox->setChecked(editProp.editorProperties.syntaxH);
-	underlineCheckBox->setChecked(editProp.editorProperties.underlineChanges);
+	ui->capsLockCheckBox->setChecked(editProp.editorProperties.intCapsLock);
+	ui->syntaxHCheckBox->setChecked(editProp.editorProperties.syntaxH);
+	ui->underlineCheckBox->setChecked(editProp.editorProperties.underlineChanges);
 
-	tabbedModecheckBox->setChecked(editProp.mdiTabbedMode);
-	fileNameCheckBox->setChecked(editProp.editorProperties.windowMode & SHOW_FILENAME);
-	filePathCheckBox->setChecked(editProp.editorProperties.windowMode & SHOW_FILEPATH);
-	titleCheckBox->setChecked(editProp.editorProperties.windowMode & SHOW_PROGTITLE);
+	ui->tabbedModecheckBox->setChecked(editProp.mdiTabbedMode);
+	ui->fileNameCheckBox->setChecked(editProp.editorProperties.windowMode & SHOW_FILENAME);
+	ui->filePathCheckBox->setChecked(editProp.editorProperties.windowMode & SHOW_FILEPATH);
+	ui->titleCheckBox->setChecked(editProp.editorProperties.windowMode & SHOW_PROGTITLE);
 
-	calcLineEdit->setText(editProp.calcBinary);
-	clearUndocheckBox->setChecked(editProp.editorProperties.clearUndoHistory);
-	clearUnderlinecheckBox->setChecked(editProp.editorProperties.clearUnderlineHistory);
-	editorToolTipsCheckBox->setChecked(editProp.editorProperties.editorToolTips);
-	startEmptyCheckBox->setChecked(editProp.startEmpty);
-	disableFileChangeMonitorCheckBox->setChecked(editProp.disableFileChangeMonitor);
-	changeDateOnSave->setChecked(editProp.editorProperties.changeDateInComment);
+	ui->calcLineEdit->setText(editProp.calcBinary);
+	ui->clearUndocheckBox->setChecked(editProp.editorProperties.clearUndoHistory);
+	ui->clearUnderlinecheckBox->setChecked(editProp.editorProperties.clearUnderlineHistory);
+	ui->editorToolTipsCheckBox->setChecked(editProp.editorProperties.editorToolTips);
+	ui->startEmptyCheckBox->setChecked(editProp.startEmpty);
+	ui->disableFileChangeMonitorCheckBox->setChecked(editProp.disableFileChangeMonitor);
+	ui->changeDateOnSave->setChecked(editProp.editorProperties.changeDateInComment);
 
 	QStringListIterator extIterator(editProp.extensions);
 
 	while (extIterator.hasNext()) {
-		lstExtensions->addItem(extIterator.next().toLocal8Bit().constData());
+		ui->lstExtensions->addItem(extIterator.next().toLocal8Bit().constData());
 	}
 
-	edtSaveExtension->setText(editProp.saveExtension);
-	edtSaveDirectory->setText(editProp.saveDirectory);
+	ui->edtSaveExtension->setText(editProp.saveExtension);
+	ui->edtSaveDirectory->setText(editProp.saveDirectory);
 
 	if (editProp.editorProperties.guessFileNameByProgNum) {
-		progNumCheckBox->setChecked(true);
+		ui->progNumCheckBox->setChecked(true);
 	} else {
-		firstCommCheckBox->setChecked(true);
+		ui->firstCommCheckBox->setChecked(true);
 	}
 
-	highlightModeComboBox->addItem(tr("AUTO"), MODE_AUTO);
-	highlightModeComboBox->addItem(tr("FANUC"), MODE_FANUC);
-	highlightModeComboBox->addItem(tr("HEIDENHAIN DIALOG"), MODE_HEIDENHAIN);
-	highlightModeComboBox->addItem(tr("HEIDENHAIN ISO"), MODE_HEIDENHAIN_ISO);
-	highlightModeComboBox->addItem(tr("OKUMA OSP"), MODE_OKUMA);
-	highlightModeComboBox->addItem(tr("PHILIPS"), MODE_PHILIPS);
-	highlightModeComboBox->addItem(tr("SINUMERIK OLD"), MODE_SINUMERIK);
-	highlightModeComboBox->addItem(tr("SINUMERIK NEW"), MODE_SINUMERIK_840);
-	highlightModeComboBox->addItem(tr("LinuxCNC"), MODE_LINUXCNC);
-	highlightModeComboBox->addItem(tr("TOOLTIPS"), MODE_TOOLTIPS);
+	ui->highlightModeComboBox->addItem(tr("AUTO"), MODE_AUTO);
+	ui->highlightModeComboBox->addItem(tr("FANUC"), MODE_FANUC);
+	ui->highlightModeComboBox->addItem(tr("HEIDENHAIN DIALOG"), MODE_HEIDENHAIN);
+	ui->highlightModeComboBox->addItem(tr("HEIDENHAIN ISO"), MODE_HEIDENHAIN_ISO);
+	ui->highlightModeComboBox->addItem(tr("OKUMA OSP"), MODE_OKUMA);
+	ui->highlightModeComboBox->addItem(tr("PHILIPS"), MODE_PHILIPS);
+	ui->highlightModeComboBox->addItem(tr("SINUMERIK OLD"), MODE_SINUMERIK);
+	ui->highlightModeComboBox->addItem(tr("SINUMERIK NEW"), MODE_SINUMERIK_840);
+	ui->highlightModeComboBox->addItem(tr("LinuxCNC"), MODE_LINUXCNC);
+	ui->highlightModeComboBox->addItem(tr("TOOLTIPS"), MODE_TOOLTIPS);
 
-	int id = highlightModeComboBox->findData(editProp.editorProperties.defaultHighlightMode);
-	highlightModeComboBox->setCurrentIndex(id);
+	int id = ui->highlightModeComboBox->findData(editProp.editorProperties.defaultHighlightMode);
+	ui->highlightModeComboBox->setCurrentIndex(id);
 
 	QRegularExpression regex("(\\*\\.)[A-Z0-9]{1,3}");
 	regex.setPatternOptions(QRegularExpression::CaseInsensitiveOption);
 	QValidator* edtExtensionValid = new QRegularExpressionValidator(regex, this);
-	edtExtension->setValidator(edtExtensionValid);
+	ui->edtExtension->setValidator(edtExtensionValid);
 
 	//   QRegularExpression ext("(\\(|;){1,1}[ \\t]{0,5}(d|dd|M|MM|YYYY)[-./]{1,1}(M|MM|d|dd)[-./]{1,1}(d|dd|M|MM|YYYY)[ \\t]{1,5}(\\)){0,1}");
 	//   // (\\(;){1,1}[ \\t]{0,5}(d|dd|M|MM|YYYY)[.-/]{1,1}(M|MM|d|dd)[.-/]{1,1}(d|dd|M|MM|YYYY)[ \\t]{1,5}(\\)){0,1}
@@ -261,19 +264,19 @@ GUI::SetupDialog::SetupDialog(QWidget* parent, const AppConfig* prop,
 	//   QValidator *dateFormatValidator = new QRegExpValidator(ext, this);
 	//   dateFormatComboBox->setValidator(dateFormatValidator);
 
-	connect(defaultButton, SIGNAL(clicked()), SLOT(setDefaultProp()));
-	connect(okButton, SIGNAL(clicked()), SLOT(accept()));
-	connect(cancelButton, SIGNAL(clicked()), SLOT(close()));
+	connect(ui->defaultButton, SIGNAL(clicked()), SLOT(setDefaultProp()));
+	connect(ui->okButton, SIGNAL(clicked()), SLOT(accept()));
+	connect(ui->cancelButton, SIGNAL(clicked()), SLOT(close()));
 
-	connect(ui_showAllCodecs, &QCheckBox::stateChanged,
+	connect(ui->showAllCodecs, &QCheckBox::stateChanged,
 	        this, &GUI::SetupDialog::showAllCodecsClicked);
-	connect(ui_showAllCodecs, &QCheckBox::stateChanged,
+	connect(ui->showAllCodecs, &QCheckBox::stateChanged,
 	        this, &GUI::SetupDialog::fillCodecs);
-	connect(ui_showAliases, &QCheckBox::stateChanged,
+	connect(ui->showAliases, &QCheckBox::stateChanged,
 	        this, &GUI::SetupDialog::fillCodecs);
-	ui_dropControl->setChecked(prop->gcodeConverterOptions.dropControll);
-	ui_dropExtra->setChecked(prop->gcodeConverterOptions.dropExtented);
-	ui_dropEmptyLine->setChecked(prop->gcodeConverterOptions.dropEmptyLine);
+	ui->dropControl->setChecked(prop->gcodeConverterOptions.dropControll);
+	ui->dropExtra->setChecked(prop->gcodeConverterOptions.dropExtented);
+	ui->dropEmptyLine->setChecked(prop->gcodeConverterOptions.dropEmptyLine);
 	showAllCodecsClicked();
 	fillCodecs();
 }
@@ -290,9 +293,9 @@ void GUI::SetupDialog::changeFont()
 	if (ok) {
 		editProp.codeStyle.fontName = font.family();
 		editProp.codeStyle.fontSize = font.pointSize();
-		fontLabel->setText(QString(tr("Current font : <b>\"%1\", %2 pt.<\b>")
-		                           .arg(editProp.codeStyle.fontName).arg(editProp.codeStyle.fontSize)));
-		fontLabel->setFont(QFont(editProp.codeStyle.fontName, editProp.codeStyle.fontSize));
+		ui->fontLabel->setText(QString(tr("Current font : <b>\"%1\", %2 pt.<\b>")
+		                               .arg(editProp.codeStyle.fontName).arg(editProp.codeStyle.fontSize)));
+		ui->fontLabel->setFont(QFont(editProp.codeStyle.fontName, editProp.codeStyle.fontSize));
 	}
 }
 
@@ -307,13 +310,13 @@ void GUI::SetupDialog::browseButtonClicked()
 	QString fileName = QFileDialog::getOpenFileName(
 	                       this,
 	                       tr("Select calculator executable"),
-	                       calcLineEdit->text(),
+	                       ui->calcLineEdit->text(),
 	                       filter);
 
 	QFileInfo file(fileName);
 
 	if ((file.exists()) && (file.isReadable())) {
-		calcLineEdit->setText(QDir::toNativeSeparators(file.canonicalFilePath()));
+		ui->calcLineEdit->setText(QDir::toNativeSeparators(file.canonicalFilePath()));
 	}
 }
 
@@ -325,138 +328,138 @@ AppConfig GUI::SetupDialog::getSettings()
 
 	r = 0;
 
-	if (fileNameCheckBox->isChecked()) {
+	if (ui->fileNameCheckBox->isChecked()) {
 		r |= SHOW_FILENAME;
 	}
 
-	if (filePathCheckBox->isChecked()) {
+	if (ui->filePathCheckBox->isChecked()) {
 		r |= SHOW_FILEPATH;
 	}
 
-	if (titleCheckBox->isChecked()) {
+	if (ui->titleCheckBox->isChecked()) {
 		r |= SHOW_PROGTITLE;
 	}
 
-	editProp.mdiTabbedMode = tabbedModecheckBox->isChecked();
+	editProp.mdiTabbedMode = ui->tabbedModecheckBox->isChecked();
 	editProp.editorProperties.windowMode = r;
-	editProp.editorProperties.intCapsLock = capsLockCheckBox->isChecked();
-	editProp.editorProperties.syntaxH = syntaxHCheckBox->isChecked();
-	editProp.editorProperties.underlineChanges = underlineCheckBox->isChecked();
-	editProp.calcBinary = calcLineEdit->text();
-	editProp.editorProperties.clearUndoHistory = clearUndocheckBox->isChecked();
-	editProp.editorProperties.clearUnderlineHistory = clearUnderlinecheckBox->isChecked();
-	editProp.editorProperties.editorToolTips = editorToolTipsCheckBox->isChecked();
-	editProp.defaultReadOnly = readOnlyModeCheckBox->isChecked();
-	editProp.startEmpty = startEmptyCheckBox->isChecked();
-	editProp.disableFileChangeMonitor = disableFileChangeMonitorCheckBox->isChecked();
-	editProp.editorProperties.changeDateInComment = changeDateOnSave->isChecked();
+	editProp.editorProperties.intCapsLock = ui->capsLockCheckBox->isChecked();
+	editProp.editorProperties.syntaxH = ui->syntaxHCheckBox->isChecked();
+	editProp.editorProperties.underlineChanges = ui->underlineCheckBox->isChecked();
+	editProp.calcBinary = ui->calcLineEdit->text();
+	editProp.editorProperties.clearUndoHistory = ui->clearUndocheckBox->isChecked();
+	editProp.editorProperties.clearUnderlineHistory = ui->clearUnderlinecheckBox->isChecked();
+	editProp.editorProperties.editorToolTips = ui->editorToolTipsCheckBox->isChecked();
+	editProp.defaultReadOnly = ui->readOnlyModeCheckBox->isChecked();
+	editProp.startEmpty = ui->startEmptyCheckBox->isChecked();
+	editProp.disableFileChangeMonitor = ui->disableFileChangeMonitorCheckBox->isChecked();
+	editProp.editorProperties.changeDateInComment = ui->changeDateOnSave->isChecked();
 
-	int id = highlightModeComboBox->currentIndex();
+	int id = ui->highlightModeComboBox->currentIndex();
 
 	if (id >= 0) {
-		editProp.editorProperties.defaultHighlightMode = highlightModeComboBox->itemData(id).toInt(&ok);
+		editProp.editorProperties.defaultHighlightMode = ui->highlightModeComboBox->itemData(id).toInt(&ok);
 	}
 
-	palette = backgroundColorButton->palette();
-	palette.color(backgroundColorButton->foregroundRole()).getRgb(&r, &g, &b);
+	palette = ui->backgroundColorButton->palette();
+	palette.color(ui->backgroundColorButton->foregroundRole()).getRgb(&r, &g, &b);
 	editProp.codeStyle.hColors.backgroundColor = (r << 16) + (g << 8) + b;
 
-	palette = fontColorButton->palette();
-	palette.color(fontColorButton->foregroundRole()).getRgb(&r, &g, &b);
+	palette = ui->fontColorButton->palette();
+	palette.color(ui->fontColorButton->foregroundRole()).getRgb(&r, &g, &b);
 	editProp.codeStyle.hColors.defaultColor = (r << 16) + (g << 8) + b;
 
-	palette = commentColorButton->palette();
-	palette.color(commentColorButton->foregroundRole()).getRgb(&r, &g, &b);
+	palette = ui->commentColorButton->palette();
+	palette.color(ui->commentColorButton->foregroundRole()).getRgb(&r, &g, &b);
 	editProp.codeStyle.hColors.commentColor = (r << 16) + (g << 8) + b;
 
-	palette = gColorButton->palette();
-	palette.color(gColorButton->foregroundRole()).getRgb(&r, &g, &b);
+	palette = ui->gColorButton->palette();
+	palette.color(ui->gColorButton->foregroundRole()).getRgb(&r, &g, &b);
 	editProp.codeStyle.hColors.gColor = (r << 16) + (g << 8) + b;
 
-	palette = mColorButton->palette();
-	palette.color(mColorButton->foregroundRole()).getRgb(&r, &g, &b);
+	palette = ui->mColorButton->palette();
+	palette.color(ui->mColorButton->foregroundRole()).getRgb(&r, &g, &b);
 	editProp.codeStyle.hColors.mColor = (r << 16) + (g << 8) + b;
 
-	palette = nColorButton->palette();
-	palette.color(nColorButton->foregroundRole()).getRgb(&r, &g, &b);
+	palette = ui->nColorButton->palette();
+	palette.color(ui->nColorButton->foregroundRole()).getRgb(&r, &g, &b);
 	editProp.codeStyle.hColors.nColor = (r << 16) + (g << 8) + b;
 
-	palette = lColorButton->palette();
-	palette.color(lColorButton->foregroundRole()).getRgb(&r, &g, &b);
+	palette = ui->lColorButton->palette();
+	palette.color(ui->lColorButton->foregroundRole()).getRgb(&r, &g, &b);
 	editProp.codeStyle.hColors.lColor = (r << 16) + (g << 8) + b;
 
-	palette = fsColorButton->palette();
-	palette.color(fsColorButton->foregroundRole()).getRgb(&r, &g, &b);
+	palette = ui->fsColorButton->palette();
+	palette.color(ui->fsColorButton->foregroundRole()).getRgb(&r, &g, &b);
 	editProp.codeStyle.hColors.fsColor = (r << 16) + (g << 8) + b;
 
-	palette = dhtColorButton->palette();
-	palette.color(dhtColorButton->foregroundRole()).getRgb(&r, &g, &b);
+	palette = ui->dhtColorButton->palette();
+	palette.color(ui->dhtColorButton->foregroundRole()).getRgb(&r, &g, &b);
 	editProp.codeStyle.hColors.dhtColor = (r << 16) + (g << 8) + b;
 
-	palette = rColorButton->palette();
-	palette.color(rColorButton->foregroundRole()).getRgb(&r, &g, &b);
+	palette = ui->rColorButton->palette();
+	palette.color(ui->rColorButton->foregroundRole()).getRgb(&r, &g, &b);
 	editProp.codeStyle.hColors.rColor = (r << 16) + (g << 8) + b;
 
-	palette = macroColorButton->palette();
-	palette.color(macroColorButton->foregroundRole()).getRgb(&r, &g, &b);
+	palette = ui->macroColorButton->palette();
+	palette.color(ui->macroColorButton->foregroundRole()).getRgb(&r, &g, &b);
 	editProp.codeStyle.hColors.macroColor = (r << 16) + (g << 8) + b;
 
-	palette = keyWordColorButton->palette();
-	palette.color(keyWordColorButton->foregroundRole()).getRgb(&r, &g, &b);
+	palette = ui->keyWordColorButton->palette();
+	palette.color(ui->keyWordColorButton->foregroundRole()).getRgb(&r, &g, &b);
 	editProp.codeStyle.hColors.keyWordColor = (r << 16) + (g << 8) + b;
 
-	palette = progNameColorButton->palette();
-	palette.color(progNameColorButton->foregroundRole()).getRgb(&r, &g, &b);
+	palette = ui->progNameColorButton->palette();
+	palette.color(ui->progNameColorButton->foregroundRole()).getRgb(&r, &g, &b);
 	editProp.codeStyle.hColors.progNameColor = (r << 16) + (g << 8) + b;
 
-	palette = operatorColorButton->palette();
-	palette.color(operatorColorButton->foregroundRole()).getRgb(&r, &g, &b);
+	palette = ui->operatorColorButton->palette();
+	palette.color(ui->operatorColorButton->foregroundRole()).getRgb(&r, &g, &b);
 	editProp.codeStyle.hColors.operatorColor = (r << 16) + (g << 8) + b;
 
-	palette = zColorButton->palette();
-	palette.color(zColorButton->foregroundRole()).getRgb(&r, &g, &b);
+	palette = ui->zColorButton->palette();
+	palette.color(ui->zColorButton->foregroundRole()).getRgb(&r, &g, &b);
 	editProp.codeStyle.hColors.zColor = (r << 16) + (g << 8) + b;
 
-	palette = aColorButton->palette();
-	palette.color(aColorButton->foregroundRole()).getRgb(&r, &g, &b);
+	palette = ui->aColorButton->palette();
+	palette.color(ui->aColorButton->foregroundRole()).getRgb(&r, &g, &b);
 	editProp.codeStyle.hColors.aColor = (r << 16) + (g << 8) + b;
 
-	palette = bColorButton->palette();
-	palette.color(bColorButton->foregroundRole()).getRgb(&r, &g, &b);
+	palette = ui->bColorButton->palette();
+	palette.color(ui->bColorButton->foregroundRole()).getRgb(&r, &g, &b);
 	editProp.codeStyle.hColors.bColor = (r << 16) + (g << 8) + b;
 
-	palette = underlineColorButton->palette();
-	palette.color(underlineColorButton->foregroundRole()).getRgb(&r, &g, &b);
+	palette = ui->underlineColorButton->palette();
+	palette.color(ui->underlineColorButton->foregroundRole()).getRgb(&r, &g, &b);
 	editProp.codeStyle.underlineColor = (r << 16) + (g << 8) + b;
 
-	palette = curLineColorButton->palette();
-	palette.color(curLineColorButton->foregroundRole()).getRgb(&r, &g, &b);
+	palette = ui->curLineColorButton->palette();
+	palette.color(ui->curLineColorButton->foregroundRole()).getRgb(&r, &g, &b);
 	editProp.codeStyle.lineColor = (r << 16) + (g << 8) + b;
 
 	editProp.extensions.clear();
 
-	for (int row = 0; row < lstExtensions->count(); row++) {
-		QListWidgetItem* item = lstExtensions->item(row);
+	for (int row = 0; row < ui->lstExtensions->count(); row++) {
+		QListWidgetItem* item = ui->lstExtensions->item(row);
 		editProp.extensions.append(item->text());
 	}
 
-	editProp.saveExtension = edtSaveExtension->text();
-	editProp.saveDirectory = edtSaveDirectory->text();
+	editProp.saveExtension = ui->edtSaveExtension->text();
+	editProp.saveDirectory = ui->edtSaveDirectory->text();
 
-	editProp.editorProperties.guessFileNameByProgNum = progNumCheckBox->isChecked();
+	editProp.editorProperties.guessFileNameByProgNum = ui->progNumCheckBox->isChecked();
 
-	editProp.gcodeConverterOptions.dropControll = ui_dropControl->isChecked();
-	editProp.gcodeConverterOptions.dropExtented = ui_dropExtra->isChecked();
-	editProp.gcodeConverterOptions.dropEmptyLine = ui_dropEmptyLine->isChecked();
+	editProp.gcodeConverterOptions.dropControll = ui->dropControl->isChecked();
+	editProp.gcodeConverterOptions.dropExtented = ui->dropExtra->isChecked();
+	editProp.gcodeConverterOptions.dropEmptyLine = ui->dropEmptyLine->isChecked();
 	editProp.gcodeConverterOptions.codecName.clear();
 
-	if (ui_encodingCombo->currentIndex() != 0) {
-		QTextCodec* codec = QTextCodec::codecForName(ui_encodingCombo->currentText().toLatin1());
+	if (ui->encodingCombo->currentIndex() != 0) {
+		QTextCodec* codec = QTextCodec::codecForName(ui->encodingCombo->currentText().toLatin1());
 
 		if (codec != nullptr) {
 			editProp.gcodeConverterOptions.codecName = codec->name();
 		} else {
-			editProp.gcodeConverterOptions.codecName = ui_encodingCombo->currentText().toLatin1();
+			editProp.gcodeConverterOptions.codecName = ui->encodingCombo->currentText().toLatin1();
 		}
 	}
 
@@ -476,167 +479,167 @@ void GUI::SetupDialog::changeColor(QAbstractButton* button)
 		button->setPalette(palette);
 	}
 
-	palette = backgroundColorButton->palette();
-	color = palette.color(backgroundColorButton->foregroundRole());
+	palette = ui->backgroundColorButton->palette();
+	color = palette.color(ui->backgroundColorButton->foregroundRole());
 
-	palette = fontColorButton->palette();
-	palette.setColor(fontColorButton->backgroundRole(), color);
-	fontColorButton->setPalette(palette);
+	palette = ui->fontColorButton->palette();
+	palette.setColor(ui->fontColorButton->backgroundRole(), color);
+	ui->fontColorButton->setPalette(palette);
 
-	palette = commentColorButton->palette();
-	palette.setColor(commentColorButton->backgroundRole(), color);
-	commentColorButton->setPalette(palette);
+	palette = ui->commentColorButton->palette();
+	palette.setColor(ui->commentColorButton->backgroundRole(), color);
+	ui->commentColorButton->setPalette(palette);
 
-	palette = commentColorButton->palette();
-	palette.setColor(commentColorButton->backgroundRole(), color);
-	commentColorButton->setPalette(palette);
+	palette = ui->commentColorButton->palette();
+	palette.setColor(ui->commentColorButton->backgroundRole(), color);
+	ui->commentColorButton->setPalette(palette);
 
-	palette = gColorButton->palette();
-	palette.setColor(gColorButton->backgroundRole(), color);
-	gColorButton->setPalette(palette);
+	palette = ui->gColorButton->palette();
+	palette.setColor(ui->gColorButton->backgroundRole(), color);
+	ui->gColorButton->setPalette(palette);
 
-	palette = mColorButton->palette();
-	palette.setColor(mColorButton->backgroundRole(), color);
-	mColorButton->setPalette(palette);
+	palette = ui->mColorButton->palette();
+	palette.setColor(ui->mColorButton->backgroundRole(), color);
+	ui->mColorButton->setPalette(palette);
 
-	palette = nColorButton->palette();
-	palette.setColor(nColorButton->backgroundRole(), color);
-	nColorButton->setPalette(palette);
+	palette = ui->nColorButton->palette();
+	palette.setColor(ui->nColorButton->backgroundRole(), color);
+	ui->nColorButton->setPalette(palette);
 
-	palette = lColorButton->palette();
-	palette.setColor(lColorButton->backgroundRole(), color);
-	lColorButton->setPalette(palette);
+	palette = ui->lColorButton->palette();
+	palette.setColor(ui->lColorButton->backgroundRole(), color);
+	ui->lColorButton->setPalette(palette);
 
-	palette = fsColorButton->palette();
-	palette.setColor(fsColorButton->backgroundRole(), color);
-	fsColorButton->setPalette(palette);
+	palette = ui->fsColorButton->palette();
+	palette.setColor(ui->fsColorButton->backgroundRole(), color);
+	ui->fsColorButton->setPalette(palette);
 
-	palette = dhtColorButton->palette();
-	palette.setColor(dhtColorButton->backgroundRole(), color);
-	dhtColorButton->setPalette(palette);
+	palette = ui->dhtColorButton->palette();
+	palette.setColor(ui->dhtColorButton->backgroundRole(), color);
+	ui->dhtColorButton->setPalette(palette);
 
-	palette = rColorButton->palette();
-	palette.setColor(rColorButton->backgroundRole(), color);
-	rColorButton->setPalette(palette);
+	palette = ui->rColorButton->palette();
+	palette.setColor(ui->rColorButton->backgroundRole(), color);
+	ui->rColorButton->setPalette(palette);
 
-	palette = macroColorButton->palette();
-	palette.setColor(macroColorButton->backgroundRole(), color);
-	macroColorButton->setPalette(palette);
+	palette = ui->macroColorButton->palette();
+	palette.setColor(ui->macroColorButton->backgroundRole(), color);
+	ui->macroColorButton->setPalette(palette);
 
-	palette = keyWordColorButton->palette();
-	palette.setColor(keyWordColorButton->backgroundRole(), color);
-	keyWordColorButton->setPalette(palette);
+	palette = ui->keyWordColorButton->palette();
+	palette.setColor(ui->keyWordColorButton->backgroundRole(), color);
+	ui->keyWordColorButton->setPalette(palette);
 
-	palette = progNameColorButton->palette();
-	palette.setColor(progNameColorButton->backgroundRole(), color);
-	progNameColorButton->setPalette(palette);
+	palette = ui->progNameColorButton->palette();
+	palette.setColor(ui->progNameColorButton->backgroundRole(), color);
+	ui->progNameColorButton->setPalette(palette);
 
-	palette = operatorColorButton->palette();
-	palette.setColor(operatorColorButton->backgroundRole(), color);
-	operatorColorButton->setPalette(palette);
+	palette = ui->operatorColorButton->palette();
+	palette.setColor(ui->operatorColorButton->backgroundRole(), color);
+	ui->operatorColorButton->setPalette(palette);
 
-	palette = zColorButton->palette();
-	palette.setColor(zColorButton->backgroundRole(), color);
-	zColorButton->setPalette(palette);
+	palette = ui->zColorButton->palette();
+	palette.setColor(ui->zColorButton->backgroundRole(), color);
+	ui->zColorButton->setPalette(palette);
 
-	palette = aColorButton->palette();
-	palette.setColor(aColorButton->backgroundRole(), color);
-	aColorButton->setPalette(palette);
+	palette = ui->aColorButton->palette();
+	palette.setColor(ui->aColorButton->backgroundRole(), color);
+	ui->aColorButton->setPalette(palette);
 
-	palette = bColorButton->palette();
-	palette.setColor(bColorButton->backgroundRole(), color);
-	bColorButton->setPalette(palette);
+	palette = ui->bColorButton->palette();
+	palette.setColor(ui->bColorButton->backgroundRole(), color);
+	ui->bColorButton->setPalette(palette);
 
-	palette = underlineColorButton->palette();
-	palette.setColor(underlineColorButton->backgroundRole(), color);
-	underlineColorButton->setPalette(palette);
+	palette = ui->underlineColorButton->palette();
+	palette.setColor(ui->underlineColorButton->backgroundRole(), color);
+	ui->underlineColorButton->setPalette(palette);
 
-	palette = curLineColorButton->palette();
-	palette.setColor(curLineColorButton->backgroundRole(), color);
-	curLineColorButton->setPalette(palette);
+	palette = ui->curLineColorButton->palette();
+	palette.setColor(ui->curLineColorButton->backgroundRole(), color);
+	ui->curLineColorButton->setPalette(palette);
 }
 
 void GUI::SetupDialog::setDefaultProp()
 {
 	QPalette palette;
 
-	palette.setColor(commentColorButton->foregroundRole(), 0xde0020);
-	commentColorButton->setPalette(palette);
+	palette.setColor(ui->commentColorButton->foregroundRole(), 0xde0020);
+	ui->commentColorButton->setPalette(palette);
 
-	palette.setColor(gColorButton->foregroundRole(), 0x1600ee);
-	gColorButton->setPalette(palette);
+	palette.setColor(ui->gColorButton->foregroundRole(), 0x1600ee);
+	ui->gColorButton->setPalette(palette);
 
-	palette.setColor(mColorButton->foregroundRole(), 0x80007d);
-	mColorButton->setPalette(palette);
+	palette.setColor(ui->mColorButton->foregroundRole(), 0x80007d);
+	ui->mColorButton->setPalette(palette);
 
-	palette.setColor(nColorButton->foregroundRole(), Qt::darkGray);
-	nColorButton->setPalette(palette);
+	palette.setColor(ui->nColorButton->foregroundRole(), Qt::darkGray);
+	ui->nColorButton->setPalette(palette);
 
-	palette.setColor(lColorButton->foregroundRole(), 0x535b5f);
-	lColorButton->setPalette(palette);
+	palette.setColor(ui->lColorButton->foregroundRole(), 0x535b5f);
+	ui->lColorButton->setPalette(palette);
 
-	palette.setColor(fsColorButton->foregroundRole(), 0x516600);
-	fsColorButton->setPalette(palette);
+	palette.setColor(ui->fsColorButton->foregroundRole(), 0x516600);
+	ui->fsColorButton->setPalette(palette);
 
-	palette.setColor(dhtColorButton->foregroundRole(), 0x660033);
-	dhtColorButton->setPalette(palette);
+	palette.setColor(ui->dhtColorButton->foregroundRole(), 0x660033);
+	ui->dhtColorButton->setPalette(palette);
 
-	palette.setColor(rColorButton->foregroundRole(), 0x24576f);
-	rColorButton->setPalette(palette);
+	palette.setColor(ui->rColorButton->foregroundRole(), 0x24576f);
+	ui->rColorButton->setPalette(palette);
 
-	palette.setColor(macroColorButton->foregroundRole(), 0x000080);
-	macroColorButton->setPalette(palette);
+	palette.setColor(ui->macroColorButton->foregroundRole(), 0x000080);
+	ui->macroColorButton->setPalette(palette);
 
-	palette.setColor(keyWordColorButton->foregroundRole(), 0x1d8000);
-	keyWordColorButton->setPalette(palette);
+	palette.setColor(ui->keyWordColorButton->foregroundRole(), 0x1d8000);
+	ui->keyWordColorButton->setPalette(palette);
 
-	palette.setColor(progNameColorButton->foregroundRole(), Qt::black);
-	progNameColorButton->setPalette(palette);
+	palette.setColor(ui->progNameColorButton->foregroundRole(), Qt::black);
+	ui->progNameColorButton->setPalette(palette);
 
-	palette.setColor(operatorColorButton->foregroundRole(), 0x9a2200);
-	operatorColorButton->setPalette(palette);
+	palette.setColor(ui->operatorColorButton->foregroundRole(), 0x9a2200);
+	ui->operatorColorButton->setPalette(palette);
 
-	palette.setColor(zColorButton->foregroundRole(), 0x000080);
-	zColorButton->setPalette(palette);
+	palette.setColor(ui->zColorButton->foregroundRole(), 0x000080);
+	ui->zColorButton->setPalette(palette);
 
-	palette.setColor(aColorButton->foregroundRole(), Qt::black);
-	aColorButton->setPalette(palette);
+	palette.setColor(ui->aColorButton->foregroundRole(), Qt::black);
+	ui->aColorButton->setPalette(palette);
 
-	palette.setColor(bColorButton->foregroundRole(), Qt::black);
-	bColorButton->setPalette(palette);
+	palette.setColor(ui->bColorButton->foregroundRole(), Qt::black);
+	ui->bColorButton->setPalette(palette);
 
-	palette.setColor(underlineColorButton->foregroundRole(), Qt::green);
-	underlineColorButton->setPalette(palette);
+	palette.setColor(ui->underlineColorButton->foregroundRole(), Qt::green);
+	ui->underlineColorButton->setPalette(palette);
 
-	palette.setColor(curLineColorButton->foregroundRole(), 0xFEFFB6);
-	curLineColorButton->setPalette(palette);
+	palette.setColor(ui->curLineColorButton->foregroundRole(), 0xFEFFB6);
+	ui->curLineColorButton->setPalette(palette);
 
-	palette.setColor(fontColorButton->foregroundRole(), Qt::black);
-	fontColorButton->setPalette(palette);
+	palette.setColor(ui->fontColorButton->foregroundRole(), Qt::black);
+	ui->fontColorButton->setPalette(palette);
 
-	palette.setColor(backgroundColorButton->foregroundRole(), 0xFFFFFF);
-	backgroundColorButton->setPalette(palette);
+	palette.setColor(ui->backgroundColorButton->foregroundRole(), 0xFFFFFF);
+	ui->backgroundColorButton->setPalette(palette);
 
-	syntaxHCheckBox->setChecked(true);
-	capsLockCheckBox->setChecked(true);
-	underlineCheckBox->setChecked(true);
-	tabbedModecheckBox->setChecked(false);
-	fileNameCheckBox->setChecked(true);
-	filePathCheckBox->setChecked(false);
-	titleCheckBox->setChecked(false);
-	editorToolTipsCheckBox->setChecked(true);
-	readOnlyModeCheckBox->setChecked(false);
-	disableFileChangeMonitorCheckBox->setChecked(false);
+	ui->syntaxHCheckBox->setChecked(true);
+	ui->capsLockCheckBox->setChecked(true);
+	ui->underlineCheckBox->setChecked(true);
+	ui->tabbedModecheckBox->setChecked(false);
+	ui->fileNameCheckBox->setChecked(true);
+	ui->filePathCheckBox->setChecked(false);
+	ui->titleCheckBox->setChecked(false);
+	ui->editorToolTipsCheckBox->setChecked(true);
+	ui->readOnlyModeCheckBox->setChecked(false);
+	ui->disableFileChangeMonitorCheckBox->setChecked(false);
 	editProp.codeStyle.fontName = "Courier";
 	editProp.codeStyle.fontSize = 12;
 
 	editProp.editorProperties.defaultHighlightMode = MODE_AUTO;
-	int id = highlightModeComboBox->findData(editProp.editorProperties.defaultHighlightMode);
-	highlightModeComboBox->setCurrentIndex(id);
+	int id = ui->highlightModeComboBox->findData(editProp.editorProperties.defaultHighlightMode);
+	ui->highlightModeComboBox->setCurrentIndex(id);
 
-	clearUndocheckBox->setChecked(false);
-	clearUnderlinecheckBox->setChecked(true);
-	startEmptyCheckBox->setChecked(false);
+	ui->clearUndocheckBox->setChecked(false);
+	ui->clearUnderlinecheckBox->setChecked(true);
+	ui->startEmptyCheckBox->setChecked(false);
 
 #ifdef Q_OS_LINUX
 	editProp.calcBinary = "kcalc";
@@ -646,25 +649,25 @@ void GUI::SetupDialog::setDefaultProp()
 	editProp.calcBinary = "calc.exe";
 #endif
 
-	calcLineEdit->setText(editProp.calcBinary);
+	ui->calcLineEdit->setText(editProp.calcBinary);
 
-	fontLabel->setText(QString(tr("Current font : <b>\"%1\", %2 pt.<\b>")
-	                           .arg(editProp.codeStyle.fontName).arg(editProp.codeStyle.fontSize)));
-	fontLabel->setFont(QFont(editProp.codeStyle.fontName, editProp.codeStyle.fontSize));
+	ui->fontLabel->setText(QString(tr("Current font : <b>\"%1\", %2 pt.<\b>")
+	                               .arg(editProp.codeStyle.fontName).arg(editProp.codeStyle.fontSize)));
+	ui->fontLabel->setFont(QFont(editProp.codeStyle.fontName, editProp.codeStyle.fontSize));
 
-	lstExtensions->clear();
-	lstExtensions->addItem("*.nc");
-	lstExtensions->addItem("*.cnc");
-	//lstExtensions->addItem("*.anc");
+	ui->lstExtensions->clear();
+	ui->lstExtensions->addItem("*.nc");
+	ui->lstExtensions->addItem("*.cnc");
+	//ui->lstExtensions->addItem("*.anc");
 
-	progNumCheckBox->setChecked(true);
+	ui->progNumCheckBox->setChecked(true);
 
-	edtSaveExtension->setText("*.nc");
+	ui->edtSaveExtension->setText("*.nc");
 }
 
 void GUI::SetupDialog::on_btnAddExtension_clicked()
 {
-	QString ext = edtExtension->text();
+	QString ext = ui->edtExtension->text();
 	ext.remove(" ");
 	ext.simplified();
 
@@ -672,18 +675,18 @@ void GUI::SetupDialog::on_btnAddExtension_clicked()
 		return;
 	}
 
-	lstExtensions->addItem(ext);
-	edtExtension->setText("*.");
+	ui->lstExtensions->addItem(ext);
+	ui->edtExtension->setText("*.");
 }
 
 void GUI::SetupDialog::on_btnDeleteExtension_clicked()
 {
-	qDeleteAll(lstExtensions->selectedItems());
+	qDeleteAll(ui->lstExtensions->selectedItems());
 }
 
 void GUI::SetupDialog::on_btnBrowseDirectory_clicked()
 {
-	QString dir = edtSaveDirectory->text();
+	QString dir = ui->edtSaveDirectory->text();
 
 	if (dir.isEmpty()) {
 		dir = QDir::homePath();
@@ -695,25 +698,25 @@ void GUI::SetupDialog::on_btnBrowseDirectory_clicked()
 	          dir);
 
 	if (!dir.isEmpty()) {
-		edtSaveDirectory->setText(dir);
+		ui->edtSaveDirectory->setText(dir);
 	}
 }
 
 void GUI::SetupDialog::showAllCodecsClicked()
 {
-	ui_showAliases->setEnabled(ui_showAllCodecs->isChecked());
+	ui->showAliases->setEnabled(ui->showAllCodecs->isChecked());
 }
 
 void GUI::SetupDialog::fillCodecs()
 {
-	ui_encodingCombo->clear();
-	ui_encodingCombo->setEditable(!ui_showAllCodecs->isChecked());
-	ui_encodingCombo->addItem(tr("System charset (%1)").arg(QString(QTextCodec::codecForLocale()->name())));
-	ui_encodingCombo->insertSeparator(1);
+	ui->encodingCombo->clear();
+	ui->encodingCombo->setEditable(!ui->showAllCodecs->isChecked());
+	ui->encodingCombo->addItem(tr("System charset (%1)").arg(QString(QTextCodec::codecForLocale()->name())));
+	ui->encodingCombo->insertSeparator(1);
 
 	QList<int> mibList;
 
-	if (ui_showAllCodecs->isChecked()) {
+	if (ui->showAllCodecs->isChecked()) {
 		mibList = QTextCodec::availableMibs();
 	} else {
 		mibList = {
@@ -729,7 +732,7 @@ void GUI::SetupDialog::fillCodecs()
 		if (tc != nullptr) {
 			codecList.append(tc->name());
 
-			if (ui_showAllCodecs->isChecked() && ui_showAliases->isChecked()) {
+			if (ui->showAllCodecs->isChecked() && ui->showAliases->isChecked()) {
 				codecList.append(tc->aliases());
 			}
 		}
@@ -740,7 +743,7 @@ void GUI::SetupDialog::fillCodecs()
 	codecList.erase(last, codecList.end());
 
 	for (auto i = codecList.cbegin(); i < codecList.cend(); ++i) {
-		ui_encodingCombo->addItem(*i);
+		ui->encodingCombo->addItem(*i);
 	}
 
 	QByteArray currentCodec = editProp.gcodeConverterOptions.codecName;
@@ -748,8 +751,8 @@ void GUI::SetupDialog::fillCodecs()
 
 	if (currentIndex < 0) {
 		if (! currentCodec.isEmpty()) {
-			ui_encodingCombo->insertItem(2, currentCodec);
-			ui_encodingCombo->insertSeparator(3);
+			ui->encodingCombo->insertItem(2, currentCodec);
+			ui->encodingCombo->insertSeparator(3);
 			currentIndex = 2;
 		} else {
 			currentIndex = 0;
@@ -758,5 +761,5 @@ void GUI::SetupDialog::fillCodecs()
 		currentIndex += 2;
 	}
 
-	ui_encodingCombo->setCurrentIndex(currentIndex);
+	ui->encodingCombo->setCurrentIndex(currentIndex);
 }
