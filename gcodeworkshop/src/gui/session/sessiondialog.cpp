@@ -33,21 +33,25 @@ class QWidget;
 #include "sessionmanager.h"     // for SessionManager
 #include "sessionnamedialog.h"  // for SessionNameDialog
 
+#include "ui_sessiondialog.h"  // for Ui::SessionDialog
 
-GUI::SessionDialog::SessionDialog(QWidget* parent, SessionManager* sessions) : QDialog(parent, Qt::Dialog)
+
+GUI::SessionDialog::SessionDialog(QWidget* parent, SessionManager* sessions) :
+	QDialog(parent, Qt::Dialog),
+	m_sessions(sessions),
+	ui(new Ui::SessionDialog())
 {
-	m_sessions = sessions;
-	setupUi(this);
+	ui->setupUi(this);
 	setWindowTitle(tr("Session manager"));
 	setModal(true);
 
-	connect(newPushButton, SIGNAL(clicked()), this, SLOT(newButtonClicked()));
-	connect(renamePushButton, SIGNAL(clicked()), this, SLOT(renameButtonClicked()));
-	connect(clonePushButton, SIGNAL(clicked()), this, SLOT(cloneButtonClicked()));
-	connect(deletePushButton, SIGNAL(clicked()), this, SLOT(deleteButtonClicked()));
-	connect(switchPushButton, SIGNAL(clicked()), this, SLOT(switchButtonClicked()));
+	connect(ui->newPushButton, SIGNAL(clicked()), this, SLOT(newButtonClicked()));
+	connect(ui->renamePushButton, SIGNAL(clicked()), this, SLOT(renameButtonClicked()));
+	connect(ui->clonePushButton, SIGNAL(clicked()), this, SLOT(cloneButtonClicked()));
+	connect(ui->deletePushButton, SIGNAL(clicked()), this, SLOT(deleteButtonClicked()));
+	connect(ui->switchPushButton, SIGNAL(clicked()), this, SLOT(switchButtonClicked()));
 
-	connect(sessionListWidget, SIGNAL(itemSelectionChanged()), this,
+	connect(ui->sessionListWidget, SIGNAL(itemSelectionChanged()), this,
 	        SLOT(sessionListItemSelectionChanged()));
 
 	connect(m_sessions, SIGNAL(sessionListChanged(QStringList)), this, SLOT(updateSessionList(QStringList)));
@@ -77,7 +81,7 @@ void GUI::SessionDialog::newButtonClicked()
 
 void GUI::SessionDialog::renameButtonClicked()
 {
-	QString currName = sessionListWidget->currentItem()->text();
+	QString currName = ui->sessionListWidget->currentItem()->text();
 	GUI::SessionNameDialog* newSesDialog = new GUI::SessionNameDialog(this);
 	newSesDialog->setName(currName);
 	int result = newSesDialog->exec();
@@ -95,7 +99,7 @@ void GUI::SessionDialog::renameButtonClicked()
 
 void GUI::SessionDialog::cloneButtonClicked()
 {
-	QString currName = sessionListWidget->currentItem()->text();
+	QString currName = ui->sessionListWidget->currentItem()->text();
 	GUI::SessionNameDialog* newSesDialog = new GUI::SessionNameDialog(this);
 	newSesDialog->setName(currName);
 	int result = newSesDialog->exec();
@@ -113,7 +117,7 @@ void GUI::SessionDialog::cloneButtonClicked()
 
 void GUI::SessionDialog::deleteButtonClicked()
 {
-	const QList<QListWidgetItem*>& selected = sessionListWidget->selectedItems();
+	const QList<QListWidgetItem*>& selected = ui->sessionListWidget->selectedItems();
 
 	if (!selected.isEmpty()) {
 		m_sessions->removeSession(selected.at(0)->text());
@@ -122,21 +126,21 @@ void GUI::SessionDialog::deleteButtonClicked()
 
 void GUI::SessionDialog::switchButtonClicked()
 {
-	m_sessions->setCurrentSession(sessionListWidget->currentItem()->text());
+	m_sessions->setCurrentSession(ui->sessionListWidget->currentItem()->text());
 	accept();
 }
 
 void GUI::SessionDialog::sessionListItemSelectionChanged()
 {
-	bool hasSelection = sessionListWidget->selectedItems().size() == 1;
-	deletePushButton->setEnabled(hasSelection);
-	renamePushButton->setEnabled(hasSelection);
-	clonePushButton->setEnabled(hasSelection);
-	switchPushButton->setEnabled(hasSelection);
+	bool hasSelection = ui->sessionListWidget->selectedItems().size() == 1;
+	ui->deletePushButton->setEnabled(hasSelection);
+	ui->renamePushButton->setEnabled(hasSelection);
+	ui->clonePushButton->setEnabled(hasSelection);
+	ui->switchPushButton->setEnabled(hasSelection);
 }
 
 void GUI::SessionDialog::updateSessionList(const QStringList& list)
 {
-	sessionListWidget->clear();
-	sessionListWidget->addItems(list);
+	ui->sessionListWidget->clear();
+	ui->sessionListWidget->addItems(list);
 }
