@@ -47,25 +47,25 @@ GUI::NewFileDialog::NewFileDialog(QWidget* parent) :
 {
 	ui->setupUi(this);
 
-	path.setPath(TEMPLATE_PATH);
+	m_templatePath.setPath(TEMPLATE_PATH);
 
-	if (!path.exists()) {
-		path.setPath(QApplication::applicationDirPath() + "/" + "TEMPLATE");
+	if (!m_templatePath.exists()) {
+		m_templatePath.setPath(QApplication::applicationDirPath() + "/" + "TEMPLATE");
 	}
 
-	if (!path.exists()) {
-		path.setPath(QDir::homePath());
+	if (!m_templatePath.exists()) {
+		m_templatePath.setPath(QDir::homePath());
 	}
 
 	QSettings& settings = *Medium::instance().settings();
 
-	QDir savedPath(settings.value("TemplatePath", path.canonicalPath()).toString());
+	QDir savedPath(settings.value("TemplatePath", m_templatePath.canonicalPath()).toString());
 
 	if (savedPath.exists()) {
-		path = savedPath;
+		m_templatePath = savedPath;
 	}
 
-	ui->pathLineEdit->setText(path.canonicalPath());
+	ui->pathLineEdit->setText(m_templatePath.canonicalPath());
 
 	fillFileCombo();
 
@@ -81,7 +81,7 @@ GUI::NewFileDialog::~NewFileDialog()
 
 QString GUI::NewFileDialog::getChosenFile()
 {
-	QFile file(path.canonicalPath() + "/" + ui->fileComboBox->currentText());
+	QFile file(m_templatePath.canonicalPath() + "/" + ui->fileComboBox->currentText());
 
 	if (file.exists()) {
 		return file.fileName();
@@ -93,20 +93,20 @@ QString GUI::NewFileDialog::getChosenFile()
 void GUI::NewFileDialog::browseButtonClicked()
 {
 	QString directory = QFileDialog::getExistingDirectory(this, tr("Choose template path"),
-	                    path.canonicalPath());
+	                    m_templatePath.canonicalPath());
 
 	if (!directory.isEmpty()) {
-		path.setPath(directory);
-		ui->pathLineEdit->setText(path.canonicalPath());
+		m_templatePath.setPath(directory);
+		ui->pathLineEdit->setText(m_templatePath.canonicalPath());
 		fillFileCombo();
 	}
 }
 
 void GUI::NewFileDialog::fillFileCombo()
 {
-	QStringList files = path.entryList((QStringList() << "*.nc"),
-	                                   QDir::Files | QDir::NoDotAndDotDot | QDir::Readable,
-	                                   QDir::Name | QDir::IgnoreCase);
+	QStringList files = m_templatePath.entryList((QStringList() << "*.nc"),
+	                    QDir::Files | QDir::NoDotAndDotDot | QDir::Readable,
+	                    QDir::Name | QDir::IgnoreCase);
 	ui->fileComboBox->clear();
 	ui->fileComboBox->addItem(tr("EMPTY FILE"));
 	ui->fileComboBox->addItems(files);
@@ -116,7 +116,7 @@ void GUI::NewFileDialog::saveSettings()
 {
 	QSettings& settings = *Medium::instance().settings();
 
-	settings.setValue("TemplatePath", path.canonicalPath());
+	settings.setValue("TemplatePath", m_templatePath.canonicalPath());
 }
 
 int GUI::NewFileDialog::exec()
