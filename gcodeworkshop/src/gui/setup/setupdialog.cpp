@@ -264,16 +264,13 @@ GUI::SetupDialog::SetupDialog(QWidget* parent, const AppConfig* prop, Qt::Window
 	//   QValidator *dateFormatValidator = new QRegExpValidator(ext, this);
 	//   dateFormatComboBox->setValidator(dateFormatValidator);
 
-	connect(ui->defaultButton, SIGNAL(clicked()), SLOT(setDefaultProp()));
-	connect(ui->okButton, SIGNAL(clicked()), SLOT(accept()));
-	connect(ui->cancelButton, SIGNAL(clicked()), SLOT(close()));
+	connect(ui->defaultButton, &QPushButton::clicked, this, &GUI::SetupDialog::setDefaultProp);
+	connect(ui->okButton, &QPushButton::clicked, this, &GUI::SetupDialog::accept);
+	connect(ui->cancelButton, &QPushButton::clicked, this, &GUI::SetupDialog::close);
 
-	connect(ui->showAllCodecs, &QCheckBox::stateChanged,
-	        this, &GUI::SetupDialog::showAllCodecsClicked);
-	connect(ui->showAllCodecs, &QCheckBox::stateChanged,
-	        this, &GUI::SetupDialog::fillCodecs);
-	connect(ui->showAliases, &QCheckBox::stateChanged,
-	        this, &GUI::SetupDialog::fillCodecs);
+	connect(ui->showAllCodecs, &QCheckBox::stateChanged, this, &GUI::SetupDialog::showAllCodecsClicked);
+	connect(ui->showAllCodecs, &QCheckBox::stateChanged, this, &GUI::SetupDialog::fillCodecs);
+	connect(ui->showAliases, &QCheckBox::stateChanged, this, &GUI::SetupDialog::fillCodecs);
 	ui->dropControl->setChecked(prop->gcodeConverterOptions.dropControll);
 	ui->dropExtra->setChecked(prop->gcodeConverterOptions.dropExtented);
 	ui->dropEmptyLine->setChecked(prop->gcodeConverterOptions.dropEmptyLine);
@@ -667,9 +664,7 @@ void GUI::SetupDialog::setDefaultProp()
 
 void GUI::SetupDialog::on_btnAddExtension_clicked()
 {
-	QString ext = ui->edtExtension->text();
-	ext.remove(" ");
-	ext.simplified();
+	QString ext = ui->edtExtension->text().simplified();
 
 	if ((ext == "") || (ext == "*.")) {
 		return;
