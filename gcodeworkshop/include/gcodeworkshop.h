@@ -151,9 +151,13 @@ protected:
 
 	void setMdiTabbedMode(bool tabbed);
 
-private slots:
+public slots:
 	Document* newFileFromTemplate();
+
+private slots:
 	void open(const QDir& dir);
+
+public slots:
 	void open();
 	void openExample();
 	bool save();
@@ -168,6 +172,8 @@ private slots:
 	void copy();
 	void paste();
 	void about();
+
+private slots:
 	void updateMenus();
 	void updateWindowMenu();
 	Document* createDocument(const QString& type);
@@ -177,24 +183,40 @@ private slots:
 	void recentFilesChanged();
 	void fileOpenRecent(QAction* act);
 	void updateRecentFilesMenu(const QStringList& fileList);
+
+public slots:
 	void activeWindowChanged(QMdiSubWindow* window);
 	void deleteText();
 	void findInFl();
+
+private slots:
 	bool findNext();
 	bool findPrevious();
 	void replaceNext();
 	void replacePrevious();
 	void replaceAll();
+
+public slots:
 	void selAll();
 	void config();
 	void readOnly();
 	void doCalc();
+
+private slots:
 	void loadFoundedFile(const QString& fileName);
 	void updateStatusBar();
+
+public slots:
 	void createFindToolBar();
+
+private slots:
 	void closeFindToolBar();
 	void findTextChanged();
+
+public slots:
 	void createSerialToolBar();
+
+private slots:
 	void serialConfig();
 	void serialConfigTest();
 	void closeSerialToolbar();
@@ -204,13 +226,21 @@ private slots:
 	void attachToDirButtonClicked(bool attach = true);
 	void deAttachToDirButtonClicked();
 	void setHighLightMode(int mode);
+
+public slots:
 	void createGlobalToolTipsFile();
 	void createUserToolTipsFile();
+
+private slots:
 	void attachHighlightToDirActClicked();
 	void deAttachHighlightToDirActClicked();
+
+public slots:
 	void doDiffL();
 	void doDiffR();
 	void doDiff();
+
+private slots:
 	void projectAdd();
 	void projectSave();
 	void projectSaveAs();
@@ -223,24 +253,40 @@ private slots:
 	void projectOpen();
 	void updateOpenFileList();
 	void openFileTableWidgetClicked(int x, int y);
+
+public slots:
 	void diffEditorFile();
 	void closeCurrentWindow();
 	void closeAllMdiWindows();
+
+private slots:
 	void goToLine(const QString& fileName, int line);
 	void updateSessionMenus(const QStringList& sessionList);
 	void sessionsChanged();
 	void changeSession(QAction* action);
 	void beforeCurrentSessionChanged();
 	void currentSessionChanged();
+
+public slots:
 	void showSessionDialog();
+
+private slots:
 	void fileChanged(const QString& fileName);
+
+public slots:
 	void tileSubWindowsVertycally();
+
+private slots:
 	void clipboardChanged();
 	void deleteFromClipboardButtonClicked();
 	void clipboardTreeViewContextMenu(const QPoint& point);
 	void customContextMenuRequest(Document* doc, const QPoint& pos);
 	QMenu* doContextMenuGCoder(GCoderDocument* doc, const QPoint& pos);
+
+public slots:
 	void doShowInLineCalc();
+
+private slots:
 	void watchFile(const QString& fileName, bool add);
 
 signals:
