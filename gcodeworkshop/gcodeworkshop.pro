@@ -64,6 +64,7 @@ HEADERS += \
     src/gui/workshop/editactions.h \
     src/gui/workshop/fileactions.h \
     src/gui/workshop/helpactions.h \
+    src/gui/workshop/mainwindow.h \
     src/gui/workshop/statusbaractions.h \
     src/gui/workshop/toolactions.h \
     src/gui/workshop/windowactions.h \
@@ -108,6 +109,7 @@ SOURCES += \
     src/gui/workshop/fileactions.cpp \
     src/gui/workshop/helpactions.cpp \
     src/gui/workshop/knownactions.cpp \
+    src/gui/workshop/mainwindow.cpp \
     src/gui/workshop/statusbaractions.cpp \
     src/gui/workshop/toolactions.cpp \
     src/gui/workshop/windowactions.cpp \
@@ -120,7 +122,6 @@ SOURCES += \
     src/utils/removezeros.cpp
 
 FORMS += \
-    src/gcodeworkshop.ui \
     src/gui/clipboard/clipboardpanel.ui \
     src/gui/filebrowser/filebrowserpanel.ui \
     src/gui/findinfiles/findinfilespanel.ui \
@@ -128,7 +129,8 @@ FORMS += \
     src/gui/project/projectpanel.ui \
     src/gui/session/sessiondialog.ui \
     src/gui/session/sessionnamedialog.ui \
-    src/gui/setup/setupdialog.ui
+    src/gui/setup/setupdialog.ui \
+    src/gui/workshop/mainwindow.ui
 
 
 # target platforms dependencies
