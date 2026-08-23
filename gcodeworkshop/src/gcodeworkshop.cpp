@@ -368,7 +368,7 @@ void GCodeWorkShop::closeAllMdiWindows()
 	ui->mdiArea->closeAllSubWindows();
 }
 
-void GCodeWorkShop::closeEvent(QCloseEvent* event)
+bool GCodeWorkShop::close()
 {
 	if (m_fileServer) {
 		QMessageBox::StandardButton result = QMessageBox::warning(mainWindow(),
@@ -377,19 +377,25 @@ void GCodeWorkShop::closeEvent(QCloseEvent* event)
 		                                     QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
 
 		if (result == QMessageBox::No) {
-			event->ignore();
-			return;
+			return false;
 		}
 	}
 
 	if (!m_projectPanel->maybeSave() || !maybeSaveAll()) {
-		event->ignore();
-		return;
+		return false;
 	}
 
 	emit saveSettings(Medium::instance().settings());
 	writeSettings();
 	closeAllMdiWindows();
+	return true;
+}
+
+void GCodeWorkShop::closeEvent(QCloseEvent* event)
+{
+	if (!close()) {
+		event->ignore();
+	}
 }
 
 Document* GCodeWorkShop::newFileFromTemplate()

@@ -165,6 +165,8 @@ public slots:
 	bool maybeSave(Document* doc);
 	bool maybeSaveAll();
 
+	bool close();
+
 protected:
 	void closeEvent(QCloseEvent* event);
 	void setLastOpenedPath(const QString& path);
