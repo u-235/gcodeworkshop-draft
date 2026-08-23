@@ -100,7 +100,7 @@ private:
 	Ui::FindInFilesPanel* ui;
 
 signals:
-	void fileClicked(const QString&);
+	void fileClicked(const QString& file, const QString& mime);
 };
 } // namespace GUI
 

@@ -22,6 +22,7 @@
 
 #include <QApplication>         // for main
 #include <QObject>              // for QObject, SIGNAL, SLOT
+#include <QMainWindow>
 #include <QString>              // for QString
 #include <QtGlobal>             // for Q_INIT_RESOURCE
 
@@ -72,9 +73,9 @@ int main(int argc, char* argv[])
 		}
 	}
 
-	mw->show();
+	mw->mainWindow()->show();
 
-	app.setActivationWindow(mw, false);
+	app.setActivationWindow(mw->mainWindow(), false);
 
 	QObject::connect(&app, SIGNAL(messageReceived(const QString&)),
 	                 mw, SLOT(messReceived(const QString&)));

@@ -26,22 +26,24 @@
 #include <gui/actions/knownactions.h>   // for KnownActions
 
 #include "editactions.h"    // for EditAcions
+#include "gui/mainwindow/mainwindow.h"
 
 
 using ActionId = GUI::Actions::KnownActions::Edit;
 
 
-GUI::Actions::EditActions::EditActions(GCodeWorkShop* app) : ActionKit(app)
+GUI::Actions::EditActions::EditActions(MainWindow* mw) : ActionKit(mw)
 {
+	GCodeWorkShop* app = mw->app();
 	connect(makeAction(ActionId::CONFIG), &QAction::triggered, app, &GCodeWorkShop::config);
 	connect(makeAction(ActionId::COPY), &QAction::triggered, app, &GCodeWorkShop::copy);
 	connect(makeAction(ActionId::CUT), &QAction::triggered, app, &GCodeWorkShop::cut);
 	connect(makeAction(ActionId::DELETE), &QAction::triggered, app, &GCodeWorkShop::deleteText);
-	connect(makeAction(ActionId::FIND), &QAction::triggered, app, &GCodeWorkShop::showFindToolBar);
+	connect(makeAction(ActionId::FIND), &QAction::triggered, mw, &MainWindow::showFindToolBar);
 	connect(makeAction(ActionId::PASTE), &QAction::triggered, app, &GCodeWorkShop::paste);
 	connect(makeAction(ActionId::READ_ONLY), &QAction::triggered, app, &GCodeWorkShop::readOnly);
 	connect(makeAction(ActionId::REDO), &QAction::triggered, app, &GCodeWorkShop::redo);
-	connect(makeAction(ActionId::REPLACE), &QAction::triggered, app, &GCodeWorkShop::showReplaceToolBar);
+	connect(makeAction(ActionId::REPLACE), &QAction::triggered, mw, &MainWindow::showReplaceToolBar);
 	connect(makeAction(ActionId::SELECT_ALL), &QAction::triggered, app, &GCodeWorkShop::selAll);
 	connect(makeAction(ActionId::UNDO), &QAction::triggered, app, &GCodeWorkShop::undo);
 

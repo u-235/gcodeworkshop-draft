@@ -336,7 +336,7 @@ void Addons::Actions::doParaComment()
 		return;
 	}
 
-	LongJobHelper helper{GCodeWorkShop::instance()};
+	LongJobHelper helper{m_app->mainWindow()};
 	helper.begin(ctx.text().length(), tr("Comments/uncomments"));
 
 	bool changed = Utils::autoComments(ctx.text(), Utils::ParenthesisComments, [&helper](int pos) -> bool{
@@ -358,7 +358,7 @@ void Addons::Actions::doSemiComment()
 		return;
 	}
 
-	LongJobHelper helper{GCodeWorkShop::instance()};
+	LongJobHelper helper{m_app->mainWindow()};
 	helper.begin(ctx.text().length(), tr("Comments/uncomments"));
 
 	bool changed = Utils::autoComments(ctx.text(), Utils::SemicolonComments, [&helper](int pos) -> bool{
@@ -415,7 +415,7 @@ void Addons::Actions::doInsertEmptyLines()
 		return;
 	}
 
-	LongJobHelper helper{GCodeWorkShop::instance()};
+	LongJobHelper helper{m_app->mainWindow()};
 	helper.begin(ctx.text().length(), tr("Inserting empty lines"));
 
 	bool changed = Utils::insertEmptyLines(ctx.text(), [&helper](int pos) -> bool{
@@ -437,7 +437,7 @@ void Addons::Actions::doRemoveEmptyLines()
 		return;
 	}
 
-	LongJobHelper helper{GCodeWorkShop::instance()};
+	LongJobHelper helper{m_app->mainWindow()};
 	helper.begin(ctx.text().length(), tr("Removing empty lines"));
 
 	bool changed = Utils::removeEmptyLines(ctx.text(), [&helper](int pos) -> bool{

@@ -27,13 +27,15 @@
 #include <gui/actions/knownactions.h>   // for KnownActions
 
 #include "helpactions.h"    // for HelpActions
+#include "gui/mainwindow/mainwindow.h"
 
 
 using ActionId = GUI::Actions::KnownActions::Help;
 
 
-GUI::Actions::HelpActions::HelpActions(GCodeWorkShop* app) : ActionKit(app)
+GUI::Actions::HelpActions::HelpActions(MainWindow* mw) : ActionKit(mw)
 {
+	GCodeWorkShop* app = mw->app();
 	connect(makeAction(ActionId::ABOUT), &QAction::triggered, app, &GCodeWorkShop::about);
 	connect(makeAction(ActionId::ABOUT_QT), &QAction::triggered, qApp, &QApplication::aboutQt);
 	connect(makeAction(ActionId::CREATE_GLOBAL_TOOL_TIP), &QAction::triggered, app,

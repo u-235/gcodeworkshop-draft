@@ -224,7 +224,7 @@ void GUI::ProjectPanel::saveProject()
 
 	if (settings.status() == QSettings::NoError) {
 		m_modified = false;
-		GCodeWorkShop::instance()->statusBar()->showMessage(tr("Project saved"), 5000);
+		GCodeWorkShop::instance()->mainWindow()->statusBar()->showMessage(tr("Project saved"), 5000);
 	}
 }
 
@@ -326,7 +326,7 @@ void GUI::ProjectPanel::addItem()
 	fModel->deleteLater();
 	ui->treeView->expandAll(); //model->indexFromItem(currentProject));
 	m_modified = true;
-	GCodeWorkShop::instance()->statusBar()->showMessage(tr("Project opened"), 5000);
+	GCodeWorkShop::instance()->mainWindow()->statusBar()->showMessage(tr("Project opened"), 5000);
 }
 
 void GUI::ProjectPanel::removeItem()

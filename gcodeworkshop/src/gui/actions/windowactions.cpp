@@ -26,19 +26,21 @@
 #include <gui/actions/knownactions.h>   // for KnownActions
 
 #include "windowactions.h"  // for WindowActions
+#include "gui/mainwindow/mainwindow.h"
 
 
 using ActionId = GUI::Actions::KnownActions::Window;
 
 
-GUI::Actions::WindowActions::WindowActions(GCodeWorkShop* app) : ActionKit(app)
+GUI::Actions::WindowActions::WindowActions(MainWindow* mw) : ActionKit(mw)
 {
-	connect(makeAction(ActionId::CASCADE), &QAction::triggered, app, &GCodeWorkShop::cascadeSubWindows);
-	connect(makeAction(ActionId::NEXT), &QAction::triggered, app, &GCodeWorkShop::activateNextSubWindow);
-	connect(makeAction(ActionId::PREVIOUS), &QAction::triggered, app, &GCodeWorkShop::activatePreviousSubWindow);
+	GCodeWorkShop* app = mw->app();
+	connect(makeAction(ActionId::CASCADE), &QAction::triggered, mw, &MainWindow::cascadeSubWindows);
+	connect(makeAction(ActionId::NEXT), &QAction::triggered, mw, &MainWindow::activateNextSubWindow);
+	connect(makeAction(ActionId::PREVIOUS), &QAction::triggered, mw, &MainWindow::activatePreviousSubWindow);
 	makeAction(ActionId::SEPARATOR)->setSeparator(true);
-	connect(makeAction(ActionId::TILE_HORIZ), &QAction::triggered, app, &GCodeWorkShop::tileSubWindowsHorizontally);
-	connect(makeAction(ActionId::TILE_VERT), &QAction::triggered, app, &GCodeWorkShop::tileSubWindowsVertycally);
+	connect(makeAction(ActionId::TILE_HORIZ), &QAction::triggered, mw, &MainWindow::tileSubWindowsHorizontally);
+	connect(makeAction(ActionId::TILE_VERT), &QAction::triggered, mw, &MainWindow::tileSubWindowsVertycally);
 
 	connect(app, &GCodeWorkShop::updateIcons, this, &GUI::Actions::WindowActions::loadIcons);
 	connect(app, &GCodeWorkShop::updateTranslations, this, &GUI::Actions::WindowActions::loadTranslations);

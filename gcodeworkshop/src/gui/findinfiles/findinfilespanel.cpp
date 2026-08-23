@@ -546,7 +546,7 @@ void GUI::FindInFilesPanel::filesTableClicked(int x, int y)
 		dir = dir + "/";
 	}
 
-	emit fileClicked(dir + item->text());
+	emit fileClicked(dir + item->text(), "");
 }
 
 void GUI::FindInFilesPanel::filePreview(int x, int y)

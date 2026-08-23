@@ -61,6 +61,7 @@ HEADERS += \
     src/gui/findinfiles/findinfilespanel.h \
     src/gui/findtoolbar/findtoolbar.h \
     src/gui/findtoolbar/findtoolbaractions.h \
+    src/gui/mainwindow/mainwindow.h \
     src/gui/newfile/newfiledialog.h \
     src/gui/project/projectpanel.h \
     src/gui/serialport/serialtoolbar.h \
@@ -105,6 +106,7 @@ SOURCES += \
     src/gui/findinfiles/findinfilespanel.cpp \
     src/gui/findtoolbar/findtoolbar.cpp \
     src/gui/findtoolbar/findtoolbaractions.cpp \
+    src/gui/mainwindow/mainwindow.cpp \
     src/gui/newfile/newfiledialog.cpp \
     src/gui/project/projectpanel.cpp \
     src/gui/serialport/serialtoolbar.cpp \
@@ -121,10 +123,10 @@ SOURCES += \
     src/utils/removezeros.cpp
 
 FORMS += \
-    src/gcodeworkshop.ui \
     src/gui/clipboard/clipboardpanel.ui \
     src/gui/filebrowser/filebrowserpanel.ui \
     src/gui/findinfiles/findinfilespanel.ui \
+    src/gui/mainwindow/mainwindow.ui \
     src/gui/newfile/newfiledialog.ui \
     src/gui/project/projectpanel.ui \
     src/gui/session/sessiondialog.ui \

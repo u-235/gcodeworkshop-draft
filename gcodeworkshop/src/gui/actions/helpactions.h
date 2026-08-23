@@ -27,17 +27,17 @@ class QAction;
 
 #include <gui/actions/actionkit.h> // for ActionKit
 
-class GCodeWorkShop;
-
 
 namespace GUI {
+class MainWindow;
+
 namespace Actions {
 class HelpActions : public ActionKit
 {
 	Q_OBJECT
 
 public:
-	explicit HelpActions(GCodeWorkShop* app);
+	explicit HelpActions(MainWindow* mw);
 	~HelpActions();
 
 public slots:

@@ -26,20 +26,22 @@
 #include <gui/actions/knownactions.h>   // for KnownActions
 
 #include "toolactions.h"    // for ToolActions
+#include "gui/mainwindow/mainwindow.h"
 
 
 using ActionId = GUI::Actions::KnownActions::Tool;
 
 
-GUI::Actions::ToolActions::ToolActions(GCodeWorkShop* app) : ActionKit(app)
+GUI::Actions::ToolActions::ToolActions(MainWindow* mw) : ActionKit(mw)
 {
+	GCodeWorkShop* app = mw->app();
 	connect(makeAction(ActionId::CALC), &QAction::triggered, app, &GCodeWorkShop::doCalc);
-	connect(makeAction(ActionId::DIFF), &QAction::triggered, app, &GCodeWorkShop::doDiff);
-	connect(makeAction(ActionId::DIFF_EDITOR), &QAction::triggered, app, &GCodeWorkShop::diffEditorFile);
-	connect(makeAction(ActionId::DIFF_LEFT), &QAction::triggered, app, &GCodeWorkShop::doDiffL);
-	connect(makeAction(ActionId::DIFF_RIGHT), &QAction::triggered, app, &GCodeWorkShop::doDiffR);
+	connect(makeAction(ActionId::DIFF), &QAction::triggered, mw, &MainWindow::doDiff);
+	connect(makeAction(ActionId::DIFF_EDITOR), &QAction::triggered, mw, &MainWindow::diffEditorFile);
+	connect(makeAction(ActionId::DIFF_LEFT), &QAction::triggered, mw, &MainWindow::doDiffL);
+	connect(makeAction(ActionId::DIFF_RIGHT), &QAction::triggered, mw, &MainWindow::doDiffR);
 	connect(makeAction(ActionId::INLINE_CALC), &QAction::triggered, app, &GCodeWorkShop::doShowInLineCalc);
-	connect(makeAction(ActionId::SHOW_SERIAL_TOOLBAR), &QAction::triggered, app, &GCodeWorkShop::createSerialToolBar);
+	connect(makeAction(ActionId::SHOW_SERIAL_TOOLBAR), &QAction::triggered, mw, &MainWindow::createSerialToolBar);
 
 	connect(app, &GCodeWorkShop::updateIcons, this, &GUI::Actions::ToolActions::loadIcons);
 	connect(app, &GCodeWorkShop::updateTranslations, this, &GUI::Actions::ToolActions::loadTranslations);

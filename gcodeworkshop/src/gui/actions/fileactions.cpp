@@ -27,17 +27,19 @@
 #include <gui/actions/knownactions.h>   // for KnownActions
 
 #include "fileactions.h"    // for FileActions
+#include "gui/mainwindow/mainwindow.h"
 
 
 using ActionId = GUI::Actions::KnownActions::File;
 
 
-GUI::Actions::FileActions::FileActions(GCodeWorkShop* app) : ActionKit(app)
+GUI::Actions::FileActions::FileActions(MainWindow* mw) : ActionKit(mw)
 {
-	connect(makeAction(ActionId::CLOSE), &QAction::triggered, app, &GCodeWorkShop::closeCurrentWindow);
-	connect(makeAction(ActionId::CLOSE_ALL), &QAction::triggered, app, &GCodeWorkShop::closeAllMdiWindows);
+	GCodeWorkShop* app = mw->app();
+	connect(makeAction(ActionId::CLOSE), &QAction::triggered, mw, &MainWindow::closeCurrentWindow);
+	connect(makeAction(ActionId::CLOSE_ALL), &QAction::triggered, mw, &MainWindow::closeAllMdiWindows);
 	connect(makeAction(ActionId::EXIT), &QAction::triggered, qApp, &QApplication::closeAllWindows);
-	connect(makeAction(ActionId::FIND_IN_FILES), &QAction::triggered, app, &GCodeWorkShop::findInFl);
+	connect(makeAction(ActionId::FIND_IN_FILES), &QAction::triggered, mw, &MainWindow::findInFiles);
 	connect(makeAction(ActionId::NEW), &QAction::triggered, app, &GCodeWorkShop::newFileFromTemplate);
 	connect(makeAction(ActionId::OPEN), &QAction::triggered, app, &GCodeWorkShop::open);
 	connect(makeAction(ActionId::OPEN_EXAMPLE), &QAction::triggered, app, &GCodeWorkShop::openExample);
