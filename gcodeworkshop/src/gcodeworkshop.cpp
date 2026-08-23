@@ -22,33 +22,24 @@
 
 #include <QAbstractPrintDialog> // for QAbstractPrintDialog, QAbstractPrintDialog::PrintSelection
 #include <QAction>              // for QAction
-#include <QActionGroup>         // for QActionGroup
 #include <QApplication>         // for QApplication, qApp
 #include <QByteArray>           // for QByteArray
-#include <QClipboard>           // for QClipboard
-#include <QCloseEvent>          // for QCloseEvent
 #include <QComboBox>            // for QComboBox, QComboBox::AdjustToContents
 #include <QDesktopServices>     // for QDesktopServices
 #include <QDialog>              // for QDialog, QDialog::Accepted
 #include <QDir>                 // for QDir, operator|, QDir::Files, QDir::Hidden, QDir::Name, QDir::NoSymLinks
-#include <QDragEnterEvent>      // for QDragEnterEvent
-#include <QDropEvent>           // for QDropEvent
 #include <QFile>                // for QFile
 #include <QFileDialog>          // for QFileDialog, QFileDialog::DontConfirmOverwrite
 #include <QFileInfo>            // for QFileInfo, QFileInfoList
 #include <QFileSystemWatcher>   // for QFileSystemWatcher
-#include <QFrame>               // for QFrame, QFrame::Box, QFrame::Sunken
 #include <QIODevice>            // for QIODevice, QIODevice::ReadWrite, operator|, QIODevice::ReadOnly, QIODe...
-#include <QIcon>                // for QIcon
-#include <QLabel>               // for QLabel
+#include <QLatin1String>        // for QLatin1String
 #include <QList>                // for QList, QList<>::iterator, QList<>::const_iterator, QList<>::Iterator
 #include <QMainWindow>          // for QMainWindow
 #include <QMdiArea>             // for QMdiArea, QMdiArea::SubWindowView, QMdiArea::TabbedView
 #include <QMdiSubWindow>        // for QMdiSubWindow
 #include <QMenu>                // for QMenu
-#include <QMenuBar>             // for QMenuBar
 #include <QMessageBox>          // for QMessageBox, operator|, QMessageBox::Save, QMessageBox::Discard, QMess...
-#include <QMimeData>            // for QMimeData
 #include <QObject>              // for SIGNAL, SLOT, qobject_cast, emit
 #include <QPageLayout>          // for QPageLayout, QPageLayout::Orientation
 #include <QPageSize>            // for QPageSize, QPageSize::A4, QPageSize::PageSizeId
@@ -58,20 +49,12 @@
 #include <QPrintPreviewDialog>  // for QPrintPreviewDialog
 #include <QPrinter>             // for QPrinter, QPrinter::HighResolution, QPrinter::NativeFormat, QPrinter::...
 #include <QProcess>             // for QProcess
-#include <QPushButton>          // for QPushButton
 #include <QRect>                // for QRect
-#include <QResizeEvent>         // for QResizeEvent
 #include <QSettings>            // for QSettings, QSettings::IniFormat, QSettings::NoError
-#include <QSize>                // for QSize
-#include <QSplitter>            // for QSplitter
 #include <QStatusBar>           // for QStatusBar
 #include <QString>              // for QString, operator+, operator!=, operator==
 #include <QStringList>          // for QStringList
-#include <QTabBar>              // for QTabBar
-#include <QTabWidget>           // for QTabWidget
 #include <QTextStream>          // for QTextStream
-#include <QToolBar>             // for QToolBar
-#include <QToolButton>          // for QToolButton
 #include <QUrl>                 // for QUrl, QUrl::TolerantMode
 #include <QVariant>             // for QVariant
 #include <QWidget>              // for QWidget
@@ -89,7 +72,6 @@
 #include <gcoderstyle.h>                // for GCoderStyle
 #include <gcoderwidgetproperties.h>     // for GCoderWidgetProperties
 #include <gcodeworkshop.h>              // IWYU pragma: associated
-#include <kdiff3/kdiff3.h>              // KDiff3App
 #include <kdiff3/common.h>              // getFilters()
 #include <utils/keysequencemap.h>       // for KeySequenceMap
 #include <utils/medium.h>               // Medium
@@ -99,28 +81,18 @@
 #include "gcoder.h"                         // for DOCUMENT_TYPE
 #include "gcoderinfo.h"                     // for GCoderInfo
 #include "gcoderproducer.h"                 // for GCoderProducer
-#include "gui/clipboard/clipboardpanel.h"
-#include "gui/filebrowser/filebrowserpanel.h"
-#include "gui/filetable/filetablepanel.h"
-#include "gui/findinfiles/findinfilespanel.h"    // for FindInFiles
-#include "gui/findtoolbar/findtoolbar.h"    // for FindToolBar
-#include "gui/newfile/newfiledialog.h"      // for newFileDialog
-#include "gui/project/projectpanel.h"
-#include "gui/serialport/serialtoolbar.h"
-#include "gui/session/sessiondialog.h"      // for SessionDialog
-#include "gui/setup/setupdialog.h"          // for AppConfig, SetupDialog
 #include "gui/workshop/defaultkeysequences.h"
 #include "gui/workshop/editactions.h"       // for EditActions
 #include "gui/workshop/fileactions.h"       // for FileActions
-#include "gui/workshop/helpactions.h"       // for HelpActions
-#include "gui/workshop/statusbaractions.h"
+#include "gui/workshop/mainwindow.h"        // for MainWindow
 #include "gui/workshop/toolactions.h"       // for ToolActions
-#include "gui/workshop/windowactions.h"     // for WindowActions
+#include "gui/newfile/newfiledialog.h"      // for newFileDialog
+#include "gui/session/sessiondialog.h"      // for SessionDialog
+#include "gui/setup/setupdialog.h"          // for AppConfig, SetupDialog
 #include "highlightmode.h"                  // for MODE_AUTO, MODE_FANUC, MODE_HEIDENHAIN, MODE_HEIDENHAIN_ISO, MODE_LINU...
 #include "recentfiles.h"                    // for RecentFiles
 #include "sessionmanager.h"                 // for SessionManager
 #include "tooltips.h"                       // for writeTooltipFile
-#include "ui_gcodeworkshop.h"               // for Ui::GCodeWorkShop
 
 
 #define EXAMPLES_PATH             "/usr/share/gcodeworkshop/EXAMPLES"
@@ -137,41 +109,23 @@ GCodeWorkShop* GCodeWorkShop::instance()
 }
 
 GCodeWorkShop::GCodeWorkShop(Medium* medium)
-	: QMainWindow(nullptr)
+	: QObject(nullptr)
 {
+	m_mainWindow = nullptr;
 	mMedium = medium;
-
-	setAttribute(Qt::WA_DeleteOnClose);
-
-	ui = new Ui::GCodeWorkShop();
-	ui->setupUi(this);
-	setAcceptDrops(true);
-	connect(ui->mdiArea, SIGNAL(subWindowActivated(QMdiSubWindow*)), this,
-	        SLOT(activeWindowChanged(QMdiSubWindow*)));
-
-	serialToolBar = nullptr;
-	diffApp = nullptr;
-	findFiles = nullptr;
 	m_fileServer = nullptr;
 
 	m_MdiWidgetsMaximized = true;
 	m_defaultReadOnly = false;
 	m_startEmpty = false;
 	m_disableFileChangeMonitor = false;
-	m_MdiTabbedMode = false;
 	m_findInFilesHighlightEnable = true;
 
 	m_extensions << "*.nc" <<  "*.cnc";
 	m_saveExtension = "*.nc";
 	m_saveDirectory = QDir::homePath();
 
-	clipboard = QApplication::clipboard();
-	connect(clipboard, SIGNAL(dataChanged()), this, SLOT(clipboardChanged()));
-
-	connect(ui->hideButton, SIGNAL(clicked()), this, SLOT(hidePanel()));
-
 	m_recentFiles = new RecentFiles(this);
-	connect(m_recentFiles, SIGNAL(fileListChanged(QStringList)), this, SLOT(updateRecentFilesMenu(QStringList)));
 	connect(m_recentFiles, SIGNAL(saveRequest()), this, SLOT(recentFilesChanged()));
 
 	m_shortcuts.insert(GUI::WorkShop::defaultKeySequence());
@@ -183,44 +137,38 @@ GCodeWorkShop::GCodeWorkShop(Medium* medium)
 		m_shortcuts.save(cfg);
 	});
 
-	createActions();
-	createToolBars();
-	createStatusBar();
-	setupToolTabs();
-
-	connect(ui->mdiArea, SIGNAL(subWindowActivated(QMdiSubWindow*)), this,
-	        SLOT(activeWindowChanged(QMdiSubWindow*)));
 
 	m_documentManager = new DocumentManager(this);
-	m_documentManager->setMdiArea(ui->mdiArea);
 	m_documentManager->registerDocumentProducer(new GCoderProducer());
-	connect(m_documentManager, SIGNAL(activeDocumentChanged(Document*)), this, SLOT(updateMenus()));
-	connect(m_documentManager, SIGNAL(cursorPositionChanged()), this, SLOT(updateStatusBar()));
-	connect(m_documentManager, SIGNAL(modificationChanged(bool)), this, SLOT(updateMenus()));
-	connect(m_documentManager, SIGNAL(selectionChanged()), this, SLOT(updateMenus()));
 	connect(m_documentManager, SIGNAL(closeRequested(Document*)), this, SLOT(maybeSave(Document*)),
 	        Qt::ConnectionType::DirectConnection);
-	connect(m_documentManager, SIGNAL(redoAvailable(bool)), m_editActions->redo(), SLOT(setEnabled(bool)));
-	connect(m_documentManager, SIGNAL(undoAvailable(bool)), m_editActions->undo(), SLOT(setEnabled(bool)));
 	connect(m_documentManager, SIGNAL(customContextMenuRequested(Document*, const QPoint&)), this,
 	        SLOT(customContextMenuRequest(Document*, const QPoint&)));
 	connect(m_documentManager, SIGNAL(fileWatchRequest(const QString&, bool)), this, SLOT(watchFile(const QString&, bool)));
 
 	m_sessionManager = new SessionManager(m_documentManager, this);
-	connect(m_sessionManager, SIGNAL(sessionListChanged(QStringList)), this, SLOT(updateSessionMenus(QStringList)));
 	connect(m_sessionManager, SIGNAL(beforeCurrentSessionChanged()), this, SLOT(beforeCurrentSessionChanged()));
 	connect(m_sessionManager, SIGNAL(currentSessionChanged()), this, SLOT(currentSessionChanged()));
 	connect(m_sessionManager, SIGNAL(saveRequest()), this, SLOT(sessionsChanged()));
 
-	createFindToolBar();
-	connect(m_documentManager, SIGNAL(activeDocumentChanged(Document*)), m_findToolBar, SLOT(highlight()));
-	createMenus();
-	updateWindowMenu();
-	updateMenus();
-	ui->vSplitter->addWidget(createFileTablePanel());
-
-	setWindowTitle(tr("GCodeWorkShop"));
-	setWindowIcon(QIcon(":/images/edytornc.png"));
+	m_mainWindow = new GUI::WorkShop::MainWindow(this);
+	m_documentManager->setMdiArea(m_mainWindow->mdiArea());
+	connect(m_recentFiles, &RecentFiles::fileListChanged, m_mainWindow, &GUI::WorkShop::MainWindow::updateRecentFilesMenu);
+	connect(m_documentManager, &DocumentManager::redoAvailable, m_mainWindow->editActions()->redo(), &QAction::setEnabled);
+	connect(m_documentManager, &DocumentManager::undoAvailable, m_mainWindow->editActions()->undo(), &QAction::setEnabled);
+	connect(m_documentManager, &DocumentManager::activeDocumentChanged, m_mainWindow,
+	        &GUI::WorkShop::MainWindow::updateMenus);
+	connect(m_documentManager, &DocumentManager::cursorPositionChanged, m_mainWindow,
+	        &GUI::WorkShop::MainWindow::updateStatusBar);
+	connect(m_documentManager, &DocumentManager::modificationChanged, m_mainWindow,
+	        &GUI::WorkShop::MainWindow::updateMenus);
+	connect(m_documentManager, &DocumentManager::selectionChanged, m_mainWindow, &GUI::WorkShop::MainWindow::updateMenus);
+	connect(m_sessionManager, &SessionManager::sessionListChanged, m_mainWindow,
+	        &GUI::WorkShop::MainWindow::updateSessionMenus);
+	connect(this, &GCodeWorkShop::loadSettings, m_mainWindow, &GUI::WorkShop::MainWindow::loadSettings);
+	connect(this, &GCodeWorkShop::saveSettings, m_mainWindow, &GUI::WorkShop::MainWindow::saveSettings);
+	connect(this, &GCodeWorkShop::updateIcons, m_mainWindow, &GUI::WorkShop::MainWindow::loadIcons);
+	connect(this, &GCodeWorkShop::updateTranslations, m_mainWindow, &GUI::WorkShop::MainWindow::loadTranslations);
 }
 
 GCodeWorkShop::~GCodeWorkShop()
@@ -235,8 +183,6 @@ GCodeWorkShop::~GCodeWorkShop()
 	if (m_fileServer) {
 		m_fileServer->close();
 	}
-
-	delete ui;
 }
 
 void GCodeWorkShop::launch(const QStringList& args)
@@ -263,107 +209,26 @@ void GCodeWorkShop::launch(const QStringList& args)
 		openFilesFromSession();
 	}
 
+	m_mainWindow->fileActions()->openExample()->setEnabled(QDir(EXAMPLES_PATH).exists()
+	        || QDir(QApplication::applicationDirPath() + "../" + "examples").exists()
+	        || QDir(QApplication::applicationDirPath() + "../../" + "examples").exists());
+
+	m_mainWindow->updateMenus();
+	m_mainWindow->updateRecentFilesMenu(m_recentFiles->fileList());
+	m_mainWindow->updateSessionMenus(m_sessionManager->sessionList());
+	m_mainWindow->updateStatusBar();
+
 	mainWindow()->show();
-}
-
-void GCodeWorkShop::resizeEvent(QResizeEvent* event)
-{
-	if (windowState() == Qt::WindowNoState && event->oldSize().isValid()) {
-		mMWConfig.size = event->size();
-	}
-
-	QMainWindow::resizeEvent(event);
-}
-
-void GCodeWorkShop::moveEvent(QMoveEvent* event)
-{
-	if (windowState() == Qt::WindowNoState) {
-		mMWConfig.pos = geometry().topLeft();
-	}
-
-	QMainWindow::moveEvent(event);
-}
-
-void GCodeWorkShop::dragEnterEvent(QDragEnterEvent* event)
-{
-	if (!event->mimeData()->hasUrls()) {
-		QMainWindow::dragEnterEvent(event);
-		return;
-	}
-
-	event->acceptProposedAction();
-}
-
-void GCodeWorkShop::dropEvent(QDropEvent* event)
-{
-	if (!event->mimeData()->hasUrls()) {
-		QMainWindow::dropEvent(event);
-		return;
-	}
-
-	for (QUrl url : event->mimeData()->urls()) {
-		openFile(url.toString(QUrl::PreferLocalFile));
-	}
-
-	event->acceptProposedAction();
 }
 
 QMainWindow* GCodeWorkShop::mainWindow()
 {
-	return this;
-}
-
-Addons::Actions* GCodeWorkShop::addonsActions()
-{
-	return m_addonsActions;
-}
-
-GUI::WorkShop::EditActions* GCodeWorkShop::editActions()
-{
-	return m_editActions;
-}
-
-GUI::WorkShop::FileActions* GCodeWorkShop::fileActions()
-{
-	return m_fileActions;
-}
-
-GUI::WorkShop::HelpActions* GCodeWorkShop::helpActions()
-{
-	return m_helpActions;
-}
-
-GUI::WorkShop::ToolActions* GCodeWorkShop::toolActions()
-{
-	return m_toolActions;
-}
-
-GUI::WorkShop::WindowActions* GCodeWorkShop::windowActions()
-{
-	return m_windowActions;
+	return m_mainWindow;
 }
 
 DocumentManager* GCodeWorkShop::documentManager() const
 {
 	return m_documentManager;
-}
-
-void GCodeWorkShop::setMdiTabbedMode(bool tabbed)
-{
-	m_MdiTabbedMode = tabbed;
-
-	if (m_MdiTabbedMode) {
-		ui->mdiArea->setViewMode(QMdiArea::TabbedView);
-		QTabBar* tab = ui->mdiArea->findChild<QTabBar*>();
-
-		if (tab) {
-			tab->setTabsClosable(true);
-			// The tabs might be very wide
-			tab->setExpanding(false);
-		}
-	} else {
-		ui->mdiArea->setViewMode(QMdiArea::SubWindowView);
-	}
 }
 
 QStringList GCodeWorkShop::fileFilter() const
@@ -379,12 +244,12 @@ void GCodeWorkShop::setFileFilter(const QStringList& extensions)
 
 void GCodeWorkShop::closeCurrentWindow()
 {
-	ui->mdiArea->closeActiveSubWindow();
+	m_mainWindow->mdiArea()->closeActiveSubWindow();
 }
 
 void GCodeWorkShop::closeAllMdiWindows()
 {
-	ui->mdiArea->closeAllSubWindows();
+	m_mainWindow->mdiArea()->closeAllSubWindows();
 }
 
 bool GCodeWorkShop::close()
@@ -400,7 +265,7 @@ bool GCodeWorkShop::close()
 		}
 	}
 
-	if (!m_projectPanel->maybeSave() || !maybeSaveAll()) {
+	if (!m_mainWindow->maybeSave() || !maybeSaveAll()) {
 		return false;
 	}
 
@@ -408,13 +273,6 @@ bool GCodeWorkShop::close()
 	writeSettings();
 	closeAllMdiWindows();
 	return true;
-}
-
-void GCodeWorkShop::closeEvent(QCloseEvent* event)
-{
-	if (!close()) {
-		event->ignore();
-	}
 }
 
 Document* GCodeWorkShop::newFileFromTemplate()
@@ -800,41 +658,7 @@ void GCodeWorkShop::copy()
 
 void GCodeWorkShop::findInFl()
 {
-	if (findFiles == nullptr) {
-		findFiles = new GUI::FindInFilesPanel(ui->splitter);
-		connect(this, &GCodeWorkShop::intCapsLockChanged, findFiles, &GUI::FindInFilesPanel::setCapsLockEnable);
-		auto prop = dynamic_cast<GCoderWidgetProperties*>(m_documentManager->documentWidgetProperties(
-		                GCoder::DOCUMENT_TYPE).get());
-
-		if (prop) {
-			findFiles->setCapsLockEnable(prop->intCapsLock);
-		}
-
-		findFiles->loadSettings(Medium::instance().settings());
-		connect(this, &GCodeWorkShop::loadSettings, findFiles, &GUI::FindInFilesPanel::loadSettings);
-		connect(this, &GCodeWorkShop::saveSettings, findFiles, &GUI::FindInFilesPanel::saveSettings);
-
-		if (m_findInFilesHighlightEnable) {
-			GCoderStyle* style = dynamic_cast<GCoderStyle*>(m_documentManager->documentStyle(GCoder::DOCUMENT_TYPE).get());
-
-			if (style) {
-				findFiles->setHighlightColors(style->hColors);
-			}
-		}
-
-		if (activeDocument()) {
-			findFiles->setDir(activeDocument()->path());
-		}
-
-		connect(findFiles, SIGNAL(fileClicked(QString)), this, SLOT(loadFoundedFile(QString)));
-	} else if (!m_fileActions->findFiles()->isChecked()) {
-		findFiles->saveSettings(Medium::instance().settings());
-		findFiles->close();
-		findFiles = nullptr;
-	} else {
-		findFiles->show();
-		m_fileActions->findFiles()->setChecked(true);
-	}
+	m_mainWindow->findInFiles();
 }
 
 void GCodeWorkShop::selAll()
@@ -855,7 +679,7 @@ void GCodeWorkShop::config()
 	config.extensions = m_extensions;
 	config.saveExtension = m_saveExtension;
 	config.saveDirectory = m_saveDirectory;
-	config.mdiTabbedMode = m_MdiTabbedMode;
+	config.mdiTabbedMode = m_mainWindow->MdiTabbedMode();
 	config.defaultReadOnly = m_defaultReadOnly;
 	config.disableFileChangeMonitor = m_disableFileChangeMonitor;
 	config.startEmpty = m_startEmpty;
@@ -875,7 +699,7 @@ void GCodeWorkShop::config()
 		setFileFilter(config.extensions);
 		m_saveExtension = config.saveExtension;
 		m_saveDirectory = config.saveDirectory;
-		setMdiTabbedMode(config.mdiTabbedMode);
+		m_mainWindow->setMdiTabbedMode(config.mdiTabbedMode);
 		m_defaultReadOnly = config.defaultReadOnly;
 		m_disableFileChangeMonitor = config.disableFileChangeMonitor;
 		m_startEmpty = config.startEmpty;
@@ -895,10 +719,10 @@ void GCodeWorkShop::config()
 void GCodeWorkShop::readOnly()
 {
 	if (activeDocument()) {
-		activeDocument()->setReadOnly(editActions()->readOnly()->isChecked());
+		activeDocument()->setReadOnly(m_mainWindow->editActions()->readOnly()->isChecked());
 	}
 
-	updateMenus();
+	m_mainWindow->updateMenus();
 }
 
 void GCodeWorkShop::goToLine(const QString& fileName, int line)
@@ -917,165 +741,29 @@ void GCodeWorkShop::goToLine(const QString& fileName, int line)
 	}
 }
 
-void GCodeWorkShop::createDiffApp()
-{
-	if (diffApp == nullptr) {
-		diffApp = new KDiff3App(ui->splitter, "DiffApp", m_extensions);
-
-		connect(diffApp, SIGNAL(lineClicked(QString, int)), this, SLOT(goToLine(QString, int)));
-	}
-}
-
 void GCodeWorkShop::doDiffL()
 {
-	QString fileName;
-
-	createDiffApp();
-
-	if (diffApp != nullptr) {
-		m_toolActions->diffLeft()->setEnabled(false);
-		m_toolActions->diffRight()->setEnabled(false);
-		m_toolActions->diff()->setEnabled(false);
-
-		m_toolActions->diff()->setChecked(true);
-
-		if (activeDocument()) {
-			fileName = activeDocument()->filePath();
-		}
-
-		if (fileName.isEmpty()) {
-			fileName = lastOpenedPath();
-		}
-
-		//        diffApp->close();
-		diffApp->completeInit(fileName, "");
-
-		m_toolActions->diffLeft()->setEnabled(true);
-		m_toolActions->diffRight()->setEnabled(true);
-		m_toolActions->diff()->setEnabled(true);
-	}
+	m_mainWindow->doDiffL();
 }
 
 void GCodeWorkShop::doDiffR()
 {
-	QString fileName;
-
-	createDiffApp();
-
-	if (diffApp != nullptr) {
-		m_toolActions->diffLeft()->setEnabled(false);
-		m_toolActions->diffRight()->setEnabled(false);
-		m_toolActions->diff()->setEnabled(false);
-
-		m_toolActions->diff()->setChecked(true);
-
-		if (activeDocument()) {
-			fileName = activeDocument()->filePath();
-		}
-
-		if (fileName.isEmpty()) {
-			fileName = lastOpenedPath();
-		}
-
-		//        diffApp->close();
-		diffApp->completeInit("", fileName);
-
-		m_toolActions->diffLeft()->setEnabled(true);
-		m_toolActions->diffRight()->setEnabled(true);
-		m_toolActions->diff()->setEnabled(true);
-	}
-}
-
-void GCodeWorkShop::diffTwoFiles(const QString& filename1, const QString& filename2)
-{
-	createDiffApp();
-
-	if (diffApp != nullptr) {
-		m_toolActions->diff()->setChecked(true);
-		//        diffApp->close();
-		diffApp->completeInit(filename1, filename2);
-
-		QList<int> sizes;
-		sizes.clear();
-		sizes.append(0);
-		sizes.append(ui->splitter->height());
-		ui->splitter->setSizes(sizes);
-	}
+	m_mainWindow->doDiffR();
 }
 
 void GCodeWorkShop::diffEditorFile()
 {
-	Document* doc = activeDocument();
-
-	if (!doc) {
-		return;
-	}
-
-	createDiffApp();
-
-	if (diffApp != nullptr) {
-		QString fileName = doc->filePath();
-
-		if (fileName.isEmpty()) {
-			return;
-		}
-
-		QString fileName1 = QDir::tempPath() + QDir::separator() + QFileInfo(
-		                        fileName).baseName() + ".tmp";
-		//qDebug() << fileName << fileName1;
-
-		QFile file(fileName1);
-
-		if (!file.open(QIODevice::WriteOnly)) {
-			QMessageBox::warning(mainWindow(), tr("GCodeWorkShop"),
-			                     tr("Cannot write tmp file \"%1\".\n %2")
-			                     .arg(QDir::toNativeSeparators(fileName1))
-			                     .arg(file.errorString()));
-			return;
-		}
-
-		file.write(doc->rawData());
-		file.close();
-
-		m_toolActions->diff()->setChecked(true);
-		//        diffApp->close();
-		diffApp->completeInit(fileName, fileName1);
-
-		if (file.exists()) {
-			file.remove();
-		}
-
-		//      QList<int> sizes;
-		//      sizes.clear();
-		//      sizes.append(0);
-		//      sizes.append(splitter->height());
-		//      splitter->setSizes(sizes);
-	}
+	m_mainWindow->diffEditorFile();
 }
 
 void GCodeWorkShop::doDiff()
 {
-	QString fileName;
+	m_mainWindow->doDiff();
+}
 
-	if (diffApp == nullptr) {
-		createDiffApp();
-
-		if (activeDocument()) {
-			fileName = activeDocument()->filePath();
-		}
-
-		if (fileName.isEmpty()) {
-			fileName = lastOpenedPath();
-		}
-
-		//        diffApp->close();
-		diffApp->completeInit(QFileInfo(fileName).canonicalPath(), QFileInfo(fileName).canonicalPath());
-
-	} else if (!m_toolActions->diff()->isChecked()) {
-		m_toolActions->diff()->setChecked(false);
-		diffApp->close();
-		diffApp = nullptr;
-	}
+void GCodeWorkShop::diffTwoFiles(const QString& filename1, const QString& filename2)
+{
+	m_mainWindow->diffTwoFiles(filename1, filename2);
 }
 
 void GCodeWorkShop::doCalc()
@@ -1142,7 +830,7 @@ void GCodeWorkShop::activeWindowChanged(QMdiSubWindow* window)
 	Q_UNUSED(window);
 	Document* doc;
 
-	if (ui->mdiArea->subWindowList().count() <= 1) {
+	if (m_documentManager->documentList().count() <= 1) {
 		m_MdiWidgetsMaximized = true;
 	}
 
@@ -1153,7 +841,7 @@ void GCodeWorkShop::activeWindowChanged(QMdiSubWindow* window)
 		statusBarMessage(doc->filePath(), 9000);
 	}
 
-	updateCurrentSerialConfig();
+	m_mainWindow->updateCurrentSerialConfig();
 	fireCurrentDirChanged();
 }
 
@@ -1192,177 +880,6 @@ void GCodeWorkShop::about()
 	                      "MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.</i>").arg(GCODEWORKSHOP_VERSION));
 }
 
-void GCodeWorkShop::updateMenus()
-{
-	Document* doc = activeDocument();
-	GCoderDocument* gdoc = activeGCoderDocument();
-	bool hasMdiChildNotReadOnly;
-	bool hasSelection;
-	bool hasModifiedMdiChild;
-	bool hasMdiChild = doc != nullptr;
-
-	if (hasMdiChild) {
-		hasMdiChildNotReadOnly = !doc->isReadOnly();
-		hasSelection = gdoc ? gdoc->hasSelection() : false;
-		hasModifiedMdiChild = doc->isModified();
-
-		m_editActions->redo()->setEnabled(hasMdiChild && doc->isRedoAvailable());
-		m_editActions->undo()->setEnabled(hasMdiChild && doc->isUndoAvailable());
-	} else {
-		hasMdiChildNotReadOnly = false;
-		hasSelection = false;
-		hasModifiedMdiChild = false;
-
-		m_editActions->redo()->setEnabled(false);
-		m_editActions->undo()->setEnabled(false);
-	}
-
-	m_fileActions->save()->setEnabled(hasModifiedMdiChild);
-	m_fileActions->saveAll()->setEnabled(hasMdiChild);
-	m_fileActions->saveAs()->setEnabled(hasMdiChild);
-	m_fileActions->print()->setEnabled(hasMdiChild);
-	m_fileActions->printPreview()->setEnabled(hasMdiChild);
-	m_editActions->paste()->setEnabled(hasMdiChild);
-	m_fileActions->close()->setEnabled(hasMdiChild);
-	m_fileActions->closeAll()->setEnabled(hasMdiChild);
-
-	m_windowActions->tileHoriz()->setEnabled(hasMdiChild);
-	m_windowActions->tileVert()->setEnabled(hasMdiChild);
-	m_windowActions->cascade()->setEnabled(hasMdiChild);
-	m_windowActions->next()->setEnabled(hasMdiChild);
-	m_windowActions->previous()->setEnabled(hasMdiChild);
-	m_windowActions->separator()->setVisible(hasMdiChild);
-	m_editActions->selectAll()->setEnabled(hasMdiChildNotReadOnly);
-	m_editActions->find()->setEnabled(hasMdiChild);
-
-	m_toolActions->diffLeft()->setEnabled(hasMdiChild);
-	m_toolActions->diffRight()->setEnabled(hasMdiChild);
-	m_toolActions->diffEditor()->setEnabled(hasMdiChildNotReadOnly);
-
-	m_editActions->replace()->setEnabled(hasMdiChildNotReadOnly);
-	m_editActions->readOnly()->setEnabled(hasMdiChild);
-	m_addonsActions->renumber()->setEnabled(hasMdiChildNotReadOnly);
-	m_addonsActions->dot()->setEnabled(hasMdiChildNotReadOnly);
-	m_addonsActions->removeEmptyLines()->setEnabled(hasMdiChildNotReadOnly);
-	m_addonsActions->insertEmptyLines()->setEnabled(hasMdiChildNotReadOnly);
-	m_addonsActions->insertSpaces()->setEnabled(hasMdiChildNotReadOnly);
-	m_addonsActions->removeSpaces()->setEnabled(hasMdiChildNotReadOnly);
-	m_addonsActions->splitProgramms()->setEnabled(hasMdiChildNotReadOnly);
-	m_addonsActions->i2mProg()->setEnabled(hasMdiChildNotReadOnly);
-	m_addonsActions->compileMacro()->setEnabled(hasMdiChildNotReadOnly);
-	m_addonsActions->cleanUp()->setEnabled(hasMdiChildNotReadOnly);
-	m_addonsActions->swapAxes()->setEnabled(hasMdiChildNotReadOnly);
-	m_addonsActions->paraComment()->setEnabled(hasMdiChildNotReadOnly && hasSelection);
-	m_addonsActions->semiComment()->setEnabled(hasMdiChildNotReadOnly && hasSelection);
-	m_addonsActions->blockSkipDecrement()->setEnabled(hasMdiChildNotReadOnly && hasSelection);
-	m_addonsActions->blockSkipIncrement()->setEnabled(hasMdiChildNotReadOnly && hasSelection);
-	m_addonsActions->blockSkipRemove()->setEnabled(hasMdiChildNotReadOnly && hasSelection);
-	m_toolActions->inLineCalc()->setEnabled(hasMdiChild);
-
-	if (!hasMdiChildNotReadOnly) {
-		m_editActions->readOnly()->setChecked(true);
-		m_editActions->readOnly()->setIcon(QIcon(":/images/lock.png"));
-	} else {
-		m_editActions->readOnly()->setChecked(false);
-		m_editActions->readOnly()->setIcon(QIcon(":/images/unlock.png"));
-	}
-
-	m_editActions->cut()->setEnabled(hasSelection && hasMdiChildNotReadOnly);
-	m_editActions->del()->setEnabled(hasSelection && hasMdiChildNotReadOnly);
-	m_editActions->copy()->setEnabled(hasSelection);
-
-	m_editActions->paste()->setEnabled((!clipboard->text().isEmpty()) && hasMdiChildNotReadOnly);
-
-	if (doc) {
-		m_fileActions->save()->setText(tr("&Save \"%1\"").arg(doc->fileName()));
-		m_fileActions->saveAs()->setText(tr("Save \"%1\" &As...").arg(doc->fileName()));
-		m_fileActions->close()->setText(tr("Cl&ose \"%1\"").arg(doc->fileName()));
-	}
-
-	updateStatusBar();
-}
-
-void GCodeWorkShop::updateCurrentSerialConfig()
-{
-	bool hasMdiChild = (activeDocument() != nullptr);
-
-	if (hasMdiChild && (serialToolBar != nullptr)) {
-		QDir dir = activeDocument()->dir();
-		dir.setFilter(QDir::Files | QDir::Hidden | QDir::NoSymLinks);
-		dir.setSorting(QDir::Name);
-		dir.setNameFilters(QStringList("*.ini"));
-
-		QFileInfoList list = dir.entryInfoList();
-
-		if (!list.isEmpty()) {
-			QFileInfo name = list.at(0);
-			serialToolBar->selectProfile(name.baseName());
-		}
-	}
-}
-
-void GCodeWorkShop::updateStatusBar()
-{
-	GCoderDocument* gdoc = activeGCoderDocument();
-
-	if (gdoc) {
-		int id = highlightTypeCombo->findData(gdoc->highlightMode());
-		highlightTypeCombo->blockSignals(true);
-		highlightTypeCombo->setCurrentIndex(id);
-		highlightTypeCombo->blockSignals(false);
-
-		int line = gdoc->currentLine();
-		int column = gdoc->currentColumn();
-
-		labelStat1->setText(tr(" Col: ") + QString::number(column + 1) +
-		                    tr("  Line: ") + QString::number(line) +
-		                    (gdoc->isModified() ? tr("  <b>Modified</b>  ") : " ") +
-		                    (gdoc->isReadOnly() ? tr(" Read only  ") : " ") +
-		                    (gdoc->overwriteMode() ? tr(" Overwrite  ") : tr(" Insert ")));
-
-	}
-}
-
-void GCodeWorkShop::updateWindowMenu()
-{
-	QString text;
-
-	windowMenu->clear();
-	windowMenu->addAction(m_fileActions->close());
-	windowMenu->addAction(m_fileActions->closeAll());
-	windowMenu->addSeparator();
-	windowMenu->addAction(m_windowActions->tileHoriz());
-	windowMenu->addAction(m_windowActions->tileVert());
-	windowMenu->addAction(m_windowActions->cascade());
-	windowMenu->addSeparator();
-	windowMenu->addAction(m_windowActions->next());
-	windowMenu->addAction(m_windowActions->previous());
-	windowMenu->addAction(m_windowActions->separator());
-
-	windowMenu->setAttribute(Qt::WA_AlwaysShowToolTips, true);
-
-	QList<Document*> docList = m_documentManager->documentList();
-	m_windowActions->separator()->setVisible(!docList.isEmpty());
-
-	for (int i = 0; i < docList.size(); ++i) {
-		Document* doc = docList.at(i);
-
-		if (i < 9) {
-			text = tr("&%1 %2").arg(i + 1).arg(doc->filePath());
-		} else {
-			text = tr("%1 %2").arg(i + 1).arg(doc->filePath());
-		}
-
-		QAction* action = windowMenu->addAction(text);
-		action->setCheckable(true);
-		action->setChecked(doc == activeDocument());
-		action->setToolTip(doc->brief());
-		connect(action, &QAction::triggered, [this, doc]() {
-			setActiveDocument(doc);
-		});
-	}
-}
-
 Document* GCodeWorkShop::createDocument(const QString& type)
 {
 	Document* doc = m_documentManager->createDocument(type, "");
@@ -1386,282 +903,9 @@ Document* GCodeWorkShop::createDocument(const QString& type)
 	return doc;
 }
 
-void GCodeWorkShop::createActions()
-{
-	m_addonsActions = new Addons::Actions(this, this);
-	m_editActions = new GUI::WorkShop::EditActions(this, this);
-	m_fileActions = new GUI::WorkShop::FileActions(this, this);
-	m_fileActions->openExample()->setEnabled(QDir(EXAMPLES_PATH).exists()
-	        || QDir(QApplication::applicationDirPath() + "../" + "examples").exists()
-	        || QDir(QApplication::applicationDirPath() + "../../" + "examples").exists());
-	m_helpActions = new GUI::WorkShop::HelpActions(this, this);
-	m_toolActions = new GUI::WorkShop::ToolActions(this, this);
-	m_windowActions = new GUI::WorkShop::WindowActions(this, this);
-}
-
-void GCodeWorkShop::createMenus()
-{
-	fileMenu = menuBar()->addMenu(tr("&File"));
-	fileMenu->addAction(m_fileActions->makeNew());
-	fileMenu->addAction(m_fileActions->open());
-	fileMenu->addAction(m_fileActions->openExample());
-
-	fileMenu->addSeparator();
-	recentFileMenu = fileMenu->addMenu(tr("&Recent files"));
-	recentFileMenu->setIcon(QIcon(":/images/document-open-recent.png"));
-	connect(recentFileMenu, SIGNAL(triggered(QAction*)), this, SLOT(fileOpenRecent(QAction*)));
-	fileMenu->addSeparator();
-	fileMenu->addAction(m_fileActions->save());
-	fileMenu->addAction(m_fileActions->saveAs());
-	fileMenu->addAction(m_fileActions->saveAll());
-	fileMenu->addSeparator();
-	fileMenu->addAction(m_fileActions->findFiles());
-	fileMenu->addSeparator();
-
-	sessionsMenu = fileMenu->addMenu(tr("Sessions"));
-	connect(sessionsMenu, SIGNAL(triggered(QAction*)), this, SLOT(changeSession(QAction*)));
-	fileMenu->addAction(m_fileActions->sessionManager());
-
-	fileMenu->addSeparator();
-	fileMenu->addAction(m_fileActions->print());
-	fileMenu->addAction(m_fileActions->printPreview());
-	fileMenu->addSeparator();
-	fileMenu->addAction(m_fileActions->close());
-	fileMenu->addAction(m_fileActions->closeAll());
-	fileMenu->addSeparator();
-	fileMenu->addAction(m_fileActions->exit());
-
-	editMenu = menuBar()->addMenu(tr("&Edit"));
-	editMenu->addAction(m_editActions->undo());
-	editMenu->addAction(m_editActions->redo());
-	editMenu->addSeparator();
-	editMenu->addAction(m_editActions->cut());
-	editMenu->addAction(m_editActions->copy());
-	editMenu->addAction(m_editActions->paste());
-	editMenu->addAction(m_editActions->del());
-	editMenu->addSeparator();
-	editMenu->addAction(m_editActions->selectAll());
-	editMenu->addSeparator();
-	editMenu->addAction(m_editActions->find());
-	editMenu->addAction(m_editActions->replace());
-
-	editMenu->addSeparator();
-	editMenu->addAction(m_addonsActions->semiComment());
-	editMenu->addAction(m_addonsActions->paraComment());
-	blockSkipMenu = editMenu->addMenu(tr("&Block Skip"));
-	blockSkipMenu->setIcon(QIcon(":/images/blockskip.png"));
-	blockSkipMenu->addAction(m_addonsActions->blockSkipIncrement());
-	blockSkipMenu->addAction(m_addonsActions->blockSkipDecrement());
-	blockSkipMenu->addAction(m_addonsActions->blockSkipRemove());
-	editMenu->addSeparator();
-	editMenu->addAction(m_editActions->readOnly());
-	editMenu->addSeparator();
-	editMenu->addAction(m_editActions->config());
-
-	toolsMenu = menuBar()->addMenu(tr("&Tools"));
-	toolsMenu->addAction(m_toolActions->showSerialToolBar());
-	toolsMenu->addSeparator();
-	toolsMenu->addAction(m_addonsActions->insertSpaces());
-	toolsMenu->addAction(m_addonsActions->removeSpaces());
-	toolsMenu->addAction(m_addonsActions->dot());
-	toolsMenu->addAction(m_addonsActions->insertEmptyLines());
-	toolsMenu->addAction(m_addonsActions->removeEmptyLines());
-	toolsMenu->addAction(m_addonsActions->cleanUp());
-	toolsMenu->addAction(m_addonsActions->swapAxes());
-	toolsMenu->addAction(m_addonsActions->splitProgramms());
-	toolsMenu->addAction(m_addonsActions->renumber());
-	toolsMenu->addSeparator();
-	toolsMenu->addAction(m_toolActions->diff());
-	toolsMenu->addSeparator();
-	toolsMenu->addAction(m_toolActions->diffLeft());
-	toolsMenu->addAction(m_toolActions->diffRight());
-	toolsMenu->addAction(m_toolActions->diffEditor());
-	toolsMenu->addSeparator();
-	toolsMenu->addAction(m_addonsActions->bhc());
-	toolsMenu->addAction(m_addonsActions->feeds());
-	toolsMenu->addAction(m_addonsActions->triangle());
-	toolsMenu->addAction(m_addonsActions->chamfer());
-	toolsMenu->addAction(m_addonsActions->i2m());
-	toolsMenu->addAction(m_addonsActions->i2mProg());
-	toolsMenu->addSeparator();
-	toolsMenu->addAction(m_addonsActions->compileMacro());
-	toolsMenu->addSeparator();
-	toolsMenu->addAction(m_toolActions->inLineCalc());
-	toolsMenu->addAction(m_toolActions->calc());
-
-	windowMenu = menuBar()->addMenu(tr("&Window"));
-	connect(windowMenu, SIGNAL(aboutToShow()), this, SLOT(updateWindowMenu()));
-
-	menuBar()->addSeparator();
-
-	helpMenu = menuBar()->addMenu(tr("&Help"));
-	helpMenu->addAction(m_helpActions->createGlobalToolTips());
-	helpMenu->addAction(m_helpActions->createUserToolTips());
-	helpMenu->addSeparator();
-	helpMenu->addAction(m_helpActions->about());
-	helpMenu->addAction(m_helpActions->aboutQt());
-}
-
-void GCodeWorkShop::createToolBars()
-{
-	fileToolBar = addToolBar(tr("File"));
-	fileToolBar->setObjectName("File");
-	fileToolBar->addAction(m_fileActions->makeNew());
-	fileToolBar->addAction(m_fileActions->open());
-	fileToolBar->addAction(m_fileActions->save());
-	fileToolBar->addAction(m_fileActions->saveAll());
-	fileToolBar->addAction(m_fileActions->saveAs());
-	fileToolBar->addSeparator();
-	fileToolBar->addAction(m_fileActions->findFiles());
-	fileToolBar->addSeparator();
-	fileToolBar->addAction(m_fileActions->print());
-
-	editToolBar = addToolBar(tr("Edit"));
-	editToolBar->setObjectName("Edit");
-	editToolBar->addAction(m_editActions->undo());
-	editToolBar->addAction(m_editActions->redo());
-	editToolBar->addSeparator();
-	editToolBar->addAction(m_editActions->cut());
-	editToolBar->addAction(m_editActions->copy());
-	editToolBar->addAction(m_editActions->paste());
-	editToolBar->addSeparator();
-	editToolBar->addAction(m_editActions->del());
-	editToolBar->addSeparator();
-	editToolBar->addAction(m_editActions->selectAll());
-	editToolBar->addSeparator();
-	editToolBar->addAction(m_editActions->find());
-	editToolBar->addAction(m_editActions->replace());
-	editToolBar->addSeparator();
-	editToolBar->addAction(m_toolActions->diff());
-	editToolBar->addSeparator();
-	editToolBar->addAction(m_toolActions->diffLeft());
-	editToolBar->addAction(m_toolActions->diffRight());
-	editToolBar->addAction(m_toolActions->diffEditor());
-
-	toolsToolBar = new QToolBar(tr("Tools"));
-	addToolBar(Qt::LeftToolBarArea, toolsToolBar);
-	toolsToolBar->setObjectName("Tools");
-	toolsToolBar->addAction(m_toolActions->showSerialToolBar());
-	toolsToolBar->addSeparator();
-	toolsToolBar->addAction(m_addonsActions->insertSpaces());
-	toolsToolBar->addAction(m_addonsActions->removeSpaces());
-	toolsToolBar->addAction(m_addonsActions->cleanUp());
-	toolsToolBar->addAction(m_addonsActions->dot());
-	toolsToolBar->addAction(m_addonsActions->swapAxes());
-	toolsToolBar->addAction(m_addonsActions->renumber());
-	toolsToolBar->addAction(m_addonsActions->splitProgramms());
-	toolsToolBar->addSeparator();
-	toolsToolBar->addAction(m_addonsActions->bhc());
-	toolsToolBar->addAction(m_addonsActions->feeds());
-	toolsToolBar->addAction(m_addonsActions->triangle());
-	toolsToolBar->addAction(m_addonsActions->chamfer());
-	toolsToolBar->addAction(m_addonsActions->i2m());
-	toolsToolBar->addAction(m_addonsActions->i2mProg());
-	toolsToolBar->addSeparator();
-	toolsToolBar->addAction(m_addonsActions->compileMacro());
-	toolsToolBar->addSeparator();
-	toolsToolBar->addAction(m_toolActions->calc());
-	toolsToolBar->addSeparator();
-
-	windowToolBar = addToolBar(tr("Window"));
-	windowToolBar->setObjectName("Window");
-	windowToolBar->addAction(m_windowActions->previous());
-	windowToolBar->addAction(m_windowActions->next());
-}
-
-void GCodeWorkShop::createStatusBar()
-{
-	auto statusActions = new GUI::WorkShop::StatusBarActions(this);
-	labelStat1 = new QLabel("    ");
-
-	labelStat1->setFrameShadow(QFrame::Sunken);
-	labelStat1->setFrameShape(QFrame::Box);
-
-	highlightTypeCombo = new QComboBox();
-	highlightTypeCombo->setToolTip(tr("Highlight style and tooltip mode"));
-	highlightTypeCombo->setEditable(false);
-	highlightTypeCombo->addItem(tr("AUTO"), MODE_AUTO);
-	highlightTypeCombo->addItem(tr("FANUC"), MODE_FANUC);
-	highlightTypeCombo->addItem(tr("HEIDENHAIN DIALOG"), MODE_HEIDENHAIN);
-	highlightTypeCombo->addItem(tr("HEIDENHAIN ISO"), MODE_HEIDENHAIN_ISO);
-	highlightTypeCombo->addItem(tr("OKUMA OSP"), MODE_OKUMA);
-	highlightTypeCombo->addItem(tr("PHILIPS"), MODE_PHILIPS);
-	highlightTypeCombo->addItem(tr("SINUMERIK OLD"), MODE_SINUMERIK);
-	highlightTypeCombo->addItem(tr("SINUMERIK NEW"), MODE_SINUMERIK_840);
-	highlightTypeCombo->addItem(tr("LinuxCNC"), MODE_LINUXCNC);
-	highlightTypeCombo->addItem(tr("TOOLTIPS"), MODE_TOOLTIPS);
-
-	connect(highlightTypeCombo, SIGNAL(currentIndexChanged(int)), this,
-	        SLOT(setHighLightMode(int)));
-	connect(statusActions->attachToDir(), SIGNAL(triggered()), this,
-	        SLOT(attachHighlightToDirActClicked()));
-	connect(statusActions->deAttachToDir(), SIGNAL(triggered()), this,
-	        SLOT(deAttachHighlightToDirActClicked()));
-
-	attachHighlightButton = new QToolButton();
-	attachHighlightButton->setDefaultAction(statusActions->attachToDir());
-	deAttachHighlightButton = new QToolButton();
-	deAttachHighlightButton->setDefaultAction(statusActions->deAttachToDir());
-	readOnlyButton = new QToolButton();
-	readOnlyButton->setDefaultAction(m_editActions->readOnly());
-
-	//statusBar()->addPermanentWidget(highlightLabel);
-	statusBar()->addPermanentWidget(labelStat1);
-	statusBar()->addPermanentWidget(highlightTypeCombo);
-	statusBar()->addPermanentWidget(attachHighlightButton);
-	statusBar()->addPermanentWidget(deAttachHighlightButton);
-	statusBar()->addPermanentWidget(readOnlyButton);
-	statusBar()->setSizeGripEnabled(true);
-
-	statusBar()->showMessage(tr("Ready"));
-}
-
-void GCodeWorkShop::createFindToolBar()
-{
-	m_findToolBar = new GUI::FindToolBar(this, mainWindow());
-	m_findToolBar->hide();
-	m_findToolBar->setObjectName("Find");
-	addToolBar(Qt::BottomToolBarArea, m_findToolBar);
-}
-
-void GCodeWorkShop::setHighLightMode(int mode)
-{
-	bool ok;
-	GCoderDocument* gdoc = activeGCoderDocument();
-	int id = highlightTypeCombo->itemData(mode).toInt(&ok);
-
-	if (gdoc && ok) {
-		gdoc->setHighlightMode(id);
-		gdoc->widget()->setFocus(Qt::MouseFocusReason);
-	}
-}
-
 void GCodeWorkShop::readSettings()
 {
 	QSettings& settings = *Medium::instance().settings();
-
-	settings.beginGroup("mainwindow");
-	mMWConfig.pos = settings.value("pos", QPoint(0, 0)).toPoint();
-	mMWConfig.size = settings.value("size", QSize(400, 240)).toSize();
-	bool maximized = settings.value("maximized", false).toBool();
-	QByteArray state = settings.value("state", QByteArray()).toByteArray();
-	settings.endGroup();
-
-	setGeometry(QRect(mMWConfig.pos, mMWConfig.size));
-	setWindowState(maximized ? Qt::WindowMaximized : Qt::WindowNoState);
-
-	if (settings.value("SerialToolbarShown", false).toBool()) {
-		createSerialToolBar();
-		m_toolActions->showSerialToolBar()->setChecked(true);
-	}
-
-	m_findToolBar->loadSettings(&settings);
-
-	if (settings.value("FindToolBarShown", false).toBool()) {
-		showFindToolBar();
-	}
-
-	restoreState(state);
 
 	m_disableFileChangeMonitor = settings.value("DisableFileChangeMonitor",
 	                             false).toBool();
@@ -1680,7 +924,6 @@ void GCodeWorkShop::readSettings()
 	m_saveDirectory = settings.value("DefaultSaveDirectory", m_saveDirectory).toString();
 	m_startEmpty = settings.value("StartEmpty", false).toBool();
 	m_defaultReadOnly = settings.value("ViewerMode", false).toBool();
-	setMdiTabbedMode(settings.value("TabbetMode", false).toBool());
 
 	fileDialogState = settings.value("FileDialogState", QByteArray()).toByteArray();
 
@@ -1718,59 +961,21 @@ void GCodeWorkShop::readSettings()
 	settings.endGroup();
 
 	m_sessionManager->load(&settings);
-
-	ui->vSplitter->restoreState(settings.value("VSplitterState", QByteArray()).toByteArray());
-
-	panelState = settings.value("ProjectPanelState", QByteArray()).toByteArray();
-	ui->hSplitter->restoreState(panelState);
-	panelHidden = settings.value("PanelHidden", false).toBool();
-
-	if (panelHidden) {
-		ui->vSplitter->hide();
-		ui->frame->setMaximumWidth(ui->hideButton->width());
-		ui->hideButton->setText(">>");
-	}
-
-	ui->tabWidget->setCurrentIndex(settings.value("TabCurrentIndex", 0).toInt());
 }
 
 void GCodeWorkShop::writeSettings()
 {
 	QSettings& settings = *Medium::instance().settings();
 
-	settings.beginGroup("mainwindow");
-	settings.setValue("pos", mMWConfig.pos);
-	settings.setValue("size", mMWConfig.size);
-	settings.setValue("maximized", isMaximized());
-	settings.setValue("state", saveState());
-	settings.endGroup();
-
 	settings.setValue("LastDir", m_lastOpenedPath);
 	settings.setValue("Extensions", m_extensions);
 	settings.setValue("DefaultSaveExtension", m_saveExtension);
 	settings.setValue("DefaultSaveDirectory", m_saveDirectory);
 	settings.setValue("CalcBinary", m_calcBinary);
-	settings.setValue("TabbetMode", m_MdiTabbedMode);
 	settings.setValue("ViewerMode", m_defaultReadOnly);
 	settings.setValue("StartEmpty", m_startEmpty);
 	settings.setValue("DisableFileChangeMonitor", m_disableFileChangeMonitor);
 	settings.setValue("FileDialogState", fileDialogState);
-
-	settings.setValue("SerialToolbarShown", (!serialToolBar.isNull()));
-
-	settings.setValue("VSplitterState", ui->vSplitter->saveState());
-	settings.setValue("TabCurrentIndex", ui->tabWidget->currentIndex());
-
-	if (panelHidden) {
-		settings.setValue("ProjectPanelState", panelState);
-	} else {
-		settings.setValue("ProjectPanelState", ui->hSplitter->saveState());
-	}
-
-	settings.setValue("PanelHidden", panelHidden);
-
-	settings.setValue("FindToolBarShown", !m_findToolBar->isHidden());
-	m_findToolBar->saveSettings(&settings);
 
 	//cleanup old settings
 	settings.remove("LastDoc");
@@ -1865,7 +1070,7 @@ void GCodeWorkShop::loadFile(const DocumentInfo::Ptr& info, bool checkAlreadyLoa
 
 	if (status) {
 		setLastOpenedPath(file.path());
-		updateStatusBar();
+		m_mainWindow->updateStatusBar();
 		m_recentFiles->add(info->filePath);
 		fireCurrentDirChanged();
 	} else {
@@ -1878,26 +1083,6 @@ void GCodeWorkShop::loadFile(const DocumentInfo::Ptr& info, bool checkAlreadyLoa
 void GCodeWorkShop::recentFilesChanged()
 {
 	m_recentFiles->save(Medium::instance().settings());
-}
-
-void GCodeWorkShop::fileOpenRecent(QAction* act)
-{
-	openFile(act->data().toString());
-}
-
-void GCodeWorkShop::updateRecentFilesMenu(const QStringList& fileList)
-{
-	recentFileMenu->clear();
-
-	for (const QString& file : fileList) {
-		QAction* newAc = recentFileMenu->addAction(QIcon(":/images/document-open-recent.png"), file);
-		newAc->setData(file);
-	}
-}
-
-void GCodeWorkShop::loadFoundedFile(const QString& fileName)
-{
-	openFile(fileName);
 }
 
 void GCodeWorkShop::messReceived(const QString& text)
@@ -1917,55 +1102,19 @@ void GCodeWorkShop::messReceived(const QString& text)
 	emit needToShow();
 }
 
-void GCodeWorkShop::showFindReplaceToolBar(bool replace)
-{
-	bool intCapsLock = false;
-	GCoderWidgetProperties* prop = dynamic_cast<GCoderWidgetProperties*>(m_documentManager->documentWidgetProperties(
-	                                   GCoder::DOCUMENT_TYPE).get());
-
-	if (prop) {
-		intCapsLock = prop->intCapsLock;
-	}
-
-	m_findToolBar->setCapsLockEnable(intCapsLock);
-	m_findToolBar->show();
-	m_findToolBar->activate(replace);
-}
-
 void GCodeWorkShop::showFindToolBar()
 {
-	showFindReplaceToolBar(false);
+	m_mainWindow->showFindReplaceToolBar(false);
 }
 
 void GCodeWorkShop::showReplaceToolBar()
 {
-	showFindReplaceToolBar(true);
+	m_mainWindow->showFindReplaceToolBar(true);
 }
 
 void GCodeWorkShop::createSerialToolBar()
 {
-	if (serialToolBar == nullptr) {
-		serialToolBar = new GUI::SerialToolBar(this, mainWindow());
-		addToolBar(Qt::TopToolBarArea, serialToolBar);
-		serialToolBar->setAttribute(Qt::WA_DeleteOnClose, true);
-		connect(serialToolBar, &QObject::destroyed, [this]() {
-			serialToolBar->saveSettings(Medium::instance().settings());
-			serialToolBar = nullptr;
-			m_toolActions->showSerialToolBar()->setChecked(false);
-		});
-		connect(this, &GCodeWorkShop::loadSettings, serialToolBar, &GUI::SerialToolBar::loadSettings);
-		connect(this, &GCodeWorkShop::saveSettings, serialToolBar, &GUI::SerialToolBar::saveSettings);
-		serialToolBar->loadSettings(Medium::instance().settings());
-	} else if (!m_toolActions->showSerialToolBar()->isChecked()) {
-		serialToolBar->close();
-		return;
-	} else {
-		serialToolBar->show();
-		m_toolActions->showSerialToolBar()->setChecked(true);
-	}
-
-	serialToolBar->loadSerialConfignames();
-	updateCurrentSerialConfig();
+	m_mainWindow->createSerialToolBar();
 }
 
 void GCodeWorkShop::attachSerialConfigToDir(const QString& name, bool attach)
@@ -1974,7 +1123,7 @@ void GCodeWorkShop::attachSerialConfigToDir(const QString& name, bool attach)
 
 	bool hasMdiChild = (activeDocument() != 0);
 
-	if (hasMdiChild && (serialToolBar != nullptr)) {
+	if (hasMdiChild) {
 		QDir dir = activeDocument()->dir();
 		dir.setFilter(QDir::Files | QDir::Hidden | QDir::NoSymLinks);
 		dir.setSorting(QDir::Name);
@@ -2052,7 +1201,7 @@ void GCodeWorkShop::createGlobalToolTipsFile()
 	setActiveDocument(fileName);
 }
 
-void GCodeWorkShop::attachHighlighterToDirButtonClicked(bool attach)
+void GCodeWorkShop::attachHighlighterToDir(bool attach)
 {
 	QFile file;
 
@@ -2072,22 +1221,11 @@ void GCodeWorkShop::attachHighlighterToDirButtonClicked(bool attach)
 		}
 
 		if (attach) {
-			file.setFileName(activeDocument()->path() + "/" + highlightTypeCombo->currentText() +
-			                 ".cfg");
+			file.setFileName(activeDocument()->path() + "/" + m_mainWindow->highlightComboBox()->currentText() + ".cfg");
 			file.open(QIODevice::ReadWrite);
 			file.close();;
 		}
 	}
-}
-
-void GCodeWorkShop::attachHighlightToDirActClicked()
-{
-	attachHighlighterToDirButtonClicked(true);
-}
-
-void GCodeWorkShop::deAttachHighlightToDirActClicked()
-{
-	attachHighlighterToDirButtonClicked(false);
 }
 
 int GCodeWorkShop::defaultHighlightMode(const QString& filePath)
@@ -2104,108 +1242,22 @@ int GCodeWorkShop::defaultHighlightMode(const QString& filePath)
 
 	if (!list.isEmpty()) {
 		QFileInfo name = list.at(0);
-		int id = highlightTypeCombo->findText(name.baseName());
+		int id = m_mainWindow->highlightComboBox()->findText(name.baseName());
 
 		if (id >= 0) {
 			//highlightTypeCombo->setCurrentIndex(id);
-			return (highlightTypeCombo->itemData(id).toInt(&ok));
+			return (m_mainWindow->highlightComboBox()->itemData(id).toInt(&ok));
 		}
 	}
 
 	return MODE_AUTO;
 }
 
-void GCodeWorkShop::hidePanel()
-{
-	ui->hSplitter->setUpdatesEnabled(false);
-
-	if (!panelHidden) {
-		panelState = ui->hSplitter->saveState();
-		ui->frame->setMaximumWidth(ui->hideButton->width());
-		ui->vSplitter->hide();
-		//openFileTableWidget->hide();
-		ui->hideButton->setText(">>");
-		ui->hideButton->setToolTip(tr("Show"));
-		panelHidden = true;
-	} else {
-		panelHidden = false;
-		fireCurrentDirChanged();
-		ui->frame->setMaximumWidth(16777215);
-		ui->vSplitter->show();
-		//openFileTableWidget->show();
-		ui->hideButton->setText("<<");
-		ui->hideButton->setToolTip(tr("Hide"));
-		ui->hSplitter->restoreState(panelState);
-	}
-
-	ui->hSplitter->updateGeometry();
-	ui->hSplitter->setUpdatesEnabled(true);
-}
-
-void GCodeWorkShop::setupToolTabs()
-{
-	ui->tabWidget->insertTab(0, createProjectPanel(), QIcon(":/images/project_new.png"), "");
-	ui->tabWidget->setTabToolTip(0, tr("Manage project"));
-	ui->tabWidget->insertTab(1, createFileBrowserPanel(), QIcon(":/images/folder.png"), "");
-	ui->tabWidget->setTabToolTip(1, tr("Browse files"));
-	ui->tabWidget->insertTab(2, createClipboardPanel(), QIcon(":/images/clipboard.png"), tr("Clipboard"));
-	ui->tabWidget->setTabToolTip(2, tr("Clipboard"));
-}
-
-GUI::FileBrowserPanel* GCodeWorkShop::createFileBrowserPanel()
-{
-	GUI::FileBrowserPanel* fileBrowser = new GUI::FileBrowserPanel(this);
-	fileBrowser->setNameFilters(m_extensions);
-	connect(this, &GCodeWorkShop::updateTranslations, fileBrowser, &GUI::FileBrowserPanel::loadTranslations);
-	connect(this, &GCodeWorkShop::loadSettings, fileBrowser, &GUI::FileBrowserPanel::loadSettings);
-	connect(this, &GCodeWorkShop::saveSettings, fileBrowser, &GUI::FileBrowserPanel::saveSettings);
-	connect(this, &GCodeWorkShop::currentDirChanged, fileBrowser, &GUI::FileBrowserPanel::currentDirChanged);
-	connect(this, &GCodeWorkShop::fileFilterChanged, fileBrowser, &GUI::FileBrowserPanel::setNameFilters);
-	connect(fileBrowser, &GUI::FileBrowserPanel::fileClicked, this, &GCodeWorkShop::openFile);
-	return fileBrowser;
-}
-
-GUI::ProjectPanel* GCodeWorkShop::createProjectPanel()
-{
-	m_projectPanel = new GUI::ProjectPanel(this);
-	connect(this, &GCodeWorkShop::updateTranslations, m_projectPanel, &GUI::ProjectPanel::loadTranslations);
-	connect(this, &GCodeWorkShop::updateIcons, m_projectPanel, &GUI::ProjectPanel::loadIcons);
-	connect(this, &GCodeWorkShop::loadSettings, m_projectPanel, &GUI::ProjectPanel::loadSettings);
-	connect(this, &GCodeWorkShop::saveSettings, m_projectPanel, &GUI::ProjectPanel::saveSettings);
-	connect(m_projectPanel, &GUI::ProjectPanel::fileClicked, this, &GCodeWorkShop::openFile);
-	return m_projectPanel;
-}
-
-GUI::ClipboardPanel* GCodeWorkShop::createClipboardPanel()
-{
-	GUI::ClipboardPanel* clipboardPanel = new GUI::ClipboardPanel(this);
-	connect(this, &GCodeWorkShop::updateTranslations, clipboardPanel, &GUI::ClipboardPanel::loadTranslations);
-	connect(this, &GCodeWorkShop::updateIcons, clipboardPanel, &GUI::ClipboardPanel::loadIcons);
-	connect(this, &GCodeWorkShop::loadSettings, clipboardPanel, &GUI::ClipboardPanel::loadSettings);
-	connect(this, &GCodeWorkShop::saveSettings, clipboardPanel, &GUI::ClipboardPanel::saveSettings);
-	connect(this, &GCodeWorkShop::clipboardTextChanged, clipboardPanel, &GUI::ClipboardPanel::addText);
-	connect(clipboardPanel, &GUI::ClipboardPanel::hitText, this, &GCodeWorkShop::clipboardSetText);
-	return clipboardPanel;
-}
-
-GUI::FileTablePanel* GCodeWorkShop::createFileTablePanel()
-{
-	GUI::FileTablePanel* fileTablePanel = new GUI::FileTablePanel(m_documentManager);
-	connect(this, &GCodeWorkShop::updateTranslations, fileTablePanel, &GUI::FileTablePanel::loadTranslations);
-	connect(this, &GCodeWorkShop::updateIcons, fileTablePanel, &GUI::FileTablePanel::loadIcons);
-	connect(m_documentManager, &DocumentManager::modificationChanged, fileTablePanel, &GUI::FileTablePanel::updateFileList);
-	connect(m_documentManager, &DocumentManager::briefChanged, fileTablePanel, &GUI::FileTablePanel::updateFileList);
-	connect(m_documentManager, &DocumentManager::documentListChanged, fileTablePanel, &GUI::FileTablePanel::updateFileList);
-	connect(m_documentManager, &DocumentManager::activeDocumentChanged, fileTablePanel,
-	        &GUI::FileTablePanel::updateFileList);
-	return fileTablePanel;
-}
-
 void GCodeWorkShop::fireCurrentDirChanged()
 {
 	QString path;
 
-	if (panelHidden) { //if((!isVisible()) || panelHidden)
+	if (m_mainWindow->isPanelHidden()) { //if((!isVisible()) || panelHidden)
 		return;
 	}
 
@@ -2228,34 +1280,9 @@ void GCodeWorkShop::fireCurrentDirChanged()
 	emit currentDirChanged(path);
 }
 
-void GCodeWorkShop::updateSessionMenus(const QStringList& sessionList)
-{
-	sessionsMenu->clear();
-
-	// TODO memory leak?
-	QActionGroup* actionGroup = new QActionGroup(sessionsMenu);
-	actionGroup->setExclusive(true);
-
-	bool checked = true;
-
-	for (const QString& name : sessionList) {
-		QAction* action = actionGroup->addAction(name);
-		action->setCheckable(true);
-		action->setChecked(checked);
-		checked = false;
-	}
-
-	sessionsMenu->addActions(actionGroup->actions());
-}
-
 void GCodeWorkShop::sessionsChanged()
 {
 	m_sessionManager->save(Medium::instance().settings());
-}
-
-void GCodeWorkShop::changeSession(QAction* action)
-{
-	m_sessionManager->setCurrentSession(action->text());
 }
 
 void GCodeWorkShop::beforeCurrentSessionChanged()
@@ -2268,6 +1295,11 @@ void GCodeWorkShop::currentSessionChanged()
 	closeAllMdiWindows();
 	openFilesFromSession();
 	statusBarMessage(tr("Session %1 loaded").arg(m_sessionManager->currentSession()), 5000);
+}
+
+void GCodeWorkShop::changeSession(const QString& name)
+{
+	m_sessionManager->setCurrentSession(name);
 }
 
 void GCodeWorkShop::openFilesFromSession()
@@ -2412,20 +1444,20 @@ void GCodeWorkShop::startSerialPortServer()
 
 void GCodeWorkShop::tileSubWindowsHorizontally()
 {
-	ui->mdiArea->tileSubWindows();
+	m_mainWindow->mdiArea()->tileSubWindows();
 }
 
 void GCodeWorkShop::tileSubWindowsVertycally()
 {
-	if (ui->mdiArea->subWindowList().isEmpty()) {
+	if (m_mainWindow->mdiArea()->subWindowList().isEmpty()) {
 		return;
 	}
 
 	QPoint position(0, 0);
 
-	foreach (QMdiSubWindow* window, ui->mdiArea->subWindowList()) {
-		QRect rect(0, 0, ui->mdiArea->width(),
-		           ui->mdiArea->height() / ui->mdiArea->subWindowList().count());
+	foreach (QMdiSubWindow* window, m_mainWindow->mdiArea()->subWindowList()) {
+		QRect rect(0, 0, m_mainWindow->mdiArea()->width(),
+		           m_mainWindow->mdiArea()->height() / m_mainWindow->mdiArea()->subWindowList().count());
 		window->setGeometry(rect);
 		window->move(position);
 		position.setY(position.y() + window->height());
@@ -2434,34 +1466,17 @@ void GCodeWorkShop::tileSubWindowsVertycally()
 
 void GCodeWorkShop::cascadeSubWindows()
 {
-	ui->mdiArea->cascadeSubWindows();
+	m_mainWindow->mdiArea()->cascadeSubWindows();
 }
 
 void GCodeWorkShop::activateNextSubWindow()
 {
-	ui->mdiArea->activateNextSubWindow();
+	m_mainWindow->mdiArea()->activateNextSubWindow();
 }
 
 void GCodeWorkShop::activatePreviousSubWindow()
 {
-	ui->mdiArea->activatePreviousSubWindow();
-}
-
-void GCodeWorkShop::clipboardChanged()
-{
-	if (!mainWindow()->isActiveWindow()) {
-		return;
-	}
-
-	updateMenus();
-	emit clipboardTextChanged(clipboard->text());
-}
-
-void GCodeWorkShop::clipboardSetText(const QString& text)
-{
-	if (!text.isEmpty()) {
-		clipboard->setText(text);
-	}
+	m_mainWindow->mdiArea()->activatePreviousSubWindow();
 }
 
 void GCodeWorkShop::customContextMenuRequest(Document* doc, const QPoint& pos)
@@ -2486,14 +1501,14 @@ QMenu* GCodeWorkShop::doContextMenuGCoder(GCoderDocument* doc, const QPoint& pos
 {
 	QMenu* menu = doc->createStandardContextMenu(pos);
 	menu->addSeparator();
-	menu->addAction(addonsActions()->semiComment());
-	menu->addAction(addonsActions()->paraComment());
+	menu->addAction(m_mainWindow->addonsActions()->semiComment());
+	menu->addAction(m_mainWindow->addonsActions()->paraComment());
 	menu->addSeparator();
-	menu->addAction(addonsActions()->blockSkipIncrement());
-	menu->addAction(addonsActions()->blockSkipDecrement());
-	menu->addAction(addonsActions()->blockSkipRemove());
+	menu->addAction(m_mainWindow->addonsActions()->blockSkipIncrement());
+	menu->addAction(m_mainWindow->addonsActions()->blockSkipDecrement());
+	menu->addAction(m_mainWindow->addonsActions()->blockSkipRemove());
 	menu->addSeparator();
-	menu->addAction(toolActions()->inLineCalc());
+	menu->addAction(m_mainWindow->toolActions()->inLineCalc());
 	return menu;
 }
 

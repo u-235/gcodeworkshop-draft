@@ -26,75 +26,41 @@
 #include <QByteArray>   // for QByteArray
 // Special for the moc_gcodeworkshop.cpp
 #include <QKeySequence> // IWYU pragma: keep
-#include <QMainWindow>  // for QMainWindow
 #include <QObject>      // for slots, Q_OBJECT, signals
-#include <QPoint>       // for QPoint
 #include <QPointer>     // for QPointer
-#include <QSize>        // for QSize
 #include <QString>      // for QString
 #include <QStringList>  // for QStringList
 
-class QAction;
-class QClipboard;
-class QCloseEvent;
-class QComboBox;
 class QDir;
-class QDragEnterEvent;
-class QDropEvent;
 class QFileSystemWatcher;
-class QLabel;
 template <class Key, class T> class QMap;
+class QMainWindow;
 class QMdiSubWindow;
 class QMenu;
-class QMoveEvent;
+class QPoint;
 class QPrinter;
 class QProcess;
-class QResizeEvent;
 class QSettings;
-class QToolBar;
-class QToolButton;
 
 #include <documentinfo.h>           // for DocumentInfo, DocumentInfo::Ptr
 #include <utils/keysequencemap.h>   // for KeySequenceMap
 
 class Document;
 class DocumentManager;
-class GCoderDocument;
 class GCodeFileServer;
-class KDiff3App;
+class GCoderDocument;
 class Medium;
 class RecentFiles;
 class SessionManager;
 
-
 namespace GUI {
-class ClipboardPanel;
-class FileBrowserPanel;
-class FileTablePanel;
-class FindInFilesPanel;
-class FindToolBar;
-class ProjectPanel;
-class SerialToolBar;
-
 namespace WorkShop {
-class EditActions;
-class FileActions;
-class HelpActions;
-class ToolActions;
-class WindowActions;
+class MainWindow;
 } // namespace WorkShop
 } // namespace GUI
 
-namespace Addons {
-class Actions;
-}
 
-namespace Ui {
-class GCodeWorkShop;
-}
-
-
-class GCodeWorkShop : public QMainWindow
+class GCodeWorkShop : public QObject
 {
 	Q_OBJECT
 
@@ -105,28 +71,12 @@ public:
 
 	void launch(const QStringList& args);
 
-	void resizeEvent(QResizeEvent* event);
-	void moveEvent(QMoveEvent* event);
-
 	QMainWindow* mainWindow();
-	Addons::Actions* addonsActions();
-	GUI::WorkShop::EditActions* editActions();
-	GUI::WorkShop::FileActions* fileActions();
-	GUI::WorkShop::HelpActions* helpActions();
-	GUI::WorkShop::ToolActions* toolActions();
-	GUI::WorkShop::WindowActions* windowActions();
 	DocumentManager* documentManager() const;
 	Document* activeDocument() const;
 	GCoderDocument* activeGCoderDocument() const;
 	QString currentPath() const;
 	QString lastOpenedPath() const;
-	/*
-	 * To implement the opening of dragged files, we override the event handlers.
-	 * see textedit.h and textedit.cpp
-	 * see https://doc.qt.io/qt-5/dnd.html#dropping
-	 */
-	void dragEnterEvent(QDragEnterEvent* event) override;
-	void dropEvent(QDropEvent* event) override;
 
 signals:
 	void updateTranslations();
@@ -136,28 +86,15 @@ signals:
 	void saveSettings(QSettings* cfg);
 	void fileFilterChanged(const QStringList& extensions);
 	void currentDirChanged(const QString& path);
-	void clipboardTextChanged(const QString& text);
 
 protected:
-	Ui::GCodeWorkShop* ui;
 	static GCodeWorkShop* SINGLETON;
+	GUI::WorkShop::MainWindow* m_mainWindow;
 
 	GCodeWorkShop(Medium* medium);
 
 	Medium* mMedium;
-
-	struct MWConfig {
-		QPoint pos;
-		QSize size;
-	} mMWConfig;
-
 	KeySequenceMap m_shortcuts;
-	Addons::Actions* m_addonsActions;
-	GUI::WorkShop::EditActions* m_editActions;
-	GUI::WorkShop::FileActions* m_fileActions;
-	GUI::WorkShop::HelpActions* m_helpActions;
-	GUI::WorkShop::ToolActions* m_toolActions;
-	GUI::WorkShop::WindowActions* m_windowActions;
 
 public slots:
 	void openFile(const QString& fileName, const QString& mime = QString());
@@ -171,12 +108,9 @@ public slots:
 	bool close();
 
 protected:
-	void closeEvent(QCloseEvent* event);
 	void setLastOpenedPath(const QString& path);
 
 	bool saveDocument(Document* doc, bool forceSaveAs);
-
-	void setMdiTabbedMode(bool tabbed);
 
 public:
 	QStringList fileFilter() const;
@@ -207,15 +141,15 @@ public slots:
 	void about();
 
 private slots:
-	void updateMenus();
-	void updateWindowMenu();
 	Document* createDocument(const QString& type);
+
+public slots:
 	bool setActiveDocument(Document* doc);
 	bool setActiveDocument(const QString& fileName);
+
+private slots:
 	void loadFile(const DocumentInfo::Ptr& options, bool checkAlreadyLoaded = true);
 	void recentFilesChanged();
-	void fileOpenRecent(QAction* act);
-	void updateRecentFilesMenu(const QStringList& fileList);
 
 public slots:
 	void activeWindowChanged(QMdiSubWindow* window);
@@ -225,54 +159,34 @@ public slots:
 	void config();
 	void readOnly();
 	void doCalc();
-
-private slots:
-	void loadFoundedFile(const QString& fileName);
-	void updateStatusBar();
-
-public slots:
-	void showFindReplaceToolBar(bool replace);
 	void showFindToolBar();
 	void showReplaceToolBar();
 
 	void createSerialToolBar();
 
 	void startSerialPortServer();
-	void attachSerialConfigToDir(const QString& name, bool attach = true);
-
-private slots:
-	void setHighLightMode(int mode);
-
-public slots:
+	void attachSerialConfigToDir(const QString& name, bool attach);
+	void attachHighlighterToDir(bool attach);
 	void createGlobalToolTipsFile();
 	void createUserToolTipsFile();
 
-private slots:
-	void attachHighlightToDirActClicked();
-	void deAttachHighlightToDirActClicked();
-
-public slots:
 	void doDiffL();
 	void doDiffR();
 	void doDiff();
-
-private slots:
-	void hidePanel();
-
-public slots:
 	void diffEditorFile();
+
 	void closeCurrentWindow();
 	void closeAllMdiWindows();
 
-private slots:
 	void goToLine(const QString& fileName, int line);
-	void updateSessionMenus(const QStringList& sessionList);
+
+private slots:
 	void sessionsChanged();
-	void changeSession(QAction* action);
 	void beforeCurrentSessionChanged();
 	void currentSessionChanged();
 
 public slots:
+	void changeSession(const QString& name);
 	void showSessionDialog();
 
 private slots:
@@ -286,8 +200,6 @@ public slots:
 	void activatePreviousSubWindow();
 
 private slots:
-	void clipboardChanged();
-	void clipboardSetText(const QString& text);
 	void customContextMenuRequest(Document* doc, const QPoint& pos);
 	QMenu* doContextMenuGCoder(GCoderDocument* doc, const QPoint& pos);
 
@@ -302,21 +214,9 @@ signals:
 	void intCapsLockChanged(bool enable);
 
 private:
-	void createActions();
-	void createMenus();
-	void createToolBars();
-	void createStatusBar();
-	void createFindToolBar();
 	void readSettings();
 	void writeSettings();
-	void updateCurrentSerialConfig();
-	void attachHighlighterToDirButtonClicked(bool attach);
 	int defaultHighlightMode(const QString& filePath);
-	void setupToolTabs();
-	GUI::FileBrowserPanel* createFileBrowserPanel();
-	GUI::ProjectPanel* createProjectPanel();
-	GUI::ClipboardPanel* createClipboardPanel();
-	GUI::FileTablePanel* createFileTablePanel();
 	void fireCurrentDirChanged();
 	Document* findDocument(const QString& fileName);
 	void createDiffApp();
@@ -329,58 +229,24 @@ private:
 	SessionManager* m_sessionManager;
 
 	bool m_MdiWidgetsMaximized;
+
 	DocumentManager* m_documentManager;
 	QString m_calcBinary;
 	QStringList m_extensions;
 	QString m_saveExtension;
 	QString m_saveDirectory;
 	QString m_lastOpenedPath;
-	bool m_MdiTabbedMode;
 	bool m_defaultReadOnly;
 	bool m_startEmpty;
 	bool m_disableFileChangeMonitor;
 	bool m_findInFilesHighlightEnable;
-	GUI::FindInFilesPanel* findFiles;
 
-	bool panelHidden;
-	QByteArray panelState;
-
-	QClipboard* clipboard;
 	QByteArray fileDialogState;
-
-	KDiff3App* diffApp;
 
 	RecentFiles* m_recentFiles;
 
-	QMenu* fileMenu;
-	QMenu* recentFileMenu;
-	QMenu* editMenu;
-	QMenu* toolsMenu;
-	QMenu* blockSkipMenu;
-	QMenu* windowMenu;
-	QMenu* helpMenu;
-	QMenu* sessionsMenu;
-
-	QToolBar* fileToolBar;
-	QToolBar* editToolBar;
-	QToolBar* windowToolBar;
-	QToolBar* toolsToolBar;
-
 	QProcess* proc;
 	QProcess* sfsProc;
-
-	QLabel* labelStat1;
-	QToolButton* readOnlyButton;
-	QComboBox* highlightTypeCombo;
-	QAction* attachHighlightToDirAct;
-	QToolButton* attachHighlightButton;
-	QAction* deAttachHighlightToDirAct;
-	QToolButton* deAttachHighlightButton;
-
-	GUI::FindToolBar* m_findToolBar;
-	GUI::ProjectPanel* m_projectPanel;
-
-	QPointer<GUI::SerialToolBar> serialToolBar;
 
 	QPointer<GCodeFileServer> m_fileServer;
 
