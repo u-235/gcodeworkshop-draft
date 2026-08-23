@@ -295,7 +295,11 @@ void DocumentManager::addDocument(Document* document, const QString& id)
 	DocumentListItem item;
 	item.document = document;
 	item.id = id;
-	item.subWindow = m_area->addSubWindow(document->widget());
+
+	if (m_area != nullptr) {
+		item.subWindow = m_area->addSubWindow(document->widget());
+	}
+
 	m_docList.append(item);
 	emit documentListChanged();
 }
@@ -339,6 +343,11 @@ void DocumentManager::setMdiArea(QMdiArea* mdi)
 {
 	m_area = mdi;
 	connect(m_area, SIGNAL(subWindowActivated(QMdiSubWindow*)), this, SLOT(activeWindowChanged(QMdiSubWindow*)));
+
+
+	for (auto item : m_docList) {
+		item.subWindow = m_area->addSubWindow(item.document->widget());
+	}
 }
 
 void DocumentManager::activeWindowChanged(QMdiSubWindow* window)
