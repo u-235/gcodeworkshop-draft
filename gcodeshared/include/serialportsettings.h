@@ -24,8 +24,12 @@
 #include <QSerialPort>
 #include <QString>
 
+class QSettings;
+
 
 struct SerialPortSettings {
+	SerialPortSettings();
+
 	QSerialPort::BaudRate BaudRate;
 	QSerialPort::DataBits DataBits;
 	QSerialPort::Parity Parity;
@@ -74,8 +78,12 @@ struct SerialPortSettings {
 	QString fileNameExpFs;
 	QString fileNameExpAs;
 	QString eobChar;
+	// TODO: Remove?
 	QString fileNameExpSaveFile;
 	QString removeFromRecieved;
+
+	void load(QSettings* cfg);
+	void save(QSettings* cfg);
 };
 
 #endif // SERIALPORTSETTINGS_H

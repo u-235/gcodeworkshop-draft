@@ -17,11 +17,12 @@ INCLUDEPATH += include
 SOURCES += \
     serialporttestdialog.cpp \
     serialtransmissiondialog.cpp \
-    serialportconfigdialog.cpp
+    serialportconfigdialog.cpp \
+    src/serialportsettings.cpp
 
 HEADERS += \
+    include/serialportsettings.h \
     include/version.h \
-    serialportsettings.h \
     serialporttestdialog.h \
     serialtransmissiondialog.h \
     serialportconfigdialog.h \
