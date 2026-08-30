@@ -181,7 +181,7 @@ void SerialPortTestDialog::connectButtonToggled(bool tg)
 			delete comPort;
 		}
 
-		comPort = new QSerialPort(portName);
+		comPort = new QSerialPort(portSettings.portName);
 		comPort->clearError();
 		comPort->setBaudRate(portSettings.BaudRate);
 		comPort->setDataBits(portSettings.DataBits);
@@ -379,12 +379,11 @@ void SerialPortTestDialog::changeSettings()
 	port = "COM1";
 #else
 	port = "/dev/ttyS0";
-
 #endif
 
 	settings.beginGroup(configBox->currentText());
 
-	portName = settings.value("PortName", port).toString();
+	portSettings.portName = settings.value("PortName", port).toString();
 
 	portSettings.BaudRate = (QSerialPort::BaudRate) settings.value("BaudRate",
 	                        QSerialPort::Baud9600).toInt();
@@ -398,9 +397,9 @@ void SerialPortTestDialog::changeSettings()
 	                           QSerialPort::HardwareControl).toInt();
 	portSettings.Xon = settings.value("Xon", "17").toString().toInt(&ok, 10);
 	portSettings.Xoff = settings.value("Xoff", "19").toString().toInt(&ok, 10);
-	sendAtEnd = settings.value("SendAtEnd", "").toString();
-	sendAtBegining = settings.value("SendAtBegining", "").toString();
-	lineDelay = settings.value("LineDelay", 0).toDouble();
+	portSettings.sendAtEnd = settings.value("SendAtEnd", "").toString();
+	portSettings.sendAtBegining = settings.value("SendAtBegining", "").toString();
+	portSettings.lineDelay = settings.value("LineDelay", 0).toDouble();
 
 	settings.endGroup();
 	settings.endGroup();
@@ -490,8 +489,8 @@ void SerialPortTestDialog::sendText(QString tx)
 	}
 
 	if (comPort->isOpen()) {
-		tx.prepend(sendAtBegining);
-		tx.append(sendAtEnd);
+		tx.prepend(portSettings.sendAtBegining);
+		tx.append(portSettings.sendAtEnd);
 
 		if (!tx.contains("\r\n")) {
 			tx.replace("\n", "\r\n");
@@ -545,10 +544,10 @@ void SerialPortTestDialog::sendText(QString tx)
 				errorLabel->setText(tr("Sending byte %1 of %2").arg(i + 1).arg(tx.size()));
 				qApp->processEvents();
 
-				if (lineDelay > 0) {
+				if (portSettings.lineDelay > 0) {
 					if (tx[i].toLatin1() == '\n') {
 						readyCont = false;
-						QTimer::singleShot(int(lineDelay * 1000), this, SLOT(lineDelaySlot()));
+						QTimer::singleShot(int(portSettings.lineDelay * 1000), this, SLOT(lineDelaySlot()));
 
 						while (!readyCont) {
 							qApp->processEvents();

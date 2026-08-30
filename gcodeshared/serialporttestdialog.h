@@ -66,14 +66,9 @@ private:
 	void sendText(QString tx);
 
 	bool stop;
-	QString portName;
-	QString sendAtEnd;
-	QString sendAtBegining;
-
 	QSerialPort* comPort;
 	QTimer* timer;
 	long int count;
-	double lineDelay;
 	bool readyCont;
 	SerialPortSettings portSettings;
 };
