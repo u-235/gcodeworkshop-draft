@@ -117,6 +117,7 @@
 #include "gui/filetable/filetablepanel.h"
 #include "gui/findtoolbar/findtoolbar.h"    // for FindToolBar
 #include "gui/project/projectpanel.h"
+#include "gui/serialport/serialtoolbar.h"
 #include "highlightmode.h"                  // for MODE_AUTO, MODE_FANUC, MODE_HEIDENHAIN, MODE_HEIDENHAIN_ISO, MODE_LINU...
 #include "newfiledialog.h"                  // for newFileDialog
 #include "recentfiles.h"                    // for RecentFiles
@@ -1261,11 +1262,7 @@ void GCodeWorkShop::updateCurrentSerialConfig()
 
 		if (!list.isEmpty()) {
 			QFileInfo name = list.at(0);
-			int id = configBox->findText(name.baseName());
-
-			if (id >= 0) {
-				configBox->setCurrentIndex(id);
-			}
+			serialToolBar->selectProfile(name.baseName());
 		}
 	}
 }
@@ -1934,73 +1931,8 @@ void GCodeWorkShop::showReplaceToolBar()
 void GCodeWorkShop::createSerialToolBar()
 {
 	if (serialToolBar == nullptr) {
-		serialToolBar = new QToolBar(tr("Serial port toolbar"));
+		serialToolBar = new GUI::SerialToolBar(this, mainWindow());
 		addToolBar(Qt::TopToolBarArea, serialToolBar);
-		serialToolBar->setObjectName("SerialToolBar");
-
-		configPortAct = new QAction(QIcon(":/images/serialconfig.png"), tr("Serial port configuration"),
-		                            this);
-		//configPortAct->setShortcut(tr("F3"));
-		configPortAct->setToolTip(tr("Serial port configuration"));
-		connect(configPortAct, SIGNAL(triggered()), this, SLOT(serialConfig()));
-
-		receiveAct = new QAction(QIcon(":/images/receive.png"), tr("Receive new file"), this);
-		//receiveAct->setShortcut(tr("Shift+F3"));
-		receiveAct->setToolTip(tr("Receive new file"));
-		connect(receiveAct, SIGNAL(triggered()), this, SLOT(receiveButtonClicked()));
-
-		sendAct = new QAction(QIcon(":/images/send.png"), tr("Send current file"), this);
-		//sendAct->setShortcut(tr("F3"));
-		sendAct->setToolTip(tr("Send current file"));
-		connect(sendAct, SIGNAL(triggered()), this, SLOT(sendButtonClicked()));
-
-		attachToDirAct = new QAction(QIcon(":/images/attach.png"),
-		                             tr("Attach current port settings to current directory of programs"), this);
-		//attachToDirAct->setShortcut(tr("F3"));
-		attachToDirAct->setToolTip(tr("Attach current port settings to current directory of programs"));
-		connect(attachToDirAct, SIGNAL(triggered()), this, SLOT(attachToDirButtonClicked()));
-
-		deAttachToDirAct = new QAction(QIcon(":/images/deattach.png"),
-		                               tr("Remove settings from the current directory"), this);
-		//deAttachToDirAct->setShortcut(tr("F3"));
-		deAttachToDirAct->setToolTip(tr("Remove settings from the directory"));
-		connect(deAttachToDirAct, SIGNAL(triggered()), this, SLOT(deAttachToDirButtonClicked()));
-
-		diagAct = new QAction(QIcon(":/images/serialtest.png"), tr("Check serial port settings"), this);
-		//diagAct->setShortcut(tr("F3"));
-		diagAct->setToolTip(tr("Check serial port settings"));
-		connect(diagAct, SIGNAL(triggered()), this, SLOT(serialConfigTest()));
-
-		serialCloseAct = new QAction(QIcon(":/images/close_small.png"),
-		                             tr("Close send/receive toolbar"), this);
-		serialCloseAct->setToolTip(tr("Close send/receive toolbar"));
-		connect(serialCloseAct, SIGNAL(triggered()), this, SLOT(closeSerialToolbar()));
-
-		commAppAct = new QAction(QIcon(":/images/spserver.png"),
-		                         tr("Start application \"Serial port file server\""), this);
-		//diagAct->setShortcut(tr("F3"));
-		commAppAct->setToolTip(tr("Start application \"Serial port file server\""));
-		connect(commAppAct, SIGNAL(triggered()), this, SLOT(startSerialPortServer()));
-
-		configBox = new QComboBox();
-		configBox->setSizeAdjustPolicy(QComboBox::AdjustToContents);
-		configBox->setDuplicatesEnabled(false);
-
-		//serialToolBar->addSeparator();
-		serialToolBar->addAction(commAppAct);
-		serialToolBar->addAction(attachToDirAct);
-		serialToolBar->addAction(deAttachToDirAct);
-		serialToolBar->addSeparator();
-		serialToolBar->addAction(diagAct);
-		serialToolBar->addWidget(configBox);
-		serialToolBar->addAction(configPortAct);
-		serialToolBar->addSeparator();
-		serialToolBar->addAction(receiveAct);
-		serialToolBar->addSeparator();
-		serialToolBar->addAction(sendAct);
-
-		serialToolBar->addSeparator();
-		serialToolBar->addAction(serialCloseAct);
 	} else if (!m_toolActions->showSerialToolBar()->isChecked()) {
 		closeSerialToolbar();
 		return;
@@ -2009,7 +1941,7 @@ void GCodeWorkShop::createSerialToolBar()
 		m_toolActions->showSerialToolBar()->setChecked(true);
 	}
 
-	loadSerialConfignames();
+	serialToolBar->loadSerialConfignames();
 	configBox->adjustSize();
 	updateCurrentSerialConfig();
 }
@@ -2022,7 +1954,7 @@ void GCodeWorkShop::closeSerialToolbar()
 	m_toolActions->showSerialToolBar()->setChecked(false);
 }
 
-void GCodeWorkShop::attachToDirButtonClicked(bool attach)
+void GCodeWorkShop::attachSerialConfigToDir(const QString& name, bool attach)
 {
 	QFile file;
 
@@ -2042,16 +1974,11 @@ void GCodeWorkShop::attachToDirButtonClicked(bool attach)
 		}
 
 		if (attach) {
-			file.setFileName(activeDocument()->path() + "/" + configBox->currentText() + ".ini");
+			file.setFileName(activeDocument()->path() + "/" + name + ".ini");
 			file.open(QIODevice::ReadWrite);
 			file.close();;
 		}
 	}
-}
-
-void GCodeWorkShop::deAttachToDirButtonClicked()
-{
-	attachToDirButtonClicked(false);
 }
 
 void GCodeWorkShop::createUserToolTipsFile()
@@ -2411,116 +2338,6 @@ void GCodeWorkShop::loadPrinterSettings(QPrinter* printer)
 	settings.endGroup();
 
 #endif
-}
-
-void GCodeWorkShop::serialConfig()
-{
-	SerialPortConfigDialog* serialConfigDialog = new SerialPortConfigDialog(mainWindow(),
-	        configBox->currentText());
-
-	if (serialConfigDialog->exec() == QDialog::Accepted) {
-		loadSerialConfignames();
-	}
-}
-
-void GCodeWorkShop::loadSerialConfignames()
-{
-	int id;
-	QStringList list;
-	QString item;
-
-	QSettings& settings = *Medium::instance().settings();
-	settings.beginGroup("SerialPortConfigs");
-
-	configBox->clear();
-	list = settings.value("SettingsList", QStringList(tr("Default"))).toStringList();
-	list.sort();
-	configBox->addItems(list);
-	item = settings.value("CurrentSerialPortSettings", tr("Default")).toString();
-	id = configBox->findText(item);
-
-	if (id >= 0) {
-		configBox->setCurrentIndex(id);
-	}
-
-	settings.endGroup();
-}
-
-void GCodeWorkShop::serialConfigTest()
-{
-	SerialPortTestDialog* trDialog = new SerialPortTestDialog(mainWindow());
-
-	trDialog->show();
-}
-
-void GCodeWorkShop::sendButtonClicked()
-{
-	QString tx;
-	GCoderDocument* gdoc = activeGCoderDocument();
-
-	if (!gdoc) {
-		return;
-	}
-
-	receiveAct->setEnabled(false);
-	sendAct->setEnabled(false);
-	commAppAct->setEnabled(false);
-	QApplication::setOverrideCursor(Qt::BusyCursor);
-
-	tx.append(gdoc->text());
-
-	SerialTransmissionDialog transmissionDialog(mainWindow());
-	transmissionDialog.sendData(tx, configBox->currentText());
-
-	receiveAct->setEnabled(true);
-	sendAct->setEnabled(true);
-	commAppAct->setEnabled(true);
-	QApplication::restoreOverrideCursor();
-}
-
-void GCodeWorkShop::receiveButtonClicked()
-{
-	receiveAct->setEnabled(false);
-	sendAct->setEnabled(false);
-	commAppAct->setEnabled(false);
-	QApplication::setOverrideCursor(Qt::BusyCursor);
-
-	SerialTransmissionDialog transmissionDialog(mainWindow());
-	QStringList progList = transmissionDialog.receiveData(configBox->currentText());
-
-	if (!progList.isEmpty()) {
-		int id = configBox->currentIndex();
-
-		QStringList::const_iterator it = progList.constBegin();
-
-		if ((*it) == "#FILE_LIST#") {
-			it++;
-
-			while (it != progList.constEnd()) {
-				openFile(*it);
-				it++;
-			}
-		} else {
-			if (!(*it).isEmpty() && !(*it).isNull()) {
-				GCoderDocument* gdoc = dynamic_cast<GCoderDocument*>(newFile());
-
-				if (gdoc) {
-					gdoc->clear();
-					gdoc->insertText(*it);
-					gdoc->setHighlightMode(MODE_AUTO);
-					//activeWindow->setReadOnly(defaultMdiWindowProperites.defaultReadOnly);
-					gdoc->clearUndoRedoStacks();
-				}
-			}
-		}
-
-		configBox->setCurrentIndex(id);
-	}
-
-	receiveAct->setEnabled(true);
-	sendAct->setEnabled(true);
-	commAppAct->setEnabled(true);
-	QApplication::restoreOverrideCursor();
 }
 
 void GCodeWorkShop::fileChanged(const QString& fileName)

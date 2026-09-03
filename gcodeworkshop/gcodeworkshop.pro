@@ -61,6 +61,8 @@ HEADERS += \
     src/gui/findtoolbar/findtoolbar.h \
     src/gui/findtoolbar/findtoolbaractions.h \
     src/gui/project/projectpanel.h \
+    src/gui/serialport/serialtoolbar.h \
+    src/gui/serialport/serialtoolbaractions.h \
     src/highlighter.h \
     src/highlightmode.h \
     src/inlinecalc.h \
@@ -103,6 +105,8 @@ SOURCES += \
     src/gui/findtoolbar/findtoolbar.cpp \
     src/gui/findtoolbar/findtoolbaractions.cpp \
     src/gui/project/projectpanel.cpp \
+    src/gui/serialport/serialtoolbar.cpp \
+    src/gui/serialport/serialtoolbaractions.cpp \
     src/highlighter.cpp \
     src/inlinecalc.cpp \
     src/main.cpp \
