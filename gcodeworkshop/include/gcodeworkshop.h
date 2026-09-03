@@ -74,6 +74,7 @@ class FileBrowserPanel;
 class FileTablePanel;
 class FindToolBar;
 class ProjectPanel;
+class SerialToolBar;
 
 namespace WorkShop {
 class EditActions;
@@ -232,15 +233,10 @@ public slots:
 
 	void createSerialToolBar();
 
-private slots:
-	void serialConfig();
-	void serialConfigTest();
-	void closeSerialToolbar();
-	void sendButtonClicked();
-	void receiveButtonClicked();
 	void startSerialPortServer();
-	void attachToDirButtonClicked(bool attach = true);
-	void deAttachToDirButtonClicked();
+	void attachSerialConfigToDir(const QString& name, bool attach = true);
+
+private slots:
 	void setHighLightMode(int mode);
 
 public slots:
@@ -309,7 +305,6 @@ private:
 	void createFindToolBar();
 	void readSettings();
 	void writeSettings();
-	void loadSerialConfignames();
 	void updateCurrentSerialConfig();
 	void attachHighlighterToDirButtonClicked(bool attach);
 	int defaultHighlightMode(const QString& filePath);
@@ -380,16 +375,7 @@ private:
 	GUI::FindToolBar* m_findToolBar;
 	GUI::ProjectPanel* m_projectPanel;
 
-	QPointer<QToolBar> serialToolBar;
-	QAction* configPortAct;
-	QAction* receiveAct;
-	QAction* sendAct;
-	QAction* attachToDirAct;
-	QAction* deAttachToDirAct;
-	QAction* diagAct;
-	QAction* serialCloseAct;
-	QAction* commAppAct;
-	QComboBox* configBox;
+	QPointer<GUI::SerialToolBar> serialToolBar;
 
 	QPointer<GCodeFileServer> m_fileServer;
 
