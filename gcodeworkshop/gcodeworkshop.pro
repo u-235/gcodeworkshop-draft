@@ -54,6 +54,8 @@ HEADERS += \
     src/gui/findtoolbar/findtoolbar.h \
     src/gui/findtoolbar/findtoolbaractions.h \
     src/gui/project/projectpanel.h \
+    src/gui/serialport/serialtoolbar.h \
+    src/gui/serialport/serialtoolbaractions.h \
     src/gui/workshop/defaultkeysequences.h \
     src/gui/workshop/editactions.h \
     src/gui/workshop/fileactions.h \
@@ -94,6 +96,8 @@ SOURCES += \
     src/gui/findtoolbar/findtoolbar.cpp \
     src/gui/findtoolbar/findtoolbaractions.cpp \
     src/gui/project/projectpanel.cpp \
+    src/gui/serialport/serialtoolbar.cpp \
+    src/gui/serialport/serialtoolbaractions.cpp \
     src/gui/workshop/defaultkeysequences.cpp \
     src/gui/workshop/editactions.cpp \
     src/gui/workshop/fileactions.cpp \
