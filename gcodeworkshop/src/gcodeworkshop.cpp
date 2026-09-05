@@ -110,6 +110,7 @@
 #include "gui/workshop/editactions.h"       // for EditActions
 #include "gui/workshop/fileactions.h"       // for FileActions
 #include "gui/workshop/helpactions.h"       // for HelpActions
+#include "gui/workshop/statusbaractions.h"
 #include "gui/workshop/toolactions.h"       // for ToolActions
 #include "gui/workshop/windowactions.h"     // for WindowActions
 #include "highlightmode.h"                  // for MODE_AUTO, MODE_FANUC, MODE_HEIDENHAIN, MODE_HEIDENHAIN_ISO, MODE_LINU...
@@ -1531,6 +1532,7 @@ void GCodeWorkShop::createToolBars()
 
 void GCodeWorkShop::createStatusBar()
 {
+	auto statusActions = new GUI::WorkShop::StatusBarActions(this);
 	labelStat1 = new QLabel("    ");
 
 	labelStat1->setFrameShadow(QFrame::Sunken);
@@ -1552,26 +1554,15 @@ void GCodeWorkShop::createStatusBar()
 
 	connect(highlightTypeCombo, SIGNAL(currentIndexChanged(int)), this,
 	        SLOT(setHighLightMode(int)));
-
-	attachHighlightToDirAct = new QAction(QIcon(":/images/attach.png"),
-	                                      tr("Attach current highlight setting to current directory of programs"), this);
-	attachHighlightToDirAct->setToolTip(
-	    tr("Attach current highlight setting to current directory of programs"));
-	connect(attachHighlightToDirAct, SIGNAL(triggered()), this,
+	connect(statusActions->attachToDir(), SIGNAL(triggered()), this,
 	        SLOT(attachHighlightToDirActClicked()));
-
-	attachHighlightButton = new QToolButton();
-	attachHighlightButton->setDefaultAction(attachHighlightToDirAct);
-
-	deAttachHighlightToDirAct = new QAction(QIcon(":/images/deattach.png"),
-	                                        tr("Remove highlight settings from the directory"), this);
-	deAttachHighlightToDirAct->setToolTip(tr("Remove highlight settings from the directory"));
-	connect(deAttachHighlightToDirAct, SIGNAL(triggered()), this,
+	connect(statusActions->deAttachToDir(), SIGNAL(triggered()), this,
 	        SLOT(deAttachHighlightToDirActClicked()));
 
+	attachHighlightButton = new QToolButton();
+	attachHighlightButton->setDefaultAction(statusActions->attachToDir());
 	deAttachHighlightButton = new QToolButton();
-	deAttachHighlightButton->setDefaultAction(deAttachHighlightToDirAct);
-
+	deAttachHighlightButton->setDefaultAction(statusActions->deAttachToDir());
 	readOnlyButton = new QToolButton();
 	readOnlyButton->setDefaultAction(m_editActions->readOnly());
 
