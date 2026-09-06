@@ -221,9 +221,6 @@ GCodeWorkShop::GCodeWorkShop(Medium* medium)
 
 	setWindowTitle(tr("GCodeWorkShop"));
 	setWindowIcon(QIcon(":/images/edytornc.png"));
-
-	emit loadSettings(Medium::instance().settings());
-	readSettings();
 }
 
 GCodeWorkShop::~GCodeWorkShop()
@@ -240,6 +237,33 @@ GCodeWorkShop::~GCodeWorkShop()
 	}
 
 	delete ui;
+}
+
+void GCodeWorkShop::launch(const QStringList& args)
+{
+	emit loadSettings(Medium::instance().settings());
+	readSettings();
+
+	bool diff = false;
+
+	if (args.size() >= 3) {
+		if (args.first() == "-diff") {
+			diffTwoFiles(args.value(1), args.value(1));
+			diff = true;
+		}
+	}
+
+	if (!diff) {
+		for (const QString& a : args) {
+			openFile(a);
+		}
+	}
+
+	if (!m_startEmpty) {
+		openFilesFromSession();
+	}
+
+	mainWindow()->show();
 }
 
 void GCodeWorkShop::resizeEvent(QResizeEvent* event)
@@ -1688,10 +1712,6 @@ void GCodeWorkShop::readSettings()
 	settings.endGroup();
 
 	m_sessionManager->load(&settings);
-
-	if (!m_startEmpty) {
-		openFilesFromSession();
-	}
 
 	ui->vSplitter->restoreState(settings.value("VSplitterState", QByteArray()).toByteArray());
 
