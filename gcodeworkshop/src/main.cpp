@@ -21,9 +21,17 @@
  ***************************************************************************/
 
 #include <QApplication>         // for main
+#include <QMainWindow>          // for QMainWindow
 #include <QObject>              // for QObject, SIGNAL, SLOT
 #include <QString>              // for QString
 #include <QtGlobal>             // for Q_INIT_RESOURCE
+
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+	#include <QStringList>
+#else
+	#include <QList>
+	using QStringList = QList<QString>;
+#endif
 
 #include <gcodeworkshop.h>      // for GCodeWorkShop
 #include <QtSingleApplication>  // for QtSingleApplication
@@ -32,15 +40,16 @@
 
 int main(int argc, char* argv[])
 {
-	bool argProccesed;
-
 	Q_INIT_RESOURCE(application);
 	QtSingleApplication app("GCodeWorkShop", argc, argv);
 
 	QString txMessage;
+	QStringList args;
 
 	for (int i = 1; i < argc; ++i) {
-		txMessage += argv[i];
+		QString a = QString::fromUtf8(argv[i]);
+		txMessage += a;
+		args.append(a);
 
 		if (i < argc - 1) {
 			txMessage += ";";
@@ -54,31 +63,12 @@ int main(int argc, char* argv[])
 	Medium& medium = Medium::instance();
 	medium.addTranslationUnit("kdiff3");
 	medium.updateTranslation();
-	GCodeWorkShop* mw = GCodeWorkShop::instance();
 
-	argProccesed = false;
-
-	if (argc >= 3) {
-		if (QString(argv[1]).trimmed() == "-diff") {
-			mw->diffTwoFiles(QString(argv[2]).trimmed(), QString(argv[3]).trimmed());
-			argProccesed = true;
-		}
-	}
-
-	if (!argProccesed) {
-		for (int i = 1; i < argc; ++i) {
-			//qDebug() << argc << argv[i] << i;
-			mw->openFile(argv[i]);
-		}
-	}
-
-	mw->show();
-
-	app.setActivationWindow(mw, false);
-
-	QObject::connect(&app, SIGNAL(messageReceived(const QString&)),
-	                 mw, SLOT(messReceived(const QString&)));
-	QObject::connect(mw, SIGNAL(needToShow()), &app, SLOT(activateWindow()));
+	GCodeWorkShop* gcws = GCodeWorkShop::instance();
+	app.setActivationWindow(gcws->mainWindow(), false);
+	QObject::connect(&app, &QtSingleApplication::messageReceived, gcws, &GCodeWorkShop::messReceived);
+	QObject::connect(gcws, &GCodeWorkShop::needToShow, &app, &QtSingleApplication::activateWindow);
+	gcws->launch(args);
 
 	return app.exec();
 }

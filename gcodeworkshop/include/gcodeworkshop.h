@@ -103,6 +103,8 @@ public:
 
 	~GCodeWorkShop();
 
+	void launch(const QStringList& args);
+
 	void resizeEvent(QResizeEvent* event);
 	void moveEvent(QMoveEvent* event);
 
