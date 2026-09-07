@@ -322,6 +322,7 @@ private:
 	void storeFileInfoInSession();
 	void savePrinterSettings(QPrinter* printer);
 	void loadPrinterSettings(QPrinter* printer);
+	void statusBarMessage(const QString& msg, int timeout);
 
 	SessionManager* m_sessionManager;
 
