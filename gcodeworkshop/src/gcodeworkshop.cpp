@@ -482,7 +482,7 @@ void GCodeWorkShop::openDir(const QDir& dir)
 void GCodeWorkShop::open()
 {
 	openDir(currentPath());
-	statusBar()->showMessage(tr("File loaded"), 5000);
+	statusBarMessage(tr("File loaded"), 5000);
 }
 
 void GCodeWorkShop::openExample()
@@ -497,7 +497,7 @@ void GCodeWorkShop::openExample()
 	}
 
 	openDir(dir);
-	statusBar()->showMessage(tr("File loaded"), 5000);
+	statusBarMessage(tr("File loaded"), 5000);
 }
 
 void GCodeWorkShop::openFile(const QString& fileName, const QString& mime)
@@ -602,7 +602,7 @@ bool GCodeWorkShop::save()
 	bool saved = saveDocument(doc, false);
 
 	if (saved) {
-		statusBar()->showMessage(tr("File saved"), 5000);
+		statusBarMessage(tr("File saved"), 5000);
 	} else {
 		QMessageBox::warning(mainWindow(), tr("GCodeWorkShop"), tr("Cannot write file \"%1\".\n %2")
 		                     .arg(doc->filePath()).arg(doc->ioErrorString()));
@@ -628,7 +628,7 @@ bool GCodeWorkShop::saveAll()
 		}
 	}
 
-	statusBar()->showMessage(tr("Saved %1 files").arg(i), 5000);
+	statusBarMessage(tr("Saved %1 files").arg(i), 5000);
 	return saved;
 }
 
@@ -643,7 +643,7 @@ bool GCodeWorkShop::saveAs()
 	bool saved = saveDocument(doc, true);
 
 	if (saved) {
-		statusBar()->showMessage(tr("File saved"), 5000);
+		statusBarMessage(tr("File saved"), 5000);
 	} else {
 		QMessageBox::warning(mainWindow(), tr("GCodeWorkShop"), tr("Cannot write file \"%1\".\n %2")
 		                     .arg(doc->filePath()).arg(doc->ioErrorString()));
@@ -723,8 +723,8 @@ void GCodeWorkShop::printFile()
 		if (dialog.exec() == QDialog::Accepted) {
 			printer.setDocName(gdoc->fileName());
 			gdoc->print(&printer);
-			statusBar()->showMessage(tr("The document was sent to a printer %1...").arg(
-			                             printer.printerName()), 5000);
+			statusBarMessage(tr("The document was sent to a printer %1...").arg(
+			                     printer.printerName()), 5000);
 			savePrinterSettings(&printer);
 		}
 	}
@@ -767,8 +767,8 @@ void GCodeWorkShop::printPreview(QPrinter* printer)
 	if (gdoc) {
 		printer->setDocName(gdoc->fileName());
 		gdoc->print(printer);
-		statusBar()->showMessage(tr("The document was sent to a printer %1...").arg(
-		                             printer->printerName()), 5000);
+		statusBarMessage(tr("The document was sent to a printer %1...").arg(
+		                     printer->printerName()), 5000);
 	}
 
 #endif
@@ -1144,7 +1144,7 @@ void GCodeWorkShop::activeWindowChanged(QMdiSubWindow* window)
 
 	if (doc) {
 		m_MdiWidgetsMaximized = doc->widget()->parentWidget()->isMaximized();
-		statusBar()->showMessage(doc->filePath(), 9000);
+		statusBarMessage(doc->filePath(), 9000);
 	}
 
 	updateCurrentSerialConfig();
@@ -2261,7 +2261,7 @@ void GCodeWorkShop::currentSessionChanged()
 {
 	closeAllMdiWindows();
 	openFilesFromSession();
-	statusBar()->showMessage(tr("Session %1 loaded").arg(m_sessionManager->currentSession()), 5000);
+	statusBarMessage(tr("Session %1 loaded").arg(m_sessionManager->currentSession()), 5000);
 }
 
 void GCodeWorkShop::openFilesFromSession()
@@ -2515,4 +2515,9 @@ void GCodeWorkShop::watchFile(const QString& fileName, bool add)
 			}
 		}
 	}
+}
+
+void GCodeWorkShop::statusBarMessage(const QString& msg, int timeout)
+{
+	mainWindow()->statusBar()->showMessage(msg, timeout);
 }
