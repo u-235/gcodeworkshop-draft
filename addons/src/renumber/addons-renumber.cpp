@@ -25,7 +25,7 @@
 #include <QString>          // for QString
 #include <QWidget>          // for QWidget
 
-#include <ui/longjobhelper.h>   // for LongJobHelper, LongJobHelper::CANCEL
+#include <gui/longjobhelper.h>  // for GUI::LongJobHelper, GUI::LongJobHelper::CANCEL
 
 #include "addons-renumber.h"
 #include "renumberdialog.h"     // for RenumberDialog
@@ -49,11 +49,11 @@ bool Addons::doRenumber(QWidget* parent, QSettings* settings, QString& tx)
 		return false;
 	}
 
-	LongJobHelper helper{parent};
+	GUI::LongJobHelper helper{parent};
 	helper.begin(tx.length(), QCoreApplication::translate("Addons::Actions", "Renumbering"), 20);
 
 	bool changed = Utils::renumber(tx, dlg->options(), [&helper](int pos) -> bool{
-		return helper.check(pos) == LongJobHelper::CANCEL;
+		return helper.check(pos) == GUI::LongJobHelper::CANCEL;
 	});
 
 	helper.end();

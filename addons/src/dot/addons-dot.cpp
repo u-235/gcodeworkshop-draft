@@ -25,7 +25,7 @@
 #include <QString>          // for QString
 #include <QWidget>          // for QWidget
 
-#include <ui/longjobhelper.h>   // for LongJobHelper, LongJobHelper::CANCEL
+#include <gui/longjobhelper.h>  // for GUI::LongJobHelper, GUI::LongJobHelper::CANCEL
 
 #include "addons-dot.h"
 #include "dotdialog.h"          // for DotDialog
@@ -50,12 +50,12 @@ int Addons::doDot(QWidget* parent, QSettings* settings,  QString& tx)
 		return 0;
 	}
 
-	LongJobHelper helper{parent};
+	GUI::LongJobHelper helper{parent};
 	helper.begin(tx.length(), QCoreApplication::translate("Addons::Actions", "Inserting dots"), 20);
 
 	DotOptions opt = dlg->options();
 	result = Utils::insertDot(tx, opt.axes, opt.convert, opt.divider, [&helper](int pos) -> bool{
-		return helper.check(pos) == LongJobHelper::CANCEL;
+		return helper.check(pos) == GUI::LongJobHelper::CANCEL;
 	});
 
 	helper.end();

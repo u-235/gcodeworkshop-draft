@@ -17,8 +17,8 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef LONGJOBHELPER_H
-#define LONGJOBHELPER_H
+#ifndef GUI_LONGJOBHELPER_H
+#define GUI_LONGJOBHELPER_H
 
 #include <time.h>   // for clock_t
 
@@ -28,6 +28,7 @@
 class QWidget;
 
 
+namespace GUI {
 /**
  * @brief The LongJobHelper class help to avoid block GUI in slow operation.
  * @details
@@ -140,5 +141,6 @@ protected:
 	QString mMessage;
 	QProgressDialog mProgressDialog;
 };
+} // namespace GUI
 
-#endif // LONGJOBHELPER_H
+#endif // GUI_LONGJOBHELPER_H
