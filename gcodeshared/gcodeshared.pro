@@ -15,24 +15,23 @@ INCLUDEPATH += include
 # GCoderShared
 
 SOURCES += \
-    serialporttestdialog.cpp \
-    serialtransmissiondialog.cpp \
-    serialportconfigdialog.cpp \
-    src/gui/actions/actionkit.cpp
+    src/gui/actions/actionkit.cpp \
+    src/gui/serialport/serialporttestdialog.cpp \
+    src/gui/serialport/serialtransmissiondialog.cpp \
+    src/gui/serialport/serialportconfigdialog.cpp
 
 HEADERS += \
     include/gui/actions/actionkit.h \
-    include/version.h \
-    serialportsettings.h \
-    serialporttestdialog.h \
-    serialtransmissiondialog.h \
-    serialportconfigdialog.h \
-    serialportsettings.h
+    include/gui/serialport/serialporttestdialog.h \
+    include/gui/serialport/serialtransmissiondialog.h \
+    include/gui/serialport/serialportconfigdialog.h \
+    include/serialportsettings.h \
+    include/version.h
 
 FORMS += \
-    serialporttestdialog.ui \
-    serialtransmissiondialog.ui \
-    serialportconfigdialog.ui
+    src/gui/serialport/serialporttestdialog.ui \
+    src/gui/serialport/serialtransmissiondialog.ui \
+    src/gui/serialport/serialportconfigdialog.ui
 
 
 # utils

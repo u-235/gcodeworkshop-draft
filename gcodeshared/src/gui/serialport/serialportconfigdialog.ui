@@ -75,7 +75,7 @@
         <string>&amp;Save</string>
        </property>
        <property name="icon">
-        <iconset resource="application.qrc">
+        <iconset resource="../../../application.qrc">
          <normaloff>:/images/filesave.png</normaloff>:/images/filesave.png</iconset>
        </property>
        <property name="autoDefault">
@@ -92,7 +92,7 @@
         <string>Delete</string>
        </property>
        <property name="icon">
-        <iconset resource="application.qrc">
+        <iconset resource="../../../application.qrc">
          <normaloff>:/images/editdelete.png</normaloff>:/images/editdelete.png</iconset>
        </property>
        <property name="autoDefault">
@@ -181,7 +181,7 @@
               <string>&amp;Browse</string>
              </property>
              <property name="icon">
-              <iconset resource="application.qrc">
+              <iconset resource="../../../application.qrc">
                <normaloff>:/images/browse.png</normaloff>:/images/browse.png</iconset>
              </property>
             </widget>
@@ -888,7 +888,7 @@ Valid QtRegExp should be entered.</string>
                <string>&amp;Add</string>
               </property>
               <property name="icon">
-               <iconset resource="application.qrc">
+               <iconset resource="../../../application.qrc">
                 <normaloff>:/images/add.png</normaloff>:/images/add.png</iconset>
               </property>
              </widget>
@@ -902,7 +902,7 @@ Valid QtRegExp should be entered.</string>
                <string>&amp;Delete</string>
               </property>
               <property name="icon">
-               <iconset resource="application.qrc">
+               <iconset resource="../../../application.qrc">
                 <normaloff>:/images/list-remove.png</normaloff>:/images/list-remove.png</iconset>
               </property>
              </widget>
@@ -986,7 +986,7 @@ Valid QtRegExp should be entered.</string>
             <string>Delete from the list</string>
            </property>
            <property name="icon">
-            <iconset resource="application.qrc">
+            <iconset resource="../../../application.qrc">
              <normaloff>:/images/list-remove.png</normaloff>:/images/list-remove.png</iconset>
            </property>
           </widget>
@@ -1004,7 +1004,7 @@ Valid QtRegExp should be entered.</string>
             <string>Add to the list</string>
            </property>
            <property name="icon">
-            <iconset resource="application.qrc">
+            <iconset resource="../../../application.qrc">
              <normaloff>:/images/add.png</normaloff>:/images/add.png</iconset>
            </property>
           </widget>
@@ -1287,7 +1287,7 @@ If the file name has not been automatically detected, the file name will be the 
             <string>Browse</string>
            </property>
            <property name="icon">
-            <iconset resource="application.qrc">
+            <iconset resource="../../../application.qrc">
              <normaloff>:/images/browse.png</normaloff>:/images/browse.png</iconset>
            </property>
           </widget>
@@ -1353,7 +1353,7 @@ If the file name has not been automatically detected, the file name will be the 
                <string/>
               </property>
               <property name="icon">
-               <iconset resource="application.qrc">
+               <iconset resource="../../../application.qrc">
                 <normaloff>:/images/add.png</normaloff>:/images/add.png</iconset>
               </property>
              </widget>
@@ -1367,7 +1367,7 @@ If the file name has not been automatically detected, the file name will be the 
                <string>...</string>
               </property>
               <property name="icon">
-               <iconset resource="application.qrc">
+               <iconset resource="../../../application.qrc">
                 <normaloff>:/images/list-remove.png</normaloff>:/images/list-remove.png</iconset>
               </property>
              </widget>
@@ -1600,7 +1600,7 @@ p, li { white-space: pre-wrap; }
             <string>Browse</string>
            </property>
            <property name="icon">
-            <iconset resource="application.qrc">
+            <iconset resource="../../../application.qrc">
              <normaloff>:/images/browse.png</normaloff>:/images/browse.png</iconset>
            </property>
           </widget>
@@ -1684,7 +1684,7 @@ If detected filename will contain an extension, then this setting will be ignore
             <string>Browse</string>
            </property>
            <property name="icon">
-            <iconset resource="application.qrc">
+            <iconset resource="../../../application.qrc">
              <normaloff>:/images/browse.png</normaloff>:/images/browse.png</iconset>
            </property>
           </widget>
@@ -1695,7 +1695,7 @@ If detected filename will contain an extension, then this setting will be ignore
             <string>Browse</string>
            </property>
            <property name="icon">
-            <iconset resource="application.qrc">
+            <iconset resource="../../../application.qrc">
              <normaloff>:/images/browse.png</normaloff>:/images/browse.png</iconset>
            </property>
           </widget>
@@ -1757,7 +1757,7 @@ p, li { white-space: pre-wrap; }
             <string>&amp;Delete</string>
            </property>
            <property name="icon">
-            <iconset resource="application.qrc">
+            <iconset resource="../../../application.qrc">
              <normaloff>:/images/list-remove.png</normaloff>:/images/list-remove.png</iconset>
            </property>
           </widget>
@@ -1771,7 +1771,7 @@ p, li { white-space: pre-wrap; }
             <string>&amp;Add</string>
            </property>
            <property name="icon">
-            <iconset resource="application.qrc">
+            <iconset resource="../../../application.qrc">
              <normaloff>:/images/add.png</normaloff>:/images/add.png</iconset>
            </property>
           </widget>
@@ -1880,7 +1880,7 @@ Set to 300s to disable timer.</string>
         <string>&amp;Save &amp;&amp; close</string>
        </property>
        <property name="icon">
-        <iconset resource="application.qrc">
+        <iconset resource="../../../application.qrc">
          <normaloff>:/images/filesave.png</normaloff>:/images/filesave.png</iconset>
        </property>
        <property name="autoDefault">
@@ -1907,7 +1907,7 @@ Set to 300s to disable timer.</string>
         <string>&amp;Cancel</string>
        </property>
        <property name="icon">
-        <iconset resource="application.qrc">
+        <iconset resource="../../../application.qrc">
          <normaloff>:/images/cancel.png</normaloff>:/images/cancel.png</iconset>
        </property>
        <property name="autoDefault">
@@ -1944,8 +1944,8 @@ Set to 300s to disable timer.</string>
   <tabstop>savePathLineEdit</tabstop>
  </tabstops>
  <resources>
-  <include location="application.qrc"/>
-  <include location="application.qrc"/>
+  <include location="../../../application.qrc"/>
+  <include location="../../../application.qrc"/>
  </resources>
  <connections/>
 </ui>

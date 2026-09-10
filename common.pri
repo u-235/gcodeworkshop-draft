@@ -54,8 +54,7 @@ contains(MODULES, addons) {
 }
 
 contains(MODULES, GCodeShared) {
-    INCLUDEPATH += $${PROJECT_ROOT_PATH}/gcodeshared \
-                   $${PROJECT_ROOT_PATH}/gcodeshared/include \
+    INCLUDEPATH += $${PROJECT_ROOT_PATH}/gcodeshared/include \
                    $$shadowed($${PROJECT_ROOT_PATH}/gcodeshared)
     LIBS += -L$$shadowed($${PROJECT_ROOT_PATH}/gcodeshared)
     LIBS += -lgcodeshared
