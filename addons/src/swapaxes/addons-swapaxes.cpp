@@ -24,7 +24,7 @@
 #include <QString>  // for QString
 #include <QWidget>  // for QWidget
 
-#include <ui/longjobhelper.h>   // for LongJobHelper, LongJobHelper::CANCEL
+#include <gui/longjobhelper.h>  // for GUI::LongJobHelper, GUI::LongJobHelper::CANCEL
 
 #include "addons-swapaxes.h"
 #include "swapaxesdialog.h"     // for SwapAxesDialog
@@ -49,11 +49,11 @@ bool Addons::doSwapAxes(QWidget* parent, QSettings* settings, QString& text)
 	}
 
 
-	LongJobHelper helper{parent};
+	GUI::LongJobHelper helper{parent};
 	helper.begin(text.length(), QCoreApplication::translate("Addons::Actions", "Axis exchange"), 20);
 
 	bool changed = Utils::swapAxes(text, dlg->options(), [&helper](int pos) -> bool{
-		return helper.check(pos) == LongJobHelper::CANCEL;
+		return helper.check(pos) == GUI::LongJobHelper::CANCEL;
 	});
 
 	helper.end();

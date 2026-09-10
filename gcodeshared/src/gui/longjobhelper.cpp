@@ -22,12 +22,12 @@
 
 class QWidget;
 
-#include <ui/longjobhelper.h>   // IWYU pragma: associated
+#include <gui/longjobhelper.h>  // IWYU pragma: associated
 
 
-LongJobHelper::LongJobHelper(QWidget* parent,
-                             const QString& title,
-                             int deadLine):
+GUI::LongJobHelper::LongJobHelper(QWidget* parent,
+                                  const QString& title,
+                                  int deadLine):
 	mProgressDialog(parent, Qt::Dialog)
 {
 	mDeadLine = deadLine;
@@ -36,7 +36,7 @@ LongJobHelper::LongJobHelper(QWidget* parent,
 	mProgressDialog.cancel();
 }
 
-void LongJobHelper::begin(int maximum, const QString& message, int lazyCheck)
+void GUI::LongJobHelper::begin(int maximum, const QString& message, int lazyCheck)
 {
 	mMaximum = maximum;
 	mMessage = message;
@@ -48,7 +48,7 @@ void LongJobHelper::begin(int maximum, const QString& message, int lazyCheck)
 	QApplication::setOverrideCursor(Qt::BusyCursor);
 }
 
-void LongJobHelper::end()
+void GUI::LongJobHelper::end()
 {
 	mTotalTime = time_ms();
 
@@ -61,7 +61,7 @@ void LongJobHelper::end()
 	return;
 }
 
-int LongJobHelper::real_check(int progress)
+int GUI::LongJobHelper::real_check(int progress)
 {
 	mTotalTime = time_ms();
 
@@ -92,12 +92,12 @@ int LongJobHelper::real_check(int progress)
 	return CONTINUE;
 }
 
-int LongJobHelper::time()
+int GUI::LongJobHelper::time()
 {
 	return mTotalTime;
 }
 
-int LongJobHelper::time_ms()
+int GUI::LongJobHelper::time_ms()
 {
 	return (clock() - mStartPoint) / (CLOCKS_PER_SEC / 1000);
 }

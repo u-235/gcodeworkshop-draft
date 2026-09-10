@@ -27,7 +27,7 @@
 #include <QStringList>      // for QStringList
 #include <QWidget>          // for QWidget
 
-#include <ui/longjobhelper.h>   // for LongJobHelper, LongJobHelper::CANCEL
+#include <gui/longjobhelper.h>  // for GUI::LongJobHelper, GUI::LongJobHelper::CANCEL
 
 #include "addons-cleanup.h"
 #include "cleanupdialog.h"          // for CleanUpDialog
@@ -64,11 +64,11 @@ bool Addons::doCleanUp(QWidget* parent, QSettings* settings,  QString& tx)
 		return false;
 	}
 
-	LongJobHelper helper{parent};
+	GUI::LongJobHelper helper{parent};
 	helper.begin(tx.length(), QCoreApplication::translate("Addons::Actions", "Cleaning up"), 20);
 
 	result = Utils::removeTextByRegExp(tx, dlg->options().selected, true, [&helper](int pos) -> bool{
-		return helper.check(pos) == LongJobHelper::CANCEL;
+		return helper.check(pos) == GUI::LongJobHelper::CANCEL;
 	});
 
 	helper.end();

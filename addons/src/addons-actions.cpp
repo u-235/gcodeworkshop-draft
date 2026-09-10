@@ -35,8 +35,8 @@
 #include <document.h>                   // for Document
 #include <gcoderdocument.h>             // for GCoderDocument
 #include <gcodeworkshop.h>              // for GCodeWorkShop
+#include <gui/longjobhelper.h>          // for GUI::LongJobHelper, GUI::LongJobHelper::CANCEL
 #include <gui/workshop/knownactions.h>  // for KnownActions
-#include <ui/longjobhelper.h>           // for LongJobHelper, LongJobHelper::CANCEL
 #include <utils/medium.h>               // for Medium
 #include <utils/splitfile.h>            // for splitFile
 
@@ -336,11 +336,11 @@ void Addons::Actions::doParaComment()
 		return;
 	}
 
-	LongJobHelper helper{m_app->mainWindow()};
+	GUI::LongJobHelper helper{m_app->mainWindow()};
 	helper.begin(ctx.text().length(), tr("Comments/uncomments"));
 
 	bool changed = Utils::autoComments(ctx.text(), Utils::ParenthesisComments, [&helper](int pos) -> bool{
-		return helper.check(pos) == LongJobHelper::CANCEL;
+		return helper.check(pos) == GUI::LongJobHelper::CANCEL;
 	});
 
 	helper.end();
@@ -358,11 +358,11 @@ void Addons::Actions::doSemiComment()
 		return;
 	}
 
-	LongJobHelper helper{m_app->mainWindow()};
+	GUI::LongJobHelper helper{m_app->mainWindow()};
 	helper.begin(ctx.text().length(), tr("Comments/uncomments"));
 
 	bool changed = Utils::autoComments(ctx.text(), Utils::SemicolonComments, [&helper](int pos) -> bool{
-		return helper.check(pos) == LongJobHelper::CANCEL;
+		return helper.check(pos) == GUI::LongJobHelper::CANCEL;
 	});
 
 	helper.end();
@@ -415,11 +415,11 @@ void Addons::Actions::doInsertEmptyLines()
 		return;
 	}
 
-	LongJobHelper helper{m_app->mainWindow()};
+	GUI::LongJobHelper helper{m_app->mainWindow()};
 	helper.begin(ctx.text().length(), tr("Inserting empty lines"));
 
 	bool changed = Utils::insertEmptyLines(ctx.text(), [&helper](int pos) -> bool{
-		return helper.check(pos) == LongJobHelper::CANCEL;
+		return helper.check(pos) == GUI::LongJobHelper::CANCEL;
 	});
 
 	helper.end();
@@ -437,11 +437,11 @@ void Addons::Actions::doRemoveEmptyLines()
 		return;
 	}
 
-	LongJobHelper helper{m_app->mainWindow()};
+	GUI::LongJobHelper helper{m_app->mainWindow()};
 	helper.begin(ctx.text().length(), tr("Removing empty lines"));
 
 	bool changed = Utils::removeEmptyLines(ctx.text(), [&helper](int pos) -> bool{
-		return helper.check(pos) == LongJobHelper::CANCEL;
+		return helper.check(pos) == GUI::LongJobHelper::CANCEL;
 	});
 
 	helper.end();
@@ -495,11 +495,11 @@ void Addons::Actions::doInsertSpaces()
 		return;
 	}
 
-	LongJobHelper helper{m_app->mainWindow()};
+	GUI::LongJobHelper helper{m_app->mainWindow()};
 	helper.begin(ctx.text().length(), tr("Inserting space"));
 
 	int changed = Utils::insertSpaces(ctx.text(), [&helper](int pos) -> bool{
-		return helper.check(pos) == LongJobHelper::CANCEL;
+		return helper.check(pos) == GUI::LongJobHelper::CANCEL;
 	});
 
 	helper.end();
@@ -517,11 +517,11 @@ void Addons::Actions::doRemoveSpaces()
 		return;
 	}
 
-	LongJobHelper helper{m_app->mainWindow()};
+	GUI::LongJobHelper helper{m_app->mainWindow()};
 	helper.begin(ctx.text().length(), tr("Removing space"));
 
 	int changed = Utils::removeSpaces(ctx.text(), [&helper](int pos) -> bool{
-		return helper.check(pos) == LongJobHelper::CANCEL;
+		return helper.check(pos) == GUI::LongJobHelper::CANCEL;
 	});
 
 	helper.end();

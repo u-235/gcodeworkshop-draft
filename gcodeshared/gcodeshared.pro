@@ -38,7 +38,7 @@ FORMS += \
 # utils
 #######################################
 
-HEADERS += include/ui/longjobhelper.h \
+HEADERS += include/gui/longjobhelper.h \
     include/utils/configpage.h \
     include/utils/configdialog.h \
     include/utils/gcode-converter.h \
@@ -48,7 +48,7 @@ HEADERS += include/ui/longjobhelper.h \
     include/utils/splitfile.h \
     utils/filepatterns.h
 
-SOURCES += ui/longjobhelper.cpp \
+SOURCES += src/gui/longjobhelper.cpp \
     utils/configpage.cpp \
     utils/configdialog.cpp \
     utils/gcode-converter.cpp \

@@ -25,7 +25,7 @@
 #include <QString>          // for QString
 #include <QWidget>          // for QWidget
 
-#include <ui/longjobhelper.h>   // for LongJobHelper, LongJobHelper::CANCEL
+#include <gui/longjobhelper.h>  // for GUI::LongJobHelper, GUI::LongJobHelper::CANCEL
 
 #include "addons-i2mprog.h"
 #include "i2mprogdialog.h"  // for I2MProgDialog
@@ -50,12 +50,12 @@ int Addons::doI2MProg(QWidget* parent, QSettings* settings,  QString& tx)
 		return 0;
 	}
 
-	LongJobHelper helper{parent};
+	GUI::LongJobHelper helper{parent};
 	helper.begin(tx.length(), QCoreApplication::translate("Addons::Actions", "Converting inch to metric"), 20);
 
 	I2MProgOptions opt = dlg->options();
 	result = Utils::i2mprog(tx, opt.axes, opt.toInch, opt.prec, [&helper](int pos) -> bool{
-		return helper.check(pos) == LongJobHelper::CANCEL;
+		return helper.check(pos) == GUI::LongJobHelper::CANCEL;
 	});
 
 	helper.end();
