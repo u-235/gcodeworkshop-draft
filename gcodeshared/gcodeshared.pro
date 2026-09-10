@@ -46,18 +46,18 @@ HEADERS += include/gui/longjobhelper.h \
     include/utils/medium.h \
     include/utils/guessfilename.h \
     include/utils/splitfile.h \
-    utils/filepatterns.h
+    src/utils/filepatterns.h
 
 SOURCES += src/gui/longjobhelper.cpp \
-    utils/configpage.cpp \
-    utils/configdialog.cpp \
-    utils/gcode-converter.cpp \
-    utils/keysequencemap.cpp \
-    utils/medium.cpp \
-    utils/guessfilename.cpp \
-    utils/splitfile.cpp
+    src/utils/configpage.cpp \
+    src/utils/configdialog.cpp \
+    src/utils/gcode-converter.cpp \
+    src/utils/keysequencemap.cpp \
+    src/utils/medium.cpp \
+    src/utils/guessfilename.cpp \
+    src/utils/splitfile.cpp
 
-FORMS += utils/configdialog.ui
+FORMS += src/utils/configdialog.ui
 
 
 # resources
