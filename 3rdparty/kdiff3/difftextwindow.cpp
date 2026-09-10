@@ -1799,8 +1799,8 @@ DiffTextWindowFrame::DiffTextWindowFrame(QWidget *pParent, OptionDialog *pOption
     d->m_pBrowseButton->setToolTip(tr("Open file..."));
     d->m_pBrowseButton->setFixedWidth(30);
     d->m_pBrowseButton->setFlat(true);
-    connect(d->m_pBrowseButton, SIGNAL(clicked()), this, SLOT(slotBrowseButtonClicked()));
-    connect(d->m_pFileSelection, SIGNAL(returnPressed()), this, SLOT(slotReturnPressed()));
+    connect(d->m_pBrowseButton, &QPushButton::clicked, this, &DiffTextWindowFrame::slotBrowseButtonClicked);
+    connect(d->m_pFileSelection, &QLineEdit::returnPressed, this, &DiffTextWindowFrame::slotReturnPressed);
 
     d->m_pLabel = new QLabel("A:", d->m_pTopLineWidget);
     d->m_pTopLine = new QLabel(d->m_pTopLineWidget);

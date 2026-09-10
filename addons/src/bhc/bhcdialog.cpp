@@ -86,14 +86,14 @@ BHCDialog::BHCDialog(QWidget* parent, QSettings* settings) :
 	tabBar->addTab(page3, tr("Circle 3 - red"));
 	tabBar->addTab(page4, tr("Circle 4 - yellow"));
 
-	connect(computeButton, SIGNAL(clicked()), SLOT(computeButtonClicked()));
-	connect(closeButton, SIGNAL(clicked()), SLOT(accept()));
-	connect(this, SIGNAL(finished(int)), SLOT(onFinished(int)));
-	connect(clearAllButton, SIGNAL(clicked()), SLOT(clearAll()));
-	connect(page1, SIGNAL(commonChk()), SLOT(comChk()));
-	connect(page2, SIGNAL(commonChk()), SLOT(comChk()));
-	connect(page3, SIGNAL(commonChk()), SLOT(comChk()));
-	connect(page4, SIGNAL(commonChk()), SLOT(comChk()));
+	connect(computeButton, &QPushButton::clicked, this, &BHCDialog::computeButtonClicked);
+	connect(closeButton, &QPushButton::clicked, this, &BHCDialog::accept);
+	connect(this, &BHCDialog::finished, this, &BHCDialog::onFinished);
+	connect(clearAllButton, &QPushButton::clicked, this, &BHCDialog::clearAll);
+	connect(page1, &BHCTab::commonChk, this, &BHCDialog::comChk);
+	connect(page2, &BHCTab::commonChk, this, &BHCDialog::comChk);
+	connect(page3, &BHCTab::commonChk, this, &BHCDialog::comChk);
+	connect(page4, &BHCTab::commonChk, this, &BHCDialog::comChk);
 
 	adjustSize();
 }

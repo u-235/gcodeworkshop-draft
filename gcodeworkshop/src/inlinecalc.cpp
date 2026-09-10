@@ -49,7 +49,7 @@ InLineCalc::InLineCalc(QWidget* parent) : QLineEdit(parent)
 	           "PI\n" +
 	           tr("Press Enter to accept or click anywhere to cancel"));
 
-	connect(this, SIGNAL(editingFinished()), this, SLOT(done()));
+	connect(this, &InLineCalc::editingFinished, this, &InLineCalc::done);
 
 	QCompleter* completer = new QCompleter(m_wordList, this);
 	completer->setCaseSensitivity(Qt::CaseInsensitive);

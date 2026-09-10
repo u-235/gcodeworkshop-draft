@@ -1654,7 +1654,7 @@ ProgressDialog::ProgressDialog(QWidget *pParent)
     hlayout->addStretch(1);
     m_pAbortButton = new QPushButton(tr("&Cancel"), this);
     hlayout->addWidget(m_pAbortButton);
-    connect(m_pAbortButton, SIGNAL(clicked()), this, SLOT(slotAbort()));
+    connect(m_pAbortButton, &QPushButton::clicked, this, &ProgressDialog::slotAbort);
 
     m_progressDelayTimer = 0;
     resize(400, 100);
@@ -1896,7 +1896,7 @@ void ProgressDialog::hide()
 
     m_progressDelayTimer = 0;
     // Calling QDialog::hide() directly doesn't always work. (?)
-    QTimer::singleShot(100, this, SLOT(delayedHide()));
+    QTimer::singleShot(100, this, &ProgressDialog::delayedHide);
 }
 
 void ProgressDialog::delayedHide()

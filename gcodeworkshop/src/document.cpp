@@ -151,7 +151,7 @@ void Document::setWidget(QWidget* widget)
 	m_widget->setAutoFillBackground(true);
 
 	DocumentWidgetCloseEventFilter* filter = new DocumentWidgetCloseEventFilter(m_widget);
-	connect(filter, SIGNAL(closeRequested(QCloseEvent*)), this, SLOT(closeEvent(QCloseEvent*)),
+	connect(filter, &DocumentWidgetCloseEventFilter::closeRequested, this, &Document::closeEvent,
 	        Qt::ConnectionType::DirectConnection);
 	m_widget->installEventFilter(filter);
 }

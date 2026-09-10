@@ -131,7 +131,7 @@ GCodeWorkShop::GCodeWorkShop(Medium* medium)
 	  sfsProc(),
 	  fileChangeMonitor()
 {
-	connect(m_recentFiles, SIGNAL(saveRequest()), this, SLOT(recentFilesChanged()));
+	connect(m_recentFiles, &RecentFiles::saveRequest, this, &GCodeWorkShop::recentFilesChanged);
 
 	m_shortcuts.insert(GUI::WorkShop::defaultKeySequence());
 	connect(this, &GCodeWorkShop::loadSettings, [this](QSettings * cfg) {
@@ -143,15 +143,16 @@ GCodeWorkShop::GCodeWorkShop(Medium* medium)
 	});
 
 	m_documentManager->registerDocumentProducer(new GCoderProducer());
-	connect(m_documentManager, SIGNAL(closeRequested(Document*)), this, SLOT(maybeSave(Document*)),
+	connect(m_documentManager, &DocumentManager::closeRequested, this, &GCodeWorkShop::maybeSave,
 	        Qt::ConnectionType::DirectConnection);
-	connect(m_documentManager, SIGNAL(customContextMenuRequested(Document*, const QPoint&)), this,
-	        SLOT(customContextMenuRequest(Document*, const QPoint&)));
-	connect(m_documentManager, SIGNAL(fileWatchRequest(const QString&, bool)), this, SLOT(watchFile(const QString&, bool)));
+	connect(m_documentManager, &DocumentManager::customContextMenuRequested, this,
+	        &GCodeWorkShop::customContextMenuRequest);
+	connect(m_documentManager, &DocumentManager::fileWatchRequest, this, &GCodeWorkShop::watchFile);
 
-	connect(m_sessionManager, SIGNAL(beforeCurrentSessionChanged()), this, SLOT(beforeCurrentSessionChanged()));
-	connect(m_sessionManager, SIGNAL(currentSessionChanged()), this, SLOT(currentSessionChanged()));
-	connect(m_sessionManager, SIGNAL(saveRequest()), this, SLOT(sessionsChanged()));
+	connect(m_sessionManager, &SessionManager::beforeCurrentSessionChanged, this,
+	        &GCodeWorkShop::beforeCurrentSessionChanged);
+	connect(m_sessionManager, &SessionManager::currentSessionChanged, this, &GCodeWorkShop::currentSessionChanged);
+	connect(m_sessionManager, &SessionManager::saveRequest, this, &GCodeWorkShop::sessionsChanged);
 
 	m_documentManager->setMdiArea(m_mainWindow->mdiArea());
 	connect(m_recentFiles, &RecentFiles::fileListChanged, m_mainWindow, &GUI::WorkShop::MainWindow::updateRecentFilesMenu);
@@ -600,7 +601,7 @@ void GCodeWorkShop::filePrintPreview()
 
 		QPrintPreviewDialog preview(&printer, mainWindow());
 		preview.setWindowFlags(Qt::Window);
-		connect(&preview, SIGNAL(paintRequested(QPrinter*)), SLOT(printPreview(QPrinter*)));
+		connect(&preview, &QPrintPreviewDialog::paintRequested, this, &GCodeWorkShop::printPreview);
 		preview.exec();
 		savePrinterSettings(&printer);
 	}
@@ -900,8 +901,7 @@ void GCodeWorkShop::readSettings()
 		fileChangeMonitor.clear();
 	} else {
 		fileChangeMonitor = new QFileSystemWatcher(this);
-		connect(fileChangeMonitor, SIGNAL(fileChanged(const QString)), this,
-		        SLOT(fileChanged(const QString)));
+		connect(fileChangeMonitor, &QFileSystemWatcher::fileChanged, this, &GCodeWorkShop::fileChanged);
 	}
 
 	m_lastOpenedPath = settings.value("LastDir",  m_lastOpenedPath).toString();

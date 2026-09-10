@@ -66,21 +66,21 @@ GUI::FindToolBar::FindToolBar(GCodeWorkShop* app, QWidget* parent) :
 	m_ignoreCase(new QCheckBox()),
 	m_ignoreComments(new QCheckBox())
 {
-	connect(m_app, SIGNAL(updateTranslations()), this, SLOT(loadTranslations()));
-	connect(m_app, SIGNAL(updateIcons()), this, SLOT(loadIcons()));
-	connect(m_app, SIGNAL(intCapsLockChanged(bool)), this, SLOT(setCapsLockEnable(bool)));
+	connect(m_app, &GCodeWorkShop::updateTranslations, this, &FindToolBar::loadTranslations);
+	connect(m_app, &GCodeWorkShop::updateIcons, this, &FindToolBar::loadIcons);
+	connect(m_app, &GCodeWorkShop::intCapsLockChanged, this, &FindToolBar::setCapsLockEnable);
 
-	connect(m_actions->findNext(), SIGNAL(triggered()), this, SLOT(findNext()));
-	connect(m_actions->findPrevious(), SIGNAL(triggered()), this, SLOT(findPrevious()));
-	connect(m_actions->replaceNext(), SIGNAL(triggered()), this, SLOT(replaceNext()));
-	connect(m_actions->replacePrevious(), SIGNAL(triggered()), this, SLOT(replacePrevious()));
-	connect(m_actions->replaceAll(), SIGNAL(triggered()), this, SLOT(replaceAll()));
-	connect(m_actions->findClose(), SIGNAL(triggered()), this, SLOT(close()));
-	connect(m_findEdit, SIGNAL(textChanged(const QString&)), this, SLOT(findTextChanged()));
-	connect(m_findEdit, SIGNAL(returnPressed()), this, SLOT(findReturnPressed()));
-	connect(m_ignoreCase, SIGNAL(clicked()), this, SLOT(findTextChanged()));
-	connect(m_wholeWords, SIGNAL(clicked()), this, SLOT(findTextChanged()));
-	connect(m_ignoreComments, SIGNAL(clicked()), this, SLOT(findTextChanged()));
+	connect(m_actions->findNext(), &QAction::triggered, this, &FindToolBar::findNext);
+	connect(m_actions->findPrevious(), &QAction::triggered, this, &FindToolBar::findPrevious);
+	connect(m_actions->replaceNext(), &QAction::triggered, this, &FindToolBar::replaceNext);
+	connect(m_actions->replacePrevious(), &QAction::triggered, this, &FindToolBar::replacePrevious);
+	connect(m_actions->replaceAll(), &QAction::triggered, this, &FindToolBar::replaceAll);
+	connect(m_actions->findClose(), &QAction::triggered, this, &FindToolBar::close);
+	connect(m_findEdit, &QLineEdit::textChanged, this, &FindToolBar::findTextChanged);
+	connect(m_findEdit, &QLineEdit::returnPressed, this, &FindToolBar::findReturnPressed);
+	connect(m_ignoreCase, &QCheckBox::clicked, this, &FindToolBar::findTextChanged);
+	connect(m_wholeWords, &QCheckBox::clicked, this, &FindToolBar::findTextChanged);
+	connect(m_ignoreComments, &QCheckBox::clicked, this, &FindToolBar::findTextChanged);
 
 	m_findEdit->setClearButtonEnabled(true);
 	m_findEditEventFilter = new CapsLockEventFilter(m_findEdit);

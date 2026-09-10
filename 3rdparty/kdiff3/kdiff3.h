@@ -51,7 +51,7 @@ public:
     {
         m_pbRightToLeftLanguage = pbRightToLeftLanguage;
         m_realVal = 0;
-        connect(this, SIGNAL(valueChanged(int)), this, SLOT(slotValueChanged(int)));
+        connect(this, &ReversibleScrollBar::valueChanged, this, &ReversibleScrollBar::slotValueChanged);
     }
 
     void setAgain()

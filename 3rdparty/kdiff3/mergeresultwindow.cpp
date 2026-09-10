@@ -95,7 +95,7 @@ MergeResultWindow::MergeResultWindow(QWidget *pParent,
     m_cursorYPos = 0;
     m_bCursorOn = true;
     m_bCursorUpdate = false;
-    connect(&m_cursorTimer, SIGNAL(timeout()), this, SLOT(slotCursorUpdate()));
+    connect(&m_cursorTimer, &QTimer::timeout, this, &MergeResultWindow::slotCursorUpdate);
     m_cursorTimer.setSingleShot(true);
     m_cursorTimer.start(500 /*ms*/);
     m_selection.reset();

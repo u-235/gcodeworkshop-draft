@@ -67,7 +67,7 @@ CleanUpDialog::CleanUpDialog(QWidget* parent, QSettings* settings) :
 	                                    this);
 	deleteRowAct->setShortcut(QKeySequence::Delete);
 	deleteRowAct->setStatusTip(tr("Delete current row"));
-	connect(deleteRowAct, SIGNAL(triggered()), this, SLOT(removeRow()));
+	connect(deleteRowAct, &QAction::triggered, this, &CleanUpDialog::removeRow);
 	tableWidget->addAction(deleteRowAct);
 
 	contextMenu = new QMenu(this);
@@ -77,13 +77,12 @@ CleanUpDialog::CleanUpDialog(QWidget* parent, QSettings* settings) :
 
 	newRow();
 
-	connect(tableWidget, SIGNAL(cellClicked(int, int)), this, SLOT(onCellCliced(int, int)));
-	connect(tableWidget, SIGNAL(cellChanged(int, int)), this, SLOT(cellChangedSlot(int, int)));
-	connect(cancelPushButton, SIGNAL(clicked()), this, SLOT(reject()));
-	connect(okPushButton, SIGNAL(clicked()), this, SLOT(accept()));
-	connect(this, SIGNAL(finished(int)), SLOT(onFinished(int)));
-	connect(tableWidget, SIGNAL(customContextMenuRequested(const QPoint&)), this,
-	        SLOT(contextMenuReq(const QPoint&)));
+	connect(tableWidget, &QTableWidget::cellClicked, this, &CleanUpDialog::onCellCliced);
+	connect(tableWidget, &QTableWidget::cellChanged, this, &CleanUpDialog::cellChangedSlot);
+	connect(cancelPushButton, &QPushButton::clicked, this, &CleanUpDialog::reject);
+	connect(okPushButton, &QPushButton::clicked, this, &CleanUpDialog::accept);
+	connect(this, &CleanUpDialog::finished, this, &CleanUpDialog::onFinished);
+	connect(tableWidget, &QTableWidget::customContextMenuRequested, this, &CleanUpDialog::contextMenuReq);
 	tableWidget->setSelectionMode(QAbstractItemView::NoSelection);
 }
 

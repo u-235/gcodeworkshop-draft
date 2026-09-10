@@ -384,7 +384,7 @@ bool KDiff3App::init(bool bAuto, TotalDiffStatus *pTotalDiffStatus, bool bLoadFi
         }
     }
 
-    QTimer::singleShot(10, this, SLOT(slotAfterFirstPaint()));
+    QTimer::singleShot(10, this, &KDiff3App::slotAfterFirstPaint);
 
     /* if ( bVisibleMergeResultWindow && m_pMergeResultWindow )
      {
@@ -500,12 +500,12 @@ void KDiff3App::initView()
     copyAct->setShortcut(QKeySequence::Copy);
     copyAct->setStatusTip(tr("Copy the current selection's contents to the "
                              "clipboard"));
-    connect(copyAct, SIGNAL(triggered()), this, SLOT(slotEditCopy()));
+    connect(copyAct, &QAction::triggered, this, &KDiff3App::slotEditCopy);
 
     //   QAction *selAllAct = new QAction(QIcon(":/images/edit-select-all.png"), tr("&Select all"), this);
     //   selAllAct->setShortcut(QKeySequence::SelectAll);
     //   selAllAct->setStatusTip(tr("Select all"));
-    //   connect(selAllAct, SIGNAL(triggered()), this, SLOT(sellAll()));
+    //   connect(selAllAct, &QAction::triggered, this, &KDiff3App::sellAll);
 
     contextMenu->addAction(copyAct);
     //contextMenu->addSeparator();
@@ -534,7 +534,7 @@ void KDiff3App::initView()
     m_pOverview = new Overview(m_pOptionDialog);
     m_pOverview->setObjectName("Overview");
     pDiffHLayout->addWidget(m_pOverview);
-    connect(m_pOverview, SIGNAL(setLine(int)), this, SLOT(setDiff3Line(int)));
+    connect(m_pOverview, &Overview::setLine, this, &KDiff3App::setDiff3Line);
 
     m_pDiffVScrollBar = new QScrollBar(Qt::Vertical, pDiffWindowFrame);
     pDiffHLayout->addWidget(m_pDiffVScrollBar);
@@ -550,10 +550,10 @@ void KDiff3App::initView()
     m_pDiffTextWindow1 = m_pDiffTextWindowFrame1->getDiffTextWindow();
     m_pDiffTextWindow2 = m_pDiffTextWindowFrame2->getDiffTextWindow();
 
-    connect(m_pDiffTextWindowFrame1, SIGNAL(fileNameChanged(const QString &, int)), this,
-            SLOT(slotFileNameChanged(const QString &, int)));
-    connect(m_pDiffTextWindowFrame2, SIGNAL(fileNameChanged(const QString &, int)), this,
-            SLOT(slotFileNameChanged(const QString &, int)));
+    connect(m_pDiffTextWindowFrame1, &DiffTextWindowFrame::fileNameChanged, this,
+            &KDiff3App::slotFileNameChanged);
+    connect(m_pDiffTextWindowFrame2, &DiffTextWindowFrame::fileNameChanged, this,
+            &KDiff3App::slotFileNameChanged);
 
     m_pMergeResultWindow = new MergeResultWindow(this, m_pOptionDialog);
 
@@ -568,58 +568,53 @@ void KDiff3App::initView()
     m_pCornerWidget = new QWidget(this);
     pHScrollBarLayout->addWidget(m_pCornerWidget);
 
-    connect(m_pDiffVScrollBar, SIGNAL(valueChanged(int)), m_pOverview, SLOT(setFirstLine(int)));
-    connect(m_pDiffVScrollBar, SIGNAL(valueChanged(int)), m_pDiffTextWindow1,
-            SLOT(setFirstLine(int)));
-    connect(m_pHScrollBar, SIGNAL(valueChanged2(int)), m_pDiffTextWindow1,
-            SLOT(setFirstColumn(int)));
-    connect(m_pDiffTextWindow1, SIGNAL(newSelection()), this, SLOT(slotSelectionStart()));
-    connect(m_pDiffTextWindow1, SIGNAL(selectionEnd()), this, SLOT(slotSelectionEnd()));
-    connect(m_pDiffTextWindow1, SIGNAL(scroll(int, int)), this, SLOT(scrollDiffTextWindow(int,
-            int)));
-    connect(m_pDiffTextWindow1, SIGNAL(lineClicked(QString, int)), this, SIGNAL(lineClicked(QString,
-            int)));
-    connect(m_pDiffTextWindow1, SIGNAL(showPopupMenu(const QPoint &)), this,
-            SLOT(showPopupMenu(const QPoint &)));
+    connect(m_pDiffVScrollBar, &QScrollBar::valueChanged, m_pOverview, &Overview::setFirstLine);
+    connect(m_pDiffVScrollBar, &QScrollBar::valueChanged, m_pDiffTextWindow1,
+            &DiffTextWindow::setFirstLine);
+    connect(m_pHScrollBar, &ReversibleScrollBar::valueChanged2, m_pDiffTextWindow1,
+            &DiffTextWindow::setFirstColumn);
+    connect(m_pDiffTextWindow1, &DiffTextWindow::newSelection, this, &KDiff3App::slotSelectionStart);
+    connect(m_pDiffTextWindow1, &DiffTextWindow::selectionEnd, this, &KDiff3App::slotSelectionEnd);
+    connect(m_pDiffTextWindow1, &DiffTextWindow::scroll, this, &KDiff3App::scrollDiffTextWindow);
+    connect(m_pDiffTextWindow1, &DiffTextWindow::lineClicked, this, &KDiff3App::lineClicked);
+    connect(m_pDiffTextWindow1, &DiffTextWindow::showPopupMenu, this,
+            &KDiff3App::showPopupMenu);
     m_pDiffTextWindow1->installEventFilter(this);
 
-    connect(m_pDiffVScrollBar, SIGNAL(valueChanged(int)), m_pDiffTextWindow2,
-            SLOT(setFirstLine(int)));
-    connect(m_pHScrollBar, SIGNAL(valueChanged2(int)), m_pDiffTextWindow2,
-            SLOT(setFirstColumn(int)));
-    connect(m_pDiffTextWindow2, SIGNAL(newSelection()), this, SLOT(slotSelectionStart()));
-    connect(m_pDiffTextWindow2, SIGNAL(selectionEnd()), this, SLOT(slotSelectionEnd()));
-    connect(m_pDiffTextWindow2, SIGNAL(scroll(int, int)), this, SLOT(scrollDiffTextWindow(int,
-            int)));
-    connect(m_pDiffTextWindow2, SIGNAL(lineClicked(QString, int)), this, SIGNAL(lineClicked(QString,
-            int)));
-    connect(m_pDiffTextWindow2, SIGNAL(showPopupMenu(const QPoint &)), this,
-            SLOT(showPopupMenu(const QPoint &)));
+    connect(m_pDiffVScrollBar, &QScrollBar::valueChanged, m_pDiffTextWindow2,
+            &DiffTextWindow::setFirstLine);
+    connect(m_pHScrollBar, &ReversibleScrollBar::valueChanged2, m_pDiffTextWindow2,
+            &DiffTextWindow::setFirstColumn);
+    connect(m_pDiffTextWindow2, &DiffTextWindow::newSelection, this, &KDiff3App::slotSelectionStart);
+    connect(m_pDiffTextWindow2, &DiffTextWindow::selectionEnd, this, &KDiff3App::slotSelectionEnd);
+    connect(m_pDiffTextWindow2, &DiffTextWindow::scroll, this, &KDiff3App::scrollDiffTextWindow);
+    connect(m_pDiffTextWindow2, &DiffTextWindow::lineClicked, this, &KDiff3App::lineClicked);
+    connect(m_pDiffTextWindow2, &DiffTextWindow::showPopupMenu, this,
+            &KDiff3App::showPopupMenu);
     m_pDiffTextWindow2->installEventFilter(this);
 
     MergeResultWindow *p = m_pMergeResultWindow;
 
-    connect(p, SIGNAL(selectionEnd()), this, SLOT(slotSelectionEnd()));
+    connect(p, &MergeResultWindow::selectionEnd, this, &KDiff3App::slotSelectionEnd);
 
-    //connect( p, SIGNAL( showPopupMenu(const QPoint&) ), this, SLOT(showPopupMenu(const QPoint&)));
+    //connect( p, &MergeResultWindow::showPopupMenu, this, &KDiff3App::showPopupMenu);
 
-    connect(p, SIGNAL(setFastSelectorRange(int, int)), m_pDiffTextWindow1,
-            SLOT(setFastSelectorRange(int, int)));
-    connect(p, SIGNAL(setFastSelectorRange(int, int)), m_pDiffTextWindow2,
-            SLOT(setFastSelectorRange(int, int)));
+    connect(p, &MergeResultWindow::setFastSelectorRange, m_pDiffTextWindow1,
+            &DiffTextWindow::setFastSelectorRange);
+    connect(p, &MergeResultWindow::setFastSelectorRange, m_pDiffTextWindow2,
+            &DiffTextWindow::setFastSelectorRange);
 
-    connect(m_pDiffTextWindow1, SIGNAL(setFastSelectorLine(int)), p,
-            SLOT(slotSetFastSelectorLine(int)));
-    connect(m_pDiffTextWindow2, SIGNAL(setFastSelectorLine(int)), p,
-            SLOT(slotSetFastSelectorLine(int)));
+    connect(m_pDiffTextWindow1, &DiffTextWindow::setFastSelectorLine, p,
+            &MergeResultWindow::slotSetFastSelectorLine);
+    connect(m_pDiffTextWindow2, &DiffTextWindow::setFastSelectorLine, p,
+            &MergeResultWindow::slotSetFastSelectorLine);
 
-    connect(m_pDiffTextWindow1, SIGNAL(gotFocus()), p, SLOT(updateSourceMask()));
-    connect(m_pDiffTextWindow2, SIGNAL(gotFocus()), p, SLOT(updateSourceMask()));
+    connect(m_pDiffTextWindow1, &DiffTextWindow::gotFocus, p, &MergeResultWindow::updateSourceMask);
+    connect(m_pDiffTextWindow2, &DiffTextWindow::gotFocus, p, &MergeResultWindow::updateSourceMask);
 
-    connect(m_pDiffTextWindow1, SIGNAL(resizeSignal(int, int)), this, SLOT(resizeDiffTextWindow(int,
-            int)));
+    connect(m_pDiffTextWindow1, &DiffTextWindow::resizeSignal, this, &KDiff3App::resizeDiffTextWindow);
     // The following two connects cause the wordwrap to be recalced thrice, just to make sure. Better than forgetting one.
-    connect(m_pDiffTextWindow2, SIGNAL(resizeSignal(int, int)), this, SLOT(slotRecalcWordWrap()));
+    connect(m_pDiffTextWindow2, &DiffTextWindow::resizeSignal, this, &KDiff3App::slotRecalcWordWrap);
 
     m_pDiffTextWindow1->setFocus();
     setMinimumSize(50, 50);

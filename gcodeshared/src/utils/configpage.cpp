@@ -53,7 +53,7 @@ QWidget* ConfigPage::widget()
 {
 	if (mWidget == nullptr) {
 		mWidget = doWidget();
-		connect(mWidget, SIGNAL(destroyed(QObject*)), SLOT(widgetDestroed(QObject*)));
+		connect(mWidget, &QWidget::destroyed, this, &ConfigPage::widgetDestroed);
 	}
 
 	return mWidget;

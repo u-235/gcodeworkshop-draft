@@ -84,17 +84,16 @@ GCoderDocument::GCoderDocument() : Document(nullptr)
 	m_textEdit->setWordWrapMode(QTextOption::NoWrap);
 
 	m_inLineCalc = new InLineCalc(m_textEdit);
-	connect(m_inLineCalc, SIGNAL(complete(const QString&)), this, SLOT(inLineCalcComplete(const QString&)));
+	connect(m_inLineCalc, &InLineCalc::complete, this, &GCoderDocument::inLineCalcComplete);
 
 	m_textEdit->setWindowIcon(QIcon(":/images/ncfile.png"));
 	m_textEdit->setContextMenuPolicy(Qt::CustomContextMenu);
-	connect(m_textEdit, SIGNAL(customContextMenuRequested(const QPoint&)), this,
-	        SLOT(customContextMenuRequest(const QPoint&)));
-	connect(m_textEdit, SIGNAL(cursorPositionChanged()), this, SLOT(cursorMoved()));
-	connect(m_textEdit, SIGNAL(selectionChanged()), this, SLOT(selectionUpdated()));
-	connect(m_textEdit, SIGNAL(modificationChanged(bool)), this, SLOT(setModified(bool)));
-	connect(m_textEdit, SIGNAL(redoAvailable(bool)), this, SLOT(setRedoAvailable(bool)));
-	connect(m_textEdit, SIGNAL(undoAvailable(bool)), this, SLOT(setUndoAvailable(bool)));
+	connect(m_textEdit, &QPlainTextEdit::customContextMenuRequested, this, &GCoderDocument::customContextMenuRequest);
+	connect(m_textEdit, &QPlainTextEdit::cursorPositionChanged, this, &GCoderDocument::cursorMoved);
+	connect(m_textEdit, &QPlainTextEdit::selectionChanged, this, &GCoderDocument::selectionUpdated);
+	connect(m_textEdit, &QPlainTextEdit::modificationChanged, this, &GCoderDocument::setModified);
+	connect(m_textEdit, &QPlainTextEdit::redoAvailable, this, &GCoderDocument::setRedoAvailable);
+	connect(m_textEdit, &QPlainTextEdit::undoAvailable, this, &GCoderDocument::setUndoAvailable);
 
 	m_capsLockEventFilter = new CapsLockEventFilter(m_textEdit);
 	m_capsLockEventFilter->setCapsLockEnable(m_widgetProperties.intCapsLock);
@@ -102,8 +101,8 @@ GCoderDocument::GCoderDocument() : Document(nullptr)
 	m_gCoderEventFilter = new GCoderEventFilter(m_textEdit, this);
 	m_textEdit->installEventFilter(m_gCoderEventFilter);
 	m_textEdit->viewport()->installEventFilter(m_gCoderEventFilter);
-	connect(m_gCoderEventFilter, SIGNAL(requestInLineCalc()), this, SLOT(showInLineCalc()));
-	connect(m_gCoderEventFilter, SIGNAL(requestUnderLine()), this, SLOT(underLine()));
+	connect(m_gCoderEventFilter, &GCoderEventFilter::requestInLineCalc, this, &GCoderDocument::showInLineCalc);
+	connect(m_gCoderEventFilter, &GCoderEventFilter::requestUnderLine, this, &GCoderDocument::underLine);
 
 	document()->setDocumentMargin(8);
 	document()->setModified(false);

@@ -70,7 +70,7 @@ void GCodeFileServer::launch()
 	loadSettings();
 
 	if (m_mainWindow->isStartMinimized()) {
-		QTimer::singleShot(500, mainWindow(), SLOT(hide()));
+		QTimer::singleShot(500, mainWindow(), &QMainWindow::hide);
 	} else {
 		mainWindow()->showNormal();
 	}

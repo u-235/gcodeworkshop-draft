@@ -52,6 +52,10 @@
 class QValidator;
 class QWidget;
 
+#if QT_VERSION < QT_VERSION_CHECK(5, 7, 0)
+	#include <qt/qoverload.h>
+#endif
+
 #include <gcoderstyle.h>            // for GCoderStyle, HighlightColors
 #include <gcoderwidgetproperties.h> // for GCoderWidgetProperties, SHOW_FILENAME, SHOW_FILEPATH, SHOW_PROGTITLE
 
@@ -78,12 +82,19 @@ GUI::SetupDialog::SetupDialog(QWidget* parent, const AppConfig* prop, Qt::Window
 	                               .arg(editProp.codeStyle.fontName).arg(editProp.codeStyle.fontSize)));
 	ui->fontLabel->setFont(QFont(editProp.codeStyle.fontName, editProp.codeStyle.fontSize));
 
-	connect(ui->changeFontButton, SIGNAL(clicked()), SLOT(changeFont()));
-	connect(ui->browseButton, SIGNAL(clicked()), SLOT(browseButtonClicked()));
+	connect(ui->changeFontButton, &QPushButton::clicked, this, &SetupDialog::changeFont);
+	connect(ui->browseButton, &QPushButton::clicked, this, &SetupDialog::browseButtonClicked);
 
 	colorButtons = new QButtonGroup(this);
-	connect(colorButtons, SIGNAL(buttonClicked(QAbstractButton*)),
-	        SLOT(changeColor(QAbstractButton*)));
+#if QT_VERSION < QT_VERSION_CHECK(5,15,0)
+	connect(colorButtons,  QOverload<int>::of(&QButtonGroup::buttonClicked), [this](int id) {
+		changeColor(colorButtons->button(id));
+	});
+#else
+	connect(colorButtons, &QButtonGroup::idClicked, [this](int id) {
+		changeColor(colorButtons->button(id));
+	});
+#endif
 
 	palette.setColor(ui->backgroundColorButton->foregroundRole(), editProp.codeStyle.hColors.backgroundColor);
 	ui->backgroundColorButton->setPalette(palette);
