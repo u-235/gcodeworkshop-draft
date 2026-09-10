@@ -44,9 +44,9 @@
 #include <Qt>               // for WidgetAttribute, ToolBarArea, WindowModality, WindowType
 #include <QtGlobal>         // for QForeachContainer, qMakeForeachContainer, QTypeInfo<>::isLarge, QTypeI...
 
-#include <serialportconfigdialog.h>     // for SerialPortConfigDialog
-#include <serialtransmissiondialog.h>   // for SerialTransmissionDialog
-#include <utils/medium.h>               // for Medium
+#include <gui/serialport/serialportconfigdialog.h>      // for SerialPortConfigDialog
+#include <gui/serialport/serialtransmissiondialog.h>    // for SerialTransmissionDialog
+#include <utils/medium.h>                               // for Medium
 #include <version.h>
 
 #include "gcodefileserver.h"
@@ -140,7 +140,7 @@ void GCodeFileServer::saveSettings()
 	QStringList activeConfigs;
 
 	foreach (QMdiSubWindow* window, ui->mdiArea->subWindowList()) {
-		SerialTransmissionDialog* mdiChild = qobject_cast<SerialTransmissionDialog*>(window->widget());
+		GUI::SerialTransmissionDialog* mdiChild = qobject_cast<GUI::SerialTransmissionDialog*>(window->widget());
 
 		if (mdiChild != nullptr) {
 			activeConfigs.append(mdiChild->configName());
@@ -174,15 +174,15 @@ void GCodeFileServer::loadSettings()
 	QStringList::Iterator it = list.begin();
 
 	while (it != list.end()) {
-		SerialTransmissionDialog* spServer = createSerialPortServer(*it);
+		GUI::SerialTransmissionDialog* spServer = createSerialPortServer(*it);
 		spServer->show();
 		++it;
 	}
 }
 
-SerialTransmissionDialog* GCodeFileServer::createSerialPortServer(QString __config)
+GUI::SerialTransmissionDialog* GCodeFileServer::createSerialPortServer(QString __config)
 {
-	SerialTransmissionDialog* spServer = new SerialTransmissionDialog(this, Qt::SubWindow,
+	GUI::SerialTransmissionDialog* spServer = new GUI::SerialTransmissionDialog(this, Qt::SubWindow,
 	        true);  // Qt::Tool | Qt::CustomizeWindowHint | Qt::WindowTitleHint
 	spServer->setAttribute(Qt::WA_DeleteOnClose);
 	ui->mdiArea->addSubWindow(spServer);
@@ -196,12 +196,12 @@ void GCodeFileServer::startSerialPortServer()
 {
 	QString _config = configBox->currentText();
 
-	SerialTransmissionDialog* _existing = findMdiChild(_config);
+	GUI::SerialTransmissionDialog* _existing = findMdiChild(_config);
 
 	if (_existing) {
 		_existing->setFocus();
 	} else {
-		SerialTransmissionDialog* spServer = createSerialPortServer(_config);
+		GUI::SerialTransmissionDialog* spServer = createSerialPortServer(_config);
 		//spServer->startFileServer(_config, true);
 		spServer->show();
 	}
@@ -211,7 +211,7 @@ void GCodeFileServer::stopSerialPortServer()
 {
 	QString _config = configBox->currentText();
 
-	SerialTransmissionDialog* _existing = findMdiChild(_config);
+	GUI::SerialTransmissionDialog* _existing = findMdiChild(_config);
 
 	if (_existing != nullptr) {
 		_existing->close();
@@ -323,7 +323,7 @@ void GCodeFileServer::createActions()
 
 void GCodeFileServer::serialConfig()
 {
-	SerialPortConfigDialog* serialConfigDialog = new SerialPortConfigDialog(this,
+	GUI::SerialPortConfigDialog* serialConfigDialog = new GUI::SerialPortConfigDialog(this,
 	        configBox->currentText());
 
 	if (serialConfigDialog->exec() == QDialog::Accepted) {
@@ -395,10 +395,10 @@ void GCodeFileServer::tileSubWindowsVertycally()
 	//    }
 }
 
-SerialTransmissionDialog* GCodeFileServer::findMdiChild(const QString __config)
+GUI::SerialTransmissionDialog* GCodeFileServer::findMdiChild(const QString __config)
 {
 	foreach (QMdiSubWindow* window, ui->mdiArea->subWindowList()) {
-		SerialTransmissionDialog* mdiChild = qobject_cast<SerialTransmissionDialog*>(window->widget());
+		GUI::SerialTransmissionDialog* mdiChild = qobject_cast<GUI::SerialTransmissionDialog*>(window->widget());
 
 		if (mdiChild != nullptr)
 			if (mdiChild->configName() == __config) {
@@ -418,10 +418,10 @@ void GCodeFileServer::setActiveSubWindow(QWidget* window)
 	ui->mdiArea->setActiveSubWindow(qobject_cast<QMdiSubWindow*>(window));
 }
 
-SerialTransmissionDialog* GCodeFileServer::activeMdiChild()
+GUI::SerialTransmissionDialog* GCodeFileServer::activeMdiChild()
 {
 	if (QMdiSubWindow* activeSubWindow = ui->mdiArea->activeSubWindow()) {
-		return qobject_cast<SerialTransmissionDialog*>(activeSubWindow->widget());
+		return qobject_cast<GUI::SerialTransmissionDialog*>(activeSubWindow->widget());
 	}
 
 	return nullptr;
@@ -433,8 +433,8 @@ void GCodeFileServer::activeWindowChanged(QMdiSubWindow* window)
 		return;
 	}
 
-	SerialTransmissionDialog* mdiChild = qobject_cast<SerialTransmissionDialog*>
-	                                     (window->widget()); //activeMdiChild();
+	GUI::SerialTransmissionDialog* mdiChild = qobject_cast<GUI::SerialTransmissionDialog*>
+	        (window->widget()); //activeMdiChild();
 
 	if (mdiChild != nullptr) {
 		mdiChild->setFocus();
@@ -461,7 +461,7 @@ void GCodeFileServer::activeWindowChanged(QMdiSubWindow* window)
 
 void GCodeFileServer::changeActiveWindow()
 {
-	SerialTransmissionDialog* mdiChild = findMdiChild(configBox->currentText());
+	GUI::SerialTransmissionDialog* mdiChild = findMdiChild(configBox->currentText());
 
 	if (mdiChild != nullptr) {
 		mdiChild->setFocus();
@@ -488,7 +488,7 @@ void GCodeFileServer::closeTab(int i)
 
 void GCodeFileServer::doPortReset()
 {
-	SerialTransmissionDialog* mdiChild = activeMdiChild();
+	GUI::SerialTransmissionDialog* mdiChild = activeMdiChild();
 
 	if (mdiChild != nullptr) {
 		mdiChild->portReset();
@@ -497,7 +497,7 @@ void GCodeFileServer::doPortReset()
 
 void GCodeFileServer::showNewFiles()
 {
-	SerialTransmissionDialog* mdiChild = activeMdiChild();
+	GUI::SerialTransmissionDialog* mdiChild = activeMdiChild();
 
 	if (mdiChild != nullptr) {
 		QSettings& settings = *Medium::instance().settings();
@@ -514,7 +514,7 @@ void GCodeFileServer::showNewFiles()
 
 void GCodeFileServer::browseSaveFolder()
 {
-	SerialTransmissionDialog* mdiChild = activeMdiChild();
+	GUI::SerialTransmissionDialog* mdiChild = activeMdiChild();
 
 	if (mdiChild != nullptr) {
 		QDesktopServices::openUrl(QUrl(QString("file:///%1").arg(mdiChild->savePath()),
@@ -570,7 +570,7 @@ void GCodeFileServer::quitApp()
 	saveSettings();
 
 	foreach (const QMdiSubWindow* window, ui->mdiArea->subWindowList(QMdiArea::StackingOrder)) {
-		SerialTransmissionDialog* mdiChild = qobject_cast<SerialTransmissionDialog*>(window->widget());
+		GUI::SerialTransmissionDialog* mdiChild = qobject_cast<GUI::SerialTransmissionDialog*>(window->widget());
 		mdiChild->close();
 		mdiChild->parentWidget()->close();
 	}

@@ -20,8 +20,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef SERIALTRANSMISSIONDIALOG_H
-#define SERIALTRANSMISSIONDIALOG_H
+#ifndef GUI_SERIALTRANSMISSIONDIALOG_H
+#define GUI_SERIALTRANSMISSIONDIALOG_H
 
 #include <QByteArray>   // for QByteArray
 #include <QDialog>      // for QDialog
@@ -36,10 +36,11 @@ class QCloseEvent;
 class QTimer;
 class QWidget;
 
-#include "serialportsettings.h"             // for SerialPortSettings
+#include <serialportsettings.h>             // for SerialPortSettings
 #include "ui_serialtransmissiondialog.h"    // for Ui::SerialTransmissionDialog
 
 
+namespace GUI {
 class SerialTransmissionDialog : public QDialog, private Ui::SerialTransmissionDialog
 {
 	Q_OBJECT
@@ -125,5 +126,6 @@ private:
 	QTimer* receiveTimeoutTimer;
 	QTimer* reconnectTimer;
 };
+} // namespace GUI
 
-#endif // SERIALTRANSMISSIONDIALOG_H
+#endif // GUI_SERIALTRANSMISSIONDIALOG_H

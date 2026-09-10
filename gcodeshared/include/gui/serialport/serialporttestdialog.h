@@ -20,70 +20,93 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef SERIALPORTCONFIGDIALOG_H
-#define SERIALPORTCONFIGDIALOG_H
+#ifndef GUI_SERIALPORTTESTDIALOG_H
+#define GUI_SERIALPORTTESTDIALOG_H
 
 #include <QDialog>  // for QDialog
 #include <QObject>  // for Q_OBJECT, slots
 #include <QString>  // for QString
 #include <Qt>       // for WindowType, WindowFlags
 
-class QButtonGroup;
+class QSerialPort;
+class QTimer;
 class QWidget;
 
-#include "ui_serialportconfigdialog.h"  // for Ui::SerialPortConfigDialog
+#include <serialportsettings.h>         // for SerialPortSettings
+#include "ui_serialporttestdialog.h"    // for Ui::SerialPortTestDialog
 
-
-class SerialPortConfigDialog : public QDialog, private Ui::SerialPortConfigDialog
+namespace GUI {
+class SerialPortTestDialog : public QDialog, private Ui::SerialPortTestDialog
 {
 	Q_OBJECT
 
 public:
-	SerialPortConfigDialog(QWidget* parent = 0, QString confName = "",
-	                       Qt::WindowFlags f = Qt::Dialog);
-	~SerialPortConfigDialog();
+	SerialPortTestDialog(QWidget* parent = 0, Qt::WindowFlags f = Qt::Dialog);
+	~SerialPortTestDialog();
 
 private slots:
-	void browseButtonClicked();
-	void saveButtonClicked();
-	void loadSettings();
-	void changeSettings();
 	void closeButtonClicked();
-	void deleteButtonClicked();
-	void saveCloseButtonClicked();
-	void flowCtlGroupReleased();
-	void browse1ButtonClicked();
-	void browse2ButtonClicked();
-	void browse3ButtonClicked();
-	void browse4ButtonClicked();
-	void portNameComboBoxIndexChanged(QString name);
-	void autoSaveCheckBoxChanged(int state);
-	void appendExtCheckBoxChanged(int state);
-	void useAsExtCheckBoxChanged(int state);
-	void fileServerCheckBoxChanged(int state);
-	void addButtonClicked();
-	void removeButtonClicked();
-	void addEobButtonClicked();
-	void deleteEobButtonClicked();
-	void addEobCharButtonClicked();
-	void deleteEobCharButtonClicked();
-	void eobComboBoxEditTextChanged(const QString text);
-	void addFileNameButtonClicked();
-	void removeFileNameButtonClicked();
-	void helpButtonClicked();
-	void readPath1Changed(const QString text);
-	void readPath2Changed(const QString text);
-	void readPath3Changed(const QString text);
+	void clearButtonClicked();
+	void connectButtonToggled(bool tg);
+	void configButtonClicked();
+	void changeSettings();
+	void updateLeds();
+	void setRtsButtonClicked();
+	void setDtrButtonClicked();
+	void sendTextEditChanged();
+	void lineDelaySlot();
+	void setXonButtonClicked();
+	void setXoffButtonClicked();
+	void textEditScroll(int pos);
+	void hexTextEditScroll(int pos);
 
 private:
-	QString browseForDir(const QString dir, QString windowTitle);
+	void loadSerialConfignames();
+	void showError(int error);
+	void sendText(QString tx);
 
-	QButtonGroup* baudGroup;
-	QButtonGroup* dataBitsGroup;
-	QButtonGroup* stopBitsGroup;
-	QButtonGroup* parityGroup;
-	QButtonGroup* flowCtlGroup;
-	QString configName;
+	bool stop;
+	QString portName;
+	QString sendAtEnd;
+	QString sendAtBegining;
+
+	QSerialPort* comPort;
+	QTimer* timer;
+	long int count;
+	double lineDelay;
+	bool readyCont;
+	SerialPortSettings portSettings;
 };
+} // namespace GUI
 
-#endif // SERIALPORTCONFIGDIALOG_H
+//class TransProgressDialog : public QDialog, private Ui::TransProgressDialog
+//{
+//    Q_OBJECT
+
+//public:
+//    TransProgressDialog(QWidget *parent = 0, Qt::WindowFlags f = Qt::Dialog);
+//    ~TransProgressDialog();
+
+//public slots:
+//    void setLabelText(const QString text);
+//    void open(QSerialPort *port);
+//    bool wasCanceled();
+//    void setRange(int min, int max);
+//    void setValue(int val);
+
+//protected:
+//    void closeEvent(QCloseEvent *event);
+
+//private slots:
+//    void cancelButtonClicked();
+//    void updateLeds();
+
+
+//private:
+//    QSerialPort *comPort;
+//    bool canceled;
+
+//    QTimer *timer;
+//};
+
+#endif // GUI_SERIALPORTTESTDIALOG_H

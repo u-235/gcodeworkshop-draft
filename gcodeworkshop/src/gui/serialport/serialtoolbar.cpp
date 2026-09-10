@@ -35,14 +35,14 @@
 	using QStringList = QList<QString>;
 #endif
 
-#include <document.h>                   // for Document
-#include <gcoderdocument.h>             // for GCoderDocument
-#include <gcodeworkshop.h>              // for GCodeWorkShop
-#include <highlightmode.h>              // for HighlightMode
-#include <serialportconfigdialog.h>     // for SerialPortConfigDialog
-#include <serialporttestdialog.h>       // for SerialPortTestDialog
-#include <serialtransmissiondialog.h>   // for SerialTransmissionDialog
-#include <utils/medium.h>               // for Medium
+#include <document.h>                                   // for Document
+#include <gcoderdocument.h>                             // for GCoderDocument
+#include <gcodeworkshop.h>                              // for GCodeWorkShop
+#include <gui/serialport/serialportconfigdialog.h>      // for SerialPortConfigDialog
+#include <gui/serialport/serialporttestdialog.h>        // for SerialPortTestDialog
+#include <gui/serialport/serialtransmissiondialog.h>    // for SerialTransmissionDialog
+#include <highlightmode.h>                              // for HighlightMode
+#include <utils/medium.h>                               // for Medium
 
 #include "serialtoolbar.h"
 #include "serialtoolbaractions.h"   //  for SerialToolBarActions
@@ -156,7 +156,7 @@ void GUI::SerialToolBar::loadSerialConfignames()
 
 void GUI::SerialToolBar::configure()
 {
-	SerialPortConfigDialog* serialConfigDialog = new SerialPortConfigDialog(m_app->mainWindow(),
+	SerialPortConfigDialog* serialConfigDialog = new GUI::SerialPortConfigDialog(m_app->mainWindow(),
 	        m_configBox->currentText());
 
 	if (serialConfigDialog->exec() == QDialog::Accepted) {
@@ -166,7 +166,7 @@ void GUI::SerialToolBar::configure()
 
 void GUI::SerialToolBar::testConfig()
 {
-	SerialPortTestDialog* testDialog = new SerialPortTestDialog(m_app->mainWindow());
+	GUI::SerialPortTestDialog* testDialog = new GUI::SerialPortTestDialog(m_app->mainWindow());
 	testDialog->show();
 }
 
@@ -186,7 +186,7 @@ void GUI::SerialToolBar::send()
 
 	tx.append(gdoc->text());
 
-	SerialTransmissionDialog transmissionDialog(m_app->mainWindow());
+	GUI::SerialTransmissionDialog transmissionDialog(m_app->mainWindow());
 	transmissionDialog.sendData(tx, m_configBox->currentText());
 
 	m_actions->receive()->setEnabled(true);
@@ -202,7 +202,7 @@ void GUI::SerialToolBar::receive()
 	m_actions->runFileServer()->setEnabled(false);
 	QApplication::setOverrideCursor(Qt::BusyCursor);
 
-	SerialTransmissionDialog transmissionDialog(m_app->mainWindow());
+	GUI::SerialTransmissionDialog transmissionDialog(m_app->mainWindow());
 	QStringList progList = transmissionDialog.receiveData(m_configBox->currentText());
 
 	if (!progList.isEmpty()) {

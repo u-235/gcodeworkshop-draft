@@ -53,13 +53,13 @@ class QWidget;
 
 #include <utils/medium.h>   // for Medium
 
-#include "serialportconfigdialog.h"
+#include <gui/serialport/serialportconfigdialog.h>
 
 
 // TODO: move into class SerialPortConfigDialog
 static const char blankString[] = QT_TRANSLATE_NOOP("SettingsDialog", "N/A");
 
-SerialPortConfigDialog::SerialPortConfigDialog(QWidget* parent, QString confName,
+GUI::SerialPortConfigDialog::SerialPortConfigDialog(QWidget* parent, QString confName,
         Qt::WindowFlags f) : QDialog(parent, f)
 {
 	setupUi(this);
@@ -171,15 +171,15 @@ SerialPortConfigDialog::SerialPortConfigDialog(QWidget* parent, QString confName
 	setResult(QDialog::Rejected);
 }
 
-SerialPortConfigDialog::~SerialPortConfigDialog()
+GUI::SerialPortConfigDialog::~SerialPortConfigDialog()
 {
 }
 
-void SerialPortConfigDialog::flowCtlGroupReleased()
+void GUI::SerialPortConfigDialog::flowCtlGroupReleased()
 {
 }
 
-void SerialPortConfigDialog::browseButtonClicked()
+void GUI::SerialPortConfigDialog::browseButtonClicked()
 {
 	QString fileName = QFileDialog::getOpenFileName(
 	                       this,
@@ -195,7 +195,7 @@ void SerialPortConfigDialog::browseButtonClicked()
 	}
 }
 
-void SerialPortConfigDialog::saveButtonClicked()
+void GUI::SerialPortConfigDialog::saveButtonClicked()
 {
 	QStringList list;
 	QString item, curItem;
@@ -374,7 +374,7 @@ void SerialPortConfigDialog::saveButtonClicked()
 	}
 }
 
-void SerialPortConfigDialog::changeSettings()
+void GUI::SerialPortConfigDialog::changeSettings()
 {
 	int id;
 	QString item, port;
@@ -637,7 +637,7 @@ void SerialPortConfigDialog::changeSettings()
 	fileServerCheckBoxChanged((fileServerCheckBox->isChecked() ? Qt::Checked : Qt::Unchecked));
 }
 
-void SerialPortConfigDialog::loadSettings()
+void GUI::SerialPortConfigDialog::loadSettings()
 {
 	int id;
 	QStringList list;
@@ -667,7 +667,7 @@ void SerialPortConfigDialog::loadSettings()
 	changeSettings();
 }
 
-void SerialPortConfigDialog::portNameComboBoxIndexChanged(QString name)
+void GUI::SerialPortConfigDialog::portNameComboBoxIndexChanged(QString name)
 {
 	QString description;
 	QString manufacturer;
@@ -694,7 +694,7 @@ void SerialPortConfigDialog::portNameComboBoxIndexChanged(QString name)
 	                            QString::number(info->productIdentifier(), 16) : blankString)));
 }
 
-void SerialPortConfigDialog::deleteButtonClicked()
+void GUI::SerialPortConfigDialog::deleteButtonClicked()
 {
 	QSettings& settings = *Medium::instance().settings();
 
@@ -706,7 +706,7 @@ void SerialPortConfigDialog::deleteButtonClicked()
 	configNameBox->removeItem(id);
 }
 
-void SerialPortConfigDialog::closeButtonClicked()
+void GUI::SerialPortConfigDialog::closeButtonClicked()
 {
 	QSettings& settings = *Medium::instance().settings();
 	settings.beginGroup("SerialPortConfigs");
@@ -716,14 +716,14 @@ void SerialPortConfigDialog::closeButtonClicked()
 	close();
 }
 
-void SerialPortConfigDialog::saveCloseButtonClicked()
+void GUI::SerialPortConfigDialog::saveCloseButtonClicked()
 {
 	saveButtonClicked();
 	closeButtonClicked();
 	accept();
 }
 
-QString SerialPortConfigDialog::browseForDir(QString dir, QString windowTitle)
+QString GUI::SerialPortConfigDialog::browseForDir(QString dir, QString windowTitle)
 {
 	QDir directory(dir);
 
@@ -744,24 +744,24 @@ QString SerialPortConfigDialog::browseForDir(QString dir, QString windowTitle)
 	return directory.canonicalPath();
 }
 
-void SerialPortConfigDialog::browse1ButtonClicked()
+void GUI::SerialPortConfigDialog::browse1ButtonClicked()
 {
 	savePathLineEdit->setText(browseForDir(savePathLineEdit->text(), tr("Select search path")));
 }
 
-void SerialPortConfigDialog::browse2ButtonClicked()
+void GUI::SerialPortConfigDialog::browse2ButtonClicked()
 {
 	searchPath1LineEdit->setText(browseForDir(searchPath1LineEdit->text(),
 	                             tr("Select search path")));
 }
 
-void SerialPortConfigDialog::browse3ButtonClicked()
+void GUI::SerialPortConfigDialog::browse3ButtonClicked()
 {
 	searchPath2LineEdit->setText(browseForDir(searchPath2LineEdit->text(),
 	                             tr("Select search path")));
 }
 
-void SerialPortConfigDialog::autoSaveCheckBoxChanged(int state)
+void GUI::SerialPortConfigDialog::autoSaveCheckBoxChanged(int state)
 {
 	savePathLineEdit->setEnabled(state == Qt::Checked);
 	saveExtComboBox->setEnabled(state == Qt::Checked);
@@ -784,20 +784,20 @@ void SerialPortConfigDialog::autoSaveCheckBoxChanged(int state)
 	flowCtlGroupReleased();
 }
 
-void SerialPortConfigDialog::browse4ButtonClicked()
+void GUI::SerialPortConfigDialog::browse4ButtonClicked()
 {
 	searchPath3LineEdit->setText(browseForDir(searchPath3LineEdit->text(),
 	                             tr("Select search path")));
 }
 
-void SerialPortConfigDialog::appendExtCheckBoxChanged(int state)
+void GUI::SerialPortConfigDialog::appendExtCheckBoxChanged(int state)
 {
 	if (state == Qt::Checked) {
 		useAsExtCheckBox->setChecked(false);
 	}
 }
 
-void SerialPortConfigDialog::useAsExtCheckBoxChanged(int state)
+void GUI::SerialPortConfigDialog::useAsExtCheckBoxChanged(int state)
 {
 	if (state == Qt::Checked) {
 		appendExtCheckBox->setChecked(false);
@@ -805,7 +805,7 @@ void SerialPortConfigDialog::useAsExtCheckBoxChanged(int state)
 
 }
 
-void SerialPortConfigDialog::fileServerCheckBoxChanged(int state)
+void GUI::SerialPortConfigDialog::fileServerCheckBoxChanged(int state)
 {
 	searchPath1LineEdit->setEnabled(state == Qt::Checked);
 	searchPath2LineEdit->setEnabled(state == Qt::Checked);
@@ -824,7 +824,7 @@ void SerialPortConfigDialog::fileServerCheckBoxChanged(int state)
 	flowCtlGroupReleased();
 }
 
-void SerialPortConfigDialog::addButtonClicked()
+void GUI::SerialPortConfigDialog::addButtonClicked()
 {
 	QString text = fileNameExpFSComboBox->currentText();
 
@@ -833,12 +833,12 @@ void SerialPortConfigDialog::addButtonClicked()
 	}
 }
 
-void SerialPortConfigDialog::removeButtonClicked()
+void GUI::SerialPortConfigDialog::removeButtonClicked()
 {
 	fileNameExpFSComboBox->removeItem(fileNameExpFSComboBox->currentIndex());
 }
 
-void SerialPortConfigDialog::addEobButtonClicked()
+void GUI::SerialPortConfigDialog::addEobButtonClicked()
 {
 	QString text = endOfProgComboBox->currentText();
 
@@ -847,12 +847,12 @@ void SerialPortConfigDialog::addEobButtonClicked()
 	}
 }
 
-void SerialPortConfigDialog::deleteEobButtonClicked()
+void GUI::SerialPortConfigDialog::deleteEobButtonClicked()
 {
 	endOfProgComboBox->removeItem(endOfProgComboBox->currentIndex());
 }
 
-void SerialPortConfigDialog::addEobCharButtonClicked()
+void GUI::SerialPortConfigDialog::addEobCharButtonClicked()
 {
 	QString text = eobComboBox->currentText();
 
@@ -861,17 +861,17 @@ void SerialPortConfigDialog::addEobCharButtonClicked()
 	}
 }
 
-void SerialPortConfigDialog::deleteEobCharButtonClicked()
+void GUI::SerialPortConfigDialog::deleteEobCharButtonClicked()
 {
 	eobComboBox->removeItem(eobComboBox->currentIndex());
 }
 
-void SerialPortConfigDialog::eobComboBoxEditTextChanged(const QString text)
+void GUI::SerialPortConfigDialog::eobComboBoxEditTextChanged(const QString text)
 {
 	eobComboBox->setCurrentText(text.toUpper());
 }
 
-void SerialPortConfigDialog::addFileNameButtonClicked()
+void GUI::SerialPortConfigDialog::addFileNameButtonClicked()
 {
 	QString text = fileNameExpASComboBox->currentText();
 
@@ -880,12 +880,12 @@ void SerialPortConfigDialog::addFileNameButtonClicked()
 	}
 }
 
-void SerialPortConfigDialog::removeFileNameButtonClicked()
+void GUI::SerialPortConfigDialog::removeFileNameButtonClicked()
 {
 	fileNameExpASComboBox->removeItem(fileNameExpASComboBox->currentIndex());
 }
 
-void SerialPortConfigDialog::helpButtonClicked()
+void GUI::SerialPortConfigDialog::helpButtonClicked()
 {
 	// TODO: change a path to the file
 	QDesktopServices::openUrl(QUrl(QString("file:///%1/SerialTransmission_Help.html").arg(
@@ -894,7 +894,7 @@ void SerialPortConfigDialog::helpButtonClicked()
 	//    helpDialog.exec();
 }
 
-void SerialPortConfigDialog::readPath1Changed(const QString text)
+void GUI::SerialPortConfigDialog::readPath1Changed(const QString text)
 {
 	QPalette palette;
 
@@ -914,7 +914,7 @@ void SerialPortConfigDialog::readPath1Changed(const QString text)
 	}
 }
 
-void SerialPortConfigDialog::readPath2Changed(const QString text)
+void GUI::SerialPortConfigDialog::readPath2Changed(const QString text)
 {
 	QPalette palette;
 
@@ -934,7 +934,7 @@ void SerialPortConfigDialog::readPath2Changed(const QString text)
 	}
 }
 
-void SerialPortConfigDialog::readPath3Changed(const QString text)
+void GUI::SerialPortConfigDialog::readPath3Changed(const QString text)
 {
 	QPalette palette;
 

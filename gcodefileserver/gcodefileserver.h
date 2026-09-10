@@ -37,7 +37,9 @@ class QSignalMapper;
 class QToolBar;
 class QWidget;
 
+namespace GUI {
 class SerialTransmissionDialog;
+}
 
 namespace Ui {
 class GCodeFileServer;
@@ -95,9 +97,9 @@ private:
 	QMenu* trayIconMenu;
 	bool closable;
 
-	SerialTransmissionDialog* findMdiChild(const QString __config);
-	SerialTransmissionDialog* createSerialPortServer(QString __config);
-	SerialTransmissionDialog* activeMdiChild();
+	GUI::SerialTransmissionDialog* findMdiChild(const QString __config);
+	GUI::SerialTransmissionDialog* createSerialPortServer(QString __config);
+	GUI::SerialTransmissionDialog* activeMdiChild();
 
 	void saveSettings();
 	void loadSettings();

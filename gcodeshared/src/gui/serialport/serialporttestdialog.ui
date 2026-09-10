@@ -1,30 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>SerialTransmissionDialog</class>
- <widget class="QDialog" name="SerialTransmissionDialog">
-  <property name="windowModality">
-   <enum>Qt::NonModal</enum>
-  </property>
+ <class>SerialPortTestDialog</class>
+ <widget class="QDialog" name="SerialPortTestDialog">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>564</width>
-    <height>255</height>
+    <width>776</width>
+    <height>392</height>
    </rect>
   </property>
-  <property name="windowIcon">
-   <iconset resource="application.qrc">
-    <normaloff>:/images/serial.png</normaloff>:/images/serial.png</iconset>
+  <property name="windowTitle">
+   <string>Dialog</string>
   </property>
-  <property name="sizeGripEnabled">
-   <bool>true</bool>
+  <property name="windowIcon">
+   <iconset resource="../../../application.qrc">
+    <normaloff>:/images/serial.png</normaloff>:/images/serial.png</iconset>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout_2">
+    <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <spacer name="horizontalSpacer_6">
+      <widget class="QComboBox" name="configBox">
+       <property name="minimumSize">
+        <size>
+         <width>200</width>
+         <height>0</height>
+        </size>
+       </property>
+       <item>
+        <property name="text">
+         <string>Default</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item>
+      <widget class="QToolButton" name="configButton">
+       <property name="text">
+        <string>...</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../../../application.qrc">
+         <normaloff>:/images/serialconfig.png</normaloff>:/images/serialconfig.png</iconset>
+       </property>
+       <property name="arrowType">
+        <enum>Qt::NoArrow</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
@@ -37,20 +63,27 @@
       </spacer>
      </item>
      <item>
-      <widget class="QLabel" name="connected1Label">
-       <property name="toolTip">
-        <string>Settings name</string>
-       </property>
+      <widget class="QPushButton" name="connectButton">
        <property name="text">
-        <string/>
+        <string>&amp;Connect</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../../../application.qrc">
+         <normaloff>:/images/connect_no.png</normaloff>:/images/connect_no.png</iconset>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+       <property name="autoDefault">
+        <bool>false</bool>
+       </property>
+       <property name="default">
+        <bool>false</bool>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QLabel" name="connectedLabel"/>
-     </item>
-     <item>
-      <spacer name="horizontalSpacer_5">
+      <spacer name="horizontalSpacer_4">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
@@ -65,31 +98,41 @@
     </layout>
    </item>
    <item>
-    <widget class="Line" name="line">
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item>
+    <widget class="Line" name="line_5">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
     </widget>
    </item>
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout_3">
-     <item>
-      <spacer name="horizontalSpacer_3">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="1" column="2">
+      <widget class="QLabel" name="LedLabel11">
+       <property name="enabled">
+        <bool>true</bool>
        </property>
-       <property name="sizeType">
-        <enum>QSizePolicy::MinimumExpanding</enum>
+       <property name="toolTip">
+        <string>Clear To Send</string>
        </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>5</width>
-         <height>20</height>
-        </size>
+       <property name="text">
+        <string>CTS</string>
        </property>
-      </spacer>
+      </widget>
      </item>
-     <item>
+     <item row="1" column="1">
       <widget class="QLabel" name="ctsLabel">
        <property name="enabled">
         <bool>false</bool>
@@ -107,24 +150,11 @@
         <string/>
        </property>
        <property name="pixmap">
-        <pixmap resource="application.qrc">:/images/led.png</pixmap>
+        <pixmap resource="../../../application.qrc">:/images/led.png</pixmap>
        </property>
       </widget>
      </item>
-     <item>
-      <widget class="QLabel" name="LedLabel11">
-       <property name="enabled">
-        <bool>true</bool>
-       </property>
-       <property name="toolTip">
-        <string>Clear To Send</string>
-       </property>
-       <property name="text">
-        <string>CTS</string>
-       </property>
-      </widget>
-     </item>
-     <item>
+     <item row="1" column="3">
       <widget class="QLabel" name="dsrLabel">
        <property name="enabled">
         <bool>false</bool>
@@ -142,11 +172,11 @@
         <string/>
        </property>
        <property name="pixmap">
-        <pixmap resource="application.qrc">:/images/led.png</pixmap>
+        <pixmap resource="../../../application.qrc">:/images/led.png</pixmap>
        </property>
       </widget>
      </item>
-     <item>
+     <item row="1" column="4">
       <widget class="QLabel" name="LedLabel22">
        <property name="enabled">
         <bool>true</bool>
@@ -159,7 +189,7 @@
        </property>
       </widget>
      </item>
-     <item>
+     <item row="1" column="5">
       <widget class="QLabel" name="dcdLabel">
        <property name="enabled">
         <bool>false</bool>
@@ -177,11 +207,11 @@
         <string/>
        </property>
        <property name="pixmap">
-        <pixmap resource="application.qrc">:/images/led.png</pixmap>
+        <pixmap resource="../../../application.qrc">:/images/led.png</pixmap>
        </property>
       </widget>
      </item>
-     <item>
+     <item row="1" column="6">
       <widget class="QLabel" name="LedLabel33">
        <property name="enabled">
         <bool>true</bool>
@@ -194,7 +224,7 @@
        </property>
       </widget>
      </item>
-     <item>
+     <item row="1" column="7">
       <widget class="QLabel" name="rtsLabel">
        <property name="enabled">
         <bool>false</bool>
@@ -212,11 +242,11 @@
         <string/>
        </property>
        <property name="pixmap">
-        <pixmap resource="application.qrc">:/images/led.png</pixmap>
+        <pixmap resource="../../../application.qrc">:/images/led.png</pixmap>
        </property>
       </widget>
      </item>
-     <item>
+     <item row="1" column="8">
       <widget class="QLabel" name="LedLabel44">
        <property name="enabled">
         <bool>true</bool>
@@ -229,7 +259,7 @@
        </property>
       </widget>
      </item>
-     <item>
+     <item row="1" column="9">
       <widget class="QLabel" name="dtrLabel">
        <property name="enabled">
         <bool>false</bool>
@@ -243,19 +273,16 @@
        <property name="toolTip">
         <string>Data Terminal Ready</string>
        </property>
-       <property name="statusTip">
-        <string/>
-       </property>
        <property name="text">
         <string/>
        </property>
        <property name="pixmap">
-        <pixmap resource="application.qrc">:/images/led.png</pixmap>
+        <pixmap resource="../../../application.qrc">:/images/led.png</pixmap>
        </property>
       </widget>
      </item>
-     <item>
-      <widget class="QLabel" name="LedLabel55_2">
+     <item row="1" column="10">
+      <widget class="QLabel" name="LedLabel55">
        <property name="enabled">
         <bool>true</bool>
        </property>
@@ -267,39 +294,8 @@
        </property>
       </widget>
      </item>
-     <item>
-      <widget class="QLabel" name="xoff1Label">
-       <property name="enabled">
-        <bool>false</bool>
-       </property>
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>16</width>
-         <height>16777215</height>
-        </size>
-       </property>
-       <property name="toolTip">
-        <string>Data Terminal Ready</string>
-       </property>
-       <property name="statusTip">
-        <string/>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-       <property name="pixmap">
-        <pixmap resource="application.qrc">:/images/led.png</pixmap>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="xoffLabel">
+     <item row="2" column="10">
+      <widget class="QPushButton" name="setDtrButton">
        <property name="enabled">
         <bool>true</bool>
        </property>
@@ -307,27 +303,71 @@
         <string>Data Terminal Ready</string>
        </property>
        <property name="text">
-        <string>XOFF</string>
+        <string>Set DTR</string>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+       <property name="autoDefault">
+        <bool>false</bool>
        </property>
       </widget>
      </item>
-     <item>
-      <spacer name="horizontalSpacer_7">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
+     <item row="2" column="2">
+      <widget class="QPushButton" name="setXonButton">
+       <property name="enabled">
+        <bool>true</bool>
        </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
+       <property name="text">
+        <string>Send XON</string>
        </property>
-      </spacer>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+       <property name="autoDefault">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="8">
+      <widget class="QPushButton" name="setRtsButton">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="toolTip">
+        <string>Request To Send</string>
+       </property>
+       <property name="text">
+        <string>Set RTS</string>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+       <property name="autoDefault">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="4">
+      <widget class="QPushButton" name="setXoffButton">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="text">
+        <string>Send XOFF</string>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+       <property name="autoDefault">
+        <bool>false</bool>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>
    <item>
-    <widget class="Line" name="line_5">
+    <widget class="Line" name="line_6">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
@@ -336,83 +376,63 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_4">
      <item>
-      <widget class="QLabel" name="modeLabel">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
+      <widget class="QPlainTextEdit" name="textEdit">
+       <property name="lineWrapMode">
+        <enum>QPlainTextEdit::NoWrap</enum>
        </property>
-       <property name="text">
-        <string/>
+       <property name="readOnly">
+        <bool>true</bool>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QLabel" name="label">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
+      <widget class="QPlainTextEdit" name="hexTextEdit">
+       <property name="lineWrapMode">
+        <enum>QPlainTextEdit::NoWrap</enum>
        </property>
-       <property name="text">
-        <string/>
+       <property name="readOnly">
+        <bool>true</bool>
        </property>
       </widget>
      </item>
     </layout>
    </item>
    <item>
-    <widget class="QProgressBar" name="progressBar">
-     <property name="value">
-      <number>0</number>
+    <widget class="QLineEdit" name="sendLineEdit">
+     <property name="readOnly">
+      <bool>true</bool>
      </property>
     </widget>
    </item>
    <item>
-    <widget class="QPlainTextEdit" name="plainTextEdit">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
+    <widget class="QLabel" name="errorLabel">
      <property name="font">
       <font>
-       <family>Courier 10 Pitch</family>
-       <pointsize>9</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
       </font>
      </property>
-     <property name="autoFillBackground">
-      <bool>false</bool>
-     </property>
-     <property name="sizeAdjustPolicy">
-      <enum>QAbstractScrollArea::AdjustIgnored</enum>
-     </property>
-     <property name="undoRedoEnabled">
-      <bool>false</bool>
-     </property>
-     <property name="lineWrapMode">
-      <enum>QPlainTextEdit::NoWrap</enum>
-     </property>
-     <property name="readOnly">
-      <bool>true</bool>
-     </property>
-     <property name="plainText">
+     <property name="text">
       <string/>
      </property>
     </widget>
    </item>
    <item>
-    <widget class="Line" name="bottomLine">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <layout class="QHBoxLayout" name="horizontalLayout">
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <widget class="QPushButton" name="clearButton">
+       <property name="text">
+        <string>C&amp;lear text</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../../../application.qrc">
+         <normaloff>:/images/editdelete.png</normaloff>:/images/editdelete.png</iconset>
+       </property>
+       <property name="autoDefault">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
      <item>
       <spacer name="horizontalSpacer_2">
        <property name="orientation">
@@ -427,41 +447,25 @@
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="cancelButton">
+      <widget class="QPushButton" name="closeButton">
        <property name="text">
         <string>&amp;Close</string>
        </property>
        <property name="icon">
-        <iconset resource="application.qrc">
-         <normaloff>:/images/cancel.png</normaloff>:/images/cancel.png</iconset>
+        <iconset resource="../../../application.qrc">
+         <normaloff>:/images/window-close.png</normaloff>:/images/window-close.png</iconset>
        </property>
        <property name="autoDefault">
-        <bool>true</bool>
-       </property>
-       <property name="default">
-        <bool>true</bool>
+        <bool>false</bool>
        </property>
       </widget>
-     </item>
-     <item>
-      <spacer name="horizontalSpacer">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
      </item>
     </layout>
    </item>
   </layout>
  </widget>
  <resources>
-  <include location="application.qrc"/>
+  <include location="../../../application.qrc"/>
  </resources>
  <connections/>
 </ui>
