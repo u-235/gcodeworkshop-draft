@@ -78,12 +78,13 @@ GUI::SetupDialog::SetupDialog(QWidget* parent, const AppConfig* prop, Qt::Window
 	                               .arg(editProp.codeStyle.fontName).arg(editProp.codeStyle.fontSize)));
 	ui->fontLabel->setFont(QFont(editProp.codeStyle.fontName, editProp.codeStyle.fontSize));
 
-	connect(ui->changeFontButton, SIGNAL(clicked()), SLOT(changeFont()));
-	connect(ui->browseButton, SIGNAL(clicked()), SLOT(browseButtonClicked()));
+	connect(ui->changeFontButton, &QPushButton::clicked, this, &SetupDialog::changeFont);
+	connect(ui->browseButton, &QPushButton::clicked, this, &SetupDialog::browseButtonClicked);
 
 	colorButtons = new QButtonGroup(this);
-	connect(colorButtons, SIGNAL(buttonClicked(QAbstractButton*)),
-	        SLOT(changeColor(QAbstractButton*)));
+	connect(colorButtons, &QButtonGroup::idClicked, [this](int id) {
+		changeColor(colorButtons->button(id));
+	});
 
 	palette.setColor(ui->backgroundColorButton->foregroundRole(), editProp.codeStyle.hColors.backgroundColor);
 	ui->backgroundColorButton->setPalette(palette);

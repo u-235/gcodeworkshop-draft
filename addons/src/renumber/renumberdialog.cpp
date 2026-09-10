@@ -49,14 +49,14 @@ RenumberDialog::RenumberDialog(QWidget* parent, QSettings* settings) :
 
 	setWindowTitle(tr("Renumber lines"));
 
-	connect(mRenumLines, SIGNAL(clicked()), this, SLOT(renumClicked()));
-	connect(mAllLines, SIGNAL(clicked()), this, SLOT(allLinesClicked()));
-	connect(mRemoveAll, SIGNAL(clicked()), this, SLOT(removeAllClicked()));
-	connect(mCheckDivide, SIGNAL(clicked()), this, SLOT(divideClicked()));
-	connect(okButton, SIGNAL(clicked()), SLOT(accept()));
-	connect(cancelButton, SIGNAL(clicked()), SLOT(reject()));
-	connect(this, SIGNAL(finished(int)), SLOT(onFinished(int)));
-	connect(mRenumHe, SIGNAL(clicked()), this, SLOT(mRenumHeClicked()));
+	connect(mRenumLines, &QRadioButton::clicked, this, &RenumberDialog::renumClicked);
+	connect(mAllLines, &QRadioButton::clicked, this, &RenumberDialog::allLinesClicked);
+	connect(mRemoveAll, &QRadioButton::clicked, this, &RenumberDialog::removeAllClicked);
+	connect(mCheckDivide, &QCheckBox::clicked, this, &RenumberDialog::divideClicked);
+	connect(okButton, &QPushButton::clicked, this, &RenumberDialog::accept);
+	connect(cancelButton, &QPushButton::clicked, this, &RenumberDialog::reject);
+	connect(this, &RenumberDialog::finished, this, &RenumberDialog::onFinished);
+	connect(mRenumHe, &QRadioButton::clicked, this, &RenumberDialog::mRenumHeClicked);
 
 	setMaximumSize(width(), height());
 }

@@ -55,7 +55,7 @@ private slots:
 	void inputChanged(const QString& text);
 	void atEndClicked();
 	void divideClicked();
-	void spinBoxVal(int val);
+	void spinBoxVal();
 	void onFinished(int result);
 
 protected:

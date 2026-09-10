@@ -59,31 +59,31 @@ ChamferDialog::ChamferDialog(QWidget* parent, QSettings* settings) :
 	setAttribute(Qt::WA_DeleteOnClose);
 	setWindowTitle(tr("Chamfer"));
 
-	connect(angCheckBox, SIGNAL(toggled(bool)), SLOT(checkBoxToggled()));
+	connect(angCheckBox, &QCheckBox::toggled, this, &ChamferDialog::checkBoxToggled);
 	QValidator* angInputValid = new QDoubleValidator(0.1, 90, 3, this);
 	angInput->setValidator(angInputValid);
-	connect(zlCheckBox, SIGNAL(toggled(bool)), SLOT(checkBoxToggled()));
+	connect(zlCheckBox, &QCheckBox::toggled, this, &ChamferDialog::checkBoxToggled);
 	QValidator* zlInputValid = new QDoubleValidator(0.1, 1000, 3, this);
 	zlInput->setValidator(zlInputValid);
-	connect(dlCheckBox, SIGNAL(toggled(bool)), SLOT(checkBoxToggled()));
+	connect(dlCheckBox, &QCheckBox::toggled, this, &ChamferDialog::checkBoxToggled);
 	QValidator* dlInputValid = new QDoubleValidator(0.1, 1000, 3, this);
 	dlInput->setValidator(dlInputValid);
-	connect(xoCheckBox, SIGNAL(toggled(bool)), SLOT(checkBoxToggled()));
+	connect(xoCheckBox, &QCheckBox::toggled, this, &ChamferDialog::checkBoxToggled);
 	QValidator* xoInputValid = new QDoubleValidator(0, 2000, 3, this);
 	xoInput->setValidator(xoInputValid);
-	connect(xdCheckBox, SIGNAL(toggled(bool)), SLOT(checkBoxToggled()));
+	connect(xdCheckBox, &QCheckBox::toggled, this, &ChamferDialog::checkBoxToggled);
 	QValidator* xdInputValid = new QDoubleValidator(0.001, 2000, 3, this);
 	xdInput->setValidator(xdInputValid);
 
-	connect(computeButton, SIGNAL(clicked()), SLOT(computeButtonClicked()));
-	connect(closeButton, SIGNAL(clicked()), SLOT(accept()));
-	connect(this, SIGNAL(finished(int)), SLOT(onFinished(int)));
+	connect(computeButton, &QPushButton::clicked, this, &ChamferDialog::computeButtonClicked);
+	connect(closeButton, &QPushButton::clicked, this, &ChamferDialog::accept);
+	connect(this, &ChamferDialog::finished, this, &ChamferDialog::onFinished);
 
-	connect(angInput, SIGNAL(textChanged(const QString&)), SLOT(inputChanged()));
-	connect(zlInput, SIGNAL(textChanged(const QString&)), SLOT(inputChanged()));
-	connect(dlInput, SIGNAL(textChanged(const QString&)), SLOT(inputChanged()));
-	connect(xdInput, SIGNAL(textChanged(const QString&)), SLOT(inputChanged()));
-	connect(xoInput, SIGNAL(textChanged(const QString&)), SLOT(inputChanged()));
+	connect(angInput, &QLineEdit::textChanged, this, &ChamferDialog::inputChanged);
+	connect(zlInput, &QLineEdit::textChanged, this, &ChamferDialog::inputChanged);
+	connect(dlInput, &QLineEdit::textChanged, this, &ChamferDialog::inputChanged);
+	connect(xdInput, &QLineEdit::textChanged, this, &ChamferDialog::inputChanged);
+	connect(xoInput, &QLineEdit::textChanged, this, &ChamferDialog::inputChanged);
 
 	checkBoxToggled();
 }

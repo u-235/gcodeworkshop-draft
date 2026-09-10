@@ -50,15 +50,14 @@ DotDialog::DotDialog(QWidget* parent, QSettings* settings) :
 
 	setWindowTitle(tr("Insert dots"));
 
-	connect(mInput, SIGNAL(textChanged(const QString&)), this,
-	        SLOT(inputChanged(const QString&)));
-	connect(mCheckAtEnd, SIGNAL(clicked()), this, SLOT(atEndClicked()));
-	connect(mCheckDivide, SIGNAL(clicked()), this, SLOT(divideClicked()));
-	connect(mSpinBox, SIGNAL(valueChanged(int)), this, SLOT(spinBoxVal(int)));
-	connect(okButton, SIGNAL(clicked()), SLOT(accept()));
-	connect(cancelButton, SIGNAL(clicked()), SLOT(reject()));
-	connect(cancelButton, SIGNAL(clicked()), SLOT(close()));
-	connect(this, SIGNAL(finished(int)), SLOT(onFinished(int)));
+	connect(mInput, &QLineEdit::textChanged, this, &DotDialog::inputChanged);
+	connect(mCheckAtEnd, &QCheckBox::clicked, this, &DotDialog::atEndClicked);
+	connect(mCheckDivide, &QCheckBox::clicked, this, &DotDialog::divideClicked);
+	connect(mSpinBox, &QSpinBox::textChanged, this, &DotDialog::spinBoxVal);
+	connect(okButton, &QPushButton::clicked, this, &DotDialog::accept);
+	connect(cancelButton, &QPushButton::clicked, this, &DotDialog::reject);
+	connect(cancelButton, &QPushButton::clicked, this, &DotDialog::close);
+	connect(this, &DotDialog::finished, this, &DotDialog::onFinished);
 
 	setMaximumSize(width(), height());
 	okButton->setEnabled(mInput->hasAcceptableInput());
@@ -86,8 +85,10 @@ void DotDialog::divideClicked()
 	mSpinBox->setEnabled(mCheckDivide->isChecked());
 }
 
-void DotDialog::spinBoxVal(int val)
+void DotDialog::spinBoxVal()
 {
+	int val = mSpinBox->value();
+
 	if (val == 99) {
 		mSpinBox->setValue(10);
 	} else if (val == 999) {

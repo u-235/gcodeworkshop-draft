@@ -67,8 +67,8 @@ GUI::FileChecker::FileChecker(QWidget* parent) :
 	ui->setupUi(this);
 	setAttribute(Qt::WA_DeleteOnClose);
 
-	connect(ui->fileTableWidget, SIGNAL(currentCellChanged(int, int, int, int)), this,
-	        SLOT(filesTableCurrentCellChanged(int, int, int, int)));
+	connect(ui->fileTableWidget, &QTableWidget::currentCellChanged, this,
+	        &FileChecker::filesTableCurrentCellChanged);
 
 	showMaximized();
 
@@ -110,8 +110,7 @@ void GUI::FileChecker::setData(const QString& startDir, const QStringList& readP
 	disconnect(ui->readPathComboBox, 0, 0, 0);
 	ui->readPathComboBox->clear();
 	ui->readPathComboBox->insertItems(0, readPathList);
-	connect(ui->readPathComboBox, SIGNAL(currentIndexChanged(QString)),
-	        SLOT(readPathComboBoxChanged(QString)));
+	connect(ui->readPathComboBox, &QComboBox::currentTextChanged, this, &FileChecker::readPathComboBoxChanged);
 }
 
 void GUI::FileChecker::findFiles()
@@ -363,12 +362,12 @@ void GUI::FileChecker::filesTableCurrentCellChanged(int row, int col, int pRow, 
 			okBtn = new QToolButton();
 			okBtn->setIcon(QIcon(":/images/ok.png"));
 			okBtn->setToolTip(tr("Accept received file and move it to selected search path"));
-			connect(okBtn, SIGNAL(clicked()), this, SLOT(acceptFile()));
+			connect(okBtn, &QToolButton::clicked, this, &FileChecker::acceptFile);
 
 			noBtn = new QToolButton();
 			noBtn->setIcon(QIcon(":/images/cancel.png"));
 			noBtn->setToolTip(tr("Delete received file"));
-			connect(noBtn, SIGNAL(clicked()), this, SLOT(deleteFile()));
+			connect(noBtn, &QToolButton::clicked, this, &FileChecker::deleteFile);
 
 			ui->fileTableWidget->setCellWidget(row, 2, okBtn);
 			ui->fileTableWidget->setCellWidget(row, 3, noBtn);

@@ -74,9 +74,9 @@ BHCTab::BHCTab(QWidget* parent) : QWidget(parent)
 	angleBeetwenInput->setValidator(angleBeetwenInputValid);
 	angleBeetwenInput->installEventFilter(this);
 
-	connect(rotateInput, SIGNAL(valueChanged(int)), SLOT(inputChk()));
-	connect(mirrorX, SIGNAL(toggled(bool)), SLOT(inputChk()));
-	connect(mirrorY, SIGNAL(toggled(bool)), SLOT(inputChk()));
+	connect(rotateInput, &QSpinBox::textChanged, this, &BHCTab::inputChk);
+	connect(mirrorX, &QCheckBox::toggled, this, &BHCTab::inputChk);
+	connect(mirrorY, &QCheckBox::toggled, this, &BHCTab::inputChk);
 
 	contextMenu = new QMenu(this);
 	commentActGroup = new QActionGroup(this);
@@ -85,14 +85,14 @@ BHCTab::BHCTab(QWidget* parent) : QWidget(parent)
 	copyAct->setShortcut(QKeySequence::Copy);
 	copyAct->setStatusTip(tr("Copy the current selection's contents to the "
 	                         "clipboard"));
-	connect(copyAct, SIGNAL(triggered()), this, SLOT(copySelection()));
+	connect(copyAct, &QAction::triggered, this, &BHCTab::copySelection);
 	resultTable->addAction(copyAct);
 
 	QAction* selAllAct = new QAction(QIcon(":/images/edit-select-all.png"), tr("&Select all"),
 	                                 this);
 	selAllAct->setShortcut(QKeySequence::SelectAll);
 	selAllAct->setStatusTip(tr("Select all"));
-	connect(selAllAct, SIGNAL(triggered()), this, SLOT(sellAll()));
+	connect(selAllAct, &QAction::triggered, this, &BHCTab::sellAll);
 	resultTable->addAction(selAllAct);
 
 	contextMenu->addAction(copyAct);
@@ -110,17 +110,17 @@ BHCTab::BHCTab(QWidget* parent) : QWidget(parent)
 
 	resultTable->setHorizontalHeaderLabels(QStringList() << "X" << "Y");
 
-	connect(resultTable, SIGNAL(customContextMenuRequested(const QPoint&)), this,
-	        SLOT(contextMenuReq(const QPoint&)));
+	connect(resultTable, &QTableWidget::customContextMenuRequested, this,
+	        &BHCTab::contextMenuReq);
 	resultTable->setSelectionBehavior(QAbstractItemView::SelectRows);
 	resultTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
-	connect(xCenterInput, SIGNAL(textChanged(const QString&)), this, SLOT(inputChanged()));
-	connect(yCenterInput, SIGNAL(textChanged(const QString&)), this, SLOT(inputChanged()));
-	connect(diaInput, SIGNAL(textChanged(const QString&)), this, SLOT(inputChanged()));
-	connect(holesInput, SIGNAL(textChanged(const QString&)), this, SLOT(inputChanged()));
-	connect(angleStartInput, SIGNAL(textChanged(const QString&)), this, SLOT(inputChanged()));
-	connect(angleBeetwenInput, SIGNAL(textChanged(const QString&)), this, SLOT(inputChanged()));
+	connect(xCenterInput, &QLineEdit::textChanged, this, &BHCTab::inputChanged);
+	connect(yCenterInput, &QLineEdit::textChanged, this, &BHCTab::inputChanged);
+	connect(diaInput, &QLineEdit::textChanged, this, &BHCTab::inputChanged);
+	connect(holesInput, &QLineEdit::textChanged, this, &BHCTab::inputChanged);
+	connect(angleStartInput, &QLineEdit::textChanged, this, &BHCTab::inputChanged);
+	connect(angleBeetwenInput, &QLineEdit::textChanged, this, &BHCTab::inputChanged);
 }
 
 BHCTab::~BHCTab()

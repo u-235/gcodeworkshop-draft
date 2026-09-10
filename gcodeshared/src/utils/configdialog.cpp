@@ -50,11 +50,10 @@ ConfigDialog::ConfigDialog(QWidget* parent) :
 	mForm->stackWidget->setLayout(mStackedLayout);
 
 	mForm->treeView->setHeaderHidden(true);
-	connect(mForm->treeView, SIGNAL(currentItemChanged(QTreeWidgetItem*, QTreeWidgetItem*)),
-	        SLOT(selectedItemChange(QTreeWidgetItem*, QTreeWidgetItem*)));
-	connect(mForm->okButton, SIGNAL(clicked()), SLOT(accept()));
-	connect(mForm->cancelButton, SIGNAL(clicked()), SLOT(reject()));
-	connect(mForm->defaultButton, SIGNAL(clicked()), SLOT(reset()));
+	connect(mForm->treeView, &QTreeWidget::currentItemChanged, this, &ConfigDialog::selectedItemChange);
+	connect(mForm->okButton, &QPushButton::clicked, this, &ConfigDialog::accept);
+	connect(mForm->cancelButton, &QPushButton::clicked, this, &ConfigDialog::reject);
+	connect(mForm->defaultButton, &QPushButton::clicked, this, &ConfigDialog::reset);
 }
 
 ConfigDialog::ConfigDialog(QSharedPointer<ConfigPage> page, QWidget* parent) :
@@ -105,10 +104,10 @@ QTreeWidgetItem* ConfigDialog::doItem(QSharedPointer<ConfigPage> pagePtr)
 	TreeItem* item = new TreeItem(pagePtr.data());
 	mItemPageMap.insert(item, pagePtr);
 	mStackedLayout->addWidget(pagePtr->widget());
-	connect(this, SIGNAL(onStart()), pagePtr.data(), SLOT(start()));
-	connect(this, SIGNAL(accepted()), pagePtr.data(), SLOT(accept()));
-	connect(this, SIGNAL(rejected()), pagePtr.data(), SLOT(reject()));
-	connect(this, SIGNAL(onRetranslateUI()), pagePtr.data(), SLOT(retranslateUI()));
+	connect(this, &ConfigDialog::onStart, pagePtr.data(), &ConfigPage::start);
+	connect(this, &ConfigDialog::accepted, pagePtr.data(), &ConfigPage::accept);
+	connect(this, &ConfigDialog::rejected, pagePtr.data(), &ConfigPage::reject);
+	connect(this, &ConfigDialog::onRetranslateUI, pagePtr.data(), &ConfigPage::retranslateUI);
 
 	QList<QTreeWidgetItem*> subItems;
 
@@ -134,7 +133,7 @@ void ConfigDialog::selectedItemChange(QTreeWidgetItem* current, QTreeWidgetItem*
 		pagePtr = mItemPageMap.value(previous);
 
 		if (!pagePtr.isNull()) {
-			disconnect(this, SIGNAL(onReset()), pagePtr.data(), SLOT(reset()));
+			disconnect(this, &ConfigDialog::onReset, pagePtr.data(), &ConfigPage::reset);
 		}
 	}
 
@@ -142,7 +141,7 @@ void ConfigDialog::selectedItemChange(QTreeWidgetItem* current, QTreeWidgetItem*
 		pagePtr = mItemPageMap.value(current);
 
 		if (!pagePtr.isNull()) {
-			connect(this, SIGNAL(onReset()), pagePtr.data(), SLOT(reset()));
+			connect(this, &ConfigDialog::onReset, pagePtr.data(), &ConfigPage::reset);
 			mStackedLayout->setCurrentWidget(pagePtr->widget());
 		}
 	}

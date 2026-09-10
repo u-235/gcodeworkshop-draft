@@ -20,6 +20,7 @@
 #include <QList>            // for QList, QList<>::const_iterator, QList<>::iterator
 #include <QMap>             // for QMap, QMap<>::const_iterator
 #include <QMdiArea>         // for QMdiArea, QMdiArea::StackingOrder
+#include <QMdiSubWindow>    // for QMdiSubWindow
 #include <QObject>          // for emit, SIGNAL, SLOT, QObject
 #include <QPointer>         // for QPointer
 #include <QString>          // for QString, operator==
@@ -276,21 +277,18 @@ DocumentWidgetProperties::Ptr DocumentManager::createDocumentWidgetProperties(co
 void DocumentManager::addDocument(Document* document, const QString& id)
 {
 	document->setParent(this);
-	connect(document, SIGNAL(closeRequested(Document*)), this, SLOT(documentCloseRequest(Document*)),
+	connect(document, &Document::closeRequested, this, &DocumentManager::documentCloseRequest,
 	        Qt::ConnectionType::DirectConnection);
-	connect(document, SIGNAL(closed(Document*)), this, SLOT(removeDocument(Document*)));
-	connect(document, SIGNAL(closed(Document*)), this, SLOT(documentClosed(Document*)));
-	connect(document, SIGNAL(modificationChanged(Document*, bool)), this, SLOT(documentModificationChanged(Document*,
-	        bool)));
-	connect(document, SIGNAL(cursorPositionChanged(Document*)), this, SLOT(documentCursorPositionChanged(Document*)));
-	connect(document, SIGNAL(selectionChanged(Document*)), this, SLOT(documentSelectionChanged(Document*)));
-	connect(document, SIGNAL(briefChanged(Document*)), this, SLOT(documentBriefChanged(Document*)));
-	connect(document, SIGNAL(redoAvailable(Document*, bool)), this, SLOT(documentRedoAvailable(Document*, bool)));
-	connect(document, SIGNAL(undoAvailable(Document*, bool)), this, SLOT(documentUndoAvailable(Document*, bool)));
-	connect(document, SIGNAL(customContextMenuRequested(Document*, const QPoint&)), this,
-	        SLOT(customContextMenuRequest(Document*, const QPoint&)));
-	connect(document, SIGNAL(fileWatchRequested(const QString&, bool)), this, SLOT(documentFileWatchRequest(const QString&,
-	        bool)));
+	connect(document, &Document::closed, this, &DocumentManager::removeDocument);
+	connect(document, &Document::closed, this, &DocumentManager::documentClosed);
+	connect(document, &Document::modificationChanged, this, &DocumentManager::documentModificationChanged);
+	connect(document, &Document::cursorPositionChanged, this, &DocumentManager::documentCursorPositionChanged);
+	connect(document, &Document::selectionChanged, this, &DocumentManager::documentSelectionChanged);
+	connect(document, &Document::briefChanged, this, &DocumentManager::documentBriefChanged);
+	connect(document, &Document::redoAvailable, this, &DocumentManager::documentRedoAvailable);
+	connect(document, &Document::undoAvailable, this, &DocumentManager::documentUndoAvailable);
+	connect(document, &Document::customContextMenuRequested, this, &DocumentManager::customContextMenuRequest);
+	connect(document, &Document::fileWatchRequested, this, &DocumentManager::documentFileWatchRequest);
 
 	DocumentListItem item;
 	item.document = document;
@@ -342,7 +340,7 @@ void DocumentManager::registerDocumentProducer(DocumentProducer* producer)
 void DocumentManager::setMdiArea(QMdiArea* mdi)
 {
 	m_area = mdi;
-	connect(m_area, SIGNAL(subWindowActivated(QMdiSubWindow*)), this, SLOT(activeWindowChanged(QMdiSubWindow*)));
+	connect(m_area, &QMdiArea::subWindowActivated, this, &DocumentManager::activeWindowChanged);
 
 
 	for (auto item : m_docList) {

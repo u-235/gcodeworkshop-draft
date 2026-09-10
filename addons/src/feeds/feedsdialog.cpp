@@ -86,32 +86,32 @@ FeedsDialog::FeedsDialog(QWidget* parent, QSettings* settings) :
 	fInput->setValidator(fInputValid);
 	fInput->installEventFilter(this);
 
-	connect(vcInput, SIGNAL(editingFinished()), SLOT(setDefButton()));
-	connect(fzInput, SIGNAL(editingFinished()), SLOT(setDefButton()));
-	connect(sInput, SIGNAL(editingFinished()), SLOT(setDefButton()));
-	connect(fInput, SIGNAL(editingFinished()), SLOT(setDefButton()));
-	connect(dInput, SIGNAL(editingFinished()), SLOT(setDefButton()));
-	connect(zInput, SIGNAL(editingFinished()), SLOT(setDefButton()));
+	connect(vcInput, &QLineEdit::editingFinished, this, &FeedsDialog::setDefButton);
+	connect(fzInput, &QLineEdit::editingFinished, this, &FeedsDialog::setDefButton);
+	connect(sInput, &QLineEdit::editingFinished, this, &FeedsDialog::setDefButton);
+	connect(fInput, &QLineEdit::editingFinished, this, &FeedsDialog::setDefButton);
+	connect(dInput, &QLineEdit::editingFinished, this, &FeedsDialog::setDefButton);
+	connect(zInput, &QLineEdit::editingFinished, this, &FeedsDialog::setDefButton);
 
-	connect(computeButton, SIGNAL(clicked()), SLOT(computeButtonClicked()));
-	connect(closeButton, SIGNAL(clicked()), SLOT(accept()));
-	connect(this, SIGNAL(finished(int)), SLOT(onFinished(int)));
-	connect(computeVcButton, SIGNAL(clicked()), SLOT(computeVcButtonClicked()));
+	connect(computeButton, &QPushButton::clicked, this, &FeedsDialog::computeButtonClicked);
+	connect(closeButton, &QPushButton::clicked, this, &FeedsDialog::accept);
+	connect(this, &FeedsDialog::finished, this, &FeedsDialog::onFinished);
+	connect(computeVcButton, &QPushButton::clicked, this, &FeedsDialog::computeVcButtonClicked);
 
 	inputChanged();
 	checkBoxChanged();
 
 	setMaximumSize(width(), height());
 
-	connect(vcInput, SIGNAL(textChanged(const QString&)), SLOT(inputChanged()));
-	connect(fzInput, SIGNAL(textChanged(const QString&)), SLOT(inputChanged()));
-	connect(dInput, SIGNAL(textChanged(const QString&)), SLOT(inputChanged()));
-	connect(zInput, SIGNAL(textChanged(const QString&)), SLOT(inputChanged()));
-	connect(sInput, SIGNAL(textChanged(const QString&)), SLOT(inputChanged()));
-	connect(fInput, SIGNAL(textChanged(const QString&)), SLOT(inputChanged()));
+	connect(vcInput, &QLineEdit::textChanged, this, &FeedsDialog::inputChanged);
+	connect(fzInput, &QLineEdit::textChanged, this, & FeedsDialog::inputChanged);
+	connect(dInput, &QLineEdit::textChanged, this, & FeedsDialog::inputChanged);
+	connect(zInput, &QLineEdit::textChanged, this, & FeedsDialog::inputChanged);
+	connect(sInput, &QLineEdit::textChanged, this, & FeedsDialog::inputChanged);
+	connect(fInput, &QLineEdit::textChanged, this, & FeedsDialog::inputChanged);
 
-	connect(mmCheckBox, SIGNAL(stateChanged(int)), SLOT(checkBoxChanged()));
-	connect(inchCheckBox, SIGNAL(stateChanged(int)), SLOT(checkBoxChanged()));
+	connect(mmCheckBox, &QCheckBox::stateChanged, this, & FeedsDialog::checkBoxChanged);
+	connect(inchCheckBox, &QCheckBox::stateChanged, this, & FeedsDialog::checkBoxChanged);
 }
 
 FeedsDialog::~FeedsDialog()
@@ -185,10 +185,10 @@ void FeedsDialog::computeButtonClicked()
 	double Vc, Fz, D, z, S, F;
 	bool ok;
 
-	Vc = QLocale().toDouble(vcInput->text(), &ok);
-	Fz = QLocale().toDouble(fzInput->text(), &ok);
-	D = QLocale().toDouble(dInput->text(), &ok);
-	z = QLocale().toDouble(zInput->text(), &ok);
+	Vc = QLocale().toDouble(vcInput->text(), & ok);
+	Fz = QLocale().toDouble(fzInput->text(), & ok);
+	D = QLocale().toDouble(dInput->text(), & ok);
+	z = QLocale().toDouble(zInput->text(), & ok);
 
 	if (mmCheckBox->isChecked()) {
 		S = (Vc * 1000) / (M_PI * D);
@@ -213,9 +213,9 @@ void FeedsDialog::computeVcButtonClicked()
 	bool ok;
 
 	S = sInput->text().toInt(&ok);
-	F = QLocale().toDouble(fInput->text(), &ok);
-	D = QLocale().toDouble(dInput->text(), &ok);
-	z = QLocale().toDouble(zInput->text(), &ok);
+	F = QLocale().toDouble(fInput->text(), & ok);
+	D = QLocale().toDouble(dInput->text(), & ok);
+	z = QLocale().toDouble(zInput->text(), & ok);
 
 	if (mmCheckBox->isChecked()) {
 		Vc = (M_PI * D * S) / 1000;

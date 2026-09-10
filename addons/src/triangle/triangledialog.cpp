@@ -71,16 +71,16 @@ TriangleDialog::TriangleDialog(QWidget* parent, QSettings* settings) :
 	picLabel->setPixmap(*pic1);
 	picLabel->adjustSize();
 
-	connect(rightTriangleCheckBox, SIGNAL(toggled(bool)), SLOT(rightTriangleCheckBoxToggled()));
-	connect(aCheckBox, SIGNAL(toggled(bool)), SLOT(checkBoxToggled()));
-	connect(bCheckBox, SIGNAL(toggled(bool)), SLOT(checkBoxToggled()));
-	connect(cCheckBox, SIGNAL(toggled(bool)), SLOT(checkBoxToggled()));
-	connect(aACheckBox, SIGNAL(toggled(bool)), SLOT(checkBoxToggled()));
-	connect(aBCheckBox, SIGNAL(toggled(bool)), SLOT(checkBoxToggled()));
-	connect(aCCheckBox, SIGNAL(toggled(bool)), SLOT(checkBoxToggled()));
-	connect(computeButton, SIGNAL(clicked()), SLOT(computeButtonClicked()));
-	connect(closeButton, SIGNAL(clicked()), SLOT(accept()));
-	connect(this, SIGNAL(finished(int)), SLOT(onFinished(int)));
+	connect(rightTriangleCheckBox, &QCheckBox::toggled, this, &TriangleDialog::rightTriangleCheckBoxToggled);
+	connect(aCheckBox, &QCheckBox::toggled, this, &TriangleDialog::checkBoxToggled);
+	connect(bCheckBox, &QCheckBox::toggled, this, &TriangleDialog::checkBoxToggled);
+	connect(cCheckBox, &QCheckBox::toggled, this, &TriangleDialog::checkBoxToggled);
+	connect(aACheckBox, &QCheckBox::toggled, this, &TriangleDialog::checkBoxToggled);
+	connect(aBCheckBox, &QCheckBox::toggled, this, &TriangleDialog::checkBoxToggled);
+	connect(aCCheckBox, &QCheckBox::toggled, this, &TriangleDialog::checkBoxToggled);
+	connect(computeButton, &QPushButton::clicked, this, &TriangleDialog::computeButtonClicked);
+	connect(closeButton, &QPushButton::clicked, this, &TriangleDialog::accept);
+	connect(this, &TriangleDialog::finished, this, &TriangleDialog::onFinished);
 
 	QValidator* aInputValid = new QDoubleValidator(0.001, 9999, 3, this);
 	aInput->setValidator(aInputValid);
@@ -108,12 +108,12 @@ TriangleDialog::TriangleDialog(QWidget* parent, QSettings* settings) :
 
 	setMaximumSize(width(), height());
 
-	connect(aInput, SIGNAL(textChanged(const QString&)), SLOT(inputChanged()));
-	connect(bInput, SIGNAL(textChanged(const QString&)), SLOT(inputChanged()));
-	connect(cInput, SIGNAL(textChanged(const QString&)), SLOT(inputChanged()));
-	connect(aAInput, SIGNAL(textChanged(const QString&)), SLOT(inputChanged()));
-	connect(aBInput, SIGNAL(textChanged(const QString&)), SLOT(inputChanged()));
-	connect(aCInput, SIGNAL(textChanged(const QString&)), SLOT(inputChanged()));
+	connect(aInput, &QLineEdit::textChanged, this, &TriangleDialog::inputChanged);
+	connect(bInput, &QLineEdit::textChanged, this, &TriangleDialog::inputChanged);
+	connect(cInput, &QLineEdit::textChanged, this, &TriangleDialog::inputChanged);
+	connect(aAInput, &QLineEdit::textChanged, this, &TriangleDialog::inputChanged);
+	connect(aBInput, &QLineEdit::textChanged, this, &TriangleDialog::inputChanged);
+	connect(aCInput, &QLineEdit::textChanged, this, &TriangleDialog::inputChanged);
 
 	rightTriangleCheckBoxToggled();
 	checkBoxToggled();

@@ -54,11 +54,11 @@ I2MDialog::I2MDialog(QWidget* parent, QSettings* settings) :
 
 	checkBoxToggled();
 
-	connect(inchInput, SIGNAL(textChanged(const QString&)), SLOT(inputChanged()));
-	connect(inchCheckBox, SIGNAL(toggled(bool)), SLOT(checkBoxToggled()));
-	connect(mmCheckBox, SIGNAL(toggled(bool)), SLOT(checkBoxToggled()));
-	connect(closePushButton, SIGNAL(clicked()), SLOT(accept()));
-	connect(this, SIGNAL(finished(int)), SLOT(onFinished(int)));
+	connect(inchInput, &QLineEdit::textChanged, this, &I2MDialog::inputChanged);
+	connect(inchCheckBox, &QCheckBox::toggled, this, &I2MDialog::checkBoxToggled);
+	connect(mmCheckBox, &QCheckBox::toggled, this, &I2MDialog::checkBoxToggled);
+	connect(closePushButton, &QPushButton::clicked, this, &I2MDialog::accept);
+	connect(this, &I2MDialog::finished, this, &I2MDialog::onFinished);
 
 	setFocusProxy(inchInput);
 }

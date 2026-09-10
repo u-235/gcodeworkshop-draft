@@ -49,13 +49,9 @@ SwapAxesDialog::SwapAxesDialog(QWidget* parent, QSettings* settings) :
 
 	mSettings = settings;
 
-	connect(betweenCheckBox, SIGNAL(clicked(bool)), this, SLOT(betweenCheckBoxClicked(bool)));
-	connect(modifyCheckBox, SIGNAL(clicked(bool)), this, SLOT(modifyCheckBoxClicked(bool)));
-
-	connect(precisionSpinBox, SIGNAL(valueChanged(int)), this,
-	        SLOT(precisionSpinBoxChanded(int)));
-
-	connect(this, SIGNAL(finished(int)), SLOT(onFinished(int)));
+	connect(betweenCheckBox, &QCheckBox::clicked, this, &SwapAxesDialog::betweenCheckBoxClicked);
+	connect(modifyCheckBox, &QCheckBox::clicked, this, &SwapAxesDialog::modifyCheckBoxClicked);
+	connect(this, &SwapAxesDialog::finished, this, &SwapAxesDialog::onFinished);
 }
 
 SwapAxesDialog::~SwapAxesDialog()

@@ -39,8 +39,8 @@ GUI::FindToolBarActions::FindToolBarActions(GCodeWorkShop* parent) : Actions::Ac
 	makeAction(ActionId::REPLACE_NEXT);
 	makeAction(ActionId::REPLACE_PREVIOUS);
 
-	connect(parent, SIGNAL(updateIcons()), this, SLOT(loadIcons()));
-	connect(parent, SIGNAL(updateTranslations()), this, SLOT(loadTranslations()));
+	connect(parent, &GCodeWorkShop::updateIcons, this, &FindToolBarActions::loadIcons);
+	connect(parent, &GCodeWorkShop::updateTranslations, this, &FindToolBarActions::loadTranslations);
 
 	FindToolBarActions::loadIcons();
 	FindToolBarActions::loadTranslations();

@@ -48,11 +48,11 @@ I2MProgDialog::I2MProgDialog(QWidget* parent, QSettings* settings) :
 
 	setWindowTitle(tr("Convert program inch to metric"));
 
-	connect(mInput, SIGNAL(textChanged(const QString&)), this, SLOT(inputChanged()));
+	connect(mInput, &QLineEdit::textChanged, this, &I2MProgDialog::inputChanged);
 
-	connect(okButton, SIGNAL(clicked()), SLOT(accept()));
-	connect(closeButton, SIGNAL(clicked()), SLOT(reject()));
-	connect(this, SIGNAL(finished(int)), SLOT(onFinished(int)));
+	connect(okButton, &QPushButton::clicked, this, &I2MProgDialog::accept);
+	connect(closeButton, &QPushButton::clicked, this, &I2MProgDialog::reject);
+	connect(this, &I2MProgDialog::finished, this, &I2MProgDialog::onFinished);
 
 	setFocusProxy(mInput);
 	inputChanged();
