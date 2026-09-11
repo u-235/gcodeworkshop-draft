@@ -54,8 +54,7 @@ contains(MODULES, addons) {
 }
 
 contains(MODULES, GCodeShared) {
-    INCLUDEPATH += $${PROJECT_ROOT_PATH}/gcodeshared/include \
-                   $$shadowed($${PROJECT_ROOT_PATH}/gcodeshared)
+    INCLUDEPATH += $${PROJECT_ROOT_PATH}/gcodeshared/include
     LIBS += -L$$shadowed($${PROJECT_ROOT_PATH}/gcodeshared)
     LIBS += -lgcodeshared
     # QTextCodec in Qt6

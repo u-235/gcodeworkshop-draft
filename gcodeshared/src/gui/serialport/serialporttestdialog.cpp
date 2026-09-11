@@ -50,59 +50,64 @@ class QWidget;
 #include <gui/serialport/serialportconfigdialog.h>  //  for SerialPortConfigDialog
 #include <gui/serialport/serialporttestdialog.h>
 
+#include "ui_serialporttestdialog.h"    // for Ui::SerialPortTestDialog
 
-GUI::SerialPortTestDialog::SerialPortTestDialog(QWidget* parent, Qt::WindowFlags f) : QDialog(parent, f)
+
+GUI::SerialPortTestDialog::SerialPortTestDialog(QWidget* parent, Qt::WindowFlags f) :
+	QDialog(parent, f),
+	ui(new Ui::SerialPortTestDialog())
 {
-	setupUi(this);
+	ui->setupUi(this);
 	setAttribute(Qt::WA_DeleteOnClose);
 	setWindowTitle(tr("Serial transmission test"));
 
 	comPort = nullptr;
 
-	connect(closeButton, SIGNAL(clicked()), SLOT(closeButtonClicked()));
+	connect(ui->closeButton, SIGNAL(clicked()), SLOT(closeButtonClicked()));
 
-	connect(clearButton, SIGNAL(clicked()), SLOT(clearButtonClicked()));
-	connect(configButton, SIGNAL(clicked()), SLOT(configButtonClicked()));
+	connect(ui->clearButton, SIGNAL(clicked()), SLOT(clearButtonClicked()));
+	connect(ui->configButton, SIGNAL(clicked()), SLOT(configButtonClicked()));
 
-	connect(connectButton, SIGNAL(toggled(bool)), SLOT(connectButtonToggled(bool)));
+	connect(ui->connectButton, SIGNAL(toggled(bool)), SLOT(connectButtonToggled(bool)));
 
-	connect(setRtsButton, SIGNAL(clicked()), SLOT(setRtsButtonClicked()));
-	connect(setDtrButton, SIGNAL(clicked()), SLOT(setDtrButtonClicked()));
+	connect(ui->setRtsButton, SIGNAL(clicked()), SLOT(setRtsButtonClicked()));
+	connect(ui->setDtrButton, SIGNAL(clicked()), SLOT(setDtrButtonClicked()));
 
 	loadSerialConfignames();
 	changeSettings();
-	connect(configBox, SIGNAL(currentIndexChanged(int)), SLOT(changeSettings()));
+	connect(ui->configBox, SIGNAL(currentIndexChanged(int)), SLOT(changeSettings()));
 
 	timer = new QTimer(this);
 	connect(timer, SIGNAL(timeout()), this, SLOT(updateLeds()));
 
-	connect(sendLineEdit, SIGNAL(returnPressed()), SLOT(sendTextEditChanged()));
+	connect(ui->sendLineEdit, SIGNAL(returnPressed()), SLOT(sendTextEditChanged()));
 
-	connect(setXonButton, SIGNAL(clicked()), SLOT(setXonButtonClicked()));
-	connect(setXoffButton, SIGNAL(clicked()), SLOT(setXoffButtonClicked()));
+	connect(ui->setXonButton, SIGNAL(clicked()), SLOT(setXonButtonClicked()));
+	connect(ui->setXoffButton, SIGNAL(clicked()), SLOT(setXoffButtonClicked()));
 
 
-	connect(textEdit->verticalScrollBar(), SIGNAL(valueChanged(int)), SLOT(textEditScroll(int)));
-	connect(hexTextEdit->verticalScrollBar(), SIGNAL(valueChanged(int)),
+	connect(ui->textEdit->verticalScrollBar(), SIGNAL(valueChanged(int)), SLOT(textEditScroll(int)));
+	connect(ui->hexTextEdit->verticalScrollBar(), SIGNAL(valueChanged(int)),
 	        SLOT(hexTextEditScroll(int)));
 }
 
 GUI::SerialPortTestDialog::~SerialPortTestDialog()
 {
+	delete ui;
 }
 
 void GUI::SerialPortTestDialog::textEditScroll(int pos)
 {
 	Q_UNUSED(pos);
-	hexTextEdit->verticalScrollBar()->setSliderPosition(
-	    textEdit->verticalScrollBar()->sliderPosition());
+	ui->hexTextEdit->verticalScrollBar()->setSliderPosition(
+	    ui->textEdit->verticalScrollBar()->sliderPosition());
 }
 
 void GUI::SerialPortTestDialog::hexTextEditScroll(int pos)
 {
 	Q_UNUSED(pos);
-	textEdit->verticalScrollBar()->setSliderPosition(
-	    hexTextEdit->verticalScrollBar()->sliderPosition());
+	ui->textEdit->verticalScrollBar()->setSliderPosition(
+	    ui->hexTextEdit->verticalScrollBar()->sliderPosition());
 }
 
 void GUI::SerialPortTestDialog::sendTextEditChanged()
@@ -110,21 +115,21 @@ void GUI::SerialPortTestDialog::sendTextEditChanged()
 	QString tx, ty;
 	int i;
 
-	tx = sendLineEdit->text();
-	sendLineEdit->clear();
+	tx = ui->sendLineEdit->text();
+	ui->sendLineEdit->clear();
 
 	tx.append("\r\n");
 
 	sendText(tx);
 
-	QTextCursor cr = textEdit->textCursor();
+	QTextCursor cr = ui->textEdit->textCursor();
 	QTextCharFormat format = cr.charFormat();
 	format.setForeground(Qt::black);
 	cr.setCharFormat(format);
 	cr.insertText(tx);
-	textEdit->setTextCursor(cr);
+	ui->textEdit->setTextCursor(cr);
 
-	cr = hexTextEdit->textCursor();
+	cr = ui->hexTextEdit->textCursor();
 	format = cr.charFormat();
 	format.setForeground(Qt::black);
 	cr.setCharFormat(format);
@@ -135,11 +140,11 @@ void GUI::SerialPortTestDialog::sendTextEditChanged()
 		cr.insertText(ty);
 	}
 
-	hexTextEdit->setTextCursor(cr);
-	hexTextEdit->insertPlainText("\n");
+	ui->hexTextEdit->setTextCursor(cr);
+	ui->hexTextEdit->insertPlainText("\n");
 
-	textEdit->ensureCursorVisible();
-	hexTextEdit->ensureCursorVisible();
+	ui->textEdit->ensureCursorVisible();
+	ui->hexTextEdit->ensureCursorVisible();
 }
 
 void GUI::SerialPortTestDialog::closeButtonClicked()
@@ -157,21 +162,21 @@ void GUI::SerialPortTestDialog::closeButtonClicked()
 
 void GUI::SerialPortTestDialog::clearButtonClicked()
 {
-	textEdit->clear();
-	hexTextEdit->clear();
-	sendLineEdit->clear();
+	ui->textEdit->clear();
+	ui->hexTextEdit->clear();
+	ui->sendLineEdit->clear();
 }
 
 void GUI::SerialPortTestDialog::connectButtonToggled(bool tg)
 {
 	if (tg) {
 
-		connectButton->setIcon(QIcon(":/images/connect_established.png"));
-		connectButton->setText(tr("&Disconnect"));
+		ui->connectButton->setIcon(QIcon(":/images/connect_established.png"));
+		ui->connectButton->setText(tr("&Disconnect"));
 
-		textEdit->clear();
-		hexTextEdit->clear();
-		sendLineEdit->clear();
+		ui->textEdit->clear();
+		ui->hexTextEdit->clear();
+		ui->sendLineEdit->clear();
 
 		count = 0;
 
@@ -193,7 +198,7 @@ void GUI::SerialPortTestDialog::connectButtonToggled(bool tg)
 			showError(comPort->error());
 			delete comPort;
 			comPort = nullptr;
-			connectButton->setChecked(false);
+			ui->connectButton->setChecked(false);
 			return;
 		}
 
@@ -204,20 +209,20 @@ void GUI::SerialPortTestDialog::connectButtonToggled(bool tg)
 		//         comPort->putChar(portSettings.Xon);
 		//      }
 
-		setDtrButton->setEnabled(true);
-		setDtrButton->setChecked(false);
-		setRtsButton->setEnabled(true);
-		setRtsButton->setChecked(false);
+		ui->setDtrButton->setEnabled(true);
+		ui->setDtrButton->setChecked(false);
+		ui->setRtsButton->setEnabled(true);
+		ui->setRtsButton->setChecked(false);
 
-		configBox->setEnabled(false);
-		configButton->setEnabled(false);
+		ui->configBox->setEnabled(false);
+		ui->configButton->setEnabled(false);
 
 		bool en = portSettings.FlowControl == QSerialPort::SoftwareControl;
-		setXonButton->setEnabled(en);
-		setXoffButton->setEnabled(en);
+		ui->setXonButton->setEnabled(en);
+		ui->setXoffButton->setEnabled(en);
 
-		sendLineEdit->setReadOnly(false);
-		sendLineEdit->setFocus(Qt::MouseFocusReason);
+		ui->sendLineEdit->setReadOnly(false);
+		ui->sendLineEdit->setFocus(Qt::MouseFocusReason);
 
 		showError(comPort->error());
 
@@ -227,28 +232,28 @@ void GUI::SerialPortTestDialog::connectButtonToggled(bool tg)
 	} else {
 		timer->stop();
 		//qApp->processEvents();
-		connectButton->setIcon(QIcon(":/images/connect_no.png"));
-		connectButton->setText(tr("&Connect"));
+		ui->connectButton->setIcon(QIcon(":/images/connect_no.png"));
+		ui->connectButton->setText(tr("&Connect"));
 
 		stop = true;
 		qApp->processEvents();
-		setDtrButton->setEnabled(false);
-		setRtsButton->setEnabled(false);
-		setXonButton->setEnabled(false);
-		setXoffButton->setEnabled(false);
+		ui->setDtrButton->setEnabled(false);
+		ui->setRtsButton->setEnabled(false);
+		ui->setXonButton->setEnabled(false);
+		ui->setXoffButton->setEnabled(false);
 
-		ctsLabel->setEnabled(false);
-		dsrLabel->setEnabled(false);
-		dcdLabel->setEnabled(false);
-		rtsLabel->setEnabled(false);
-		dtrLabel->setEnabled(false);
+		ui->ctsLabel->setEnabled(false);
+		ui->dsrLabel->setEnabled(false);
+		ui->dcdLabel->setEnabled(false);
+		ui->rtsLabel->setEnabled(false);
+		ui->dtrLabel->setEnabled(false);
 
-		connectButton->setChecked(false);
+		ui->connectButton->setChecked(false);
 
-		configBox->setEnabled(true);
-		configButton->setEnabled(true);
+		ui->configBox->setEnabled(true);
+		ui->configButton->setEnabled(true);
 
-		sendLineEdit->setReadOnly(true);
+		ui->sendLineEdit->setReadOnly(true);
 	}
 }
 
@@ -269,14 +274,14 @@ void GUI::SerialPortTestDialog::setXoffButtonClicked()
 void GUI::SerialPortTestDialog::setDtrButtonClicked()
 {
 	if (comPort != nullptr && comPort->isOpen()) {
-		comPort->setDataTerminalReady(setDtrButton->isChecked());
+		comPort->setDataTerminalReady(ui->setDtrButton->isChecked());
 	}
 }
 
 void GUI::SerialPortTestDialog::setRtsButtonClicked()
 {
 	if (comPort != nullptr && comPort->isOpen()) {
-		comPort->setRequestToSend(setRtsButton->isChecked());
+		comPort->setRequestToSend(ui->setRtsButton->isChecked());
 	}
 }
 
@@ -299,13 +304,13 @@ void GUI::SerialPortTestDialog::updateLeds()
 	while (!stop) {
 		status = comPort->pinoutSignals();
 
-		ctsLabel->setEnabled(status & QSerialPort::ClearToSendSignal);
-		dsrLabel->setEnabled(status & QSerialPort::DataSetReadySignal);
-		dcdLabel->setEnabled(status & QSerialPort::DataCarrierDetectSignal);
-		rtsLabel->setEnabled(status & QSerialPort::RequestToSendSignal);
-		setRtsButton->setChecked(status & QSerialPort::RequestToSendSignal);
-		dtrLabel->setEnabled(status & QSerialPort::DataTerminalReadySignal);
-		setDtrButton->setChecked(status & QSerialPort::DataTerminalReadySignal);
+		ui->ctsLabel->setEnabled(status & QSerialPort::ClearToSendSignal);
+		ui->dsrLabel->setEnabled(status & QSerialPort::DataSetReadySignal);
+		ui->dcdLabel->setEnabled(status & QSerialPort::DataCarrierDetectSignal);
+		ui->rtsLabel->setEnabled(status & QSerialPort::RequestToSendSignal);
+		ui->setRtsButton->setChecked(status & QSerialPort::RequestToSendSignal);
+		ui->dtrLabel->setEnabled(status & QSerialPort::DataTerminalReadySignal);
+		ui->setDtrButton->setChecked(status & QSerialPort::DataTerminalReadySignal);
 
 
 		i = comPort->bytesAvailable();
@@ -320,34 +325,34 @@ void GUI::SerialPortTestDialog::updateLeds()
 			}
 
 			count++;
-			errorLabel->setText(tr("Received: %1 bytes.").arg(count));
+			ui->errorLabel->setText(tr("Received: %1 bytes.").arg(count));
 			tx = ch;
 
 			qApp->processEvents();
 
 			if (ch != '\r') {
-				cr = textEdit->textCursor();
+				cr = ui->textEdit->textCursor();
 				format = cr.charFormat();
 				format.setForeground(Qt::blue);
 				cr.setCharFormat(format);
 				cr.insertText(tx);
-				textEdit->setTextCursor(cr);
+				ui->textEdit->setTextCursor(cr);
 			}
 
 			tx = QString("%1 ").arg((int)ch, 2, 16, (QChar)'0');
-			cr = hexTextEdit->textCursor();
+			cr = ui->hexTextEdit->textCursor();
 			format = cr.charFormat();
 			format.setForeground(Qt::blue);
 			cr.setCharFormat(format);
 			cr.insertText(tx);
-			hexTextEdit->setTextCursor(cr);
+			ui->hexTextEdit->setTextCursor(cr);
 
 			if (ch == '\n') {
-				hexTextEdit->insertPlainText("\n");
+				ui->hexTextEdit->insertPlainText("\n");
 			}
 
-			textEdit->ensureCursorVisible();
-			hexTextEdit->ensureCursorVisible();
+			ui->textEdit->ensureCursorVisible();
+			ui->hexTextEdit->ensureCursorVisible();
 		} else if (i < 0) {
 			showError(comPort->error());
 		}
@@ -359,7 +364,7 @@ void GUI::SerialPortTestDialog::updateLeds()
 void GUI::SerialPortTestDialog::configButtonClicked()
 {
 	SerialPortConfigDialog* serialConfigDialog = new SerialPortConfigDialog(this,
-	        configBox->currentText());
+	        ui->configBox->currentText());
 
 	if (serialConfigDialog->exec() == QDialog::Accepted) {
 		changeSettings();
@@ -382,7 +387,7 @@ void GUI::SerialPortTestDialog::changeSettings()
 
 #endif
 
-	settings.beginGroup(configBox->currentText());
+	settings.beginGroup(ui->configBox->currentText());
 
 	portName = settings.value("PortName", port).toString();
 
@@ -416,13 +421,13 @@ void GUI::SerialPortTestDialog::loadSerialConfignames()
 
 	settings.beginGroup("SerialPortConfigs");
 
-	configBox->clear();
+	ui->configBox->clear();
 	list = settings.value("SettingsList", QStringList(tr("Default"))).toStringList();
 	list.sort();
-	configBox->addItems(list);
+	ui->configBox->addItems(list);
 	item = settings.value("CurrentSerialPortSettings", tr("Default")).toString();
-	id = configBox->findText(item);
-	configBox->setCurrentIndex(id);
+	id = ui->configBox->findText(item);
+	ui->configBox->setCurrentIndex(id);
 	settings.endGroup();
 }
 
@@ -430,51 +435,51 @@ void GUI::SerialPortTestDialog::showError(int error)
 {
 	switch (error) {
 	case QSerialPort::NoError:
-		errorLabel->setText("No Error has occurred");
+		ui->errorLabel->setText("No Error has occurred");
 		break;
 
 	case QSerialPort::DeviceNotFoundError:
-		errorLabel->setText("Attempting to open an non-existing device");
+		ui->errorLabel->setText("Attempting to open an non-existing device");
 		break;
 
 	case QSerialPort::PermissionError:
-		errorLabel->setText("Attempting to open an already opened device by another process or user not having enough permission and credentials to open");
+		ui->errorLabel->setText("Attempting to open an already opened device by another process or user not having enough permission and credentials to open");
 		break;
 
 	case QSerialPort::OpenError:
-		errorLabel->setText("Attempting to open an already opened device in this object");
+		ui->errorLabel->setText("Attempting to open an already opened device in this object");
 		break;
 
 	case QSerialPort::WriteError:
-		errorLabel->setText("An I/O error occurred while writing the data");
+		ui->errorLabel->setText("An I/O error occurred while writing the data");
 		break;
 
 	case QSerialPort::ReadError:
-		errorLabel->setText("An I/O error occurred while reading the data");
+		ui->errorLabel->setText("An I/O error occurred while reading the data");
 		break;
 
 	case QSerialPort::ResourceError:
-		errorLabel->setText("An I/O error occurred when a resource becomes unavailable, e.g. when the device is unexpectedly removed from the system");
+		ui->errorLabel->setText("An I/O error occurred when a resource becomes unavailable, e.g. when the device is unexpectedly removed from the system");
 		break;
 
 	case QSerialPort::UnsupportedOperationError:
-		errorLabel->setText("Receive buffer overflow");
+		ui->errorLabel->setText("Receive buffer overflow");
 		break;
 
 	case QSerialPort::UnknownError:
-		errorLabel->setText("An unidentified error occurred");
+		ui->errorLabel->setText("An unidentified error occurred");
 		break;
 
 	case QSerialPort::TimeoutError:
-		errorLabel->setText("Transmit buffer overflow");
+		ui->errorLabel->setText("Transmit buffer overflow");
 		break;
 
 	case QSerialPort::NotOpenError:
-		errorLabel->setText("An operation is executed that can only be successfully performed if the device is open");
+		ui->errorLabel->setText("An operation is executed that can only be successfully performed if the device is open");
 		break;
 
 	default:
-		errorLabel->setText("Unknown error");
+		ui->errorLabel->setText("Unknown error");
 	}
 }
 
@@ -497,7 +502,7 @@ void GUI::SerialPortTestDialog::sendText(QString tx)
 			tx.replace("\n", "\r\n");
 		}
 
-		errorLabel->setText(tr("Waiting..."));
+		ui->errorLabel->setText(tr("Waiting..."));
 		qApp->processEvents();
 
 		i = 0;
@@ -505,7 +510,7 @@ void GUI::SerialPortTestDialog::sendText(QString tx)
 
 		while (i < tx.size()) {
 			if (xoffReceived) {
-				errorLabel->setText(tr("Waiting for a signal readiness..."));
+				ui->errorLabel->setText(tr("Waiting for a signal readiness..."));
 			}
 
 			qApp->processEvents();
@@ -529,8 +534,8 @@ void GUI::SerialPortTestDialog::sendText(QString tx)
 					xoffReceived = false;
 				}
 
-				//setXoffButton->setChecked(xoffReceived);
-				//setXonButton->setChecked(!xoffReceived);
+				//ui->setXoffButton->setChecked(xoffReceived);
+				//ui->setXonButton->setChecked(!xoffReceived);
 			} else {
 				xoffReceived = false;
 			}
@@ -542,7 +547,7 @@ void GUI::SerialPortTestDialog::sendText(QString tx)
 					showError(comPort->error());
 				}
 
-				errorLabel->setText(tr("Sending byte %1 of %2").arg(i + 1).arg(tx.size()));
+				ui->errorLabel->setText(tr("Sending byte %1 of %2").arg(i + 1).arg(tx.size()));
 				qApp->processEvents();
 
 				if (lineDelay > 0) {
@@ -652,11 +657,11 @@ void GUI::SerialPortTestDialog::lineDelaySlot()
 //      return;
 
 //   QSerialPort::PinoutSignals status = comPort->pinoutSignals();
-//   ctsLabel->setEnabled(status & QSerialPort::ClearToSendSignal);
-//   dsrLabel->setEnabled(status & QSerialPort::DataSetReadySignal);
-//   dcdLabel->setEnabled(status & QSerialPort::DataCarrierDetectSignal);
-//   rtsLabel->setEnabled(status & QSerialPort::RequestToSendSignal);
-//   dtrLabel->setEnabled(status & QSerialPort::DataTerminalReadySignal);
+//   ui->ctsLabel->setEnabled(status & QSerialPort::ClearToSendSignal);
+//   ui->dsrLabel->setEnabled(status & QSerialPort::DataSetReadySignal);
+//   ui->dcdLabel->setEnabled(status & QSerialPort::DataCarrierDetectSignal);
+//   ui->rtsLabel->setEnabled(status & QSerialPort::RequestToSendSignal);
+//   ui->dtrLabel->setEnabled(status & QSerialPort::DataTerminalReadySignal);
 
 //   timer->start();
 //}

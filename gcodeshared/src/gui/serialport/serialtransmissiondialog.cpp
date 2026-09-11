@@ -57,11 +57,15 @@ class QWidget;
 
 #include <gui/serialport/serialtransmissiondialog.h>
 
+#include "ui_serialtransmissiondialog.h"    // for Ui::SerialTransmissionDialog
+
 
 GUI::SerialTransmissionDialog::SerialTransmissionDialog(QWidget* parent, Qt::WindowFlags f,
-        bool mode) : QDialog(parent, f)
+        bool mode) :
+	QDialog(parent, f),
+	ui(new Ui::SerialTransmissionDialog())
 {
-	setupUi(this);
+	ui->setupUi(this);
 
 	serverMode = mode;
 	canceled = false;
@@ -96,16 +100,16 @@ GUI::SerialTransmissionDialog::SerialTransmissionDialog(QWidget* parent, Qt::Win
 	if (serverMode) {
 		setModal(false);
 		setAttribute(Qt::WA_DeleteOnClose);
-		cancelButton->hide();
-		bottomLine->hide();
+		ui->cancelButton->hide();
+		ui->bottomLine->hide();
 		setWindowIcon(QIcon(":/images/spserver.png"));
 
-		plainTextEdit->setCenterOnScroll(false);
+		ui->plainTextEdit->setCenterOnScroll(false);
 	} else {
 		setWindowTitle(tr("Serial transmission"));
 		setModal(true);
-		connect(cancelButton, SIGNAL(clicked()), SLOT(cancelButtonClicked()));
-		delete (plainTextEdit);
+		connect(ui->cancelButton, SIGNAL(clicked()), SLOT(cancelButtonClicked()));
+		delete (ui->plainTextEdit);
 		adjustSize();
 
 	}
@@ -125,6 +129,7 @@ GUI::SerialTransmissionDialog::SerialTransmissionDialog(QWidget* parent, Qt::Win
 
 GUI::SerialTransmissionDialog::~SerialTransmissionDialog()
 {
+	delete ui;
 }
 
 void GUI::SerialTransmissionDialog::closeEvent(QCloseEvent* event)
@@ -158,9 +163,9 @@ void GUI::SerialTransmissionDialog::autoCloseTimerTimeout()
 	}
 
 	if (autoCloseCountner <= (portSettings.autoCloseTimeout - 2)) {
-		cancelButton->setText(tr("Auto &closing in %1s").arg(autoCloseCountner));
+		ui->cancelButton->setText(tr("Auto &closing in %1s").arg(autoCloseCountner));
 	} else {
-		cancelButton->setText(tr("&Close"));
+		ui->cancelButton->setText(tr("&Close"));
 	}
 }
 
@@ -186,16 +191,16 @@ void GUI::SerialTransmissionDialog::setLabelText(const QString text, bool multil
 	                    .remove(QRegularExpression(" \\w+"));
 
 	if (multiline && serverMode) {
-		if (plainTextEdit) {
-			if (plainTextEdit->blockCount() > 2000) { // too many lines may not be good
-				plainTextEdit->clear();
+		if (ui->plainTextEdit) {
+			if (ui->plainTextEdit->blockCount() > 2000) { // too many lines may not be good
+				ui->plainTextEdit->clear();
 			}
 
-			plainTextEdit->insertPlainText("\n" + timeStamp + "  " + text);
-			plainTextEdit->ensureCursorVisible();
+			ui->plainTextEdit->insertPlainText("\n" + timeStamp + "  " + text);
+			ui->plainTextEdit->ensureCursorVisible();
 		}
 	} else {
-		label->setText(text);
+		ui->label->setText(text);
 	}
 
 	if (writeToLog) {
@@ -205,22 +210,22 @@ void GUI::SerialTransmissionDialog::setLabelText(const QString text, bool multil
 
 void GUI::SerialTransmissionDialog::setValue(int val)
 {
-	progressBar->setValue(val);
+	ui->progressBar->setValue(val);
 }
 
 void GUI::SerialTransmissionDialog::setRange(int min, int max)
 {
 	if (max == 0) {
-		progressBar->hide();
-		//cancelButton->setText(tr("&Close"));
-		//cancelButton->setIcon(QIcon(":/images/window-close.png"));
+		ui->progressBar->hide();
+		//ui->cancelButton->setText(tr("&Close"));
+		//ui->cancelButton->setIcon(QIcon(":/images/window-close.png"));
 		//adjustSize();
 	} else {
-		progressBar->setRange(min, max);
-		progressBar->show();
+		ui->progressBar->setRange(min, max);
+		ui->progressBar->show();
 	}
 
-	progressBar->setValue(0);
+	ui->progressBar->setValue(0);
 }
 
 void GUI::SerialTransmissionDialog::updateStatus()
@@ -228,48 +233,48 @@ void GUI::SerialTransmissionDialog::updateStatus()
 	updateStatusTimer->stop();
 
 	if (xoffReceived) {
-		xoffLabel->setText("<html><head/><body><p><span style=\" font-weight:600;color:#ff0000;\">XOFF</span></p></body></html>");
+		ui->xoffLabel->setText("<html><head/><body><p><span style=\" font-weight:600;color:#ff0000;\">XOFF</span></p></body></html>");
 	} else {
-		xoffLabel->setText("<html><head/><body><p><span style=\" font-weight:600;color:#005500;\">XON</span></p></body></html>");
+		ui->xoffLabel->setText("<html><head/><body><p><span style=\" font-weight:600;color:#005500;\">XON</span></p></body></html>");
 	}
 
 
 	if (sending) {
 		if (serialPortWriteBuffer.isEmpty()) {
-			modeLabel->setText(" ");
-			modeLabel->setToolTip(tr("Waiting for data..."));
+			ui->modeLabel->setText(" ");
+			ui->modeLabel->setToolTip(tr("Waiting for data..."));
 		} else {
-			modeLabel->setPixmap(QPixmap(":/images/send.png"));
-			modeLabel->setToolTip(tr("Sending a file..."));
+			ui->modeLabel->setPixmap(QPixmap(":/images/send.png"));
+			ui->modeLabel->setToolTip(tr("Sending a file..."));
 		}
 	} else {
 		if (serialPortReadBuffer.isEmpty()) {
-			modeLabel->setText(" ");
-			modeLabel->setToolTip(tr("Waiting for data..."));
+			ui->modeLabel->setText(" ");
+			ui->modeLabel->setToolTip(tr("Waiting for data..."));
 		} else {
-			modeLabel->setPixmap(QPixmap(":/images/receive.png"));
-			modeLabel->setToolTip(tr("Receiving a file..."));
+			ui->modeLabel->setPixmap(QPixmap(":/images/receive.png"));
+			ui->modeLabel->setToolTip(tr("Receiving a file..."));
 		}
 	}
 
 
-	connected1Label->setText(
+	ui->connected1Label->setText(
 	    tr("<html><head/><body><p>Port: <span style=\" font-weight:600;\">%1</span> is</p></body></html>").arg(
 	        portSettings.portName));
 
 	if (serialPort.isOpen()) {
-		connectedLabel->setText(
+		ui->connectedLabel->setText(
 		    tr("<html><head/><body><p><span style=\" font-weight:600; color:#009500;\">OPEN</span></p></body></html>"));
 
 		QSerialPort::PinoutSignals status = serialPort.pinoutSignals();
 
-		ctsLabel->setEnabled(status & QSerialPort::ClearToSendSignal);
-		dsrLabel->setEnabled(status & QSerialPort::DataSetReadySignal);
-		dcdLabel->setEnabled(status & QSerialPort::DataCarrierDetectSignal);
-		rtsLabel->setEnabled(status & QSerialPort::RequestToSendSignal);
-		dtrLabel->setEnabled(status & QSerialPort::DataTerminalReadySignal);
+		ui->ctsLabel->setEnabled(status & QSerialPort::ClearToSendSignal);
+		ui->dsrLabel->setEnabled(status & QSerialPort::DataSetReadySignal);
+		ui->dcdLabel->setEnabled(status & QSerialPort::DataCarrierDetectSignal);
+		ui->rtsLabel->setEnabled(status & QSerialPort::RequestToSendSignal);
+		ui->dtrLabel->setEnabled(status & QSerialPort::DataTerminalReadySignal);
 
-		xoff1Label->setEnabled(!xoffReceived);
+		ui->xoff1Label->setEnabled(!xoffReceived);
 
 		if (sendStartDelayCountner > 0) {
 			setLabelText(tr("Sending starts in %1s").arg(sendStartDelayCountner));
@@ -311,14 +316,14 @@ void GUI::SerialTransmissionDialog::updateStatus()
 			}
 		}
 	} else {
-		ctsLabel->setEnabled(false);
-		dsrLabel->setEnabled(false);
-		dcdLabel->setEnabled(false);
-		rtsLabel->setEnabled(false);
-		dtrLabel->setEnabled(false);
-		xoff1Label->setEnabled(xoffReceived);
+		ui->ctsLabel->setEnabled(false);
+		ui->dsrLabel->setEnabled(false);
+		ui->dcdLabel->setEnabled(false);
+		ui->rtsLabel->setEnabled(false);
+		ui->dtrLabel->setEnabled(false);
+		ui->xoff1Label->setEnabled(xoffReceived);
 
-		connectedLabel->setText(
+		ui->connectedLabel->setText(
 		    tr("<html><head/><body><p><span style=\" font-weight:600; color:#ff0000;\">CLOSED</span></p></body></html>"));
 	}
 

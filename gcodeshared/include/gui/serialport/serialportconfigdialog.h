@@ -31,10 +31,13 @@
 class QButtonGroup;
 class QWidget;
 
-#include "ui_serialportconfigdialog.h"  // for Ui::SerialPortConfigDialog
+namespace Ui {
+class SerialPortConfigDialog;
+}
+
 
 namespace GUI {
-class SerialPortConfigDialog : public QDialog, private Ui::SerialPortConfigDialog
+class SerialPortConfigDialog : public QDialog
 {
 	Q_OBJECT
 
@@ -78,6 +81,7 @@ private slots:
 private:
 	QString browseForDir(const QString dir, QString windowTitle);
 
+	Ui::SerialPortConfigDialog* ui;
 	QButtonGroup* baudGroup;
 	QButtonGroup* dataBitsGroup;
 	QButtonGroup* stopBitsGroup;

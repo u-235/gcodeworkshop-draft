@@ -37,11 +37,13 @@ class QTimer;
 class QWidget;
 
 #include <serialportsettings.h>             // for SerialPortSettings
-#include "ui_serialtransmissiondialog.h"    // for Ui::SerialTransmissionDialog
 
+namespace Ui {
+class SerialTransmissionDialog;
+}
 
 namespace GUI {
-class SerialTransmissionDialog : public QDialog, private Ui::SerialTransmissionDialog
+class SerialTransmissionDialog : public QDialog
 {
 	Q_OBJECT
 
@@ -95,6 +97,7 @@ private:
 	void procesSpecialCharacters(QString* text, QString* fileData);
 	void resetTransmission(bool portRestart = false);
 
+	Ui::SerialTransmissionDialog* ui;
 	QSerialPort serialPort;
 	bool canceled;
 	SerialPortSettings portSettings;
