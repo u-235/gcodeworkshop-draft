@@ -29,6 +29,7 @@
 #include <QDoubleSpinBox>               // for QDoubleSpinBox
 #include <QFileDialog>                  // for QFileDialog
 #include <QFileInfo>                    // for QFileInfo
+#include <QIcon>                        // for QIcon
 #include <QIntValidator>                // for QIntValidator
 #include <QLineEdit>                    // for QLineEdit
 #include <QList>                        // for QList
@@ -67,6 +68,7 @@ GUI::SerialPortConfigDialog::SerialPortConfigDialog(QWidget* parent, QString con
 	ui(new Ui::SerialPortConfigDialog())
 {
 	ui->setupUi(this);
+	loadIcons();
 	setAttribute(Qt::WA_DeleteOnClose);
 	setWindowTitle(tr("Serial port configuration"));
 	setModal(true);
@@ -178,6 +180,37 @@ GUI::SerialPortConfigDialog::SerialPortConfigDialog(QWidget* parent, QString con
 GUI::SerialPortConfigDialog::~SerialPortConfigDialog()
 {
 	delete ui;
+}
+
+void GUI::SerialPortConfigDialog::loadTranslations()
+{
+	ui->retranslateUi(this);
+}
+
+void GUI::SerialPortConfigDialog::loadIcons()
+{
+	QIcon addIcon(":/images/add.png");
+	ui->addEobButton->setIcon(addIcon);
+	ui->addEobCharButton->setIcon(addIcon);
+	ui->addfileNameButton->setIcon(addIcon);
+	ui->addButton->setIcon(addIcon);
+	QIcon browseIcon(":/images/browse.png");
+	ui->browseButton->setIcon(browseIcon);
+	ui->browse1PushButton->setIcon(browseIcon);
+	ui->browse2PushButton->setIcon(browseIcon);
+	ui->browse4PushButton->setIcon(browseIcon);
+	ui->browse3PushButton->setIcon(browseIcon);
+	ui->closeButton->setIcon(QIcon(":/images/cancel.png"));
+	QIcon deleteIcon(":/images/editdelete.png");
+	ui->deleteButton->setIcon(deleteIcon);
+	QIcon removeIcon(":/images/list-remove.png");
+	ui->deleteEobButton->setIcon(removeIcon);
+	ui->deleteEobCharButton->setIcon(removeIcon);
+	ui->removeFileNameButton->setIcon(removeIcon);
+	ui->removeButton->setIcon(removeIcon);
+	QIcon saveIcon(":/images/filesave.png");
+	ui->saveButton->setIcon(saveIcon);
+	ui->saveCloseButton->setIcon(saveIcon);
 }
 
 void GUI::SerialPortConfigDialog::flowCtlGroupReleased()

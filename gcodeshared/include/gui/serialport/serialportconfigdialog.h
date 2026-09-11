@@ -46,6 +46,10 @@ public:
 	                       Qt::WindowFlags f = Qt::Dialog);
 	~SerialPortConfigDialog();
 
+public slots:
+	void loadTranslations();
+	void loadIcons();
+
 private slots:
 	void browseButtonClicked();
 	void saveButtonClicked();
