@@ -58,6 +58,7 @@ GUI::SerialPortTestDialog::SerialPortTestDialog(QWidget* parent, Qt::WindowFlags
 	ui(new Ui::SerialPortTestDialog())
 {
 	ui->setupUi(this);
+	loadIcons();
 	setAttribute(Qt::WA_DeleteOnClose);
 	setWindowTitle(tr("Serial transmission test"));
 
@@ -94,6 +95,21 @@ GUI::SerialPortTestDialog::SerialPortTestDialog(QWidget* parent, Qt::WindowFlags
 GUI::SerialPortTestDialog::~SerialPortTestDialog()
 {
 	delete ui;
+}
+
+void GUI::SerialPortTestDialog::loadTranslations()
+{
+	ui->retranslateUi(this);
+	updateConnectButton();
+}
+
+void GUI::SerialPortTestDialog::loadIcons()
+{
+	setWindowIcon(QIcon(":/images/serial.png"));
+	ui->configButton->setIcon(QIcon(":/images/serialconfig.png"));
+	ui->clearButton->setIcon(QIcon(":/images/editdelete.png"));
+	ui->closeButton->setIcon(QIcon(":/images/window-close.png"));
+	updateConnectButton();
 }
 
 void GUI::SerialPortTestDialog::textEditScroll(int pos)
@@ -167,13 +183,22 @@ void GUI::SerialPortTestDialog::clearButtonClicked()
 	ui->sendLineEdit->clear();
 }
 
-void GUI::SerialPortTestDialog::connectButtonToggled(bool tg)
+void GUI::SerialPortTestDialog::updateConnectButton()
 {
-	if (tg) {
-
+	if (ui->connectButton->isChecked()) {
 		ui->connectButton->setIcon(QIcon(":/images/connect_established.png"));
 		ui->connectButton->setText(tr("&Disconnect"));
+	} else {
+		ui->connectButton->setIcon(QIcon(":/images/connect_no.png"));
+		ui->connectButton->setText(tr("&Connect"));
+	}
+}
 
+void GUI::SerialPortTestDialog::connectButtonToggled(bool tg)
+{
+	updateConnectButton();
+
+	if (tg) {
 		ui->textEdit->clear();
 		ui->hexTextEdit->clear();
 		ui->sendLineEdit->clear();
@@ -232,8 +257,6 @@ void GUI::SerialPortTestDialog::connectButtonToggled(bool tg)
 	} else {
 		timer->stop();
 		//qApp->processEvents();
-		ui->connectButton->setIcon(QIcon(":/images/connect_no.png"));
-		ui->connectButton->setText(tr("&Connect"));
 
 		stop = true;
 		qApp->processEvents();

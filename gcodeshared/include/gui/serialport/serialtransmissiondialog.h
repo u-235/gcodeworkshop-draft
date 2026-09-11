@@ -60,6 +60,9 @@ public:
 	QStringList readPaths();
 
 public slots:
+	void loadTranslations();
+	void loadIcons();
+
 	bool wasCanceled();
 	void portReset();
 

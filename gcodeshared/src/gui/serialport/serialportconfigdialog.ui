@@ -74,10 +74,6 @@
        <property name="text">
         <string>&amp;Save</string>
        </property>
-       <property name="icon">
-        <iconset resource="../../../application.qrc">
-         <normaloff>:/images/filesave.png</normaloff>:/images/filesave.png</iconset>
-       </property>
        <property name="autoDefault">
         <bool>false</bool>
        </property>
@@ -90,10 +86,6 @@
        </property>
        <property name="text">
         <string>Delete</string>
-       </property>
-       <property name="icon">
-        <iconset resource="../../../application.qrc">
-         <normaloff>:/images/editdelete.png</normaloff>:/images/editdelete.png</iconset>
        </property>
        <property name="autoDefault">
         <bool>false</bool>
@@ -179,10 +171,6 @@
             <widget class="QPushButton" name="browseButton">
              <property name="text">
               <string>&amp;Browse</string>
-             </property>
-             <property name="icon">
-              <iconset resource="../../../application.qrc">
-               <normaloff>:/images/browse.png</normaloff>:/images/browse.png</iconset>
              </property>
             </widget>
            </item>
@@ -887,10 +875,6 @@ Valid QtRegExp should be entered.</string>
               <property name="text">
                <string>&amp;Add</string>
               </property>
-              <property name="icon">
-               <iconset resource="../../../application.qrc">
-                <normaloff>:/images/add.png</normaloff>:/images/add.png</iconset>
-              </property>
              </widget>
             </item>
             <item>
@@ -900,10 +884,6 @@ Valid QtRegExp should be entered.</string>
               </property>
               <property name="text">
                <string>&amp;Delete</string>
-              </property>
-              <property name="icon">
-               <iconset resource="../../../application.qrc">
-                <normaloff>:/images/list-remove.png</normaloff>:/images/list-remove.png</iconset>
               </property>
              </widget>
             </item>
@@ -985,10 +965,6 @@ Valid QtRegExp should be entered.</string>
            <property name="toolTip">
             <string>Delete from the list</string>
            </property>
-           <property name="icon">
-            <iconset resource="../../../application.qrc">
-             <normaloff>:/images/list-remove.png</normaloff>:/images/list-remove.png</iconset>
-           </property>
           </widget>
          </item>
          <item row="3" column="1">
@@ -1002,10 +978,6 @@ Valid QtRegExp should be entered.</string>
           <widget class="QToolButton" name="addEobCharButton">
            <property name="toolTip">
             <string>Add to the list</string>
-           </property>
-           <property name="icon">
-            <iconset resource="../../../application.qrc">
-             <normaloff>:/images/add.png</normaloff>:/images/add.png</iconset>
            </property>
           </widget>
          </item>
@@ -1286,10 +1258,6 @@ If the file name has not been automatically detected, the file name will be the 
            <property name="text">
             <string>Browse</string>
            </property>
-           <property name="icon">
-            <iconset resource="../../../application.qrc">
-             <normaloff>:/images/browse.png</normaloff>:/images/browse.png</iconset>
-           </property>
           </widget>
          </item>
         </layout>
@@ -1352,10 +1320,6 @@ If the file name has not been automatically detected, the file name will be the 
               <property name="text">
                <string/>
               </property>
-              <property name="icon">
-               <iconset resource="../../../application.qrc">
-                <normaloff>:/images/add.png</normaloff>:/images/add.png</iconset>
-              </property>
              </widget>
             </item>
             <item>
@@ -1365,10 +1329,6 @@ If the file name has not been automatically detected, the file name will be the 
               </property>
               <property name="text">
                <string>...</string>
-              </property>
-              <property name="icon">
-               <iconset resource="../../../application.qrc">
-                <normaloff>:/images/list-remove.png</normaloff>:/images/list-remove.png</iconset>
               </property>
              </widget>
             </item>
@@ -1599,10 +1559,6 @@ p, li { white-space: pre-wrap; }
            <property name="text">
             <string>Browse</string>
            </property>
-           <property name="icon">
-            <iconset resource="../../../application.qrc">
-             <normaloff>:/images/browse.png</normaloff>:/images/browse.png</iconset>
-           </property>
           </widget>
          </item>
          <item row="3" column="4">
@@ -1683,20 +1639,12 @@ If detected filename will contain an extension, then this setting will be ignore
            <property name="text">
             <string>Browse</string>
            </property>
-           <property name="icon">
-            <iconset resource="../../../application.qrc">
-             <normaloff>:/images/browse.png</normaloff>:/images/browse.png</iconset>
-           </property>
           </widget>
          </item>
          <item row="11" column="3">
           <widget class="QPushButton" name="browse3PushButton">
            <property name="text">
             <string>Browse</string>
-           </property>
-           <property name="icon">
-            <iconset resource="../../../application.qrc">
-             <normaloff>:/images/browse.png</normaloff>:/images/browse.png</iconset>
            </property>
           </widget>
          </item>
@@ -1756,10 +1704,6 @@ p, li { white-space: pre-wrap; }
            <property name="text">
             <string>&amp;Delete</string>
            </property>
-           <property name="icon">
-            <iconset resource="../../../application.qrc">
-             <normaloff>:/images/list-remove.png</normaloff>:/images/list-remove.png</iconset>
-           </property>
           </widget>
          </item>
          <item row="2" column="3">
@@ -1769,10 +1713,6 @@ p, li { white-space: pre-wrap; }
            </property>
            <property name="text">
             <string>&amp;Add</string>
-           </property>
-           <property name="icon">
-            <iconset resource="../../../application.qrc">
-             <normaloff>:/images/add.png</normaloff>:/images/add.png</iconset>
            </property>
           </widget>
          </item>
@@ -1879,10 +1819,6 @@ Set to 300s to disable timer.</string>
        <property name="text">
         <string>&amp;Save &amp;&amp; close</string>
        </property>
-       <property name="icon">
-        <iconset resource="../../../application.qrc">
-         <normaloff>:/images/filesave.png</normaloff>:/images/filesave.png</iconset>
-       </property>
        <property name="autoDefault">
         <bool>false</bool>
        </property>
@@ -1905,10 +1841,6 @@ Set to 300s to disable timer.</string>
       <widget class="QPushButton" name="closeButton">
        <property name="text">
         <string>&amp;Cancel</string>
-       </property>
-       <property name="icon">
-        <iconset resource="../../../application.qrc">
-         <normaloff>:/images/cancel.png</normaloff>:/images/cancel.png</iconset>
        </property>
        <property name="autoDefault">
         <bool>false</bool>
@@ -1943,9 +1875,6 @@ Set to 300s to disable timer.</string>
   <tabstop>browse1PushButton</tabstop>
   <tabstop>savePathLineEdit</tabstop>
  </tabstops>
- <resources>
-  <include location="../../../application.qrc"/>
-  <include location="../../../application.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

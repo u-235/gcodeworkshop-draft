@@ -48,9 +48,14 @@ public:
 	SerialPortTestDialog(QWidget* parent = 0, Qt::WindowFlags f = Qt::Dialog);
 	~SerialPortTestDialog();
 
+public slots:
+	void loadTranslations();
+	void loadIcons();
+
 private slots:
 	void closeButtonClicked();
 	void clearButtonClicked();
+	void updateConnectButton();
 	void connectButtonToggled(bool tg);
 	void configButtonClicked();
 	void changeSettings();

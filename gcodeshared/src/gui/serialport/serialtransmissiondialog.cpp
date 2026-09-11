@@ -76,6 +76,7 @@ GUI::SerialTransmissionDialog::SerialTransmissionDialog(QWidget* parent, Qt::Win
 	sendStartDelayCountner = 0;
 	sendTimeoutCountner = 2;
 	receiveTimeoutCountner = 2;
+	loadIcons();
 
 	sendTimeoutTimer = new QTimer(this);
 	sendTimeoutTimer->setInterval(1000);
@@ -102,7 +103,6 @@ GUI::SerialTransmissionDialog::SerialTransmissionDialog(QWidget* parent, Qt::Win
 		setAttribute(Qt::WA_DeleteOnClose);
 		ui->cancelButton->hide();
 		ui->bottomLine->hide();
-		setWindowIcon(QIcon(":/images/spserver.png"));
 
 		ui->plainTextEdit->setCenterOnScroll(false);
 	} else {
@@ -130,6 +130,22 @@ GUI::SerialTransmissionDialog::SerialTransmissionDialog(QWidget* parent, Qt::Win
 GUI::SerialTransmissionDialog::~SerialTransmissionDialog()
 {
 	delete ui;
+}
+
+void GUI::SerialTransmissionDialog::loadTranslations()
+{
+	ui->retranslateUi(this);
+}
+
+void GUI::SerialTransmissionDialog::loadIcons()
+{
+	if (serverMode) {
+		setWindowIcon(QIcon(":/images/spserver.png"));
+	} else {
+		setWindowIcon(QIcon(":/images/serial.png"));
+	}
+
+	ui->cancelButton->setIcon(QIcon(":/images/cancel.png"));
 }
 
 void GUI::SerialTransmissionDialog::closeEvent(QCloseEvent* event)
