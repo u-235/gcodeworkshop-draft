@@ -33,10 +33,14 @@ class QTimer;
 class QWidget;
 
 #include <serialportsettings.h>         // for SerialPortSettings
-#include "ui_serialporttestdialog.h"    // for Ui::SerialPortTestDialog
+
+namespace Ui {
+class SerialPortTestDialog;
+}
+
 
 namespace GUI {
-class SerialPortTestDialog : public QDialog, private Ui::SerialPortTestDialog
+class SerialPortTestDialog : public QDialog
 {
 	Q_OBJECT
 
@@ -65,6 +69,7 @@ private:
 	void showError(int error);
 	void sendText(QString tx);
 
+	Ui::SerialPortTestDialog* ui;
 	bool stop;
 	QString portName;
 	QString sendAtEnd;
