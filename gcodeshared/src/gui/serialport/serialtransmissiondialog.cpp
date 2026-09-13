@@ -81,22 +81,22 @@ GUI::SerialTransmissionDialog::SerialTransmissionDialog(QWidget* parent, Qt::Win
 	sendTimeoutTimer = new QTimer(this);
 	sendTimeoutTimer->setInterval(1000);
 	sendTimeoutTimer->stop();
-	connect(sendTimeoutTimer, SIGNAL(timeout()), this, SLOT(sendTimeoutTimerTimeout()));
+	connect(sendTimeoutTimer, &QTimer::timeout, this, &SerialTransmissionDialog::sendTimeoutTimerTimeout);
 
 	receiveTimeoutTimer = new QTimer(this);
 	receiveTimeoutTimer->setInterval(1000);
 	receiveTimeoutTimer->stop();
-	connect(receiveTimeoutTimer, SIGNAL(timeout()), this, SLOT(receiveTimeoutTimerTimeout()));
+	connect(receiveTimeoutTimer, &QTimer::timeout, this, &SerialTransmissionDialog::receiveTimeoutTimerTimeout);
 
 	sendStartDelayTimer = new QTimer(this);
 	sendStartDelayTimer->setInterval(1000);
 	sendStartDelayTimer->stop();
-	connect(sendStartDelayTimer, SIGNAL(timeout()), this, SLOT(sendStartDelayTimeout()));
+	connect(sendStartDelayTimer, &QTimer::timeout, this, &SerialTransmissionDialog::sendStartDelayTimeout);
 
 	reconnectTimer = new QTimer(this);
 	reconnectTimer->setInterval(60 * 1000);
 	reconnectTimer->stop();
-	connect(reconnectTimer, SIGNAL(timeout()), this, SLOT(reconnectTimerTimeout()));
+	connect(reconnectTimer, &QTimer::timeout, this, &SerialTransmissionDialog::reconnectTimerTimeout);
 
 	if (serverMode) {
 		setModal(false);
@@ -108,21 +108,21 @@ GUI::SerialTransmissionDialog::SerialTransmissionDialog(QWidget* parent, Qt::Win
 	} else {
 		setWindowTitle(tr("Serial transmission"));
 		setModal(true);
-		connect(ui->cancelButton, SIGNAL(clicked()), SLOT(cancelButtonClicked()));
+		connect(ui->cancelButton, &QPushButton::clicked, this, &SerialTransmissionDialog::cancelButtonClicked);
 		delete (ui->plainTextEdit);
 		adjustSize();
 
 	}
 
-	connect(this, SIGNAL(rejected()), SLOT(cancelButtonClicked()));
+	connect(this, &QDialog::rejected, this, &SerialTransmissionDialog::cancelButtonClicked);
 
 	updateStatusTimer = new QTimer(this);
-	connect(updateStatusTimer, SIGNAL(timeout()), this, SLOT(updateStatus()));
+	connect(updateStatusTimer, &QTimer::timeout, this, &SerialTransmissionDialog::updateStatus);
 
 	autoCloseTimer = new QTimer(this);
 	autoCloseTimer->setInterval(1000);
 	autoCloseTimer->stop();
-	connect(autoCloseTimer, SIGNAL(timeout()), this, SLOT(autoCloseTimerTimeout()));
+	connect(autoCloseTimer, &QTimer::timeout, this, &SerialTransmissionDialog::autoCloseTimerTimeout);
 
 	updateStatusTimer->start(80);
 }
@@ -495,7 +495,7 @@ void GUI::SerialTransmissionDialog::serialPortBytesWritten(qint64 bytes)
 	}
 
 	if ((portSettings.lineDelay > 0) && (bytes > 0)) {
-		QTimer::singleShot(int(portSettings.lineDelay * 1000), this, SLOT(lineDelaySlot()));
+		QTimer::singleShot(int(portSettings.lineDelay * 1000), this, &SerialTransmissionDialog::lineDelaySlot);
 		return;
 	}
 
@@ -1054,7 +1054,6 @@ QStringList GUI::SerialTransmissionDialog::guessFileName(QString* text)
 	name2 = file2.name;
 	ext2 = file2.ext;
 
-
 	if (portSettings.removeLetters) {
 		QString tmpName = name2;
 		tmpName.remove(QRegularExpression("[a-zA-Z-.]{1,}"));
@@ -1479,7 +1478,7 @@ void GUI::SerialTransmissionDialog::fileServerBytesWritten(qint64 bytes)
 	}
 
 	if ((portSettings.lineDelay > 0) && (bytes > 0)) {
-		QTimer::singleShot(int(portSettings.lineDelay * 1000), this, SLOT(lineDelaySlot()));
+		QTimer::singleShot(int(portSettings.lineDelay * 1000), this, &SerialTransmissionDialog::lineDelaySlot);
 		return;
 	}
 
@@ -1561,14 +1560,12 @@ void GUI::SerialTransmissionDialog::resetTransmission(bool portRestart)
 
 		qApp->processEvents();
 
-		connect(&serialPort, SIGNAL(error(QSerialPort::SerialPortError)), this,
-		        SLOT(showSerialPortError(QSerialPort::SerialPortError)));
-		connect(&serialPort, SIGNAL(bytesWritten(qint64)), this, SLOT(serialPortBytesWritten(qint64)));
-		connect(&serialPort, SIGNAL(readyRead()), this, SLOT(serialPortReadyRead()));
+		connect(&serialPort, &QSerialPort::errorOccurred, this, &SerialTransmissionDialog::showSerialPortError);
+		connect(&serialPort, &QSerialPort::bytesWritten, this, &SerialTransmissionDialog::serialPortBytesWritten);
+		connect(&serialPort, &QSerialPort::readyRead, this, &SerialTransmissionDialog::serialPortReadyRead);
 
 		if (portSettings.FlowControl == QSerialPort::HardwareControl) {
-			connect(&serialPort, SIGNAL(requestToSendChanged(bool)), this,
-			        SLOT(serialPortRequestToSend(bool)));
+			connect(&serialPort, &QSerialPort::requestToSendChanged, this, &SerialTransmissionDialog::serialPortRequestToSend);
 		}
 
 		qApp->processEvents();

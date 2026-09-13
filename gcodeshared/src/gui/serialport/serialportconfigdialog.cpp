@@ -115,54 +115,50 @@ GUI::SerialPortConfigDialog::SerialPortConfigDialog(QWidget* parent, QString con
 #ifdef Q_OS_WIN32
 	ui->browseButton->setEnabled(false);
 #else
-	connect(ui->browseButton, SIGNAL(clicked()), SLOT(browseButtonClicked()));
+	connect(ui->browseButton, &QPushButton::clicked, this, &SerialPortConfigDialog::browseButtonClicked);
 #endif
 
-	connect(ui->browse1PushButton, SIGNAL(clicked()), SLOT(browse1ButtonClicked()));
-	connect(ui->browse2PushButton, SIGNAL(clicked()), SLOT(browse2ButtonClicked()));
-	connect(ui->browse3PushButton, SIGNAL(clicked()), SLOT(browse3ButtonClicked()));
-	connect(ui->browse4PushButton, SIGNAL(clicked()), SLOT(browse4ButtonClicked()));
+	connect(ui->browse1PushButton, &QPushButton::clicked, this, &SerialPortConfigDialog::browse1ButtonClicked);
+	connect(ui->browse2PushButton, &QPushButton::clicked, this, &SerialPortConfigDialog::browse2ButtonClicked);
+	connect(ui->browse3PushButton, &QPushButton::clicked, this, &SerialPortConfigDialog::browse3ButtonClicked);
+	connect(ui->browse4PushButton, &QPushButton::clicked, this, &SerialPortConfigDialog::browse4ButtonClicked);
 
-	connect(ui->saveButton, SIGNAL(clicked()), SLOT(saveButtonClicked()));
-	connect(ui->saveCloseButton, SIGNAL(clicked()), SLOT(saveCloseButtonClicked()));
-	connect(ui->deleteButton, SIGNAL(clicked()), SLOT(deleteButtonClicked()));
-	connect(ui->closeButton, SIGNAL(clicked()), SLOT(closeButtonClicked()));
-	connect(ui->helpButton, SIGNAL(clicked()), SLOT(helpButtonClicked()));
+	connect(ui->saveButton, &QPushButton::clicked, this, &SerialPortConfigDialog::saveButtonClicked);
+	connect(ui->saveCloseButton, &QPushButton::clicked, this, &SerialPortConfigDialog::saveCloseButtonClicked);
+	connect(ui->deleteButton, &QPushButton::clicked, this, &SerialPortConfigDialog::deleteButtonClicked);
+	connect(ui->closeButton, &QPushButton::clicked, this, &SerialPortConfigDialog::closeButtonClicked);
+	connect(ui->helpButton, &QPushButton::clicked, this, &SerialPortConfigDialog::helpButtonClicked);
 
-	connect(ui->addButton, SIGNAL(clicked()), SLOT(addButtonClicked()));
-	connect(ui->removeButton, SIGNAL(clicked()), SLOT(removeButtonClicked()));
+	connect(ui->addButton, &QPushButton::clicked, this, &SerialPortConfigDialog::addButtonClicked);
+	connect(ui->removeButton, &QPushButton::clicked, this, &SerialPortConfigDialog::removeButtonClicked);
 
-	connect(ui->addEobButton, SIGNAL(clicked()), SLOT(addEobButtonClicked()));
-	connect(ui->deleteEobButton, SIGNAL(clicked()), SLOT(deleteEobButtonClicked()));
+	connect(ui->addEobButton, &QToolButton::clicked, this, &SerialPortConfigDialog::addEobButtonClicked);
+	connect(ui->deleteEobButton, &QToolButton::clicked, this, &SerialPortConfigDialog::deleteEobButtonClicked);
 
-	connect(ui->addfileNameButton, SIGNAL(clicked()), SLOT(addFileNameButtonClicked()));
-	connect(ui->removeFileNameButton, SIGNAL(clicked()), SLOT(removeFileNameButtonClicked()));
+	connect(ui->addfileNameButton, &QToolButton::clicked, this, &SerialPortConfigDialog::addFileNameButtonClicked);
+	connect(ui->removeFileNameButton, &QToolButton::clicked, this, &SerialPortConfigDialog::removeFileNameButtonClicked);
 
-	connect(ui->addEobCharButton, SIGNAL(clicked()), SLOT(addEobCharButtonClicked()));
-	connect(ui->deleteEobCharButton, SIGNAL(clicked()), SLOT(deleteEobCharButtonClicked()));
-	connect(ui->eobComboBox, SIGNAL(editTextChanged(const QString)),
-	        SLOT(eobComboBoxEditTextChanged(const QString)));
+	connect(ui->addEobCharButton, &QToolButton::clicked, this, &SerialPortConfigDialog::addEobCharButtonClicked);
+	connect(ui->deleteEobCharButton, &QToolButton::clicked, this, &SerialPortConfigDialog::deleteEobCharButtonClicked);
+	connect(ui->eobComboBox, &QComboBox::editTextChanged, this, &SerialPortConfigDialog::eobComboBoxEditTextChanged);
 
-	connect(ui->autoSaveCheckBox, SIGNAL(stateChanged(int)), SLOT(autoSaveCheckBoxChanged(int)));
-	connect(ui->fileServerCheckBox, SIGNAL(stateChanged(int)), SLOT(fileServerCheckBoxChanged(int)));
-	connect(ui->appendExtCheckBox, SIGNAL(stateChanged(int)), SLOT(appendExtCheckBoxChanged(int)));
-	connect(ui->useAsExtCheckBox, SIGNAL(stateChanged(int)), SLOT(useAsExtCheckBoxChanged(int)));
+	connect(ui->autoSaveCheckBox, &QCheckBox::stateChanged, this, &SerialPortConfigDialog::autoSaveCheckBoxChanged);
+	connect(ui->fileServerCheckBox, &QCheckBox::stateChanged, this, &SerialPortConfigDialog::fileServerCheckBoxChanged);
+	connect(ui->appendExtCheckBox, &QCheckBox::stateChanged, this, &SerialPortConfigDialog::appendExtCheckBoxChanged);
+	connect(ui->useAsExtCheckBox, &QCheckBox::stateChanged, this, &SerialPortConfigDialog::useAsExtCheckBoxChanged);
 
-	connect(ui->searchPath1LineEdit, SIGNAL(textChanged(const QString)),
-	        SLOT(readPath1Changed(const QString)));
-	connect(ui->searchPath2LineEdit, SIGNAL(textChanged(const QString)),
-	        SLOT(readPath2Changed(const QString)));
-	connect(ui->searchPath3LineEdit, SIGNAL(textChanged(const QString)),
-	        SLOT(readPath3Changed(const QString)));
+	connect(ui->searchPath1LineEdit, &QLineEdit::textChanged, this, &SerialPortConfigDialog::readPath1Changed);
+	connect(ui->searchPath2LineEdit, &QLineEdit::textChanged, this, &SerialPortConfigDialog::readPath2Changed);
+	connect(ui->searchPath3LineEdit, &QLineEdit::textChanged, this, &SerialPortConfigDialog::readPath3Changed);
 
-	//connect(flowCtlGroup, SIGNAL(buttonReleased(int)), SLOT(flowCtlGroupReleased()));
+	//connect(flowCtlGroup, SIGNAL(buttonReleased(int)), &SerialPortConfigDialog::flowCtlGroupReleased()));
 
 	loadSettings();
 	flowCtlGroupReleased();
 
-	connect(ui->configNameBox, SIGNAL(currentIndexChanged(int)), SLOT(changeSettings()));
-	connect(ui->portNameComboBox, SIGNAL(currentIndexChanged(QString)),
-	        SLOT(portNameComboBoxIndexChanged(QString)));
+	connect(ui->configNameBox, &QComboBox::currentTextChanged, this, &SerialPortConfigDialog::changeSettings);
+	connect(ui->portNameComboBox, &QComboBox::currentTextChanged, this,
+	        &SerialPortConfigDialog::portNameComboBoxIndexChanged);
 
 	ui->tabWidget->setCurrentIndex(0);
 

@@ -64,32 +64,31 @@ GUI::SerialPortTestDialog::SerialPortTestDialog(QWidget* parent, Qt::WindowFlags
 
 	comPort = nullptr;
 
-	connect(ui->closeButton, SIGNAL(clicked()), SLOT(closeButtonClicked()));
+	connect(ui->closeButton, &QPushButton::clicked, this, &SerialPortTestDialog::closeButtonClicked);
 
-	connect(ui->clearButton, SIGNAL(clicked()), SLOT(clearButtonClicked()));
-	connect(ui->configButton, SIGNAL(clicked()), SLOT(configButtonClicked()));
+	connect(ui->clearButton, &QPushButton::clicked, this, &SerialPortTestDialog::clearButtonClicked);
+	connect(ui->configButton, &QToolButton::clicked, this, &SerialPortTestDialog::configButtonClicked);
 
-	connect(ui->connectButton, SIGNAL(toggled(bool)), SLOT(connectButtonToggled(bool)));
+	connect(ui->connectButton, &QPushButton::toggled, this, &SerialPortTestDialog::connectButtonToggled);
 
-	connect(ui->setRtsButton, SIGNAL(clicked()), SLOT(setRtsButtonClicked()));
-	connect(ui->setDtrButton, SIGNAL(clicked()), SLOT(setDtrButtonClicked()));
+	connect(ui->setRtsButton, &QToolButton::clicked, this, &SerialPortTestDialog::setRtsButtonClicked);
+	connect(ui->setDtrButton, &QToolButton::clicked, this, &SerialPortTestDialog::setDtrButtonClicked);
 
 	loadSerialConfignames();
 	changeSettings();
-	connect(ui->configBox, SIGNAL(currentIndexChanged(int)), SLOT(changeSettings()));
+	connect(ui->configBox, &QComboBox::currentTextChanged, this, &SerialPortTestDialog::changeSettings);
 
 	timer = new QTimer(this);
-	connect(timer, SIGNAL(timeout()), this, SLOT(updateLeds()));
+	connect(timer, &QTimer::timeout, this, &SerialPortTestDialog::updateLeds);
 
-	connect(ui->sendLineEdit, SIGNAL(returnPressed()), SLOT(sendTextEditChanged()));
+	connect(ui->sendLineEdit, &QLineEdit::returnPressed, this, &SerialPortTestDialog::sendTextEditChanged);
 
-	connect(ui->setXonButton, SIGNAL(clicked()), SLOT(setXonButtonClicked()));
-	connect(ui->setXoffButton, SIGNAL(clicked()), SLOT(setXoffButtonClicked()));
+	connect(ui->setXonButton, &QToolButton::clicked, this, &SerialPortTestDialog::setXonButtonClicked);
+	connect(ui->setXoffButton, &QToolButton::clicked, this, &SerialPortTestDialog::setXoffButtonClicked);
 
-
-	connect(ui->textEdit->verticalScrollBar(), SIGNAL(valueChanged(int)), SLOT(textEditScroll(int)));
-	connect(ui->hexTextEdit->verticalScrollBar(), SIGNAL(valueChanged(int)),
-	        SLOT(hexTextEditScroll(int)));
+	connect(ui->textEdit->verticalScrollBar(), &QScrollBar::valueChanged, this, &SerialPortTestDialog::textEditScroll);
+	connect(ui->hexTextEdit->verticalScrollBar(), &QScrollBar::valueChanged, this,
+	        &SerialPortTestDialog::hexTextEditScroll);
 }
 
 GUI::SerialPortTestDialog::~SerialPortTestDialog()
@@ -407,7 +406,6 @@ void GUI::SerialPortTestDialog::changeSettings()
 	port = "COM1";
 #else
 	port = "/dev/ttyS0";
-
 #endif
 
 	settings.beginGroup(ui->configBox->currentText());
@@ -576,7 +574,7 @@ void GUI::SerialPortTestDialog::sendText(QString tx)
 				if (lineDelay > 0) {
 					if (tx[i].toLatin1() == '\n') {
 						readyCont = false;
-						QTimer::singleShot(int(lineDelay * 1000), this, SLOT(lineDelaySlot()));
+						QTimer::singleShot(int(lineDelay * 1000), this, &SerialPortTestDialog::lineDelaySlot);
 
 						while (!readyCont) {
 							qApp->processEvents();
