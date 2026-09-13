@@ -25,6 +25,7 @@ HEADERS += \
     include/gui/serialport/serialporttestdialog.h \
     include/gui/serialport/serialtransmissiondialog.h \
     include/gui/serialport/serialportconfigdialog.h \
+    include/qt/qoverload.h \
     include/serialportsettings.h \
     include/version.h
 
