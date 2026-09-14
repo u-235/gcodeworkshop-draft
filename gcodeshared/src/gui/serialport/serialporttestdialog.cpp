@@ -101,6 +101,11 @@ GUI::SerialPortTestDialog::SerialPortTestDialog(QWidget* parent, Qt::WindowFlags
 GUI::SerialPortTestDialog::~SerialPortTestDialog()
 {
 	delete ui;
+
+	if (comPort != nullptr) {
+		comPort->close();
+		comPort->deleteLater();
+	}
 }
 
 void GUI::SerialPortTestDialog::loadTranslations()
@@ -173,12 +178,6 @@ void GUI::SerialPortTestDialog::closeButtonClicked()
 {
 	stop = true;
 	qApp->processEvents();
-
-	if (comPort != nullptr) {
-		//comPort->close();
-		//delete(comPort);
-	}
-
 	close();
 }
 
@@ -214,7 +213,7 @@ void GUI::SerialPortTestDialog::connectButtonToggled(bool tg)
 		if (comPort != nullptr) {
 			comPort->reset();
 			comPort->close();
-			delete comPort;
+			comPort->deleteLater();
 		}
 
 		comPort = new QSerialPort(portName);
@@ -227,18 +226,13 @@ void GUI::SerialPortTestDialog::connectButtonToggled(bool tg)
 
 		if (!comPort->open(QIODevice::ReadWrite)) {
 			showError(comPort->error());
-			delete comPort;
+			comPort->deleteLater();
 			comPort = nullptr;
 			ui->connectButton->setChecked(false);
 			return;
 		}
 
 		comPort->clear(QSerialPort::AllDirections);
-
-		//      if(portSettings.FlowControl == FLOW_XONXOFF)
-		//      {
-		//         comPort->putChar(portSettings.Xon);
-		//      }
 
 		ui->setDtrButton->setEnabled(true);
 		ui->setDtrButton->setChecked(false);
@@ -262,8 +256,6 @@ void GUI::SerialPortTestDialog::connectButtonToggled(bool tg)
 
 	} else {
 		timer->stop();
-		//qApp->processEvents();
-
 		stop = true;
 		qApp->processEvents();
 		ui->setDtrButton->setEnabled(false);
@@ -561,9 +553,6 @@ void GUI::SerialPortTestDialog::sendText(QString tx)
 				if (controlChar == portSettings.Xon) {
 					xoffReceived = false;
 				}
-
-				//ui->setXoffButton->setChecked(xoffReceived);
-				//ui->setXonButton->setChecked(!xoffReceived);
 			} else {
 				xoffReceived = false;
 			}
@@ -599,97 +588,3 @@ void GUI::SerialPortTestDialog::lineDelaySlot()
 {
 	readyCont = true;
 }
-
-//TransProgressDialog::TransProgressDialog(QWidget *parent, Qt::WindowFlags f) : QDialog(parent, f)
-//{
-//   setupUi(this);
-//   //setWindowTitle(tr("Serial transmission"));
-
-//   comPort = nullptr;
-
-//   canceled = true;
-
-//   connect(cancelButton, SIGNAL(clicked()), SLOT(cancelButtonClicked()));
-//   connect(this, SIGNAL(rejected()), SLOT(cancelButtonClicked()));
-
-//   timer = new QTimer(this);
-//   connect(timer, SIGNAL(timeout()), this, SLOT(updateLeds()));
-//}
-
-//TransProgressDialog::~TransProgressDialog()
-//{
-//   timer->stop();
-//}
-
-//void TransProgressDialog::closeEvent(QCloseEvent *event)
-//{
-//   timer->stop();
-//   canceled = true;
-//   event->accept();
-//}
-
-//void TransProgressDialog::cancelButtonClicked()
-//{
-//   timer->stop();
-//   canceled = true;
-//   close();
-//}
-
-//bool TransProgressDialog::wasCanceled()
-//{
-//   return canceled;
-//}
-
-//void TransProgressDialog::setLabelText(const QString text)
-//{
-//   label->setText(text);
-//}
-
-//void TransProgressDialog::setValue(int val)
-//{
-//   progressBar->setValue(val);
-//}
-
-//void TransProgressDialog::setRange(int min, int max)
-//{
-//   if(max == 0)
-//   {
-//      progressBar->hide();
-//      cancelButton->setText(tr("&Close"));
-//      cancelButton->setIcon(QIcon(":/images/window-close.png"));
-//   }
-//   else
-//      progressBar->setRange(min, max);
-
-//   progressBar->setValue(0);
-//}
-
-//void TransProgressDialog::open(QSerialPort *port)
-//{
-//   if(port != nullptr)
-//   {
-//      canceled = false;
-//      show();
-//      comPort = port;
-//      timer->start(20);
-//   }
-//}
-
-//void TransProgressDialog::updateLeds()
-//{
-//   timer->stop();
-//   if(comPort == nullptr)
-//      return;
-
-//   if(!comPort->isOpen())
-//      return;
-
-//   QSerialPort::PinoutSignals status = comPort->pinoutSignals();
-//   ui->ctsLabel->setEnabled(status & QSerialPort::ClearToSendSignal);
-//   ui->dsrLabel->setEnabled(status & QSerialPort::DataSetReadySignal);
-//   ui->dcdLabel->setEnabled(status & QSerialPort::DataCarrierDetectSignal);
-//   ui->rtsLabel->setEnabled(status & QSerialPort::RequestToSendSignal);
-//   ui->dtrLabel->setEnabled(status & QSerialPort::DataTerminalReadySignal);
-
-//   timer->start();
-//}
