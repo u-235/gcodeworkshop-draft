@@ -63,37 +63,46 @@ class QWidget;
 GUI::SerialTransmissionDialog::SerialTransmissionDialog(QWidget* parent, Qt::WindowFlags f,
         bool mode) :
 	QDialog(parent, f),
-	ui(new Ui::SerialTransmissionDialog())
+	ui(new Ui::SerialTransmissionDialog()),
+	serialPort(),
+	canceled(false),
+	portSettings(),
+	serialPortReadBuffer(),
+	serialPortWriteBuffer(),
+	bytesWritten(0),
+	noOfBytes(0),
+	writeBufferIterator(),
+	xoffReceived(false),
+	prevXoffReceived(false),
+	autoCloseCountner(15),
+	sendStartDelayCountner(0),
+	sendTimeoutCountner(2),
+	receiveTimeoutCountner(2),
+	stop(false),
+	serverMode(mode),
+	sending(false),
+	sendStartDelayTimer(new QTimer(this)),
+	updateStatusTimer(new QTimer(this)),
+	autoCloseTimer(new QTimer(this)),
+	sendTimeoutTimer(new QTimer(this)),
+	receiveTimeoutTimer(new QTimer(this)),
+	reconnectTimer(new QTimer(this))
 {
 	ui->setupUi(this);
-
-	serverMode = mode;
-	canceled = false;
-	sending = false;
-	xoffReceived = false;
-	prevXoffReceived = false;
-	autoCloseCountner = 15;
-	sendStartDelayCountner = 0;
-	sendTimeoutCountner = 2;
-	receiveTimeoutCountner = 2;
 	loadIcons();
 
-	sendTimeoutTimer = new QTimer(this);
 	sendTimeoutTimer->setInterval(1000);
 	sendTimeoutTimer->stop();
 	connect(sendTimeoutTimer, &QTimer::timeout, this, &SerialTransmissionDialog::sendTimeoutTimerTimeout);
 
-	receiveTimeoutTimer = new QTimer(this);
 	receiveTimeoutTimer->setInterval(1000);
 	receiveTimeoutTimer->stop();
 	connect(receiveTimeoutTimer, &QTimer::timeout, this, &SerialTransmissionDialog::receiveTimeoutTimerTimeout);
 
-	sendStartDelayTimer = new QTimer(this);
 	sendStartDelayTimer->setInterval(1000);
 	sendStartDelayTimer->stop();
 	connect(sendStartDelayTimer, &QTimer::timeout, this, &SerialTransmissionDialog::sendStartDelayTimeout);
 
-	reconnectTimer = new QTimer(this);
 	reconnectTimer->setInterval(60 * 1000);
 	reconnectTimer->stop();
 	connect(reconnectTimer, &QTimer::timeout, this, &SerialTransmissionDialog::reconnectTimerTimeout);
@@ -116,10 +125,8 @@ GUI::SerialTransmissionDialog::SerialTransmissionDialog(QWidget* parent, Qt::Win
 
 	connect(this, &QDialog::rejected, this, &SerialTransmissionDialog::cancelButtonClicked);
 
-	updateStatusTimer = new QTimer(this);
 	connect(updateStatusTimer, &QTimer::timeout, this, &SerialTransmissionDialog::updateStatus);
 
-	autoCloseTimer = new QTimer(this);
 	autoCloseTimer->setInterval(1000);
 	autoCloseTimer->stop();
 	connect(autoCloseTimer, &QTimer::timeout, this, &SerialTransmissionDialog::autoCloseTimerTimeout);
