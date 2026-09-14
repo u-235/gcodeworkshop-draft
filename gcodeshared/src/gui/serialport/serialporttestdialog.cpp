@@ -55,14 +55,22 @@ class QWidget;
 
 GUI::SerialPortTestDialog::SerialPortTestDialog(QWidget* parent, Qt::WindowFlags f) :
 	QDialog(parent, f),
-	ui(new Ui::SerialPortTestDialog())
+	ui(new Ui::SerialPortTestDialog()),
+	stop(false),
+	portName(),
+	sendAtEnd(),
+	sendAtBegining(),
+	comPort(nullptr),
+	timer(new QTimer(this)),
+	count(0),
+	lineDelay(0),
+	readyCont(false),
+	portSettings()
 {
 	ui->setupUi(this);
 	loadIcons();
 	setAttribute(Qt::WA_DeleteOnClose);
 	setWindowTitle(tr("Serial transmission test"));
-
-	comPort = nullptr;
 
 	connect(ui->closeButton, &QPushButton::clicked, this, &SerialPortTestDialog::closeButtonClicked);
 
@@ -78,7 +86,6 @@ GUI::SerialPortTestDialog::SerialPortTestDialog(QWidget* parent, Qt::WindowFlags
 	changeSettings();
 	connect(ui->configBox, &QComboBox::currentTextChanged, this, &SerialPortTestDialog::changeSettings);
 
-	timer = new QTimer(this);
 	connect(timer, &QTimer::timeout, this, &SerialPortTestDialog::updateLeds);
 
 	connect(ui->sendLineEdit, &QLineEdit::returnPressed, this, &SerialPortTestDialog::sendTextEditChanged);

@@ -65,7 +65,13 @@ static const char blankString[] = QT_TRANSLATE_NOOP("SettingsDialog", "N/A");
 GUI::SerialPortConfigDialog::SerialPortConfigDialog(QWidget* parent, QString confName,
         Qt::WindowFlags f) :
 	QDialog(parent, f),
-	ui(new Ui::SerialPortConfigDialog())
+	ui(new Ui::SerialPortConfigDialog()),
+	baudGroup(new QButtonGroup(this)),
+	dataBitsGroup(new QButtonGroup(this)),
+	stopBitsGroup(new QButtonGroup(this)),
+	parityGroup(new QButtonGroup(this)),
+	flowCtlGroup(new QButtonGroup(this)),
+	configName(confName)
 {
 	ui->setupUi(this);
 	loadIcons();
@@ -73,9 +79,6 @@ GUI::SerialPortConfigDialog::SerialPortConfigDialog(QWidget* parent, QString con
 	setWindowTitle(tr("Serial port configuration"));
 	setModal(true);
 
-	configName = confName;
-
-	baudGroup = new QButtonGroup(this);
 	baudGroup->setExclusive(true);
 	baudGroup->addButton(ui->b1CheckBox, 300);
 	baudGroup->addButton(ui->b2CheckBox, 600);
@@ -88,25 +91,21 @@ GUI::SerialPortConfigDialog::SerialPortConfigDialog(QWidget* parent, QString con
 	baudGroup->addButton(ui->b9CheckBox, QSerialPort::Baud57600);
 	baudGroup->addButton(ui->b11CheckBox, QSerialPort::Baud115200);
 
-	dataBitsGroup = new QButtonGroup(this);
 	dataBitsGroup->setExclusive(true);
 	dataBitsGroup->addButton(ui->d1CheckBox, QSerialPort::Data5);
 	dataBitsGroup->addButton(ui->d2CheckBox, QSerialPort::Data6);
 	dataBitsGroup->addButton(ui->d3CheckBox, QSerialPort::Data7);
 	dataBitsGroup->addButton(ui->d4CheckBox, QSerialPort::Data8);
 
-	stopBitsGroup = new QButtonGroup(this);
 	stopBitsGroup->setExclusive(true);
 	stopBitsGroup->addButton(ui->s1CheckBox, QSerialPort::OneStop);
 	stopBitsGroup->addButton(ui->s2CheckBox, QSerialPort::TwoStop);
 
-	parityGroup = new QButtonGroup(this);
 	parityGroup->setExclusive(true);
 	parityGroup->addButton(ui->p1CheckBox, QSerialPort::NoParity);
 	parityGroup->addButton(ui->p2CheckBox, QSerialPort::OddParity);
 	parityGroup->addButton(ui->p3CheckBox, QSerialPort::EvenParity);
 
-	flowCtlGroup = new QButtonGroup(this);
 	flowCtlGroup->setExclusive(true);
 	flowCtlGroup->addButton(ui->f1CheckBox, QSerialPort::NoFlowControl);
 	flowCtlGroup->addButton(ui->f2CheckBox, QSerialPort::HardwareControl);
