@@ -150,8 +150,6 @@ GUI::SerialPortConfigDialog::SerialPortConfigDialog(QWidget* parent, QString con
 	connect(ui->searchPath2LineEdit, &QLineEdit::textChanged, this, &SerialPortConfigDialog::readPath2Changed);
 	connect(ui->searchPath3LineEdit, &QLineEdit::textChanged, this, &SerialPortConfigDialog::readPath3Changed);
 
-	//connect(flowCtlGroup, SIGNAL(buttonReleased(int)), &SerialPortConfigDialog::flowCtlGroupReleased()));
-
 	loadSettings();
 	flowCtlGroupReleased();
 
@@ -239,34 +237,15 @@ void GUI::SerialPortConfigDialog::saveButtonClicked()
 
 	curItem = ui->configNameBox->currentText();
 
-	//#ifndef Q_OS_WIN32
-	//    list.clear();
-	//    list.prepend(ui->portNameComboBox->currentText());
-	//    for(int i = 0; i <= ui->portNameComboBox->count(); i++)
-	//    {
-	//       item = ui->portNameComboBox->itemText(i);
-	//       if(!item.isEmpty())
-	//         if(!list.contains(item))
-	//           list.prepend(item);
-	//    }
-
-	//    while(list.size() > 64)
-	//    {
-	//       list.removeLast();
-	//    }
-	//    settings.setValue("PortNameList", list);
-	//#endif
-
 	list.clear();
 	list.prepend(ui->configNameBox->currentText());
 
 	for (int i = 0; i <= ui->configNameBox->count(); i++) {
 		item = ui->configNameBox->itemText(i);
 
-		if (!item.isEmpty())
-			if (!list.contains(item)) {
-				list.prepend(item);
-			}
+		if (!item.isEmpty() && !list.contains(item)) {
+			list.prepend(item);
+		}
 	}
 
 	while (list.size() > 64) {
@@ -297,7 +276,6 @@ void GUI::SerialPortConfigDialog::saveButtonClicked()
 	settings.setValue("ReceiveTimeoutTime", ui->receiveTimeoutSpinBox->value());
 	settings.setValue("SendTimeoutTime", ui->sendTimeoutSpinBox->value());
 	settings.setValue("AutoCloseTime", ui->autoCloseSpinBox->value());
-	//settings.setValue("EndOfBlockLF", endOfBlockLF->isChecked());
 	settings.setValue("RemoveSpaceEOB", ui->removeSpaceEOB->isChecked());
 	settings.setValue("EobChar", ui->eobComboBox->currentText());
 	settings.setValue("DataToLogFile", ui->logDataCheckBox->isChecked());
@@ -338,10 +316,9 @@ void GUI::SerialPortConfigDialog::saveButtonClicked()
 	for (int i = 0; i <= ui->fileNameExpFSComboBox->count(); i++) {
 		item = ui->fileNameExpFSComboBox->itemText(i);
 
-		if (!item.isEmpty())
-			if (!eList.contains(item)) {
-				eList.prepend(item);
-			}
+		if (!item.isEmpty() && !eList.contains(item)) {
+			eList.prepend(item);
+		}
 	}
 
 	eList.removeDuplicates();
@@ -354,10 +331,9 @@ void GUI::SerialPortConfigDialog::saveButtonClicked()
 	for (int i = 0; i <= ui->fileNameExpASComboBox->count(); i++) {
 		item = ui->fileNameExpASComboBox->itemText(i);
 
-		if (!item.isEmpty())
-			if (!eList.contains(item)) {
-				eList.prepend(item);
-			}
+		if (!item.isEmpty() && !eList.contains(item)) {
+			eList.prepend(item);
+		}
 	}
 
 	eList.removeDuplicates();
@@ -370,10 +346,9 @@ void GUI::SerialPortConfigDialog::saveButtonClicked()
 	for (int i = 0; i <= ui->endOfProgComboBox->count(); i++) {
 		item = ui->endOfProgComboBox->itemText(i);
 
-		if (!item.isEmpty())
-			if (!eList.contains(item)) {
-				eList.prepend(item);
-			}
+		if (!item.isEmpty() && !eList.contains(item)) {
+			eList.prepend(item);
+		}
 	}
 
 	eList.removeDuplicates();
@@ -386,10 +361,9 @@ void GUI::SerialPortConfigDialog::saveButtonClicked()
 	for (int i = 0; i <= ui->eobComboBox->count(); i++) {
 		item = ui->eobComboBox->itemText(i);
 
-		if (!item.isEmpty())
-			if (!eList.contains(item)) {
-				eList.prepend(item);
-			}
+		if (!item.isEmpty() && !eList.contains(item)) {
+			eList.prepend(item);
+		}
 	}
 
 	eList.removeDuplicates();
@@ -692,7 +666,6 @@ void GUI::SerialPortConfigDialog::loadSettings()
 	list = settings.value("SettingsList", tr("Default")).toStringList();
 	list.sort();
 	ui->configNameBox->addItems(list);
-	//item = settings.value("CurrentSerialPortSettings", tr("Default")).toString();
 	id = ui->configNameBox->findText(configName);
 	ui->configNameBox->setCurrentIndex(id);
 	settings.endGroup();
@@ -713,7 +686,6 @@ void GUI::SerialPortConfigDialog::portNameComboBoxIndexChanged(QString name)
 	serialNumber = info->serialNumber();
 
 	ui->portInfoListWidget->clear();
-	//ui->portInfoListWidget->addItem(tr("Port name:          %1").arg(info->portName()));
 	ui->portInfoListWidget->addItem(tr("Description       : %1").arg((!description.isEmpty() ?
 	                                description : blankString)));
 	ui->portInfoListWidget->addItem(tr("Manufacturer      : %1").arg((!manufacturer.isEmpty() ?
@@ -835,7 +807,6 @@ void GUI::SerialPortConfigDialog::useAsExtCheckBoxChanged(int state)
 	if (state == Qt::Checked) {
 		ui->appendExtCheckBox->setChecked(false);
 	}
-
 }
 
 void GUI::SerialPortConfigDialog::fileServerCheckBoxChanged(int state)
@@ -923,8 +894,6 @@ void GUI::SerialPortConfigDialog::helpButtonClicked()
 	// TODO: change a path to the file
 	QDesktopServices::openUrl(QUrl(QString("file:///%1/SerialTransmission_Help.html").arg(
 	                                   QCoreApplication::applicationDirPath()), QUrl::TolerantMode));
-	//    SerialPortCfgHelpDialog helpDialog;
-	//    helpDialog.exec();
 }
 
 void GUI::SerialPortConfigDialog::readPath1Changed(const QString text)

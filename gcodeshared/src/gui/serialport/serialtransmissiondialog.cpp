@@ -166,7 +166,6 @@ void GUI::SerialTransmissionDialog::closeEvent(QCloseEvent* event)
 	canceled = true;
 
 	if (serialPort.isOpen()) {
-		//serialPort.clearError();
 		serialPort.close();
 	}
 
@@ -244,9 +243,6 @@ void GUI::SerialTransmissionDialog::setRange(int min, int max)
 {
 	if (max == 0) {
 		ui->progressBar->hide();
-		//ui->cancelButton->setText(tr("&Close"));
-		//ui->cancelButton->setIcon(QIcon(":/images/window-close.png"));
-		//adjustSize();
 	} else {
 		ui->progressBar->setRange(min, max);
 		ui->progressBar->show();
@@ -305,8 +301,6 @@ void GUI::SerialTransmissionDialog::updateStatus()
 
 		if (sendStartDelayCountner > 0) {
 			setLabelText(tr("Sending starts in %1s").arg(sendStartDelayCountner));
-		} else if (xoffReceived) { //  || !(status & QSerialPort::ClearToSendSignal)
-
 		}
 
 		if ((xoffReceived != prevXoffReceived)) { // catch change of xoffReceived
@@ -364,7 +358,6 @@ void GUI::SerialTransmissionDialog::sendStartDelayTimeout()
 	} else {
 		sendStartDelayTimer->stop();
 		xoffReceived = false;
-		//prevXoffReceived = false;
 	}
 }
 
@@ -384,7 +377,6 @@ void GUI::SerialTransmissionDialog::showSerialPortError(QSerialPort::SerialPortE
 	switch (error) {
 	case QSerialPort::NoError:
 		text = tr("No Error has occurred");
-		//statusBar()->showMessage(text);
 		return;
 
 	case QSerialPort::DeviceNotFoundError:
@@ -520,58 +512,6 @@ void GUI::SerialTransmissionDialog::serialPortBytesWritten(qint64 bytes)
 	qDebug() << "*** xoffReceived ***" << xoffReceived << " Stop" << stop;
 }
 
-//void GUI::SerialTransmissionDialog::serialPortReadyRead()
-//{
-//    qint64 lineLength;
-//    QByteArray buff;
-
-//    char buf[1024];
-//    while((lineLength = serialPort.readLine(buf, sizeof(buf))))
-//    {
-
-//        buff = buf;
-//        int xoffPos = buff.lastIndexOf(portSettings.Xoff);
-//        int xonPos = buff.lastIndexOf(portSettings.Xon);
-
-//        if(xoffPos >= 0) //only XOFF received
-//        {
-//            xoffReceived = true;
-//            setLabelText(tr("XOFF received..."));
-//        }
-
-//        if(xonPos >= 0)  //only XON received
-//        {
-//            xoffReceived = false;
-//            sendStartDelay = 0;
-//            setLabelText(tr("XON received..."));
-//        }
-
-//        if(xoffPos > xonPos) //both XOFF/XON received but XOFF last
-//        {
-//            xoffReceived = true;
-//            setLabelText(tr("XOFF received..."));
-//        }
-
-//        serialPortReadBuffer.append(buf);
-
-
-//        setLabelText(tr("Receiving byte %1").arg(serialPortReadBuffer.size() - 1));
-
-//        //qDebug() << "Data read" << buff << "xoffReceived" << xoffReceived;
-
-//        if(QString(buff).contains(endOfProgChar) && (!endOfProgChar.isEmpty()))
-//        {
-//            qDebug() << "endOfProgChar" << endOfProgChar;
-//            qDebug() << "Process data" << processReceivedData();
-//        }
-
-//    }
-//    autoCloseCountner = autoCloseCountnerReloadValue;
-//    if(!autoCloseTimer->isActive())
-//        autoCloseTimer->start();
-
-//}
-
 void GUI::SerialTransmissionDialog::serialPortReadyRead()
 {
 	QByteArray buff(serialPort.readAll());
@@ -637,8 +577,6 @@ void GUI::SerialTransmissionDialog::serialPortRequestToSend(bool set)
 
 void GUI::SerialTransmissionDialog::sendData(QString dataToSend, QString configName)
 {
-	//QTimer *sendStartDelayTimer = nullptr;
-
 	if (dataToSend.isEmpty()) {
 		return;
 	}
@@ -671,8 +609,7 @@ void GUI::SerialTransmissionDialog::sendData(QString dataToSend, QString configN
 		}
 	}
 
-	if ((portSettings.sendStartDelayReloadValue >
-	        0)) { // && (portSettings.FlowControl == QSerialPort::SoftwareControl)
+	if ((portSettings.sendStartDelayReloadValue > 0)) {
 		xoffReceived = true;
 		prevXoffReceived = false;
 		sendStartDelayCountner = portSettings.sendStartDelayReloadValue;
@@ -896,9 +833,6 @@ void GUI::SerialTransmissionDialog::loadConfig(QString configName)
 	if (portSettings.eobChar.contains("CR")) {
 		portSettings.eobChar.replace("CR", "\r");
 	}
-
-	//portLabel->setText(portSettings.portName);
-	//settingsNameLabel->setText(portSettings.configName);
 }
 
 void GUI::SerialTransmissionDialog::lineDelaySlot()
@@ -927,7 +861,6 @@ QStringList GUI::SerialTransmissionDialog::receiveData(QString configName)
 	sendStartDelayCountner = 0;  // not needed when receiving
 
 	setRange(0, 0); // do not display progress bar
-
 
 	setLabelText(tr("Receiving byte %1").arg(0));
 
@@ -1012,7 +945,6 @@ QStringList GUI::SerialTransmissionDialog::processReceivedData()
 				readData.remove(tmpData);
 				outputList.append(saveDataToFile(&tmpData));
 				it++;
-
 			}
 
 			qDebug() << "LOST DATA" << readData;
@@ -1279,7 +1211,6 @@ void GUI::SerialTransmissionDialog::startFileServer(QString configName)
 		return;
 	}
 
-
 	resetTransmission(true);
 
 	if (serialPort.isOpen())
@@ -1473,14 +1404,11 @@ void GUI::SerialTransmissionDialog::fileServerBytesWritten(qint64 bytes)
 	setValue(bytesWritten);
 	setLabelText(tr("Sending byte %1 of %2").arg(bytesWritten).arg(noOfBytes));
 
-	//qDebug() << "Bytes written" << bytesWritten << " of " << noOfBytes;
-
 	if (stop) {
 		return;
 	}
 
 	if (writeBufferIterator == serialPortWriteBuffer.end()) {
-		//stop = true;
 		sending = false;
 		setLabelText(tr("OK:\t Sending a file completed."), serverMode, true);
 		setLabelText(tr("Waiting for data..."));
@@ -1498,8 +1426,6 @@ void GUI::SerialTransmissionDialog::fileServerBytesWritten(qint64 bytes)
 		serialPort.write(buff, buff.size());
 		writeBufferIterator++;
 	}
-
-	//qDebug() << "xoffReceived" << xoffReceived << " Stop" << stop;
 }
 
 void GUI::SerialTransmissionDialog::sendTimeoutTimerTimeout()
