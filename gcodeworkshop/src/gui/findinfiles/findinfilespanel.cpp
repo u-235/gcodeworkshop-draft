@@ -79,9 +79,9 @@ GUI::FindInFilesPanel::FindInFilesPanel(QSplitter* parent):
 	highlighter = nullptr;
 	highlight = false;
 
-	connect(ui->browseButton, SIGNAL(clicked()), SLOT(browse()));
-	connect(ui->findButton, SIGNAL(clicked()), SLOT(find()));
-	connect(ui->hideToolButton, SIGNAL(clicked()), SLOT(hideDlg()));
+	connect(ui->browseButton, &QPushButton::clicked, this, &GUI::FindInFilesPanel::browse);
+	connect(ui->findButton, &QPushButton::clicked, this, &GUI::FindInFilesPanel::find);
+	connect(ui->hideToolButton, &QPushButton::clicked, this,  &GUI::FindInFilesPanel::hideDlg);
 	//connect(closeToolButton, SIGNAL(clicked()), SLOT(close()));
 
 	createFilesTable();
@@ -538,8 +538,8 @@ void GUI::FindInFilesPanel::createFilesTable()
 	QStringList labels;
 	labels << tr("File Name") << tr("Info") << tr("Size") << tr("Modified");
 	ui->filesTable->setHorizontalHeaderLabels(labels);
-	connect(ui->filesTable, SIGNAL(cellDoubleClicked(int, int)), this, SLOT(filesTableClicked(int, int)));
-	connect(ui->filesTable, SIGNAL(cellClicked(int, int)), this, SLOT(filePreview(int, int)));
+	connect(ui->filesTable, &QTableWidget::cellDoubleClicked, this, &GUI::FindInFilesPanel::filesTableClicked);
+	connect(ui->filesTable, &QTableWidget::cellClicked, this, &GUI::FindInFilesPanel::filePreview);
 }
 
 void GUI::FindInFilesPanel::filesTableClicked(int x, int y)
