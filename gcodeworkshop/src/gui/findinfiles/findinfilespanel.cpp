@@ -68,16 +68,20 @@
 
 GUI::FindInFilesPanel::FindInFilesPanel(QSplitter* parent):
 	QWidget(parent),
+	highlighter(nullptr),
+	findTextExtraSelections(),
+	selection(),
+	highlighterColors(),
+	highlight(false),
+	currentHeight(),
+	f_parent(parent),
+	m_textComboBoxEventFilter(nullptr),
 	ui(new Ui::FindInFilesPanel())
 {
-	f_parent = parent;
 	ui->setupUi(this);
 	loadIcons();
 	setAttribute(Qt::WA_DeleteOnClose);
 	setObjectName("FindInFiles");
-
-	highlighter = nullptr;
-	highlight = false;
 
 	connect(ui->browseButton, &QPushButton::clicked, this, &GUI::FindInFilesPanel::browse);
 	connect(ui->findButton, &QPushButton::clicked, this, &GUI::FindInFilesPanel::find);
