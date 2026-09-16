@@ -40,8 +40,8 @@ GUI::SessionNameDialog::SessionNameDialog(QWidget* parent, Qt::WindowFlags f) :
 	setWindowTitle(tr("New session..."));
 	setModal(true);
 
-	connect(ui->buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-	connect(ui->buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+	connect(ui->buttonBox, &QDialogButtonBox::accepted, this, &GUI::SessionNameDialog::accept);
+	connect(ui->buttonBox, &QDialogButtonBox::rejected, this, &GUI::SessionNameDialog::reject);
 }
 
 GUI::SessionNameDialog::~SessionNameDialog()
