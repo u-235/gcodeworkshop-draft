@@ -67,7 +67,7 @@ GUI::NewFileDialog::NewFileDialog(QWidget* parent) :
 
 	fillFileCombo();
 
-	connect(ui->browsePushButton, SIGNAL(clicked()), this, SLOT(browseButtonClicked()));
+	connect(ui->browsePushButton, &QPushButton::clicked, this, &GUI::NewFileDialog::browseButtonClicked);
 }
 
 GUI::NewFileDialog::~NewFileDialog()
