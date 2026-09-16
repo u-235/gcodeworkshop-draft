@@ -48,12 +48,11 @@
 GUI::NewFileDialog::NewFileDialog(QWidget* parent) :
 	QDialog(parent),
 	m_filters("*.nc"),
-	ui(new Ui::NewFileDialog)
+	ui(new Ui::NewFileDialog),
+	m_templatePath(TEMPLATE_PATH)
 {
 	ui->setupUi(this);
 	loadIcons();
-
-	m_templatePath.setPath(TEMPLATE_PATH);
 
 	if (!m_templatePath.exists()) {
 		m_templatePath.setPath(QApplication::applicationDirPath() + "/" + "TEMPLATE");
