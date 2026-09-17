@@ -52,13 +52,13 @@ int main(int argc, char* argv[])
 
 	Medium& medium = Medium::instance();
 	medium.updateTranslation();
-	GCodeFileServer* mw = new GCodeFileServer();
-	mw->show();
+	GCodeFileServer* gcfs = new GCodeFileServer();
+	gcfs->show();
 
-	app.setActivationWindow(mw, false);
+	app.setActivationWindow(gcfs->mainWindow(), false);
 	QObject::connect(&app, SIGNAL(messageReceived(const QString&)),
-	                 mw, SLOT(messReceived(const QString&)));
+	                 gcfs, SLOT(messReceived(const QString&)));
 
-	QObject::connect(mw, SIGNAL(needToShow()), &app, SLOT(activateWindow()));
+	QObject::connect(gcfs, SIGNAL(needToShow()), &app, SLOT(activateWindow()));
 	return app.exec();
 }
