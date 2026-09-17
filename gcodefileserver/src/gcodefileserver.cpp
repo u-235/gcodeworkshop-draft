@@ -44,12 +44,12 @@
 #include <Qt>               // for WidgetAttribute, ToolBarArea, WindowModality, WindowType
 #include <QtGlobal>         // for QForeachContainer, qMakeForeachContainer, QTypeInfo<>::isLarge, QTypeI...
 
+#include <gcodefileserver.h>                            // IWYU pragma: associated
 #include <gui/serialport/serialportconfigdialog.h>      // for SerialPortConfigDialog
 #include <gui/serialport/serialtransmissiondialog.h>    // for SerialTransmissionDialog
 #include <utils/medium.h>                               // for Medium
 #include <version.h>
 
-#include "gcodefileserver.h"
 #include "filechecker.h"        // for FileChecker
 #include "ui_gcodefileserver.h" // for Ui::GCodeFileServer
 
