@@ -16,14 +16,16 @@ defined(VERSION, var) {
     VERSION = $$getVersion()
 }
 
+INCLUDEPATH += include src
+
 SOURCES = \
     filechecker.cpp \
-    gcodefileserver.cpp \
-    main.cpp
+    src/gcodefileserver.cpp \
+    src/main.cpp
 
 HEADERS = \
     filechecker.h \
-    gcodefileserver.h
+    include/gcodefileserver.h
 
 FORMS = \
     filechecker.ui \

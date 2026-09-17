@@ -68,7 +68,7 @@ contains(MODULES, GCodeWorkShop) {
 }
 
 contains(MODULES, GCodeFileServer) {
-    INCLUDEPATH += $${PROJECT_ROOT_PATH}/gcodefileserver
+    INCLUDEPATH += $${PROJECT_ROOT_PATH}/gcodefileserver/include
 #   LIBS += -L$$shadowed($${PROJECT_ROOT_PATH}/gcodefileserver)
 #   LIBS += -lgcodefileserver
 }
