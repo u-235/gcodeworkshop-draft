@@ -82,14 +82,6 @@ GCodeFileServer::GCodeFileServer(QWidget* parent) : QMainWindow(parent), ui(new 
 	createActions();
 
 	createTrayIcon();
-
-	loadSettings();
-
-	if (startMinimizedAction->isChecked()) {
-		QTimer::singleShot(500, this, SLOT(hide()));
-	} else {
-		showNormal();
-	}
 }
 
 GCodeFileServer::~GCodeFileServer()
@@ -100,6 +92,20 @@ GCodeFileServer::~GCodeFileServer()
 QMainWindow* GCodeFileServer::mainWindow()
 {
 	return this;
+}
+
+void GCodeFileServer::launch()
+{
+	loadSerialConfignames();
+	configBox->adjustSize();
+
+	loadSettings();
+
+	if (startMinimizedAction->isChecked()) {
+		QTimer::singleShot(500, this, SLOT(hide()));
+	} else {
+		showNormal();
+	}
 }
 
 void GCodeFileServer::closeEvent(QCloseEvent* event)
@@ -320,9 +326,6 @@ void GCodeFileServer::createActions()
 
 	ui->menu_Help->addAction(aboutAction);
 
-
-	loadSerialConfignames();
-	configBox->adjustSize();
 	//updateCurrentSerialConfig();
 }
 

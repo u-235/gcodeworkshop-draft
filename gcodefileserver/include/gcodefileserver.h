@@ -56,6 +56,8 @@ public:
 
 	QMainWindow* mainWindow();
 
+	void launch();
+
 protected:
 	void closeEvent(QCloseEvent* event);
 
