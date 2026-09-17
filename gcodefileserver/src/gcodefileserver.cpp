@@ -97,6 +97,11 @@ GCodeFileServer::~GCodeFileServer()
 	delete ui;
 }
 
+QMainWindow* GCodeFileServer::mainWindow()
+{
+	return this;
+}
+
 void GCodeFileServer::closeEvent(QCloseEvent* event)
 {
 	//    QMessageBox::StandardButton result = QMessageBox::warning(this, tr("GCodeWorkShop - Serial port file server"),
@@ -113,7 +118,7 @@ void GCodeFileServer::closeEvent(QCloseEvent* event)
 		event->accept();
 	} else {
 		if (trayIcon->isVisible()) {
-			QMessageBox::information(this, tr("GCodeWorkShop - Serial port file server"),
+			QMessageBox::information(mainWindow(), tr("GCodeWorkShop - Serial port file server"),
 			                         tr("The program will keep running in the "
 			                            "system tray. To terminate the program, "
 			                            "choose <b>Quit</b> in the context menu "
@@ -182,7 +187,7 @@ void GCodeFileServer::loadSettings()
 
 GUI::SerialTransmissionDialog* GCodeFileServer::createSerialPortServer(QString __config)
 {
-	GUI::SerialTransmissionDialog* spServer = new GUI::SerialTransmissionDialog(this, Qt::SubWindow,
+	GUI::SerialTransmissionDialog* spServer = new GUI::SerialTransmissionDialog(mainWindow(), Qt::SubWindow,
 	        true);  // Qt::Tool | Qt::CustomizeWindowHint | Qt::WindowTitleHint
 	spServer->setAttribute(Qt::WA_DeleteOnClose);
 	ui->mdiArea->addSubWindow(spServer);
@@ -323,7 +328,7 @@ void GCodeFileServer::createActions()
 
 void GCodeFileServer::serialConfig()
 {
-	GUI::SerialPortConfigDialog* serialConfigDialog = new GUI::SerialPortConfigDialog(this,
+	GUI::SerialPortConfigDialog* serialConfigDialog = new GUI::SerialPortConfigDialog(mainWindow(),
 	        configBox->currentText());
 
 	if (serialConfigDialog->exec() == QDialog::Accepted) {
@@ -581,7 +586,7 @@ void GCodeFileServer::quitApp()
 
 void GCodeFileServer::about()
 {
-	QMessageBox::about(this, tr("About GCodeFileServer"),
+	QMessageBox::about(mainWindow(), tr("About GCodeFileServer"),
 	                   tr("The <b>GCodeFileServer</b> is part of GCodeWorkShop."
 	                      "<P>Version: %1"
 	                      "<P>Copyright (C) 1998 - 2015 by <a href=\"mailto:artkoz78@gmail.com\">Artur Kozioł</a>"

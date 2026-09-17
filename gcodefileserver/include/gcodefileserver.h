@@ -54,6 +54,8 @@ public:
 	explicit GCodeFileServer(QWidget* parent = 0);
 	~GCodeFileServer();
 
+	QMainWindow* mainWindow();
+
 protected:
 	void closeEvent(QCloseEvent* event);
 
