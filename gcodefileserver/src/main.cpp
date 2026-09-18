@@ -36,6 +36,11 @@ int main(int argc, char* argv[])
 	Q_INIT_RESOURCE(application);
 	QtSingleApplication app("GCodeFileServer", argc, argv);
 
+#if QT_VERSION >= QT_VERSION_CHECK(5, 7, 0)
+	// https://community.kde.org/Guidelines_and_HOWTOs/Wayland_Porting_Notes#Application_Icon
+	QGuiApplication::setDesktopFileName("gcodefileserver");
+#endif
+
 	QString txMessage;
 
 	for (int i = 1; i < argc; ++i) {
