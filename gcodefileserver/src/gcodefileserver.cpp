@@ -108,6 +108,12 @@ void GCodeFileServer::launch()
 	}
 }
 
+void GCodeFileServer::messReceived(const QString& msg)
+{
+	Q_UNUSED(msg);
+	showNormal();
+}
+
 void GCodeFileServer::closeEvent(QCloseEvent* event)
 {
 	//    QMessageBox::StandardButton result = QMessageBox::warning(this, tr("GCodeWorkShop - Serial port file server"),

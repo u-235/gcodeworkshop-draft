@@ -58,6 +58,9 @@ public:
 
 	void launch();
 
+public slots:
+	void messReceived(const QString& msg);
+
 protected:
 	void closeEvent(QCloseEvent* event);
 
