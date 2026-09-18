@@ -25,36 +25,23 @@
 
 // Special for the moc_gcodefileserver.cpp & Qt6
 #include <QKeySequence>     // IWYU pragma: keep
-#include <QMainWindow>      // for QMainWindow
 #include <QObject>          // for Q_OBJECT, slots
 #include <QString>          // for QString
-#include <QSystemTrayIcon>  // for QSystemTrayIcon
 
-class QAction;
-class QCloseEvent;
-class QComboBox;
+class QMainWindow;
 template <class Key, class T> class QMap;
-class QMdiSubWindow;
-class QMenu;
-class QSignalMapper;
-class QToolBar;
 class QWidget;
 
 namespace GUI {
 class SerialTransmissionDialog;
 
 namespace FileServer {
-class WindowActions;
+class MainWindow;
 } // namespace FileServer
 } // namespace GUI
 
 
-namespace Ui {
-class GCodeFileServer;
-}
-
-
-class GCodeFileServer : public QMainWindow
+class GCodeFileServer : public QObject
 {
 	Q_OBJECT
 
@@ -78,7 +65,6 @@ public slots:
 	void serialConfig();
 	void startSerialPortServer();
 	void stopSerialPortServer();
-	void changeActiveWindow();
 	void doPortReset();
 	void showNewFiles();
 	void browseSaveFolder();
@@ -87,35 +73,15 @@ public slots:
 
 private slots:
 	void tileSubWindowsVertycally();
-	void setActiveSubWindow(QWidget* window);
-	void activeWindowChanged(QMdiSubWindow* window);
-	void closeTab(int i);
-	void iconActivated(QSystemTrayIcon::ActivationReason reason);
-
-protected:
-	void closeEvent(QCloseEvent* event);
 
 private:
-	Ui::GCodeFileServer* ui;
-	QSignalMapper* windowMapper;
-
-	GUI::FileServer::WindowActions* m_windowActions;
-	QComboBox* configBox;
-	QToolBar* fileToolBar;
-
-	QSystemTrayIcon* trayIcon;
-	QMenu* trayIconMenu;
 	bool closable;
+	GUI::FileServer::MainWindow* m_mainWindow;
 
-	GUI::SerialTransmissionDialog* findMdiChild(const QString __config);
 	GUI::SerialTransmissionDialog* createSerialPortServer(QString __config);
-	GUI::SerialTransmissionDialog* activeMdiChild();
 
 	void saveSettings();
 	void loadSettings();
-	void loadSerialConfignames();
-	void createActions();
-	void createTrayIcon();
 };
 
 #endif // GCODEFILESERVER_H

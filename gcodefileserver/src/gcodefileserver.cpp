@@ -20,29 +20,20 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <QAction>          // for QAction
-#include <QCloseEvent>      // for QCloseEvent
-#include <QComboBox>        // for QComboBox
 #include <QDesktopServices> // for QDesktopServices
 #include <QDialog>          // for QDialog
-#include <QIcon>            // for QIcon
 #include <QList>            // for QList
-#include <QMdiArea>         // for QMdiArea
-#include <QMdiSubWindow>    // for QMdiSubWindow
-#include <QMenu>            // for QMenu
+#include <QMainWindow>      // for QMainWindow
 #include <QMessageBox>      // for QMessageBox
 #include <QSettings>        // for QSettings
-#include <QSignalMapper>    // for QSignalMapper
-#include <QString>          // for QString, operator==
+#include <QString>          // for QString
 #include <QStringList>      // for QStringList
-#include <QTabBar>          // for QTabBar
 #include <QTimer>           // for QTimer
-#include <QToolBar>         // for QToolBar
 #include <QUrl>             // for QUrl
 #include <QVariant>         // for QVariant
 #include <QWidget>          // for QWidget
-#include <Qt>               // for WidgetAttribute, ToolBarArea, WindowModality, WindowType
-#include <QtGlobal>         // for QForeachContainer, qMakeForeachContainer, QTypeInfo<>::isLarge, QTypeI...
+#include <Qt>               // for WidgetAttribute, WindowType
+#include <QtGlobal>         // for QTypeInfo<>::isLarge, QTypeInfo<>::isStatic
 
 #include <gcodefileserver.h>                            // IWYU pragma: associated
 #include <gui/serialport/serialportconfigdialog.h>      // for SerialPortConfigDialog
@@ -50,87 +41,61 @@
 #include <utils/medium.h>                               // for Medium
 #include <version.h>
 
-#include "filechecker.h"                    // for FileChecker
-#include "gui/fileserver/windowactions.h"   // for WindowActions
-#include "ui_gcodefileserver.h"             // for Ui::GCodeFileServer
+#include "filechecker.h"                // for FileChecker
+#include "gui/fileserver/mainwindow.h"  // for MainWindow
 
 
-GCodeFileServer::GCodeFileServer(QWidget* parent) : QMainWindow(parent), ui(new Ui::GCodeFileServer)
+GCodeFileServer::GCodeFileServer(QWidget* parent) :
+	QObject(parent),
+	closable(false),
+	m_mainWindow(new GUI::FileServer::MainWindow(this, nullptr))
 {
-	setAttribute(Qt::WA_DeleteOnClose);
-	ui->setupUi(this);
-	m_windowActions = new GUI::FileServer::WindowActions(this, this, this);
-
-	setWindowModality(Qt::NonModal);
-
-	setWindowTitle(tr("GCodeWorkShop - Serial port file server"));
-
-	windowMapper = new QSignalMapper(this);
-	connect(windowMapper, SIGNAL(mapped(QWidget*)), this, SLOT(setActiveSubWindow(QWidget*)));
-	connect(ui->mdiArea, SIGNAL(subWindowActivated(QMdiSubWindow*)), this,
-	        SLOT(activeWindowChanged(QMdiSubWindow*)));
-
-	closable = false;
-	ui->mdiArea->setViewMode(QMdiArea::TabbedView);
-	QTabBar* tab = ui->mdiArea->findChild<QTabBar*>();
-
-	if (tab) {
-		//connect(tab, SIGNAL(tabCloseRequested(int)), this, SLOT(closeTab(int)));
-		//tab->setTabsClosable(true);
-		// The tabs might be very wide
-		tab->setExpanding(false);
-	}
-
-	createActions();
-
-	createTrayIcon();
+	connect(this, &GCodeFileServer::updateIcons, m_mainWindow, &GUI::FileServer::MainWindow::loadIcons);
+	connect(this, &GCodeFileServer::updateTranslations, m_mainWindow, &GUI::FileServer::MainWindow::loadTranslations);
 }
 
 GCodeFileServer::~GCodeFileServer()
 {
-	delete ui;
+	m_mainWindow->deleteLater();
 }
 
 QMainWindow* GCodeFileServer::mainWindow()
 {
-	return this;
+	return m_mainWindow;
 }
 
 void GCodeFileServer::launch()
 {
-	loadSerialConfignames();
-	configBox->adjustSize();
-
+	m_mainWindow->loadSerialConfignames();
 	loadSettings();
 
-	if (m_windowActions->startMinimized()->isChecked()) {
-		QTimer::singleShot(500, this, SLOT(hide()));
+	if (m_mainWindow->isStartMinimized()) {
+		QTimer::singleShot(500, mainWindow(), SLOT(hide()));
 	} else {
-		showNormal();
+		mainWindow()->showNormal();
 	}
 }
 
 bool GCodeFileServer::tryCloseApp()
 {
 	if (!closable) {
-		if (trayIcon->isVisible()) {
+		if (m_mainWindow->isTrayVisible()) {
 			QMessageBox::information(mainWindow(), tr("GCodeWorkShop - Serial port file server"),
 			                         tr("The program will keep running in the "
 			                            "system tray. To terminate the program, "
 			                            "choose <b>Quit</b> in the context menu "
 			                            "of the system tray entry."));
-			hide();
+			mainWindow()->hide();
 			return false;
 		}
 	}
 
 	saveSettings();
-	const QList<QMdiSubWindow*>& wlist = ui->mdiArea->subWindowList(QMdiArea::StackingOrder);
+	const QList<GUI::SerialTransmissionDialog*>& wlist = m_mainWindow->serverWidgetList();
 
-	for (QMdiSubWindow* window : wlist) {
-		GUI::SerialTransmissionDialog* mdiChild = qobject_cast<GUI::SerialTransmissionDialog*>(window->widget());
-		mdiChild->close();
-		mdiChild->parentWidget()->close();
+	for (GUI::SerialTransmissionDialog* sw : wlist) {
+		sw->close();
+		sw->parentWidget()->close();
 	}
 
 	return true;
@@ -138,24 +103,22 @@ bool GCodeFileServer::tryCloseApp()
 
 void GCodeFileServer::messReceived(const QString& msg)
 {
-	showNormal();
+	mainWindow()->showNormal();
 }
 
 void GCodeFileServer::saveSettings()
 {
 	QStringList activeConfigs;
 
-	foreach (QMdiSubWindow* window, ui->mdiArea->subWindowList()) {
-		GUI::SerialTransmissionDialog* mdiChild = qobject_cast<GUI::SerialTransmissionDialog*>(window->widget());
+	const QList<GUI::SerialTransmissionDialog*>& wlist = m_mainWindow->serverWidgetList();
 
-		if (mdiChild != nullptr) {
-			activeConfigs.append(mdiChild->configName());
-		}
+	for (GUI::SerialTransmissionDialog* sw : wlist) {
+		activeConfigs.append(sw->configName());
 	}
 
 	QSettings& settings = *Medium::instance().settings();
 	settings.beginGroup("CommApp");
-	settings.setValue("StartMinimized", m_windowActions->startMinimized()->isChecked());
+	settings.setValue("StartMinimized", m_mainWindow->isStartMinimized());
 	settings.remove("ActiveConfigs");
 	activeConfigs.removeDuplicates();
 	activeConfigs.removeAll("");
@@ -168,7 +131,7 @@ void GCodeFileServer::loadSettings()
 	QSettings& settings = *Medium::instance().settings();
 	settings.beginGroup("CommApp");
 
-	m_windowActions->startMinimized()->setChecked(settings.value("StartMinimized", false).toBool());
+	m_mainWindow->setStartMinimized(settings.value("StartMinimized", false).toBool());
 
 	QStringList activeConfigs = settings.value("ActiveConfigs",
 	                            (QStringList() << "")).toStringList();
@@ -191,7 +154,7 @@ GUI::SerialTransmissionDialog* GCodeFileServer::createSerialPortServer(QString _
 	GUI::SerialTransmissionDialog* spServer = new GUI::SerialTransmissionDialog(mainWindow(), Qt::SubWindow,
 	        true);  // Qt::Tool | Qt::CustomizeWindowHint | Qt::WindowTitleHint
 	spServer->setAttribute(Qt::WA_DeleteOnClose);
-	ui->mdiArea->addSubWindow(spServer);
+	m_mainWindow->addServerWidget(spServer);
 
 	spServer->startFileServer(__config);
 
@@ -200,9 +163,9 @@ GUI::SerialTransmissionDialog* GCodeFileServer::createSerialPortServer(QString _
 
 void GCodeFileServer::startSerialPortServer()
 {
-	QString _config = configBox->currentText();
+	QString _config = m_mainWindow->currentConfigName();
 
-	GUI::SerialTransmissionDialog* _existing = findMdiChild(_config);
+	GUI::SerialTransmissionDialog* _existing = m_mainWindow->serverWidgetByConfigName(_config);
 
 	if (_existing) {
 		_existing->setFocus();
@@ -215,90 +178,26 @@ void GCodeFileServer::startSerialPortServer()
 
 void GCodeFileServer::stopSerialPortServer()
 {
-	QString _config = configBox->currentText();
+	QString _config = m_mainWindow->currentConfigName();
 
-	GUI::SerialTransmissionDialog* _existing = findMdiChild(_config);
+	GUI::SerialTransmissionDialog* _existing = m_mainWindow->serverWidgetByConfigName(_config);
 
 	if (_existing != nullptr) {
 		_existing->close();
 		_existing->parentWidget()->close();
 	}
 
-	changeActiveWindow();
-}
-
-void GCodeFileServer::createActions()
-{
-	configBox = new QComboBox();
-	configBox->setSizeAdjustPolicy(QComboBox::AdjustToContents);
-	configBox->setDuplicatesEnabled(false);
-
-	connect(configBox, SIGNAL(currentIndexChanged(int)), SLOT(changeActiveWindow()));
-
-	ui->toolBar->addWidget(configBox);
-	ui->toolBar->addAction(m_windowActions->configurePort());
-	ui->toolBar->addSeparator();
-	ui->toolBar->addAction(m_windowActions->serverStart());
-	ui->toolBar->addAction(m_windowActions->serverStop());
-
-	ui->toolBar->addSeparator();
-	ui->toolBar->addAction(m_windowActions->serverReset());
-
-	fileToolBar = new QToolBar(tr("FileToolBar"));
-	addToolBar(Qt::TopToolBarArea, fileToolBar);
-	fileToolBar->setObjectName("FileToolBar");
-
-
-	fileToolBar->addAction(m_windowActions->browseSaveFolder());
-	fileToolBar->addAction(m_windowActions->showNewFiles());
-	fileToolBar->addSeparator();
-	fileToolBar->addAction(m_windowActions->serverClose());
-
-	ui->menu_File->addAction(m_windowActions->startMinimized());
-	ui->menu_File->addSeparator();
-	//    ui->menu_File->addAction(m_windowActions->browseSaveFolder());
-	//    ui->menu_File->addAction(m_windowActions->showNewFiles());
-	//    ui->menu_File->addSeparator();
-	ui->menu_File->addAction(m_windowActions->serverClose());
-	ui->menu_File->addSeparator();
-	ui->menu_File->addAction(m_windowActions->quit());
-
-	ui->menu_Help->addAction(m_windowActions->about());
-
-	//updateCurrentSerialConfig();
+	m_mainWindow->changeActiveWindow();
 }
 
 void GCodeFileServer::serialConfig()
 {
 	GUI::SerialPortConfigDialog* serialConfigDialog = new GUI::SerialPortConfigDialog(mainWindow(),
-	        configBox->currentText());
+	        m_mainWindow->currentConfigName());
 
 	if (serialConfigDialog->exec() == QDialog::Accepted) {
-		loadSerialConfignames();
+		m_mainWindow->loadSerialConfignames();
 	}
-}
-
-void GCodeFileServer::loadSerialConfignames()
-{
-	int id;
-	QStringList list;
-	QString item;
-
-	QSettings& settings = *Medium::instance().settings();
-	settings.beginGroup("SerialPortConfigs");
-
-	configBox->clear();
-	list = settings.value("SettingsList", QStringList(tr("Default"))).toStringList();
-	list.sort();
-	configBox->addItems(list);
-	item = settings.value("CurrentSerialPortSettings", tr("Default")).toString();
-	id = configBox->findText(item);
-
-	if (id >= 0) {
-		configBox->setCurrentIndex(id);
-	}
-
-	settings.endGroup();
 }
 
 //void CommApp::updateCurrentSerialConfig()
@@ -342,100 +241,9 @@ void GCodeFileServer::tileSubWindowsVertycally()
 	//    }
 }
 
-GUI::SerialTransmissionDialog* GCodeFileServer::findMdiChild(const QString __config)
-{
-	foreach (QMdiSubWindow* window, ui->mdiArea->subWindowList()) {
-		GUI::SerialTransmissionDialog* mdiChild = qobject_cast<GUI::SerialTransmissionDialog*>(window->widget());
-
-		if (mdiChild != nullptr)
-			if (mdiChild->configName() == __config) {
-				return mdiChild;
-			}
-	}
-
-	return nullptr;
-}
-
-void GCodeFileServer::setActiveSubWindow(QWidget* window)
-{
-	if (!window) {
-		return;
-	}
-
-	ui->mdiArea->setActiveSubWindow(qobject_cast<QMdiSubWindow*>(window));
-}
-
-GUI::SerialTransmissionDialog* GCodeFileServer::activeMdiChild()
-{
-	if (QMdiSubWindow* activeSubWindow = ui->mdiArea->activeSubWindow()) {
-		return qobject_cast<GUI::SerialTransmissionDialog*>(activeSubWindow->widget());
-	}
-
-	return nullptr;
-}
-
-void GCodeFileServer::activeWindowChanged(QMdiSubWindow* window)
-{
-	if (!window) {
-		return;
-	}
-
-	GUI::SerialTransmissionDialog* mdiChild = qobject_cast<GUI::SerialTransmissionDialog*>
-	        (window->widget()); //activeMdiChild();
-
-	if (mdiChild != nullptr) {
-		mdiChild->setFocus();
-
-		if (configBox) {
-			int id = configBox->findText(mdiChild->configName());
-
-			if (id >= 0) {
-				configBox->setCurrentIndex(id);
-			}
-		}
-
-		m_windowActions->configurePort()->setEnabled(false);
-		m_windowActions->serverStart()->setEnabled(false);
-		m_windowActions->serverReset()->setEnabled(true);
-		m_windowActions->serverStop()->setEnabled(true);
-	} else {
-		m_windowActions->configurePort()->setEnabled(true);
-		m_windowActions->serverStart()->setEnabled(true);
-		m_windowActions->serverReset()->setEnabled(false);
-		m_windowActions->serverStop()->setEnabled(false);
-	}
-}
-
-void GCodeFileServer::changeActiveWindow()
-{
-	GUI::SerialTransmissionDialog* mdiChild = findMdiChild(configBox->currentText());
-
-	if (mdiChild != nullptr) {
-		mdiChild->setFocus();
-		m_windowActions->configurePort()->setEnabled(false);
-		m_windowActions->serverStart()->setEnabled(false);
-		m_windowActions->serverReset()->setEnabled(true);
-		m_windowActions->serverStop()->setEnabled(true);
-	} else {
-		m_windowActions->configurePort()->setEnabled(true);
-		m_windowActions->serverStart()->setEnabled(true);
-		m_windowActions->serverReset()->setEnabled(false);
-		m_windowActions->serverStop()->setEnabled(false);
-	}
-}
-
-void GCodeFileServer::closeTab(int i)
-{
-	QTabBar* tab = ui->mdiArea->findChild<QTabBar*>();
-
-	if (tab != nullptr) {
-		tab->removeTab(i);
-	}
-}
-
 void GCodeFileServer::doPortReset()
 {
-	GUI::SerialTransmissionDialog* mdiChild = activeMdiChild();
+	GUI::SerialTransmissionDialog* mdiChild = m_mainWindow->activeServerWidget();
 
 	if (mdiChild != nullptr) {
 		mdiChild->portReset();
@@ -444,7 +252,7 @@ void GCodeFileServer::doPortReset()
 
 void GCodeFileServer::showNewFiles()
 {
-	GUI::SerialTransmissionDialog* mdiChild = activeMdiChild();
+	GUI::SerialTransmissionDialog* mdiChild = m_mainWindow->activeServerWidget();
 
 	if (mdiChild != nullptr) {
 		QSettings& settings = *Medium::instance().settings();
@@ -452,7 +260,7 @@ void GCodeFileServer::showNewFiles()
 		extensions.removeDuplicates();
 		extensions.sort();
 
-		FileChecker* fileCheck = new FileChecker(this);
+		FileChecker* fileCheck = new FileChecker(mainWindow());
 		fileCheck->setData(mdiChild->savePath(), mdiChild->readPaths(), extensions);
 		fileCheck->findFiles();
 		fileCheck->exec();
@@ -461,54 +269,11 @@ void GCodeFileServer::showNewFiles()
 
 void GCodeFileServer::browseSaveFolder()
 {
-	GUI::SerialTransmissionDialog* mdiChild = activeMdiChild();
+	GUI::SerialTransmissionDialog* mdiChild = m_mainWindow->activeServerWidget();
 
 	if (mdiChild != nullptr) {
 		QDesktopServices::openUrl(QUrl(QString("file:///%1").arg(mdiChild->savePath()),
 		                               QUrl::TolerantMode));
-	}
-}
-
-void GCodeFileServer::createTrayIcon()
-{
-	trayIconMenu = new QMenu(this);
-	trayIconMenu->addAction(m_windowActions->minimize());
-	trayIconMenu->addAction(m_windowActions->maximize());
-	trayIconMenu->addAction(m_windowActions->restore());
-	trayIconMenu->addSeparator();
-	trayIconMenu->addAction(m_windowActions->about());
-	trayIconMenu->addSeparator();
-	trayIconMenu->addAction(m_windowActions->quit());
-
-	trayIcon = new QSystemTrayIcon(this);
-	trayIcon->setContextMenu(trayIconMenu);
-	connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this,
-	        SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
-
-	trayIcon->setIcon(QIcon(":/images/serial.png"));
-	trayIcon->show();
-}
-
-void GCodeFileServer::iconActivated(QSystemTrayIcon::ActivationReason reason)
-{
-	switch (reason) {
-	case QSystemTrayIcon::Trigger:
-		if (isVisible()) {
-			hide();
-		} else {
-			showNormal();
-		}
-
-		break;
-
-	case QSystemTrayIcon::DoubleClick:
-		break;
-
-	case QSystemTrayIcon::MiddleClick:
-		break;
-
-	default:
-		;
 	}
 }
 
@@ -533,9 +298,4 @@ void GCodeFileServer::about()
 	                      "<P><i>The program is provided AS IS with NO WARRANTY OF ANY KIND,"
 	                      "INCLUDING THE WARRANTY OF DESIGN,"
 	                      "MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.</i>").arg(GCODEWORKSHOP_VERSION));
-}
-
-void GCodeFileServer::closeEvent(QCloseEvent* event)
-{
-	event->setAccepted(tryCloseApp());
 }
