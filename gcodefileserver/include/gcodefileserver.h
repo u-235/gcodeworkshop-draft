@@ -62,22 +62,22 @@ public:
 
 public slots:
 	void messReceived(const QString& msg);
-
-private slots:
 	void serialConfig();
-	void tileSubWindowsVertycally();
-	void setActiveSubWindow(QWidget* window);
 	void startSerialPortServer();
 	void stopSerialPortServer();
-	void activeWindowChanged(QMdiSubWindow* window);
 	void changeActiveWindow();
-	void closeTab(int i);
 	void doPortReset();
 	void showNewFiles();
 	void browseSaveFolder();
-	void iconActivated(QSystemTrayIcon::ActivationReason reason);
 	void quitApp();
 	void about();
+
+private slots:
+	void tileSubWindowsVertycally();
+	void setActiveSubWindow(QWidget* window);
+	void activeWindowChanged(QMdiSubWindow* window);
+	void closeTab(int i);
+	void iconActivated(QSystemTrayIcon::ActivationReason reason);
 
 protected:
 	void closeEvent(QCloseEvent* event);
