@@ -58,11 +58,10 @@ public:
 
 	void launch();
 
+	bool tryCloseApp();
+
 public slots:
 	void messReceived(const QString& msg);
-
-protected:
-	void closeEvent(QCloseEvent* event);
 
 private slots:
 	void serialConfig();
@@ -79,6 +78,9 @@ private slots:
 	void iconActivated(QSystemTrayIcon::ActivationReason reason);
 	void quitApp();
 	void about();
+
+protected:
+	void closeEvent(QCloseEvent* event);
 
 private:
 	Ui::GCodeFileServer* ui;

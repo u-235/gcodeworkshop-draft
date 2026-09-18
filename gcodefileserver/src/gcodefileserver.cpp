@@ -108,26 +108,9 @@ void GCodeFileServer::launch()
 	}
 }
 
-void GCodeFileServer::messReceived(const QString& msg)
+bool GCodeFileServer::tryCloseApp()
 {
-	showNormal();
-}
-
-void GCodeFileServer::closeEvent(QCloseEvent* event)
-{
-	//    QMessageBox::StandardButton result = QMessageBox::warning(this, tr("GCodeWorkShop - Serial port file server"),
-	//                                                              tr("You are trying to close a file server.\nAre you sure?"),
-	//                                                              QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
-
-	//    if(result == QMessageBox::No)
-	//    {
-	//        event->ignore();
-	//        return;
-	//    }
-
-	if (closable) {
-		event->accept();
-	} else {
+	if (!closable) {
 		if (trayIcon->isVisible()) {
 			QMessageBox::information(mainWindow(), tr("GCodeWorkShop - Serial port file server"),
 			                         tr("The program will keep running in the "
@@ -135,20 +118,25 @@ void GCodeFileServer::closeEvent(QCloseEvent* event)
 			                            "choose <b>Quit</b> in the context menu "
 			                            "of the system tray entry."));
 			hide();
-			event->ignore();
+			return false;
 		}
 	}
 
-	//    saveSettings();
+	saveSettings();
+	const QList<QMdiSubWindow*>& wlist = ui->mdiArea->subWindowList(QMdiArea::StackingOrder);
 
-	//    foreach(const QMdiSubWindow *window, ui->mdiArea->subWindowList(QMdiArea::StackingOrder))
-	//    {
-	//        SerialTransmissionDialog *mdiChild = qobject_cast<SerialTransmissionDialog *>(window->widget());
-	//        mdiChild->close();
-	//        mdiChild->parentWidget()->close();
-	//    }
+	for (QMdiSubWindow* window : wlist) {
+		GUI::SerialTransmissionDialog* mdiChild = qobject_cast<GUI::SerialTransmissionDialog*>(window->widget());
+		mdiChild->close();
+		mdiChild->parentWidget()->close();
+	}
 
-	//    event->accept();
+	return true;
+}
+
+void GCodeFileServer::messReceived(const QString& msg)
+{
+	showNormal();
 }
 
 void GCodeFileServer::saveSettings()
@@ -580,16 +568,8 @@ void GCodeFileServer::iconActivated(QSystemTrayIcon::ActivationReason reason)
 
 void GCodeFileServer::quitApp()
 {
-	saveSettings();
-
-	foreach (const QMdiSubWindow* window, ui->mdiArea->subWindowList(QMdiArea::StackingOrder)) {
-		GUI::SerialTransmissionDialog* mdiChild = qobject_cast<GUI::SerialTransmissionDialog*>(window->widget());
-		mdiChild->close();
-		mdiChild->parentWidget()->close();
-	}
-
 	closable = true;
-	close();
+	mainWindow()->close();
 }
 
 void GCodeFileServer::about()
@@ -607,4 +587,9 @@ void GCodeFileServer::about()
 	                      "<P><i>The program is provided AS IS with NO WARRANTY OF ANY KIND,"
 	                      "INCLUDING THE WARRANTY OF DESIGN,"
 	                      "MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.</i>").arg(GCODEWORKSHOP_VERSION));
+}
+
+void GCodeFileServer::closeEvent(QCloseEvent* event)
+{
+	event->setAccepted(tryCloseApp());
 }
