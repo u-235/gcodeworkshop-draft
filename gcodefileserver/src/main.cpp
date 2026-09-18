@@ -53,12 +53,8 @@ int main(int argc, char* argv[])
 	Medium& medium = Medium::instance();
 	medium.updateTranslation();
 	GCodeFileServer* gcfs = new GCodeFileServer();
+	QObject::connect(&app, &QtSingleApplication::messageReceived, gcfs, &GCodeFileServer::messReceived);
 	gcfs->launch();
 
-	app.setActivationWindow(gcfs->mainWindow(), false);
-	QObject::connect(&app, SIGNAL(messageReceived(const QString&)),
-	                 gcfs, SLOT(messReceived(const QString&)));
-
-	QObject::connect(gcfs, SIGNAL(needToShow()), &app, SLOT(activateWindow()));
 	return app.exec();
 }
