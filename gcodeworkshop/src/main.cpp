@@ -57,6 +57,11 @@ int main(int argc, char* argv[])
 
 	QtSingleApplication app("GCodeWorkShop", argc, argv);
 
+#if QT_VERSION >= QT_VERSION_CHECK(5, 7, 0)
+	// https://community.kde.org/Guidelines_and_HOWTOs/Wayland_Porting_Notes#Application_Icon
+	QGuiApplication::setDesktopFileName("gcodeworkshop");
+#endif
+
 	QString txMessage;
 	QStringList args;
 
