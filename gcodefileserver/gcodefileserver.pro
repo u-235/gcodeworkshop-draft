@@ -23,13 +23,15 @@ SOURCES = \
     src/gcodefileserver.cpp \
     src/gui/fileserver/defaultkeysequences.cpp \
     src/gui/fileserver/knownactions.cpp \
+    src/gui/fileserver/windowactions.cpp \
     src/main.cpp
 
 HEADERS = \
     filechecker.h \
     include/gcodefileserver.h \
     include/gui/fileserver/knownactions.h \
-    src/gui/fileserver/defaultkeysequences.h
+    src/gui/fileserver/defaultkeysequences.h \
+    src/gui/fileserver/windowactions.h
 
 FORMS = \
     filechecker.ui \

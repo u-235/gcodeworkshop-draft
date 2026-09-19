@@ -50,14 +50,16 @@
 #include <utils/medium.h>                               // for Medium
 #include <version.h>
 
-#include "filechecker.h"        // for FileChecker
-#include "ui_gcodefileserver.h" // for Ui::GCodeFileServer
+#include "filechecker.h"                    // for FileChecker
+#include "gui/fileserver/windowactions.h"   // for WindowActions
+#include "ui_gcodefileserver.h"             // for Ui::GCodeFileServer
 
 
 GCodeFileServer::GCodeFileServer(QWidget* parent) : QMainWindow(parent), ui(new Ui::GCodeFileServer)
 {
 	setAttribute(Qt::WA_DeleteOnClose);
 	ui->setupUi(this);
+	m_windowActions = new GUI::FileServer::WindowActions(this, this, this);
 
 	setWindowModality(Qt::NonModal);
 
@@ -101,7 +103,7 @@ void GCodeFileServer::launch()
 
 	loadSettings();
 
-	if (startMinimizedAction->isChecked()) {
+	if (m_windowActions->startMinimized()->isChecked()) {
 		QTimer::singleShot(500, this, SLOT(hide()));
 	} else {
 		showNormal();
@@ -153,7 +155,7 @@ void GCodeFileServer::saveSettings()
 
 	QSettings& settings = *Medium::instance().settings();
 	settings.beginGroup("CommApp");
-	settings.setValue("StartMinimized", startMinimizedAction->isChecked());
+	settings.setValue("StartMinimized", m_windowActions->startMinimized()->isChecked());
 	settings.remove("ActiveConfigs");
 	activeConfigs.removeDuplicates();
 	activeConfigs.removeAll("");
@@ -166,7 +168,7 @@ void GCodeFileServer::loadSettings()
 	QSettings& settings = *Medium::instance().settings();
 	settings.beginGroup("CommApp");
 
-	startMinimizedAction->setChecked(settings.value("StartMinimized", false).toBool());
+	m_windowActions->startMinimized()->setChecked(settings.value("StartMinimized", false).toBool());
 
 	QStringList activeConfigs = settings.value("ActiveConfigs",
 	                            (QStringList() << "")).toStringList();
@@ -227,62 +229,6 @@ void GCodeFileServer::stopSerialPortServer()
 
 void GCodeFileServer::createActions()
 {
-	configPortAct = new QAction(QIcon(":/images/serialconfig.png"), tr("Serial port configuration"),
-	                            this);
-	//configPortAct->setShortcut(tr("F3"));
-	configPortAct->setToolTip(tr("Serial port configuration"));
-	connect(configPortAct, SIGNAL(triggered()), this, SLOT(serialConfig()));
-
-	startServerAct = new QAction(QIcon(":/images/connect_creating.png"), tr("&Start"), this);
-	//receiveAct->setShortcut(tr("Shift+F3"));
-	startServerAct->setToolTip(tr("Start"));
-	connect(startServerAct, SIGNAL(triggered()), this, SLOT(startSerialPortServer()));
-
-	stopServerAct = new QAction(QIcon(":/images/stop.png"), tr("S&top"), this);
-	//sendAct->setShortcut(tr("F3"));
-	stopServerAct->setToolTip(tr("Stop"));
-	connect(stopServerAct, SIGNAL(triggered()), this, SLOT(stopSerialPortServer()));
-
-
-	resetServerAct = new QAction(QIcon(":/images/reset.png"), tr("&Reset"), this);
-	resetServerAct->setToolTip(tr("Reset serial port"));
-	connect(resetServerAct, SIGNAL(triggered()), this, SLOT(doPortReset()));
-
-
-	closeServerAct = new QAction(QIcon(":/images/window-close.png"), tr("&Minimize to tray"), this);
-	closeServerAct->setToolTip(tr("Minimize to system tray"));
-	connect(closeServerAct, SIGNAL(triggered()), this, SLOT(hide()));
-
-	browseSaveFolderAct = new QAction(QIcon(":/images/browse.png"), tr("&Browse save folder"),
-	                                  this);
-	browseSaveFolderAct->setToolTip(tr("Browse save folder"));
-	connect(browseSaveFolderAct, SIGNAL(triggered()), this, SLOT(browseSaveFolder()));
-
-	showNewFilesAct = new QAction(QIcon(":/images/project_new.png"), tr("&Show saved files"), this);
-	showNewFilesAct->setToolTip(tr("Show saved files"));
-	connect(showNewFilesAct, SIGNAL(triggered()), this, SLOT(showNewFiles()));
-
-	aboutAction = new QAction(tr("&About"), this);
-	aboutAction->setToolTip(tr("Show the application's About box"));
-	connect(aboutAction, SIGNAL(triggered()), this, SLOT(about()));
-
-
-	minimizeAction = new QAction(tr("Mi&nimize"), this);
-	connect(minimizeAction, SIGNAL(triggered()), this, SLOT(hide()));
-
-	maximizeAction = new QAction(tr("Ma&ximize"), this);
-	connect(maximizeAction, SIGNAL(triggered()), this, SLOT(showMaximized()));
-
-	restoreAction = new QAction(tr("&Restore"), this);
-	connect(restoreAction, SIGNAL(triggered()), this, SLOT(showNormal()));
-
-	quitAction = new QAction(QIcon(":/images/exit.png"), tr("&Quit"), this);
-	connect(quitAction, SIGNAL(triggered()), this, SLOT(quitApp()));
-
-	startMinimizedAction = new QAction(tr("Start minimized"), this);
-	startMinimizedAction->setCheckable(true);
-	startMinimizedAction->setChecked(false);
-
 	configBox = new QComboBox();
 	configBox->setSizeAdjustPolicy(QComboBox::AdjustToContents);
 	configBox->setDuplicatesEnabled(false);
@@ -290,34 +236,34 @@ void GCodeFileServer::createActions()
 	connect(configBox, SIGNAL(currentIndexChanged(int)), SLOT(changeActiveWindow()));
 
 	ui->toolBar->addWidget(configBox);
-	ui->toolBar->addAction(configPortAct);
+	ui->toolBar->addAction(m_windowActions->configurePort());
 	ui->toolBar->addSeparator();
-	ui->toolBar->addAction(startServerAct);
-	ui->toolBar->addAction(stopServerAct);
+	ui->toolBar->addAction(m_windowActions->serverStart());
+	ui->toolBar->addAction(m_windowActions->serverStop());
 
 	ui->toolBar->addSeparator();
-	ui->toolBar->addAction(resetServerAct);
+	ui->toolBar->addAction(m_windowActions->serverReset());
 
 	fileToolBar = new QToolBar(tr("FileToolBar"));
 	addToolBar(Qt::TopToolBarArea, fileToolBar);
 	fileToolBar->setObjectName("FileToolBar");
 
 
-	fileToolBar->addAction(browseSaveFolderAct);
-	fileToolBar->addAction(showNewFilesAct);
+	fileToolBar->addAction(m_windowActions->browseSaveFolder());
+	fileToolBar->addAction(m_windowActions->showNewFiles());
 	fileToolBar->addSeparator();
-	fileToolBar->addAction(closeServerAct);
+	fileToolBar->addAction(m_windowActions->serverClose());
 
-	ui->menu_File->addAction(startMinimizedAction);
+	ui->menu_File->addAction(m_windowActions->startMinimized());
 	ui->menu_File->addSeparator();
-	//    ui->menu_File->addAction(browseSaveFolderAct);
-	//    ui->menu_File->addAction(showNewFilesAct);
+	//    ui->menu_File->addAction(m_windowActions->browseSaveFolder());
+	//    ui->menu_File->addAction(m_windowActions->showNewFiles());
 	//    ui->menu_File->addSeparator();
-	ui->menu_File->addAction(closeServerAct);
+	ui->menu_File->addAction(m_windowActions->serverClose());
 	ui->menu_File->addSeparator();
-	ui->menu_File->addAction(quitAction);
+	ui->menu_File->addAction(m_windowActions->quit());
 
-	ui->menu_Help->addAction(aboutAction);
+	ui->menu_Help->addAction(m_windowActions->about());
 
 	//updateCurrentSerialConfig();
 }
@@ -448,15 +394,15 @@ void GCodeFileServer::activeWindowChanged(QMdiSubWindow* window)
 			}
 		}
 
-		configPortAct->setEnabled(false);
-		startServerAct->setEnabled(false);
-		resetServerAct->setEnabled(true);
-		stopServerAct->setEnabled(true);
+		m_windowActions->configurePort()->setEnabled(false);
+		m_windowActions->serverStart()->setEnabled(false);
+		m_windowActions->serverReset()->setEnabled(true);
+		m_windowActions->serverStop()->setEnabled(true);
 	} else {
-		configPortAct->setEnabled(true);
-		startServerAct->setEnabled(true);
-		resetServerAct->setEnabled(false);
-		stopServerAct->setEnabled(false);
+		m_windowActions->configurePort()->setEnabled(true);
+		m_windowActions->serverStart()->setEnabled(true);
+		m_windowActions->serverReset()->setEnabled(false);
+		m_windowActions->serverStop()->setEnabled(false);
 	}
 }
 
@@ -466,15 +412,15 @@ void GCodeFileServer::changeActiveWindow()
 
 	if (mdiChild != nullptr) {
 		mdiChild->setFocus();
-		configPortAct->setEnabled(false);
-		startServerAct->setEnabled(false);
-		resetServerAct->setEnabled(true);
-		stopServerAct->setEnabled(true);
+		m_windowActions->configurePort()->setEnabled(false);
+		m_windowActions->serverStart()->setEnabled(false);
+		m_windowActions->serverReset()->setEnabled(true);
+		m_windowActions->serverStop()->setEnabled(true);
 	} else {
-		configPortAct->setEnabled(true);
-		startServerAct->setEnabled(true);
-		resetServerAct->setEnabled(false);
-		stopServerAct->setEnabled(false);
+		m_windowActions->configurePort()->setEnabled(true);
+		m_windowActions->serverStart()->setEnabled(true);
+		m_windowActions->serverReset()->setEnabled(false);
+		m_windowActions->serverStop()->setEnabled(false);
 	}
 }
 
@@ -526,13 +472,13 @@ void GCodeFileServer::browseSaveFolder()
 void GCodeFileServer::createTrayIcon()
 {
 	trayIconMenu = new QMenu(this);
-	trayIconMenu->addAction(minimizeAction);
-	trayIconMenu->addAction(maximizeAction);
-	trayIconMenu->addAction(restoreAction);
+	trayIconMenu->addAction(m_windowActions->minimize());
+	trayIconMenu->addAction(m_windowActions->maximize());
+	trayIconMenu->addAction(m_windowActions->restore());
 	trayIconMenu->addSeparator();
-	trayIconMenu->addAction(aboutAction);
+	trayIconMenu->addAction(m_windowActions->about());
 	trayIconMenu->addSeparator();
-	trayIconMenu->addAction(quitAction);
+	trayIconMenu->addAction(m_windowActions->quit());
 
 	trayIcon = new QSystemTrayIcon(this);
 	trayIcon->setContextMenu(trayIconMenu);

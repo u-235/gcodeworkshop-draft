@@ -23,6 +23,8 @@
 #ifndef GCODEFILESERVER_H
 #define GCODEFILESERVER_H
 
+// Special for the moc_gcodefileserver.cpp & Qt6
+#include <QKeySequence>     // IWYU pragma: keep
 #include <QMainWindow>      // for QMainWindow
 #include <QObject>          // for Q_OBJECT, slots
 #include <QString>          // for QString
@@ -31,6 +33,7 @@
 class QAction;
 class QCloseEvent;
 class QComboBox;
+template <class Key, class T> class QMap;
 class QMdiSubWindow;
 class QMenu;
 class QSignalMapper;
@@ -39,7 +42,12 @@ class QWidget;
 
 namespace GUI {
 class SerialTransmissionDialog;
-}
+
+namespace FileServer {
+class WindowActions;
+} // namespace FileServer
+} // namespace GUI
+
 
 namespace Ui {
 class GCodeFileServer;
@@ -59,6 +67,11 @@ public:
 	void launch();
 
 	bool tryCloseApp();
+
+signals:
+	void updateTranslations();
+	void updateIcons();
+	void updateShortcuts(const QMap<QString, QKeySequence>&);
 
 public slots:
 	void messReceived(const QString& msg);
@@ -86,21 +99,9 @@ private:
 	Ui::GCodeFileServer* ui;
 	QSignalMapper* windowMapper;
 
-	QAction* configPortAct;
-	QAction* startServerAct;
-	QAction* stopServerAct;
-	QAction* resetServerAct;
-	QAction* closeServerAct;
-	QAction* browseSaveFolderAct;
-	QAction* showNewFilesAct;
+	GUI::FileServer::WindowActions* m_windowActions;
 	QComboBox* configBox;
 	QToolBar* fileToolBar;
-	QAction* minimizeAction;
-	QAction* maximizeAction;
-	QAction* restoreAction;
-	QAction* quitAction;
-	QAction* aboutAction;
-	QAction* startMinimizedAction;
 
 	QSystemTrayIcon* trayIcon;
 	QMenu* trayIconMenu;
