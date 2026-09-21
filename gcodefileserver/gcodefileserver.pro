@@ -21,11 +21,13 @@ INCLUDEPATH += include src
 SOURCES = \
     filechecker.cpp \
     src/gcodefileserver.cpp \
+    src/gui/fileserver/knownactions.cpp \
     src/main.cpp
 
 HEADERS = \
     filechecker.h \
-    include/gcodefileserver.h
+    include/gcodefileserver.h \
+    include/gui/fileserver/knownactions.h
 
 FORMS = \
     filechecker.ui \
