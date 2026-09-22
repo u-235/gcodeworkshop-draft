@@ -143,48 +143,42 @@ void GCodeFileServer::loadSettings()
 	QStringList::Iterator it = list.begin();
 
 	while (it != list.end()) {
-		GUI::SerialTransmissionDialog* spServer = createSerialPortServer(*it);
-		spServer->show();
+		auto sw = createSerialPortServer(*it);
+		sw->show();
 		++it;
 	}
 }
 
-GUI::SerialTransmissionDialog* GCodeFileServer::createSerialPortServer(QString __config)
+GUI::SerialTransmissionDialog* GCodeFileServer::createSerialPortServer(const QString& config)
 {
-	GUI::SerialTransmissionDialog* spServer = new GUI::SerialTransmissionDialog(mainWindow(), Qt::SubWindow,
-	        true);  // Qt::Tool | Qt::CustomizeWindowHint | Qt::WindowTitleHint
-	spServer->setAttribute(Qt::WA_DeleteOnClose);
-	m_mainWindow->addServerWidget(spServer);
-
-	spServer->startFileServer(__config);
-
-	return spServer;
+	auto sw = new GUI::SerialTransmissionDialog(mainWindow(), Qt::SubWindow, true);
+	sw->setAttribute(Qt::WA_DeleteOnClose);
+	m_mainWindow->addServerWidget(sw);
+	sw->startFileServer(config);
+	return sw;
 }
 
 void GCodeFileServer::startSerialPortServer()
 {
-	QString _config = m_mainWindow->currentConfigName();
+	const QString& config = m_mainWindow->currentConfigName();
+	auto sw = m_mainWindow->serverWidgetByConfigName(config);
 
-	GUI::SerialTransmissionDialog* _existing = m_mainWindow->serverWidgetByConfigName(_config);
-
-	if (_existing) {
-		_existing->setFocus();
+	if (sw != nullptr) {
+		sw->setFocus();
 	} else {
-		GUI::SerialTransmissionDialog* spServer = createSerialPortServer(_config);
-		//spServer->startFileServer(_config, true);
-		spServer->show();
+		sw = createSerialPortServer(config);
+		sw->show();
 	}
 }
 
 void GCodeFileServer::stopSerialPortServer()
 {
-	QString _config = m_mainWindow->currentConfigName();
+	const QString& config = m_mainWindow->currentConfigName();
+	auto sw = m_mainWindow->serverWidgetByConfigName(config);
 
-	GUI::SerialTransmissionDialog* _existing = m_mainWindow->serverWidgetByConfigName(_config);
-
-	if (_existing != nullptr) {
-		_existing->close();
-		_existing->parentWidget()->close();
+	if (sw != nullptr) {
+		sw->close();
+		sw->parentWidget()->close();
 	}
 
 	m_mainWindow->changeActiveWindow();
@@ -192,76 +186,35 @@ void GCodeFileServer::stopSerialPortServer()
 
 void GCodeFileServer::serialConfig()
 {
-	GUI::SerialPortConfigDialog* serialConfigDialog = new GUI::SerialPortConfigDialog(mainWindow(),
-	        m_mainWindow->currentConfigName());
+	const QString& config = m_mainWindow->currentConfigName();
+	auto serialConfigDialog = new GUI::SerialPortConfigDialog(mainWindow(), config);
 
 	if (serialConfigDialog->exec() == QDialog::Accepted) {
 		m_mainWindow->loadSerialConfignames();
 	}
 }
 
-//void CommApp::updateCurrentSerialConfig()
-//{
-//    int id;
-//    QDir dir;
-
-//    bool hasMdiChild = (activeMdiChild() != nullptr);
-//    if(hasMdiChild && (serialToolBar != nullptr))
-//    {
-//        dir.setPath(activeMdiChild()->filePath());
-//        dir.setFilter(QDir::Files | QDir::Hidden | QDir::NoSymLinks);
-//        dir.setSorting(QDir::Name);
-//        dir.setNameFilters(QStringList("*.ini"));
-
-//        QFileInfoList list = dir.entryInfoList();
-
-//        if(!list.isEmpty())
-//        {
-//            QFileInfo name = list.at(0);
-//            id = configBox->findText(name.baseName());
-//            if(id >= 0)
-//                configBox->setCurrentIndex(id);
-//        }
-//    }
-//}
-
-void GCodeFileServer::tileSubWindowsVertycally()
-{
-	//    if(ui->mdiArea->subWindowList().isEmpty())
-	//        return;
-
-	//    QPoint position(0, 0);
-	//    foreach(QMdiSubWindow *window, ui->mdiArea->subWindowList())
-	//    {
-	//        QRect rect(0, 0, ui->mdiArea->width(),
-	//                   ui->mdiArea->height() / ui->mdiArea->subWindowList().count());
-	//        window->setGeometry(rect);
-	//        window->move(position);
-	//        position.setY(position.y() + window->height());
-	//    }
-}
-
 void GCodeFileServer::doPortReset()
 {
-	GUI::SerialTransmissionDialog* mdiChild = m_mainWindow->activeServerWidget();
+	auto sw = m_mainWindow->activeServerWidget();
 
-	if (mdiChild != nullptr) {
-		mdiChild->portReset();
+	if (sw != nullptr) {
+		sw->portReset();
 	}
 }
 
 void GCodeFileServer::showNewFiles()
 {
-	GUI::SerialTransmissionDialog* mdiChild = m_mainWindow->activeServerWidget();
+	auto sw = m_mainWindow->activeServerWidget();
 
-	if (mdiChild != nullptr) {
+	if (sw != nullptr) {
 		QSettings& settings = *Medium::instance().settings();
 		QStringList extensions = settings.value("Extensions", "").toStringList();
 		extensions.removeDuplicates();
 		extensions.sort();
 
 		FileChecker* fileCheck = new FileChecker(mainWindow());
-		fileCheck->setData(mdiChild->savePath(), mdiChild->readPaths(), extensions);
+		fileCheck->setData(sw->savePath(), sw->readPaths(), extensions);
 		fileCheck->findFiles();
 		fileCheck->exec();
 	}
@@ -269,11 +222,10 @@ void GCodeFileServer::showNewFiles()
 
 void GCodeFileServer::browseSaveFolder()
 {
-	GUI::SerialTransmissionDialog* mdiChild = m_mainWindow->activeServerWidget();
+	auto sw = m_mainWindow->activeServerWidget();
 
-	if (mdiChild != nullptr) {
-		QDesktopServices::openUrl(QUrl(QString("file:///%1").arg(mdiChild->savePath()),
-		                               QUrl::TolerantMode));
+	if (sw != nullptr) {
+		QDesktopServices::openUrl(QUrl(QString("file:///%1").arg(sw->savePath()), QUrl::TolerantMode));
 	}
 }
 

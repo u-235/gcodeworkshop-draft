@@ -71,14 +71,11 @@ public slots:
 	void quitApp();
 	void about();
 
-private slots:
-	void tileSubWindowsVertycally();
-
 private:
 	bool closable;
 	GUI::FileServer::MainWindow* m_mainWindow;
 
-	GUI::SerialTransmissionDialog* createSerialPortServer(QString __config);
+	GUI::SerialTransmissionDialog* createSerialPortServer(const QString& config);
 
 	void saveSettings();
 	void loadSettings();
