@@ -113,7 +113,6 @@ GCodeWorkShop::GCodeWorkShop(Medium* medium)
 {
 	m_mainWindow = nullptr;
 	mMedium = medium;
-	m_fileServer = nullptr;
 
 	m_MdiWidgetsMaximized = true;
 	m_defaultReadOnly = false;
@@ -178,10 +177,6 @@ GCodeWorkShop::~GCodeWorkShop()
 	if (proc) {
 		proc->close();
 		delete (proc);
-	}
-
-	if (m_fileServer) {
-		m_fileServer->close();
 	}
 }
 
@@ -254,17 +249,6 @@ void GCodeWorkShop::closeAllMdiWindows()
 
 bool GCodeWorkShop::close()
 {
-	if (m_fileServer) {
-		QMessageBox::StandardButton result = QMessageBox::warning(mainWindow(),
-		                                     tr("GCodeWorkShop - Serial port file server"),
-		                                     tr("Serial port file server is running.\nClose anyway?"),
-		                                     QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
-
-		if (result == QMessageBox::No) {
-			return false;
-		}
-	}
-
 	if (!m_mainWindow->maybeSave() || !maybeSaveAll()) {
 		return false;
 	}

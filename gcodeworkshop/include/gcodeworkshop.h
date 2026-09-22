@@ -248,8 +248,6 @@ private:
 	QProcess* proc;
 	QProcess* sfsProc;
 
-	QPointer<GCodeFileServer> m_fileServer;
-
 	QPointer<QFileSystemWatcher> fileChangeMonitor;
 };
 
