@@ -72,7 +72,7 @@ private slots:
 private:
 	void loadSerialConfignames();
 	void showError(int error);
-	void sendText(QString tx);
+	void sendText(const QString& tx);
 
 	Ui::SerialPortTestDialog* ui;
 	bool stop;

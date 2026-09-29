@@ -503,7 +503,7 @@ void GUI::SerialPortTestDialog::showError(int error)
 	}
 }
 
-void GUI::SerialPortTestDialog::sendText(QString tx)
+void GUI::SerialPortTestDialog::sendText(const QString& tx)
 {
 	int i;
 	bool xoffReceived;
@@ -514,12 +514,14 @@ void GUI::SerialPortTestDialog::sendText(QString tx)
 		return;
 	}
 
-	if (comPort->isOpen()) {
-		tx.prepend(sendAtBegining);
-		tx.append(sendAtEnd);
+	QString formatedText = tx;
 
-		if (!tx.contains("\r\n")) {
-			tx.replace("\n", "\r\n");
+	if (comPort->isOpen()) {
+		formatedText.prepend(sendAtBegining);
+		formatedText.append(sendAtEnd);
+
+		if (!formatedText.contains("\r\n")) {
+			formatedText.replace("\n", "\r\n");
 		}
 
 		ui->errorLabel->setText(tr("Waiting..."));
@@ -528,7 +530,7 @@ void GUI::SerialPortTestDialog::sendText(QString tx)
 		i = 0;
 		xoffReceived = true;
 
-		while (i < tx.size()) {
+		while (i < formatedText.size()) {
 			if (xoffReceived) {
 				ui->errorLabel->setText(tr("Waiting for a signal readiness..."));
 			}
@@ -560,15 +562,15 @@ void GUI::SerialPortTestDialog::sendText(QString tx)
 			bytesToWrite = comPort->bytesToWrite();
 
 			if ((bytesToWrite == 0) && (!xoffReceived)) {
-				if (!comPort->putChar(tx[i].toLatin1())) {
+				if (!comPort->putChar(formatedText[i].toLatin1())) {
 					showError(comPort->error());
 				}
 
-				ui->errorLabel->setText(tr("Sending byte %1 of %2").arg(i + 1).arg(tx.size()));
+				ui->errorLabel->setText(tr("Sending byte %1 of %2").arg(i + 1).arg(formatedText.size()));
 				qApp->processEvents();
 
 				if (lineDelay > 0) {
-					if (tx[i].toLatin1() == '\n') {
+					if (formatedText[i].toLatin1() == '\n') {
 						readyCont = false;
 						QTimer::singleShot(int(lineDelay * 1000), this, &SerialPortTestDialog::lineDelaySlot);
 

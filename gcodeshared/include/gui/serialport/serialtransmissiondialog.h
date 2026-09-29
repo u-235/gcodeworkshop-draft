@@ -52,8 +52,8 @@ public:
 	                         bool mode = false);
 	~SerialTransmissionDialog();
 
-	QStringList receiveData(QString configName);
-	void sendData(QString dataToSend, QString configName);
+	QStringList receiveData(const QString& configName);
+	void sendData(const QString& dataToSend, const QString& configName);
 	void startFileServer(QString configName);
 	QString configName();
 	QString savePath();
@@ -92,12 +92,12 @@ private:
 	void setValue(int val);
 	void setLabelText(const QString text, bool multiline = false, bool writeToLog = false);
 	void loadConfig(QString configName);
-	QStringList guessFileName(QString* text);
-	QString saveDataToFile(QString* text);
+	QStringList guessFileName(const QString& text);
+	QString saveDataToFile(const QString& text);
 	void writeLog(QString msg, QString timeStamp = "");
 	QStringList processReceivedData();
-	void prepareDataBeforeSending(QString* data);
-	void procesSpecialCharacters(QString* text, QString* fileData);
+	void prepareDataBeforeSending(const QString& data);
+	QString procesSpecialCharacters(const QString& text, const QString& fileData);
 	void resetTransmission(bool portRestart = false);
 
 	Ui::SerialTransmissionDialog* ui;
