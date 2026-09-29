@@ -42,7 +42,7 @@ class SerialPortConfigDialog : public QDialog
 	Q_OBJECT
 
 public:
-	SerialPortConfigDialog(QWidget* parent = 0, QString confName = "",
+	SerialPortConfigDialog(QWidget* parent = 0, const QString& confName = QString(),
 	                       Qt::WindowFlags f = Qt::Dialog);
 	~SerialPortConfigDialog();
 
@@ -63,7 +63,7 @@ private slots:
 	void browse2ButtonClicked();
 	void browse3ButtonClicked();
 	void browse4ButtonClicked();
-	void portNameComboBoxIndexChanged(QString name);
+	void portNameComboBoxIndexChanged(const QString& name);
 	void autoSaveCheckBoxChanged(int state);
 	void appendExtCheckBoxChanged(int state);
 	void useAsExtCheckBoxChanged(int state);
@@ -74,16 +74,16 @@ private slots:
 	void deleteEobButtonClicked();
 	void addEobCharButtonClicked();
 	void deleteEobCharButtonClicked();
-	void eobComboBoxEditTextChanged(const QString text);
+	void eobComboBoxEditTextChanged(const QString& text);
 	void addFileNameButtonClicked();
 	void removeFileNameButtonClicked();
 	void helpButtonClicked();
-	void readPath1Changed(const QString text);
-	void readPath2Changed(const QString text);
-	void readPath3Changed(const QString text);
+	void readPath1Changed(const QString& text);
+	void readPath2Changed(const QString& text);
+	void readPath3Changed(const QString& text);
 
 private:
-	QString browseForDir(const QString dir, QString windowTitle);
+	QString browseForDir(const QString& dir, const QString& windowTitle);
 
 	Ui::SerialPortConfigDialog* ui;
 	QButtonGroup* baudGroup;

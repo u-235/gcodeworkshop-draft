@@ -571,7 +571,7 @@ void GUI::SerialTransmissionDialog::serialPortRequestToSend(bool set)
 	qDebug() << "Request To Send - RTS " << set;
 }
 
-void GUI::SerialTransmissionDialog::sendData(QString dataToSend, QString configName)
+void GUI::SerialTransmissionDialog::sendData(const QString& dataToSend, const QString& configName)
 {
 	if (dataToSend.isEmpty()) {
 		return;
@@ -585,7 +585,7 @@ void GUI::SerialTransmissionDialog::sendData(QString dataToSend, QString configN
 
 	resetTransmission(true);
 
-	prepareDataBeforeSending(&dataToSend);
+	prepareDataBeforeSending(dataToSend);
 
 	if (stop) {
 		return;
@@ -619,39 +619,34 @@ void GUI::SerialTransmissionDialog::sendData(QString dataToSend, QString configN
 	sending = false;
 }
 
-void GUI::SerialTransmissionDialog::prepareDataBeforeSending(QString* data)
+void GUI::SerialTransmissionDialog::prepareDataBeforeSending(const QString& data)
 {
-	if (data->isEmpty()) {
+	QString formatedData = data;
+
+	if (formatedData.isEmpty()) {
 		return;
 	}
 
 	// prepare data to send
-	if (portSettings.removeBefore && (data->count('%') > 1)) {
-		data->remove(0, data->indexOf("%"));
+	if (portSettings.removeBefore && (formatedData.count('%') > 1)) {
+		formatedData.remove(0, formatedData.indexOf("%"));
 	}
 
 	// ensure that data contains only CRLF line endings
 	QRegularExpression regex("[\\n\\r]{1,}");
-	auto match = regex.match(*data);
+	auto match = regex.match(formatedData);
 
 	while (match.hasMatch() && match.capturedLength() > 5) {
 		// too long EOB, try to find next one
-		match = regex.match(*data, match.capturedEnd());
+		match = regex.match(formatedData, match.capturedEnd());
 	}
 
 	if (match.hasMatch()) {
-		data->replace(match.captured(), "\r\n");
+		formatedData.replace(match.captured(), "\r\n");
 	}
 
-	if (!portSettings.sendAtBegining.isEmpty()) {
-		procesSpecialCharacters(&portSettings.sendAtBegining, data);
-		data->prepend(portSettings.sendAtBegining);
-	}
-
-	if (!portSettings.sendAtEnd.isEmpty()) {
-		procesSpecialCharacters(&portSettings.sendAtEnd, data);
-		data->append(portSettings.sendAtEnd);
-	}
+	formatedData.prepend(procesSpecialCharacters(portSettings.sendAtBegining, formatedData));
+	formatedData.append(procesSpecialCharacters(portSettings.sendAtEnd, formatedData));
 
 	// \n is not appended to a string only \r are left
 #if QT_VERSION < QT_VERSION_CHECK(5, 14, 0)
@@ -659,7 +654,7 @@ void GUI::SerialTransmissionDialog::prepareDataBeforeSending(QString* data)
 #else
 	auto behavior = Qt::SkipEmptyParts;
 #endif
-	serialPortWriteBuffer = data->split("\n", behavior);
+	serialPortWriteBuffer = formatedData.split("\n", behavior);
 	// insert line endings. \r is replaced with chosen line ending
 	serialPortWriteBuffer.replaceInStrings("\r", portSettings.eobChar);
 
@@ -667,17 +662,19 @@ void GUI::SerialTransmissionDialog::prepareDataBeforeSending(QString* data)
 	setRange(0, noOfBytes);
 }
 
-void GUI::SerialTransmissionDialog::procesSpecialCharacters(QString* text, QString* fileData)
+QString GUI::SerialTransmissionDialog::procesSpecialCharacters(const QString& text, const QString& fileData)
 {
-	if (text->isEmpty()) {
-		return;
+	QString result{text};
+
+	if (result.isEmpty()) {
+		return result;
 	}
 
 	QString fileExt = "";
 	QString fileExtA = "";
 	QString fileName = "";
 
-	if ((!fileData->isEmpty()) || (!fileData->isNull())) {
+	if (!fileData.isEmpty()) {
 		QStringList list = (guessFileName(fileData));
 
 		fileName = list.at(0);
@@ -698,48 +695,50 @@ void GUI::SerialTransmissionDialog::procesSpecialCharacters(QString* text, QStri
 
 	// HEX codes
 	QRegularExpression regex("0x[0-9a-fA-F]{1,2}");
-	auto match = regex.match(*text);
+	auto match = regex.match(result);
 
 	while (match.hasMatch()) {
 		bool ok;
 		char chr = match.captured().toInt(&ok, 16);
 
 		if (ok) {
-			text->replace(match.capturedStart(), match.capturedLength(), QString(chr));
+			result.replace(match.capturedStart(), match.capturedLength(), QString(chr));
 		}
 
-		match = regex.match(*text, match.capturedEnd());
+		match = regex.match(result, match.capturedEnd() - match.capturedLength() + 1);
 	}
 
-	text->remove(" ");
+	result.remove(" ");
 
-	if (text->contains("LF")) {
-		text->replace("LF", "\r\n");
+	if (result.contains("LF")) {
+		result.replace("LF", "\r\n");
 	}
 
-	if (text->contains("CR")) {
-		text->replace("CR", "\r\n");
+	if (result.contains("CR")) {
+		result.replace("CR", "\r\n");
 	}
 
-	if (text->contains("TAB")) {
-		text->replace("TAB", "\t");
+	if (result.contains("TAB")) {
+		result.replace("TAB", "\t");
 	}
 
-	if (text->contains("SP")) {
-		text->replace("SP", " ");
+	if (result.contains("SP")) {
+		result.replace("SP", " ");
 	}
 
-	if (text->contains("FA")) { // File Extension Appended at end of filename (after _ char.)
-		text->replace("FA", fileExtA);
+	if (result.contains("FA")) { // File Extension Appended at end of filename (after _ char.)
+		result.replace("FA", fileExtA);
 	}
 
-	if (text->contains("FN")) { // FileName
-		text->replace("FN", fileName);
+	if (result.contains("FN")) { // FileName
+		result.replace("FN", fileName);
 	}
 
-	if (text->contains("FE")) { // File Extension
-		text->replace("FE", fileExt);
+	if (result.contains("FE")) { // File Extension
+		result.replace("FE", fileExt);
 	}
+
+	return result;
 }
 
 void GUI::SerialTransmissionDialog::loadConfig(QString configName)
@@ -836,7 +835,7 @@ void GUI::SerialTransmissionDialog::lineDelaySlot()
 	serialPortBytesWritten(0);
 }
 
-QStringList GUI::SerialTransmissionDialog::receiveData(QString configName)
+QStringList GUI::SerialTransmissionDialog::receiveData(const QString& configName)
 {
 	QStringList outputList;
 
@@ -939,16 +938,16 @@ QStringList GUI::SerialTransmissionDialog::processReceivedData()
 				tmpData.clear();
 				tmpData.append(*it);
 				readData.remove(tmpData);
-				outputList.append(saveDataToFile(&tmpData));
+				outputList.append(saveDataToFile(tmpData));
 				it++;
 			}
 
 			qDebug() << "LOST DATA" << readData;
 		} else {
-			outputList.append(saveDataToFile(&readData));
+			outputList.append(saveDataToFile(readData));
 		}
 	} else {
-		outputList.append(saveDataToFile(&readData));
+		outputList.append(saveDataToFile(readData));
 	}
 
 	return outputList;
@@ -958,7 +957,7 @@ QStringList GUI::SerialTransmissionDialog::processReceivedData()
 // Detect program name
 //**************************************************************************************************
 
-QStringList GUI::SerialTransmissionDialog::guessFileName(QString* text)
+QStringList GUI::SerialTransmissionDialog::guessFileName(const QString& text)
 {
 	QString fileName, extension, name1, ext1, name2, ext2;
 	QRegularExpression regex;
@@ -966,12 +965,12 @@ QStringList GUI::SerialTransmissionDialog::guessFileName(QString* text)
 
 	list.clear();
 
-	if (text->isEmpty()) {
+	if (text.isEmpty()) {
 		return list;
 	}
 
 	// Detect program name like: O0032, %_N_PR25475002_MPF, $O0004.MIN%...
-	Utils::FileExt file1 = Utils::guessFileNameByProgNum(*text);
+	Utils::FileExt file1 = Utils::guessFileNameByProgNum(text);
 	name1 = file1.name;
 	ext1 = file1.ext;
 
@@ -989,7 +988,7 @@ QStringList GUI::SerialTransmissionDialog::guessFileName(QString* text)
 	qDebug() << "15" << name1 << ext1;
 
 	// detect program name by user selected expression
-	Utils::FileExt file2 = Utils::guessFileNameByRegExp(*text, portSettings.fileNameExpAs);
+	Utils::FileExt file2 = Utils::guessFileNameByRegExp(text, portSettings.fileNameExpAs);
 	name2 = file2.name;
 	ext2 = file2.ext;
 
@@ -1078,7 +1077,7 @@ QStringList GUI::SerialTransmissionDialog::guessFileName(QString* text)
 //  Save received program to a file. Return filename and empty program text if successful or leave program text unchanged
 //**************************************************************************************************
 
-QString GUI::SerialTransmissionDialog::saveDataToFile(QString* text)
+QString GUI::SerialTransmissionDialog::saveDataToFile(const QString& text)
 {
 	QFile file;
 	QString fileName;
@@ -1087,11 +1086,11 @@ QString GUI::SerialTransmissionDialog::saveDataToFile(QString* text)
 		return "";
 	}
 
-	if (text->isNull() || text->isEmpty()) {
+	if (text.isEmpty()) {
 		return "";
 	}
 
-	if (text->length() < 15) {
+	if (text.length() < 15) {
 		setLabelText(tr("ERROR:\t Received file to small (less than 15 characters)."), serverMode,
 		             true);
 		return "";
@@ -1126,11 +1125,9 @@ QString GUI::SerialTransmissionDialog::saveDataToFile(QString* text)
 	if (file.open(QIODevice::WriteOnly)) {
 		// save received data to file
 		QTextStream out(&file);
-		out << *text;
+		out << text;
 		file.flush();
 		file.close();
-
-		text->clear();
 
 		// write to log file
 		setLabelText(tr("OK:\t Saving file: \"%1\".").arg(fileName), serverMode, true);
@@ -1342,7 +1339,7 @@ void GUI::SerialTransmissionDialog::fileServerProcessData()
 								tmpBuff.clear();
 								tmpBuff.append(buff);
 
-								prepareDataBeforeSending(&tmpBuff);
+								prepareDataBeforeSending(tmpBuff);
 								setRange(0, noOfBytes);
 								sending = true;
 								writeBufferIterator = serialPortWriteBuffer.begin();

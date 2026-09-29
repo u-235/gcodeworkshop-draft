@@ -62,7 +62,7 @@ class QWidget;
 // TODO: move into class SerialPortConfigDialog
 static const char blankString[] = QT_TRANSLATE_NOOP("SettingsDialog", "N/A");
 
-GUI::SerialPortConfigDialog::SerialPortConfigDialog(QWidget* parent, QString confName,
+GUI::SerialPortConfigDialog::SerialPortConfigDialog(QWidget* parent, const QString& confName,
         Qt::WindowFlags f) :
 	QDialog(parent, f),
 	ui(new Ui::SerialPortConfigDialog()),
@@ -673,7 +673,7 @@ void GUI::SerialPortConfigDialog::loadSettings()
 	changeSettings();
 }
 
-void GUI::SerialPortConfigDialog::portNameComboBoxIndexChanged(QString name)
+void GUI::SerialPortConfigDialog::portNameComboBoxIndexChanged(const QString& name)
 {
 	QString description;
 	QString manufacturer;
@@ -728,7 +728,7 @@ void GUI::SerialPortConfigDialog::saveCloseButtonClicked()
 	accept();
 }
 
-QString GUI::SerialPortConfigDialog::browseForDir(QString dir, QString windowTitle)
+QString GUI::SerialPortConfigDialog::browseForDir(const QString& dir, const QString& windowTitle)
 {
 	QDir directory(dir);
 
@@ -736,14 +736,14 @@ QString GUI::SerialPortConfigDialog::browseForDir(QString dir, QString windowTit
 		directory.setPath(QDir::homePath());
 	}
 
-	dir = QFileDialog::getExistingDirectory(
-	          this,
-	          windowTitle,
-	          directory.canonicalPath(),
-	          QFileDialog::ShowDirsOnly);
+	const QString& userDir = QFileDialog::getExistingDirectory(
+	                             this,
+	                             windowTitle,
+	                             directory.canonicalPath(),
+	                             QFileDialog::ShowDirsOnly);
 
-	if (!dir.isEmpty()) {
-		directory.setPath(dir);
+	if (!userDir.isEmpty()) {
+		directory.setPath(userDir);
 	}
 
 	return directory.canonicalPath();
@@ -870,7 +870,7 @@ void GUI::SerialPortConfigDialog::deleteEobCharButtonClicked()
 	ui->eobComboBox->removeItem(ui->eobComboBox->currentIndex());
 }
 
-void GUI::SerialPortConfigDialog::eobComboBoxEditTextChanged(const QString text)
+void GUI::SerialPortConfigDialog::eobComboBoxEditTextChanged(const QString& text)
 {
 	ui->eobComboBox->setCurrentText(text.toUpper());
 }
@@ -896,7 +896,7 @@ void GUI::SerialPortConfigDialog::helpButtonClicked()
 	                                   QCoreApplication::applicationDirPath()), QUrl::TolerantMode));
 }
 
-void GUI::SerialPortConfigDialog::readPath1Changed(const QString text)
+void GUI::SerialPortConfigDialog::readPath1Changed(const QString& text)
 {
 	QPalette palette;
 
@@ -916,7 +916,7 @@ void GUI::SerialPortConfigDialog::readPath1Changed(const QString text)
 	}
 }
 
-void GUI::SerialPortConfigDialog::readPath2Changed(const QString text)
+void GUI::SerialPortConfigDialog::readPath2Changed(const QString& text)
 {
 	QPalette palette;
 
@@ -936,7 +936,7 @@ void GUI::SerialPortConfigDialog::readPath2Changed(const QString text)
 	}
 }
 
-void GUI::SerialPortConfigDialog::readPath3Changed(const QString text)
+void GUI::SerialPortConfigDialog::readPath3Changed(const QString& text)
 {
 	QPalette palette;
 
