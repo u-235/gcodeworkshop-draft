@@ -46,11 +46,11 @@
 #include <kdiff3/kdiff3.h> // for KDiff3App
 #include <utils/medium.h>  // for Medium
 
-#include "filechecker.h"
+#include "gui/filechecker/filechecker.h"
 #include "ui_filechecker.h"
 
 
-FileChecker::FileChecker(QWidget* parent) :
+GUI::FileChecker::FileChecker(QWidget* parent) :
 	QDialog(parent),
 	ui(new Ui::FileChecker)
 {
@@ -81,7 +81,7 @@ FileChecker::FileChecker(QWidget* parent) :
 	ui->fileTableWidget->setAutoScroll(false);
 }
 
-FileChecker::~FileChecker()
+GUI::FileChecker::~FileChecker()
 {
 	QSettings& settings = *Medium::instance().settings();
 	settings.beginGroup("FileCheck");
@@ -97,7 +97,7 @@ FileChecker::~FileChecker()
 	delete ui;
 }
 
-void FileChecker::setData(const QString startDir, QStringList readPaths, QStringList fileFilter)
+void GUI::FileChecker::setData(const QString startDir, QStringList readPaths, QStringList fileFilter)
 {
 	extensions.clear();
 	extensions = fileFilter;
@@ -115,12 +115,12 @@ void FileChecker::setData(const QString startDir, QStringList readPaths, QString
 	        SLOT(readPathComboBoxChanged(QString)));
 }
 
-void FileChecker::findFiles()
+void GUI::FileChecker::findFiles()
 {
 	findFiles(savePath, extensions);
 }
 
-void FileChecker::findFiles(const QString startDir, QStringList fileFilter)
+void GUI::FileChecker::findFiles(const QString startDir, QStringList fileFilter)
 {
 	QRegularExpression regex;
 	QString comment_tx;
@@ -254,7 +254,7 @@ void FileChecker::findFiles(const QString startDir, QStringList fileFilter)
 	ui->fileTableWidget->resizeColumnsToContents();
 }
 
-void FileChecker::createDiff()
+void GUI::FileChecker::createDiff()
 {
 	if (!diffApp) {
 		diffApp = new KDiff3App(ui->vSplitter, "Diff", extensions);
@@ -269,7 +269,7 @@ void FileChecker::createDiff()
 	}
 }
 
-void FileChecker::acceptFile()
+void GUI::FileChecker::acceptFile()
 {
 	int row = ui->fileTableWidget->currentRow();
 
@@ -310,7 +310,7 @@ void FileChecker::acceptFile()
 	}
 }
 
-void FileChecker::deleteFile()
+void GUI::FileChecker::deleteFile()
 {
 	int row = ui->fileTableWidget->currentRow();
 
@@ -339,7 +339,7 @@ void FileChecker::deleteFile()
 	}
 }
 
-void FileChecker::filesTableClicked(int row, int col)
+void GUI::FileChecker::filesTableClicked(int row, int col)
 {
 	Q_UNUSED(row);
 	Q_UNUSED(col);
@@ -400,20 +400,20 @@ void FileChecker::filesTableClicked(int row, int col)
 	//    }
 }
 
-void FileChecker::readPathComboBoxChanged(QString text)
+void GUI::FileChecker::readPathComboBoxChanged(QString text)
 {
 	Q_UNUSED(text);
 
 	findFiles(ui->savePathLabel->text(), extensions);
 }
 
-void FileChecker::preliminaryDiff(QString file1, QString file2)
+void GUI::FileChecker::preliminaryDiff(QString file1, QString file2)
 {
 	Q_UNUSED(file1);
 	Q_UNUSED(file2);
 }
 
-void FileChecker::filesTableCurrentCellChanged(int row, int col, int pRow, int pCol)
+void GUI::FileChecker::filesTableCurrentCellChanged(int row, int col, int pRow, int pCol)
 {
 	Q_UNUSED(col);
 	Q_UNUSED(pCol);

@@ -20,8 +20,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef FILECHECKER_H
-#define FILECHECKER_H
+#ifndef GUI_FILECHECKER_H
+#define GUI_FILECHECKER_H
 
 #include <QByteArray>
 #include <QDialog>
@@ -40,6 +40,7 @@ class FileChecker;
 }
 
 
+namespace GUI {
 class FileChecker : public QDialog
 {
 	Q_OBJECT
@@ -74,5 +75,6 @@ private:
 
 	void preliminaryDiff(QString file1, QString file2);
 };
+} // namespace GUI
 
-#endif // FILECHECKER_H
+#endif // GUI_FILECHECKER_H
