@@ -63,12 +63,10 @@ GUI::FileChecker::FileChecker(QWidget* parent) :
 	splitterState()
 {
 	ui->setupUi(this);
-
 	setAttribute(Qt::WA_DeleteOnClose);
 
 	connect(ui->fileTableWidget, SIGNAL(currentCellChanged(int, int, int, int)), this,
 	        SLOT(filesTableCurrentCellChanged(int, int, int, int)));
-	//connect(ui->fileTableWidget, SIGNAL(cellClicked(int, int)), this, SLOT(filesTableClicked(int, int)));
 
 	showMaximized();
 
@@ -90,10 +88,8 @@ GUI::FileChecker::~FileChecker()
 	settings.setValue("VSplitterState", ui->vSplitter->saveState());
 	settings.endGroup();
 
-	disconnect(ui->fileTableWidget, 0, 0, 0);
-
 	if (diffApp) {
-		delete (diffApp);
+		diffApp->deleteLater();
 	}
 
 	delete ui;
@@ -112,7 +108,6 @@ void GUI::FileChecker::setData(const QString startDir, QStringList readPaths, QS
 	disconnect(ui->readPathComboBox, 0, 0, 0);
 	ui->readPathComboBox->clear();
 	ui->readPathComboBox->insertItems(0, readPathList);
-	//ui->readPathComboBox->setCurrentIndex(0);
 	connect(ui->readPathComboBox, SIGNAL(currentIndexChanged(QString)),
 	        SLOT(readPathComboBoxChanged(QString)));
 }
@@ -136,15 +131,12 @@ void GUI::FileChecker::findFiles(const QString startDir, QStringList fileFilter)
 	ui->fileTableWidget->setColumnCount(labels.size());
 	ui->fileTableWidget->setHorizontalHeaderLabels(labels);
 
-
 	regex.setPatternOptions(QRegularExpression::CaseInsensitiveOption);
 	regex.setPattern("\\([^\\n\\r]*\\)|;[^\\n\\r]*");
 
 	QDir directory = QDir(startDir);
 
 	files = directory.entryList(fileFilter, QDir::Files | QDir::NoSymLinks | QDir::Readable);
-
-	//   progressDialog->setLabelText(tr("Searching in folder: \"%1\"").arg(QDir::toNativeSeparators(directory.absolutePath())));
 
 	QString path2 = ui->readPathComboBox->currentText();
 
@@ -155,13 +147,6 @@ void GUI::FileChecker::findFiles(const QString startDir, QStringList fileFilter)
 	ui->fileTableWidget->setSortingEnabled(false);
 
 	for (int i = 0; i < files.size(); ++i) {
-		//      progressDialog->setRange(0, files.size());
-		//      progressDialog->setValue(i);
-		//      qApp->processEvents();
-
-		//      if(progressDialog->wasCanceled())
-		//         break;
-
 		QFile file(directory.absoluteFilePath(files[i]));
 
 		if (file.open(QIODevice::ReadOnly)) {
@@ -184,8 +169,6 @@ void GUI::FileChecker::findFiles(const QString startDir, QStringList fileFilter)
 				match = regex.match(line, match.capturedEnd());
 			}
 
-			//qDebug() << files[i] << size;
-
 			QTableWidgetItem* fileNameItem = new QTableWidgetItem(files[i]);
 			fileNameItem->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
 
@@ -199,7 +182,6 @@ void GUI::FileChecker::findFiles(const QString startDir, QStringList fileFilter)
 			dateItem->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
 			dateItem->setData(Qt::DisplayRole, QFileInfo(file).lastModified());
 
-
 			int row = ui->fileTableWidget->rowCount();
 			ui->fileTableWidget->insertRow(row);
 			ui->fileTableWidget->setItem(row, 0, fileNameItem);
@@ -209,17 +191,12 @@ void GUI::FileChecker::findFiles(const QString startDir, QStringList fileFilter)
 
 			file.close();
 
-
 			comment_tx = "";
 
 			if (QFile::exists(QDir::toNativeSeparators((path2 + files[i])))) {
 				if (diffApp) {
-					//qDebug() << "DIFF" << path2 << directory.absoluteFilePath(files[i]);
-
-					//splitterState = ui->vSplitter->saveState();
 					diffApp->close();
 
-					//ui->vSplitter->restoreState(splitterState);
 					if (diffApp->completeInit(path2, directory.absoluteFilePath(files[i]))) {
 						comment_tx = tr("Equal");
 					} else {
@@ -237,16 +214,6 @@ void GUI::FileChecker::findFiles(const QString startDir, QStringList fileFilter)
 			                          "Equal - received file and file in Search path are identical.\n"
 			                          "Changed - received file is modified"));
 			ui->fileTableWidget->setItem(row, 4, statusItem);
-
-
-			//            QLabel *lbl = new QLabel;
-			//            lbl->setAlignment(Qt::AlignCenter);
-			//            QPixmap pix(":/images/cancel.png");
-			//            QPixmap resPix = pix.scaled(17,17, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-			//            lbl->setPixmap(resPix);
-
-
-			//            ui->fileTableWidget->setCellWidget(row, 4, lbl);
 		}
 	}
 
@@ -341,78 +308,11 @@ void GUI::FileChecker::deleteFile()
 	}
 }
 
-void GUI::FileChecker::filesTableClicked(int row, int col)
-{
-	Q_UNUSED(row);
-	Q_UNUSED(col);
-
-	//    QTableWidgetItem *item = ui->fileTableWidget->item(row, 0);
-	//    if(item)
-	//    {
-
-	//        QString path1 = ui->savePathLabel->text();
-	//        if(!path1.endsWith("/"))
-	//            path1 = path1 + "/";
-
-	//        QString path2 = ui->readPathComboBox->currentText();
-	//        if(!path2.endsWith("/"))
-	//            path2 = path2 + "/";
-
-	//        path1 = path1 + item->text();
-	//        path2 = path2 + item->text();
-
-	//        if(path1 == path2)
-	//            return;
-
-	//        if((prevRow >= 0) && (prevRow < ui->fileTableWidget->rowCount()))
-	//        {
-	//            ui->fileTableWidget->setCellWidget(prevRow, 2, new QLabel);
-	//            ui->fileTableWidget->setCellWidget(prevRow, 3, new QLabel);
-	//        }
-
-	//        if(QFile::exists(path1))
-	//        {
-	//            prevRow = row;
-
-	//            okBtn = new QToolButton();
-	//            okBtn->setIcon(QIcon(":/images/ok.png"));
-	//            okBtn->setToolTip(tr("Accept received file and move it to selected search path"));
-	//            connect(okBtn, SIGNAL(clicked()), this, SLOT(acceptFile()));
-
-	//            noBtn = new QToolButton();
-	//            noBtn->setIcon(QIcon(":/images/cancel.png"));
-	//            noBtn->setToolTip(tr("Delete received file"));
-	//            connect(noBtn, SIGNAL(clicked()), this, SLOT(deleteFile()));
-
-	//            ui->fileTableWidget->setCellWidget(row, 2, okBtn);
-	//            ui->fileTableWidget->setCellWidget(row, 3, noBtn);
-
-	//            createDiff();
-
-	//            if(diffApp)
-	//            {
-	//                splitterState = ui->vSplitter->saveState();
-	//                diffApp->close();
-	//                ui->vSplitter->restoreState(splitterState);
-	//                diffApp->completeInit(path2, path1);
-	//            }
-	//        }
-	//        else
-	//            prevRow = -1;
-	//    }
-}
-
 void GUI::FileChecker::readPathComboBoxChanged(QString text)
 {
 	Q_UNUSED(text);
 
 	findFiles(ui->savePathLabel->text(), extensions);
-}
-
-void GUI::FileChecker::preliminaryDiff(QString file1, QString file2)
-{
-	Q_UNUSED(file1);
-	Q_UNUSED(file2);
 }
 
 void GUI::FileChecker::filesTableCurrentCellChanged(int row, int col, int pRow, int pCol)
@@ -472,13 +372,7 @@ void GUI::FileChecker::filesTableCurrentCellChanged(int row, int col, int pRow, 
 			createDiff();
 
 			if (diffApp) {
-				//diffApp->setUpdatesEnabled(false);
-				//                splitterState = ui->vSplitter->saveState();
-				//                diffApp->close();
-				//                ui->vSplitter->restoreState(splitterState);
 				diffApp->completeInit(path2, path1);
-				//diffApp->setUpdatesEnabled(true);
-
 				ui->fileTableWidget->setFocus();
 			}
 		}
