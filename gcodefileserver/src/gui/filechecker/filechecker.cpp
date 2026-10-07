@@ -52,21 +52,23 @@
 
 GUI::FileChecker::FileChecker(QWidget* parent) :
 	QDialog(parent),
-	ui(new Ui::FileChecker)
+	ui(new Ui::FileChecker),
+	diffApp(nullptr),
+	extensions(),
+	okBtn(nullptr),
+	noBtn(nullptr),
+	prevRow(-1),
+	readPathList(),
+	savePath(),
+	splitterState()
 {
 	ui->setupUi(this);
 
 	setAttribute(Qt::WA_DeleteOnClose);
 
-	extensions.clear();
-
 	connect(ui->fileTableWidget, SIGNAL(currentCellChanged(int, int, int, int)), this,
 	        SLOT(filesTableCurrentCellChanged(int, int, int, int)));
 	//connect(ui->fileTableWidget, SIGNAL(cellClicked(int, int)), this, SLOT(filesTableClicked(int, int)));
-
-	okBtn = nullptr;
-	noBtn = nullptr;
-	prevRow = -1;
 
 	showMaximized();
 
