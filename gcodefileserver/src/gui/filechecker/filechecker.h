@@ -53,7 +53,6 @@ public:
 	void findFiles();
 
 private slots:
-	void filesTableClicked(int row, int col);
 	void acceptFile();
 	void deleteFile();
 	void readPathComboBoxChanged(QString text);
@@ -72,8 +71,6 @@ private:
 
 	void createDiff();
 	void findFiles(const QString startDir, QStringList fileFilter);
-
-	void preliminaryDiff(QString file1, QString file2);
 };
 } // namespace GUI
 
