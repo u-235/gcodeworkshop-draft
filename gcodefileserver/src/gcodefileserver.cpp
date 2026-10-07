@@ -41,8 +41,8 @@
 #include <utils/medium.h>                               // for Medium
 #include <version.h>
 
-#include "filechecker.h"                // for FileChecker
-#include "gui/fileserver/mainwindow.h"  // for MainWindow
+#include "gui/filechecker/filechecker.h"    // for FileChecker
+#include "gui/fileserver/mainwindow.h"      // for MainWindow
 
 
 GCodeFileServer::GCodeFileServer(QWidget* parent) :
@@ -213,7 +213,7 @@ void GCodeFileServer::showNewFiles()
 		extensions.removeDuplicates();
 		extensions.sort();
 
-		FileChecker* fileCheck = new FileChecker(mainWindow());
+		GUI::FileChecker* fileCheck = new GUI::FileChecker(mainWindow());
 		fileCheck->setData(sw->savePath(), sw->readPaths(), extensions);
 		fileCheck->findFiles();
 		fileCheck->exec();

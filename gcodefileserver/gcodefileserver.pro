@@ -19,8 +19,8 @@ defined(VERSION, var) {
 INCLUDEPATH += include src
 
 SOURCES = \
-    filechecker.cpp \
     src/gcodefileserver.cpp \
+    src/gui/filechecker/filechecker.cpp \
     src/gui/fileserver/defaultkeysequences.cpp \
     src/gui/fileserver/knownactions.cpp \
     src/gui/fileserver/mainwindow.cpp \
@@ -28,15 +28,15 @@ SOURCES = \
     src/main.cpp
 
 HEADERS = \
-    filechecker.h \
     include/gcodefileserver.h \
     include/gui/fileserver/knownactions.h \
+    src/gui/filechecker/filechecker.h \
     src/gui/fileserver/defaultkeysequences.h \
     src/gui/fileserver/mainwindow.h \
     src/gui/fileserver/windowactions.h
 
 FORMS = \
-    filechecker.ui \
+    src/gui/filechecker/filechecker.ui \
     src/gui/fileserver/mainwindow.ui
 
 
