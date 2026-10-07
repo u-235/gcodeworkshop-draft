@@ -95,7 +95,7 @@ GUI::FileChecker::~FileChecker()
 	delete ui;
 }
 
-void GUI::FileChecker::setData(const QString startDir, QStringList readPaths, QStringList fileFilter)
+void GUI::FileChecker::setData(const QString& startDir, const QStringList& readPaths, const QStringList& fileFilter)
 {
 	extensions.clear();
 	extensions = fileFilter;
@@ -117,7 +117,7 @@ void GUI::FileChecker::findFiles()
 	findFiles(savePath, extensions);
 }
 
-void GUI::FileChecker::findFiles(const QString startDir, QStringList fileFilter)
+void GUI::FileChecker::findFiles(const QString& startDir, const QStringList& fileFilter)
 {
 	QRegularExpression regex;
 	QString comment_tx;

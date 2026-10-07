@@ -49,7 +49,7 @@ public:
 	explicit FileChecker(QWidget* parent = 0);
 	~FileChecker();
 
-	void setData(const QString startDir, QStringList readPaths, QStringList fileFilter);
+	void setData(const QString& startDir, const QStringList& readPaths, const QStringList& fileFilter);
 	void findFiles();
 
 private slots:
@@ -70,7 +70,7 @@ private:
 	QByteArray splitterState;
 
 	void createDiff();
-	void findFiles(const QString startDir, QStringList fileFilter);
+	void findFiles(const QString& startDir, const QStringList& fileFilter);
 };
 } // namespace GUI
 
