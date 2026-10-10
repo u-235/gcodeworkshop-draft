@@ -20,6 +20,7 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include <QApplication>             // for QApplication
 #include <QByteArray>               // for QByteArray
 #include <QComboBox>                // for QComboBox
 #include <QDateTime>                // for QDateTime
@@ -35,6 +36,7 @@
 #include <QRegularExpressionMatch>  // for QRegularExpressionMatch
 #include <QSettings>                // for QSettings
 #include <QSplitter>                // for QSplitter
+#include <QStyle>                   // for QStyle
 #include <QTableWidget>             // for QTableWidget
 #include <QTableWidgetItem>         // for QTableWidgetItem
 #include <QTextStream>              // for QTextStream
@@ -266,8 +268,9 @@ void GUI::FileChecker::acceptFile()
 		}
 
 		if (QFile::rename(path1, path2)) {
+			int sz = QApplication::style()->pixelMetric(QStyle::PM_SmallIconSize);
 			QPixmap pix(":/images/ok.png");
-			QPixmap resPix = pix.scaled(17, 17, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+			QPixmap resPix = pix.scaled(sz, sz, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
 			QLabel* lbl = new QLabel;
 			lbl->setPixmap(resPix);
 			lbl->setAlignment(Qt::AlignCenter);
@@ -295,8 +298,9 @@ void GUI::FileChecker::deleteFile()
 		QString path1 = dir + item->text();
 
 		if (QFile::exists(path1) && QFile::remove(path1)) {
+			int sz = QApplication::style()->pixelMetric(QStyle::PM_SmallIconSize);
 			QPixmap pix(":/images/cancel.png");
-			QPixmap resPix = pix.scaled(17, 17, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+			QPixmap resPix = pix.scaled(sz, sz, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
 			QLabel* lbl = new QLabel;
 			lbl->setPixmap(resPix);
 			lbl->setAlignment(Qt::AlignCenter);
