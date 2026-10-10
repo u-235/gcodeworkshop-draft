@@ -89,12 +89,8 @@ signals:
 
 protected:
 	static GCodeWorkShop* SINGLETON;
-	GUI::WorkShop::MainWindow* m_mainWindow;
 
 	GCodeWorkShop(Medium* medium);
-
-	Medium* mMedium;
-	KeySequenceMap m_shortcuts;
 
 public slots:
 	void openFile(const QString& fileName, const QString& mime = QString());
@@ -226,16 +222,14 @@ private:
 	void loadPrinterSettings(QPrinter* printer);
 	void statusBarMessage(const QString& msg, int timeout);
 
-	SessionManager* m_sessionManager;
-
-	bool m_MdiWidgetsMaximized;
-
-	DocumentManager* m_documentManager;
+	Medium* mMedium;
+	KeySequenceMap m_shortcuts;
 	QString m_calcBinary;
 	QStringList m_extensions;
 	QString m_saveExtension;
 	QString m_saveDirectory;
 	QString m_lastOpenedPath;
+	bool m_MdiWidgetsMaximized;
 	bool m_defaultReadOnly;
 	bool m_startEmpty;
 	bool m_disableFileChangeMonitor;
@@ -243,7 +237,10 @@ private:
 
 	QByteArray fileDialogState;
 
+	DocumentManager* m_documentManager;
+	SessionManager* m_sessionManager;
 	RecentFiles* m_recentFiles;
+	GUI::WorkShop::MainWindow* m_mainWindow;
 
 	QProcess* proc;
 	QProcess* sfsProc;
