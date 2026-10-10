@@ -109,22 +109,28 @@ GCodeWorkShop* GCodeWorkShop::instance()
 }
 
 GCodeWorkShop::GCodeWorkShop(Medium* medium)
-	: QObject(nullptr)
+	: QObject(nullptr),
+	  mMedium(medium),
+	  m_shortcuts(),
+	  m_calcBinary(),
+	  m_extensions(QStringList{"*.nc", "*.cnc"}),
+	  m_saveExtension(QString("*.nc")),
+	  m_saveDirectory(QDir::homePath()),
+	  m_lastOpenedPath(),
+	  m_MdiWidgetsMaximized(true),
+	  m_defaultReadOnly(false),
+	  m_startEmpty(false),
+	  m_disableFileChangeMonitor(false),
+	  m_findInFilesHighlightEnable(true),
+	  fileDialogState(),
+	  m_documentManager(new DocumentManager(this)),
+	  m_sessionManager(new SessionManager(m_documentManager, this)),
+	  m_recentFiles(new RecentFiles(this)),
+	  m_mainWindow(new GUI::WorkShop::MainWindow(this)),
+	  proc(),
+	  sfsProc(),
+	  fileChangeMonitor()
 {
-	m_mainWindow = nullptr;
-	mMedium = medium;
-
-	m_MdiWidgetsMaximized = true;
-	m_defaultReadOnly = false;
-	m_startEmpty = false;
-	m_disableFileChangeMonitor = false;
-	m_findInFilesHighlightEnable = true;
-
-	m_extensions << "*.nc" <<  "*.cnc";
-	m_saveExtension = "*.nc";
-	m_saveDirectory = QDir::homePath();
-
-	m_recentFiles = new RecentFiles(this);
 	connect(m_recentFiles, SIGNAL(saveRequest()), this, SLOT(recentFilesChanged()));
 
 	m_shortcuts.insert(GUI::WorkShop::defaultKeySequence());
@@ -136,8 +142,6 @@ GCodeWorkShop::GCodeWorkShop(Medium* medium)
 		m_shortcuts.save(cfg);
 	});
 
-
-	m_documentManager = new DocumentManager(this);
 	m_documentManager->registerDocumentProducer(new GCoderProducer());
 	connect(m_documentManager, SIGNAL(closeRequested(Document*)), this, SLOT(maybeSave(Document*)),
 	        Qt::ConnectionType::DirectConnection);
@@ -145,12 +149,10 @@ GCodeWorkShop::GCodeWorkShop(Medium* medium)
 	        SLOT(customContextMenuRequest(Document*, const QPoint&)));
 	connect(m_documentManager, SIGNAL(fileWatchRequest(const QString&, bool)), this, SLOT(watchFile(const QString&, bool)));
 
-	m_sessionManager = new SessionManager(m_documentManager, this);
 	connect(m_sessionManager, SIGNAL(beforeCurrentSessionChanged()), this, SLOT(beforeCurrentSessionChanged()));
 	connect(m_sessionManager, SIGNAL(currentSessionChanged()), this, SLOT(currentSessionChanged()));
 	connect(m_sessionManager, SIGNAL(saveRequest()), this, SLOT(sessionsChanged()));
 
-	m_mainWindow = new GUI::WorkShop::MainWindow(this);
 	m_documentManager->setMdiArea(m_mainWindow->mdiArea());
 	connect(m_recentFiles, &RecentFiles::fileListChanged, m_mainWindow, &GUI::WorkShop::MainWindow::updateRecentFilesMenu);
 	connect(m_documentManager, &DocumentManager::redoAvailable, m_mainWindow->editActions()->redo(), &QAction::setEnabled);
