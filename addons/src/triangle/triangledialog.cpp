@@ -136,13 +136,13 @@ bool TriangleDialog::eventFilter(QObject* obj, QEvent* ev)
 
 	QKeyEvent* k = (QKeyEvent*) ev;
 
-	if (QLocale().decimalPoint() == '.' && k->key() == Qt::Key_Comma) {
+	if (QLocale().decimalPoint() == QChar('.') && k->key() == Qt::Key_Comma) {
 		QApplication::sendEvent(obj, new QKeyEvent(QEvent::KeyPress, Qt::Key_Period, Qt::NoModifier,
 		                        ".", false, 1));
 		return true;
 	}
 
-	if (QLocale().decimalPoint() == ',' && k->key() == Qt::Key_Period) {
+	if (QLocale().decimalPoint() == QChar(',') && k->key() == Qt::Key_Period) {
 		QApplication::sendEvent(obj, new QKeyEvent(QEvent::KeyPress, Qt::Key_Comma, Qt::NoModifier, ",",
 		                        false, 1));
 		return true;

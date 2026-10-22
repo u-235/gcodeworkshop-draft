@@ -376,7 +376,7 @@ void Highlighter::highlightBlockFanucRule(const QString& tx)
 		sellen = 1;
 
 		while (true) {
-			if (ch == '(') {
+			if (ch == QChar('(')) {
 				count = 1;
 
 				do {
@@ -388,9 +388,9 @@ void Highlighter::highlightBlockFanucRule(const QString& tx)
 					ch = tx.at(pos + sellen).toUpper();
 					sellen++;
 
-					if (ch == '(') {
+					if (ch == QChar('(')) {
 						count++;
-					} else if (ch == ')') {
+					} else if (ch == QChar(')')) {
 						count--;
 					}
 
@@ -402,7 +402,7 @@ void Highlighter::highlightBlockFanucRule(const QString& tx)
 
 			//***********************************************************************
 
-			if ((ch >= 'A' && ch <= 'Z') || (ch == '#') || (ch == '@') || (ch == '_')) {
+			if ((ch >= QChar('A') && ch <= QChar('Z')) || (ch == QChar('#')) || (ch == QChar('@')) || (ch == QChar('_'))) {
 				address = "";
 
 				do {
@@ -413,13 +413,13 @@ void Highlighter::highlightBlockFanucRule(const QString& tx)
 					}
 
 					ch = tx.at(address.length() + pos).toUpper();
-				} while ((ch >= 'A' && ch <= 'Z') || (ch == '_'));
+				} while ((ch >= QChar('A') && ch <= QChar('Z')) || (ch == QChar('_')));
 
 				sellen = address.length();
 
 				val = "";
 
-				while ((ch >= '0' && ch <= '9') || (ch == '.') || (((ch == '-') || (ch == '+'))
+				while ((ch >= QChar('0') && ch <= QChar('9')) || (ch == QChar('.')) || (((ch == QChar('-') || (ch == QChar('+'))))
 				        && (sellen == 1))) {
 					val.append(ch);
 
@@ -525,7 +525,7 @@ void Highlighter::highlightBlockFanucRule(const QString& tx)
 
 			//***********************************************************************
 
-			if ((ch == '/') || (ch == '*') || (ch == '-') || (ch == '+') || (ch == '=')) {
+			if ((ch == QChar('/')) || (ch == QChar('*')) || (ch == QChar('-')) || (ch == QChar('+')) || (ch == QChar('='))) {
 				format.setForeground(QColor(highlightColors.operatorColor));
 				setFormat(pos, sellen, format);
 				break;
@@ -533,7 +533,7 @@ void Highlighter::highlightBlockFanucRule(const QString& tx)
 
 			//***********************************************************************
 
-			if ((ch == '[') || (ch == ']') || (ch == ',') || (ch == '{') || (ch == '}')) {
+			if ((ch == QChar('[')) || (ch == QChar(']')) || (ch == QChar(',')) || (ch == QChar('{')) || (ch == QChar('}'))) {
 				format.setForeground(QColor(highlightColors.operatorColor));
 				setFormat(pos, sellen, format);
 				break;
@@ -541,7 +541,7 @@ void Highlighter::highlightBlockFanucRule(const QString& tx)
 
 			//***********************************************************************
 
-			if ((ch == '"') || (ch == '\'')) {
+			if ((ch == QChar('"')) || (ch == QChar('\''))) {
 				do {
 					sellen++;
 
@@ -551,7 +551,7 @@ void Highlighter::highlightBlockFanucRule(const QString& tx)
 
 					ch = tx.at(sellen + pos).toUpper();
 
-				} while (!((ch == '"') || (ch == '\'') || ((pos + sellen) >= tx.length())));
+				} while (!((ch == QChar('"')) || (ch == QChar('\'')) || ((pos + sellen) >= tx.length())));
 
 				sellen++;
 				format.setForeground(QColor(highlightColors.commentColor));
@@ -592,9 +592,9 @@ void Highlighter::highlightBlockSinuRule(const QString& tx)
 		sellen = 1;
 
 		while (true) {
-			if (ch == ';') {
+			if (ch == QChar(';')) {
 				if (tx.length() >= (pos + 2))
-					if (tx.at(pos + 1) == '$') {
+					if (tx.at(pos + 1) == QChar('$')) {
 						break;
 					}
 
@@ -606,7 +606,7 @@ void Highlighter::highlightBlockSinuRule(const QString& tx)
 
 			//***********************************************************************
 
-			if ((ch >= 'A' && ch <= 'Z') || (ch == '_')) {
+			if ((ch >= QChar('A') && ch <= QChar('Z')) || (ch == QChar('_'))) {
 				address = "";
 
 				do {
@@ -618,14 +618,14 @@ void Highlighter::highlightBlockSinuRule(const QString& tx)
 
 					ch = tx.at(address.length() + pos).toUpper().toUpper();
 
-				} while ((ch >= 'A' && ch <= 'Z') || (ch == '_'));
+				} while ((ch >= QChar('A') && ch <= QChar('Z')) || (ch == QChar('_')));
 
 				sellen = address.length();
 
 				val = "";
 
-				while ((ch >= 'A' && ch <= 'Z') || (ch >= '0' && ch <= '9') || (ch == '.') || (((ch == '-')
-				        || (ch == '+')) && (sellen == 1))) {
+				while ((ch >= QChar('A') && ch <= QChar('Z')) || (ch >= QChar('0') && ch <= QChar('9')) || (ch == QChar('.'))
+				        || (((ch == QChar('-')) || (ch == QChar('+'))) && (sellen == 1))) {
 					val.append(ch);
 
 					if ((sellen + val.length() + pos) >= tx.length()) {
@@ -634,7 +634,7 @@ void Highlighter::highlightBlockSinuRule(const QString& tx)
 
 					ch = tx.at(sellen + val.length() + pos).toUpper();
 
-					if (ch == ':') {
+					if (ch == QChar(':')) {
 						format.setForeground(QColor(highlightColors.keyWordColor));
 						format.setFontWeight(QFont::Bold);
 						sellen = address.length() + 1;
@@ -646,13 +646,13 @@ void Highlighter::highlightBlockSinuRule(const QString& tx)
 				sellen = address.length();
 
 				if (address.contains(QRegularExpression("[A-Z_]{2,}"))) {
-					if (ch == ':') {
+					if (ch == QChar(':')) {
 						format.setForeground(QColor(highlightColors.keyWordColor));
 						format.setFontWeight(QFont::Bold);
 						setFormat(pos, sellen, format);
 					}
 
-					if (ch == '(') {
+					if (ch == QChar('(')) {
 						format.setForeground(QColor(highlightColors.macroColor));
 						format.setFontWeight(QFont::Normal);
 						setFormat(pos, sellen, format);
@@ -753,8 +753,8 @@ void Highlighter::highlightBlockSinuRule(const QString& tx)
 
 			//***********************************************************************
 
-			if ((ch == '/') || (ch == '*') || (ch == '-') || (ch == '+') || (ch == '<') || (ch == '>')
-			        || (ch == '=')) {
+			if ((ch == QChar('/')) || (ch == QChar('*')) || (ch == QChar('-')) || (ch == QChar('+')) || (ch == QChar('<'))
+			        || (ch == QChar('>')) || (ch == QChar('='))) {
 				format.setForeground(QColor(highlightColors.operatorColor));
 				setFormat(pos, sellen, format);
 				break;
@@ -762,8 +762,8 @@ void Highlighter::highlightBlockSinuRule(const QString& tx)
 
 			//***********************************************************************
 
-			if ((ch == '[') || (ch == ']') || (ch == ',') || (ch == '{') || (ch == '}') || (ch == '(')
-			        || (ch == ')')) {
+			if ((ch == QChar('[')) || (ch == QChar(']')) || (ch == QChar(',')) || (ch == QChar('{')) || (ch == QChar('}'))
+			        || (ch == QChar('(')) || (ch == QChar(')'))) {
 				format.setForeground(QColor(highlightColors.operatorColor));
 				setFormat(pos, sellen, format);
 				break;
@@ -771,7 +771,7 @@ void Highlighter::highlightBlockSinuRule(const QString& tx)
 
 			//***********************************************************************
 
-			if ((ch == '"') || (ch == '\'')) {
+			if ((ch == QChar('"')) || (ch == QChar('\''))) {
 				do {
 					sellen++;
 
@@ -781,7 +781,7 @@ void Highlighter::highlightBlockSinuRule(const QString& tx)
 
 					ch = tx.at(sellen + pos).toUpper();
 
-				} while (!((ch == '"') || (ch == '\'') || ((pos + sellen) >= tx.length())));
+				} while (!((ch == QChar('"')) || (ch == QChar('\'')) || ((pos + sellen) >= tx.length())));
 
 				sellen++;
 				format.setForeground(QColor(highlightColors.commentColor));
@@ -820,7 +820,7 @@ void Highlighter::highlightBlockOkumaRule(const QString& tx)
 		sellen = 1;
 
 		while (true) {
-			if (ch == '(') {
+			if (ch == QChar('(')) {
 				count = 1;
 
 				do {
@@ -832,9 +832,9 @@ void Highlighter::highlightBlockOkumaRule(const QString& tx)
 					ch = tx.at(pos + sellen).toUpper();
 					sellen++;
 
-					if (ch == '(') {
+					if (ch == QChar('(')) {
 						count++;
-					} else if (ch == ')') {
+					} else if (ch == QChar(')')) {
 						count--;
 					}
 
@@ -846,7 +846,7 @@ void Highlighter::highlightBlockOkumaRule(const QString& tx)
 
 			//***********************************************************************
 
-			if ((ch >= 'A' && ch <= 'Z') || (ch == '_')) {
+			if ((ch >= QChar('A') && ch <= QChar('Z')) || (ch == QChar('_'))) {
 				address = "";
 
 				do {
@@ -858,14 +858,14 @@ void Highlighter::highlightBlockOkumaRule(const QString& tx)
 
 					ch = tx.at(address.length() + pos).toUpper();
 
-				} while ((ch >= 'A' && ch <= 'Z') || (ch == '_'));
+				} while ((ch >= QChar('A') && ch <= QChar('Z')) || (ch == QChar('_')));
 
 				sellen = address.length();
 
 				val = "";
 
-				while ((ch >= 'A' && ch <= 'Z') || (ch >= '0' && ch <= '9') || (ch == '.') || (((ch == '-')
-				        || (ch == '+')) && (sellen == 1))) {
+				while ((ch >= QChar('A') && ch <= QChar('Z')) || (ch >= QChar('0') && ch <= QChar('9')) || (ch == QChar('.'))
+				        || (((ch == QChar('-')) || (ch == QChar('+'))) && (sellen == 1))) {
 					val.append(ch);
 
 					if ((sellen + val.length() + pos) >= tx.length()) {
@@ -874,7 +874,7 @@ void Highlighter::highlightBlockOkumaRule(const QString& tx)
 
 					ch = tx.at(sellen + val.length() + pos).toUpper();
 
-					if (ch == ':') {
+					if (ch == QChar(':')) {
 						format.setForeground(QColor(highlightColors.keyWordColor));
 						format.setFontWeight(QFont::Bold);
 						sellen = address.length() + 1;
@@ -980,8 +980,8 @@ void Highlighter::highlightBlockOkumaRule(const QString& tx)
 
 			//***********************************************************************
 
-			if ((ch == '/') || (ch == '*') || (ch == '-') || (ch == '+') || (ch == '<') || (ch == '>')
-			        || (ch == '=')) {
+			if ((ch == QChar('/')) || (ch == QChar('*')) || (ch == QChar('-')) || (ch == QChar('+')) || (ch == QChar('<'))
+			        || (ch == QChar('>')) || (ch == QChar('='))) {
 				format.setForeground(QColor(highlightColors.operatorColor));
 				setFormat(pos, sellen, format);
 				break;
@@ -989,7 +989,7 @@ void Highlighter::highlightBlockOkumaRule(const QString& tx)
 
 			//***********************************************************************
 
-			if ((ch == '[') || (ch == ']') || (ch == ',') || (ch == '{') || (ch == '}')) {
+			if ((ch == QChar('[')) || (ch == QChar(']')) || (ch == QChar(',')) || (ch == QChar('{')) || (ch == QChar('}'))) {
 				format.setForeground(QColor(highlightColors.operatorColor));
 				setFormat(pos, sellen, format);
 				break;
@@ -997,7 +997,7 @@ void Highlighter::highlightBlockOkumaRule(const QString& tx)
 
 			//***********************************************************************
 
-			if ((ch == '"') || (ch == '\'')) {
+			if ((ch == QChar('"')) || (ch == QChar('\''))) {
 				do {
 					sellen++;
 
@@ -1007,7 +1007,7 @@ void Highlighter::highlightBlockOkumaRule(const QString& tx)
 
 					ch = tx.at(sellen + pos).toUpper();
 
-				} while (!((ch == '"') || (ch == '\'') || ((pos + sellen) >= tx.length())));
+				} while (!((ch == QChar('"')) || (ch == QChar('\'')) || ((pos + sellen) >= tx.length())));
 
 				sellen++;
 				format.setForeground(QColor(highlightColors.commentColor));
@@ -1047,7 +1047,7 @@ void Highlighter::highlightBlockSinuOldRule(const QString& tx)
 		sellen = 1;
 
 		while (true) {
-			if (ch == '(') {
+			if (ch == QChar('(')) {
 				count = 1;
 
 				do {
@@ -1059,9 +1059,9 @@ void Highlighter::highlightBlockSinuOldRule(const QString& tx)
 					ch = tx.at(pos + sellen).toUpper();
 					sellen++;
 
-					if (ch == '(') {
+					if (ch == QChar('(')) {
 						count++;
-					} else if (ch == ')') {
+					} else if (ch == QChar(')')) {
 						count--;
 					}
 
@@ -1073,7 +1073,7 @@ void Highlighter::highlightBlockSinuOldRule(const QString& tx)
 
 			//***********************************************************************
 
-			if ((ch >= 'A' && ch <= 'Z') || (ch == '_')) {
+			if ((ch >= QChar('A') && ch <= QChar('Z')) || (ch == QChar('_'))) {
 				address = "";
 
 				do {
@@ -1084,13 +1084,13 @@ void Highlighter::highlightBlockSinuOldRule(const QString& tx)
 					}
 
 					ch = tx.at(address.length() + pos).toUpper();
-				} while ((ch >= 'A' && ch <= 'Z') || (ch == '_'));
+				} while ((ch >= QChar('A') && ch <= QChar('Z')) || (ch == QChar('_')));
 
 				sellen = address.length();
 
 				val = "";
 
-				while ((ch >= '0' && ch <= '9') || (ch == '.') || (((ch == '-') || (ch == '+'))
+				while ((ch >= QChar('0') && ch <= QChar('9')) || (ch == QChar('.')) || (((ch == QChar('-')) || (ch == QChar('+')))
 				        && (sellen == 1))) {
 					val.append(ch);
 
@@ -1195,8 +1195,8 @@ void Highlighter::highlightBlockSinuOldRule(const QString& tx)
 
 			//***********************************************************************
 
-			if ((ch == '/') || (ch == '*') || (ch == '-') || (ch == '+') || (ch == '<') || (ch == '>')
-			        || (ch == '=')) {
+			if ((ch == QChar('/')) || (ch == QChar('*')) || (ch == QChar('-')) || (ch == QChar('+')) || (ch == QChar('<'))
+			        || (ch == QChar('>')) || (ch == QChar('='))) {
 				format.setForeground(QColor(highlightColors.operatorColor));
 				setFormat(pos, sellen, format);
 				break;
@@ -1204,7 +1204,7 @@ void Highlighter::highlightBlockSinuOldRule(const QString& tx)
 
 			//***********************************************************************
 
-			if ((ch == '[') || (ch == ']') || (ch == ',') || (ch == '{') || (ch == '}')) {
+			if ((ch == QChar('[')) || (ch == QChar(']')) || (ch == QChar(',')) || (ch == QChar('{')) || (ch == QChar('}'))) {
 				format.setForeground(QColor(highlightColors.operatorColor));
 				setFormat(pos, sellen, format);
 				break;
@@ -1212,7 +1212,7 @@ void Highlighter::highlightBlockSinuOldRule(const QString& tx)
 
 			//***********************************************************************
 
-			if ((ch == '"') || (ch == '\'')) {
+			if ((ch == QChar('"')) || (ch == QChar('\''))) {
 				do {
 					sellen++;
 
@@ -1222,7 +1222,7 @@ void Highlighter::highlightBlockSinuOldRule(const QString& tx)
 
 					ch = tx.at(sellen + pos).toUpper();
 
-				} while (!((ch == '"') || (ch == '\'') || ((pos + sellen) >= tx.length())));
+				} while (!((ch == QChar('"')) || (ch == QChar('\'')) || ((pos + sellen) >= tx.length())));
 
 				sellen++;
 				format.setForeground(QColor(highlightColors.commentColor));
@@ -1263,9 +1263,9 @@ void Highlighter::highlightBlockHeidRule(const QString& tx)
 		sellen = 1;
 
 		while (true) {
-			if (ch == ';') {
+			if (ch == QChar(';')) {
 				if (tx.length() >= (pos + 2))
-					if (tx.at(pos + 1) == '$') {
+					if (tx.at(pos + 1) == QChar('$')) {
 						break;
 					}
 
@@ -1277,7 +1277,7 @@ void Highlighter::highlightBlockHeidRule(const QString& tx)
 
 			//***********************************************************************
 
-			if ((ch >= 'A' && ch <= 'Z') || (ch == '_')) {
+			if ((ch >= QChar('A') && ch <= QChar('Z')) || (ch == QChar('_'))) {
 				address = "";
 
 				do {
@@ -1288,14 +1288,14 @@ void Highlighter::highlightBlockHeidRule(const QString& tx)
 					}
 
 					ch = tx.at(address.length() + pos).toUpper();
-				} while ((ch >= 'A' && ch <= 'Z') || (ch == '_'));
+				} while ((ch >= QChar('A') && ch <= QChar('Z')) || (ch == QChar('_')));
 
 				sellen = address.length();
 
 				val = "";
 
-				while ((ch >= 'A' && ch <= 'Z') || (ch >= '0' && ch <= '9') || (ch == '.') || (((ch == '-')
-				        || (ch == '+')) && (sellen == 1))) {
+				while ((ch >= QChar('A') && ch <= QChar('Z')) || (ch >= QChar('0') && ch <= QChar('9')) || (ch == QChar('.'))
+				        || (((ch == QChar('-')) || (ch == QChar('+'))) && (sellen == 1))) {
 					val.append(ch);
 
 					if ((sellen + val.length() + pos) >= tx.length()) {
@@ -1304,7 +1304,7 @@ void Highlighter::highlightBlockHeidRule(const QString& tx)
 
 					ch = tx.at(sellen + val.length() + pos).toUpper();
 
-					if (ch == ':') {
+					if (ch == QChar(':')) {
 						format.setForeground(QColor(highlightColors.keyWordColor));
 						format.setFontWeight(QFont::Bold);
 						sellen = address.length() + 1;
@@ -1316,13 +1316,13 @@ void Highlighter::highlightBlockHeidRule(const QString& tx)
 				sellen = address.length();
 
 				if (address.contains(QRegularExpression("[A-Z_]{2,}"))) {
-					if (ch == ':') {
+					if (ch == QChar(':')) {
 						format.setForeground(QColor(highlightColors.keyWordColor));
 						format.setFontWeight(QFont::Bold);
 						setFormat(pos, sellen, format);
 					}
 
-					if (ch == '(') {
+					if (ch == QChar('(')) {
 						format.setForeground(QColor(highlightColors.macroColor));
 						format.setFontWeight(QFont::Normal);
 						setFormat(pos, sellen, format);
@@ -1423,8 +1423,8 @@ void Highlighter::highlightBlockHeidRule(const QString& tx)
 
 			//***********************************************************************
 
-			if ((ch == '/') || (ch == '*') || (ch == '-') || (ch == '+') || (ch == '<') || (ch == '>')
-			        || (ch == '=')) {
+			if ((ch == QChar('/')) || (ch == QChar('*')) || (ch == QChar('-')) || (ch == QChar('+')) || (ch == QChar('<'))
+			        || (ch == QChar('>')) || (ch == QChar('='))) {
 				format.setForeground(QColor(highlightColors.operatorColor));
 				setFormat(pos, sellen, format);
 				break;
@@ -1432,8 +1432,8 @@ void Highlighter::highlightBlockHeidRule(const QString& tx)
 
 			//***********************************************************************
 
-			if ((ch == '[') || (ch == ']') || (ch == ',') || (ch == '{') || (ch == '}') || (ch == '(')
-			        || (ch == ')')) {
+			if ((ch == QChar('[')) || (ch == QChar(']')) || (ch == QChar(',')) || (ch == QChar('{')) || (ch == QChar('}'))
+			        || (ch == QChar('(')) || (ch == QChar(')'))) {
 				format.setForeground(QColor(highlightColors.operatorColor));
 				setFormat(pos, sellen, format);
 				break;
@@ -1441,7 +1441,7 @@ void Highlighter::highlightBlockHeidRule(const QString& tx)
 
 			//***********************************************************************
 
-			if ((ch == '"') || (ch == '\'')) {
+			if ((ch == QChar('"')) || (ch == QChar('\''))) {
 				do {
 					sellen++;
 
@@ -1451,7 +1451,7 @@ void Highlighter::highlightBlockHeidRule(const QString& tx)
 
 					ch = tx.at(sellen + pos).toUpper();
 
-				} while (!((ch == '"') || (ch == '\'') || ((pos + sellen) >= tx.length())));
+				} while (!((ch == QChar('"')) || (ch == QChar('\'')) || ((pos + sellen) >= tx.length())));
 
 				sellen++;
 				format.setForeground(QColor(highlightColors.commentColor));
@@ -1490,9 +1490,9 @@ void Highlighter::highlightBlockHeidIsoRule(const QString& tx)
 		sellen = 1;
 
 		while (true) {
-			if (ch == ';') {
+			if (ch == QChar(';')) {
 				if (tx.length() >= (pos + 2))
-					if (tx.at(pos + 1) == '$') {
+					if (tx.at(pos + 1) == QChar('$')) {
 						break;
 					}
 
@@ -1504,7 +1504,7 @@ void Highlighter::highlightBlockHeidIsoRule(const QString& tx)
 
 			//***********************************************************************
 
-			if ((ch >= 'A' && ch <= 'Z') || (ch == '_')) {
+			if ((ch >= QChar('A') && ch <= QChar('Z')) || (ch == QChar('_'))) {
 				address = "";
 
 				do {
@@ -1516,14 +1516,14 @@ void Highlighter::highlightBlockHeidIsoRule(const QString& tx)
 
 					ch = tx.at(address.length() + pos).toUpper();
 
-				} while ((ch >= 'A' && ch <= 'Z') || (ch == '_'));
+				} while ((ch >= QChar('A') && ch <= QChar('Z')) || (ch == QChar('_')));
 
 				sellen = address.length();
 
 				val = "";
 
-				while ((ch >= 'A' && ch <= 'Z') || (ch >= '0' && ch <= '9') || (ch == '.') || (((ch == '-')
-				        || (ch == '+')) && (sellen == 1))) {
+				while ((ch >= QChar('A') && ch <= QChar('Z')) || (ch >= QChar('0') && ch <= QChar('9')) || (ch == QChar('.'))
+				        || (((ch == QChar('-')) || (ch == QChar('+'))) && (sellen == 1))) {
 					val.append(ch);
 
 					if ((sellen + val.length() + pos) >= tx.length()) {
@@ -1532,7 +1532,7 @@ void Highlighter::highlightBlockHeidIsoRule(const QString& tx)
 
 					ch = tx.at(sellen + val.length() + pos).toUpper();
 
-					if (ch == ':') {
+					if (ch == QChar(':')) {
 						format.setForeground(QColor(highlightColors.keyWordColor));
 						format.setFontWeight(QFont::Bold);
 						sellen = address.length() + 1;
@@ -1544,13 +1544,13 @@ void Highlighter::highlightBlockHeidIsoRule(const QString& tx)
 				sellen = address.length();
 
 				if (address.contains(QRegularExpression("[A-Z_]{2,}"))) {
-					if (ch == ':') {
+					if (ch == QChar(':')) {
 						format.setForeground(QColor(highlightColors.keyWordColor));
 						format.setFontWeight(QFont::Bold);
 						setFormat(pos, sellen, format);
 					}
 
-					if (ch == '(') {
+					if (ch == QChar('(')) {
 						format.setForeground(QColor(highlightColors.macroColor));
 						format.setFontWeight(QFont::Normal);
 						setFormat(pos, sellen, format);
@@ -1650,8 +1650,8 @@ void Highlighter::highlightBlockHeidIsoRule(const QString& tx)
 
 			//***********************************************************************
 
-			if ((ch == '/') || (ch == '*') || (ch == '-') || (ch == '+') || (ch == '<') || (ch == '>')
-			        || (ch == '=')) {
+			if ((ch == QChar('/')) || (ch == QChar('*')) || (ch == QChar('-')) || (ch == QChar('+')) || (ch == QChar('<'))
+			        || (ch == QChar('>')) || (ch == QChar('='))) {
 				format.setForeground(QColor(highlightColors.operatorColor));
 				setFormat(pos, sellen, format);
 				break;
@@ -1659,8 +1659,8 @@ void Highlighter::highlightBlockHeidIsoRule(const QString& tx)
 
 			//***********************************************************************
 
-			if ((ch == '[') || (ch == ']') || (ch == ',') || (ch == '{') || (ch == '}') || (ch == '(')
-			        || (ch == ')')) {
+			if ((ch == QChar('[')) || (ch == QChar(']')) || (ch == QChar(',')) || (ch == QChar('{')) || (ch == QChar('}'))
+			        || (ch == QChar('(')) || (ch == QChar(')'))) {
 				format.setForeground(QColor(highlightColors.operatorColor));
 				setFormat(pos, sellen, format);
 				break;
@@ -1668,7 +1668,7 @@ void Highlighter::highlightBlockHeidIsoRule(const QString& tx)
 
 			//***********************************************************************
 
-			if ((ch == '"') || (ch == '\'')) {
+			if ((ch == QChar('"')) || (ch == QChar('\''))) {
 				do {
 					sellen++;
 
@@ -1678,7 +1678,7 @@ void Highlighter::highlightBlockHeidIsoRule(const QString& tx)
 
 					ch = tx.at(sellen + pos).toUpper();
 
-				} while (!((ch == '"') || (ch == '\'') || ((pos + sellen) >= tx.length())));
+				} while (!((ch == QChar('"')) || (ch == QChar('\'')) || ((pos + sellen) >= tx.length())));
 
 				sellen++;
 				format.setForeground(QColor(highlightColors.commentColor));
@@ -1820,9 +1820,9 @@ void Highlighter::highlightBlockLinuxCNCRule(const QString& tx)
 		sellen = 1;
 
 		while (true) {
-			if (ch == ';') {
+			if (ch == QChar(';')) {
 				if (tx.length() >= (pos + 2))
-					if (tx.at(pos + 1) == '$') {
+					if (tx.at(pos + 1) == QChar('$')) {
 						break;
 					}
 
@@ -1834,7 +1834,7 @@ void Highlighter::highlightBlockLinuxCNCRule(const QString& tx)
 
 			//***********************************************************************
 
-			if (ch == '(') {
+			if (ch == QChar('(')) {
 				count = 1;
 
 				do {
@@ -1846,9 +1846,9 @@ void Highlighter::highlightBlockLinuxCNCRule(const QString& tx)
 					ch = tx.at(pos + sellen).toUpper();
 					sellen++;
 
-					if (ch == '(') {
+					if (ch == QChar('(')) {
 						count++;
-					} else if (ch == ')') {
+					} else if (ch == QChar(')')) {
 						count--;
 					}
 
@@ -1860,7 +1860,7 @@ void Highlighter::highlightBlockLinuxCNCRule(const QString& tx)
 
 			//***********************************************************************
 
-			if ((ch >= 'A' && ch <= 'Z') || (ch == '_')) {
+			if ((ch >= QChar('A') && ch <= QChar('Z')) || (ch == QChar('_'))) {
 				address = "";
 
 				do {
@@ -1872,14 +1872,14 @@ void Highlighter::highlightBlockLinuxCNCRule(const QString& tx)
 
 					ch = tx.at(address.length() + pos).toUpper();
 
-				} while ((ch >= 'A' && ch <= 'Z') || (ch == '_'));
+				} while ((ch >= QChar('A') && ch <= QChar('Z')) || (ch == QChar('_')));
 
 				sellen = address.length();
 
 				val = "";
 
-				while ((ch >= 'A' && ch <= 'Z') || (ch >= '0' && ch <= '9') || (ch == '.') || (((ch == '-')
-				        || (ch == '+')) && (sellen == 1))) {
+				while ((ch >= QChar('A') && ch <= QChar('Z')) || (ch >= QChar('0') && ch <= QChar('9')) || (ch == QChar('.'))
+				        || (((ch == QChar('-')) || (ch == QChar('+'))) && (sellen == 1))) {
 					val.append(ch);
 
 					if ((sellen + val.length() + pos) >= tx.length()) {
@@ -1888,7 +1888,7 @@ void Highlighter::highlightBlockLinuxCNCRule(const QString& tx)
 
 					ch = tx.at(sellen + val.length() + pos).toUpper();
 
-					if (ch == ':') {
+					if (ch == QChar(':')) {
 						format.setForeground(QColor(highlightColors.keyWordColor));
 						format.setFontWeight(QFont::Bold);
 						sellen = address.length() + 1;
@@ -1994,8 +1994,8 @@ void Highlighter::highlightBlockLinuxCNCRule(const QString& tx)
 
 			//***********************************************************************
 
-			if ((ch == '/') || (ch == '*') || (ch == '-') || (ch == '+') || (ch == '<') || (ch == '>')
-			        || (ch == '=')) {
+			if ((ch == QChar('/')) || (ch == QChar('*')) || (ch == QChar('-')) || (ch == QChar('+')) || (ch == QChar('<'))
+			        || (ch == QChar('>')) || (ch == QChar('='))) {
 				format.setForeground(QColor(highlightColors.operatorColor));
 				setFormat(pos, sellen, format);
 				break;
@@ -2003,7 +2003,7 @@ void Highlighter::highlightBlockLinuxCNCRule(const QString& tx)
 
 			//***********************************************************************
 
-			if ((ch == '[') || (ch == ']') || (ch == ',') || (ch == '{') || (ch == '}')) {
+			if ((ch == QChar('[')) || (ch == QChar(']')) || (ch == QChar(',')) || (ch == QChar('{')) || (ch == QChar('}'))) {
 				format.setForeground(QColor(highlightColors.operatorColor));
 				setFormat(pos, sellen, format);
 				break;
@@ -2011,7 +2011,7 @@ void Highlighter::highlightBlockLinuxCNCRule(const QString& tx)
 
 			//***********************************************************************
 
-			if ((ch == '"') || (ch == '\'')) {
+			if ((ch == QChar('"')) || (ch == QChar('\''))) {
 				do {
 					sellen++;
 
@@ -2021,7 +2021,7 @@ void Highlighter::highlightBlockLinuxCNCRule(const QString& tx)
 
 					ch = tx.at(sellen + pos).toUpper();
 
-				} while (!((ch == '"') || (ch == '\'') || ((pos + sellen) >= tx.length())));
+				} while (!((ch == QChar('"')) || (ch == QChar('\'')) || ((pos + sellen) >= tx.length())));
 
 				sellen++;
 				format.setForeground(QColor(highlightColors.commentColor));

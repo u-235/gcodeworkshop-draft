@@ -360,7 +360,7 @@ void GUI::SerialPortTestDialog::updateLeds()
 				ui->textEdit->setTextCursor(cr);
 			}
 
-			tx = QString("%1 ").arg((int)ch, 2, 16, (QChar)'0');
+			tx = QString("%1 ").arg((int)ch, 2, 16, QChar('0'));
 			cr = ui->hexTextEdit->textCursor();
 			format = cr.charFormat();
 			format.setForeground(Qt::blue);

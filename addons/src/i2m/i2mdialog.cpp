@@ -80,11 +80,11 @@ void I2MDialog::inputChanged()
 		return;
 	}
 
-	tx.replace(',', '.');
+	tx.replace(QChar(','), QChar('.'));
 	dot = sl = false;
 
 	for (i = 0; i <= (tx.length() - 1); i++) {
-		if ((tx.at(i) == '.')) {
+		if ((tx.at(i) == QChar('.'))) {
 			if (dot || sl) {
 				tx.remove(i, 1);
 			}
@@ -92,7 +92,7 @@ void I2MDialog::inputChanged()
 			dot = true;
 		}
 
-		if ((tx.at(i) == '/')) {
+		if ((tx.at(i) == QChar('/'))) {
 			if (sl) {
 				tx.remove(i, 1);
 			}
@@ -100,13 +100,13 @@ void I2MDialog::inputChanged()
 			sl = true;
 		}
 
-		if (!(tx.at(i).isDigit()) && !(tx.at(i) == '.') && !(tx.at(i) == '/')) {
+		if (!(tx.at(i).isDigit()) && !(tx.at(i) == QChar('.')) && !(tx.at(i) == QChar('/'))) {
 			tx.remove(i, 1);
 		}
 	}
 
-	if (tx.at(0) == '.') {
-		tx.insert(0, '0');
+	if (tx.at(0) == QChar('.')) {
+		tx.insert(0, QChar('0'));
 	}
 
 	inchInput->setText(tx);

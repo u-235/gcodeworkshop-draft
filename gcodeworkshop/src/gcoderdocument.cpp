@@ -869,23 +869,23 @@ bool GCoderDocument::replaceNext(QString textToFind,
 			replacedText = cr.selectedText();
 			replacedText.remove(foundText);
 
-			if ((val == 0) && (op == '/')) { //divide by 0
+			if ((val == 0) && (op == QChar('/'))) { //divide by 0
 				val = 1;
 			}
 
-			if (op == '+') {
+			if (op == QChar('+')) {
 				val = val1 + val;
 			}
 
-			if (op == '-') {
+			if (op == QChar('-')) {
 				val = val1 - val;
 			}
 
-			if (op == '*') {
+			if (op == QChar('*')) {
 				val = val1 * val;
 			}
 
-			if (op == '/') {
+			if (op == QChar('/')) {
 				val = val1 / val;
 			}
 
@@ -893,7 +893,7 @@ bool GCoderDocument::replaceNext(QString textToFind,
 			        || replacedText == "n") {
 				replacedText = replacedText + Utils::removeZeros(QString("%1").arg(val, 0, 'f', 3));
 
-				if (replacedText[replacedText.length() - 1] == '.') {
+				if (replacedText[replacedText.length() - 1] == QChar('.')) {
 					replacedText = replacedText.remove((replacedText.length() - 1), 1);
 				}
 			} else {

@@ -22,6 +22,7 @@
 
 #include <QApplication>             // for QApplication
 #include <QByteArray>               // for QByteArray
+#include <QChar>                    // for QChar
 #include <QComboBox>                // for QComboBox
 #include <QDateTime>                // for QDateTime
 #include <QDir>                     // for QDir, operator|
@@ -161,9 +162,9 @@ void GUI::FileChecker::findFiles(const QString& startDir, const QStringList& fil
 				comment_tx = match.captured();
 
 				if (!comment_tx.contains(";$")) {
-					comment_tx.remove('(');
-					comment_tx.remove(')');
-					comment_tx.remove(';');
+					comment_tx.remove(QChar('('));
+					comment_tx.remove(QChar(')'));
+					comment_tx.remove(QChar(';'));
 					break;
 				}
 

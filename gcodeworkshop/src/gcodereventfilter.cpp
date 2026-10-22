@@ -187,7 +187,7 @@ bool GCoderEventFilter::mouseButtonDblClickEvent(QMouseEvent* event)
 			wasLetter = true;
 		}
 
-		if ((key.at(0).isDigit() || (key.at(0) == '.')) && wasLetter) {
+		if ((key.at(0).isDigit() || (key.at(0) == QChar('.'))) && wasLetter) {
 			cursor.movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor);
 			break;
 		}

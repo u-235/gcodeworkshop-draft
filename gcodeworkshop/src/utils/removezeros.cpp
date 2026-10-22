@@ -37,7 +37,7 @@ QString Utils::removeZeros(QString str)
 	while (match.hasMatch()) {
 		int pos = match.capturedStart();
 
-		if ((str.at(match.capturedEnd() - 1) == '0')) {
+		if ((str.at(match.capturedEnd() - 1) == QChar('0'))) {
 			str.remove(match.capturedEnd() - 1, 1);
 		} else {
 			pos = match.capturedEnd();

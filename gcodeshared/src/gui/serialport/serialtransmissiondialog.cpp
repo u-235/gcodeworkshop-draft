@@ -1062,8 +1062,8 @@ QStringList GUI::SerialTransmissionDialog::guessFileName(const QString& text)
 			fileName = portSettings.savePath + "/" + fileName + extension;
 		} else {
 			if (portSettings.appendExt) {
-				fileName = portSettings.savePath + "/" + fileName + extension.replace('.',
-				           '_') + portSettings.saveExt;
+				fileName = portSettings.savePath + "/" + fileName + extension.replace(QChar('.'),
+				           QChar('_')) + portSettings.saveExt;
 			} else {
 				fileName = portSettings.savePath + "/" + fileName + portSettings.saveExt;
 			}

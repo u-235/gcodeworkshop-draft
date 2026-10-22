@@ -102,8 +102,8 @@ int Utils::compute(QString* str)
 		dot = false;
 		minus = false;
 
-		while ((str->at(pos) == '-') || (str->at(pos) == '.') || (str->at(pos).isDigit())) {
-			if (str->at(pos) == '.') {
+		while ((str->at(pos) == QChar('-')) || (str->at(pos) == QChar('.')) || (str->at(pos).isDigit())) {
+			if (str->at(pos) == QChar('.')) {
 				if ((dot)) {
 					return (ERR_DOUBLE_DOT);
 				}
@@ -111,15 +111,15 @@ int Utils::compute(QString* str)
 				dot = true;
 			}
 
-			if (str->at(pos) == '-') {
+			if (str->at(pos) == QChar('-')) {
 				if (minus || dot) {
 					break;
 				}
 
 				if (pos == 0) {
 					minus = true;
-				} else if ((str->at(pos - 1) == '*') || (str->at(pos - 1) == '/') || (str->at(pos - 1) == '+')
-				           || (str->at(pos - 1) == '-') || (str->at(pos - 1) == '(')) {
+				} else if ((str->at(pos - 1) == QChar('*')) || (str->at(pos - 1) == QChar('/')) || (str->at(pos - 1) == QChar('+'))
+				           || (str->at(pos - 1) == QChar('-')) || (str->at(pos - 1) == QChar('('))) {
 					minus = true;
 				}
 			}
@@ -216,7 +216,7 @@ int Utils::compute(QString* str)
 		for (i = pos + 1; i < str->length(); i++) {
 			qDebug() << "456,123" << val2 << str->at(i);
 
-			if ((str->at(i) == '.')) {
+			if ((str->at(i) == QChar('.'))) {
 				if ((dot)) {
 					return (ERR_DOUBLE_DOT);
 				}
@@ -224,15 +224,15 @@ int Utils::compute(QString* str)
 				dot = true;
 			}
 
-			if ((str->at(i) == '-')) {
+			if ((str->at(i) == QChar('-'))) {
 				if (minus || dot) {
 					break;
 				}
 
 				if (i == 0) {
 					minus = true;
-				} else if ((str->at(i - 1) == '*') || (str->at(i - 1) == '/') || (str->at(i - 1) == '+')
-				           || (str->at(i - 1) == '-') || (str->at(i - 1) == '(')) {
+				} else if ((str->at(i - 1) == QChar('*')) || (str->at(i - 1) == QChar('/')) || (str->at(i - 1) == QChar('+'))
+				           || (str->at(i - 1) == QChar('-')) || (str->at(i - 1) == QChar('('))) {
 					minus = true;
 				}
 
@@ -240,7 +240,7 @@ int Utils::compute(QString* str)
 				//                break;
 			}
 
-			if (!((str->at(i).isDigit() || (str->at(i) == '.') || (str->at(i) == '-')))) {
+			if (!((str->at(i).isDigit() || (str->at(i) == QChar('.')) || (str->at(i) == QChar('-'))))) {
 				break;
 			}
 
@@ -255,7 +255,7 @@ int Utils::compute(QString* str)
 		minus = false;
 
 		for (j = pos - 1; j >= 0; j--) {
-			if ((str->at(j) == '.')) {
+			if ((str->at(j) == QChar('.'))) {
 				if ((dot)) {
 					return (ERR_DOUBLE_DOT);
 				}
@@ -263,20 +263,20 @@ int Utils::compute(QString* str)
 				dot = true;
 			}
 
-			if ((str->at(j) == '-')) {
+			if ((str->at(j) == QChar('-'))) {
 				if ((minus)) {
 					break;
 				}
 
 				if (j == 0) {
 					minus = true;
-				} else if ((str->at(j - 1) == '*') || (str->at(j - 1) == '/') || (str->at(j - 1) == '+')
-				           || (str->at(j - 1) == '-') || (str->at(j - 1) == '(')) {
+				} else if ((str->at(j - 1) == QChar('*')) || (str->at(j - 1) == QChar('/')) || (str->at(j - 1) == QChar('+'))
+				           || (str->at(j - 1) == QChar('-')) || (str->at(j - 1) == QChar('('))) {
 					minus = true;
 				}
 			}
 
-			if (!((str->at(j).isDigit() || (str->at(j) == '.') || (str->at(j) == '-')))) {
+			if (!((str->at(j).isDigit() || (str->at(j) == QChar('.')) || (str->at(j) == QChar('-'))))) {
 				break;
 			}
 
@@ -296,12 +296,12 @@ int Utils::compute(QString* str)
 		}
 
 		while (1) {
-			if (oper.at(0) == '*') {
+			if (oper.at(0) == QChar('*')) {
 				result = val1.toDouble(&ok) * val2.toDouble(&ok1);
 				break;
 			}
 
-			if (oper.at(0) == '/') {
+			if (oper.at(0) == QChar('/')) {
 				result = val1.toDouble(&ok) / val2.toDouble(&ok1);
 				break;
 			}
@@ -336,7 +336,7 @@ int Utils::compute(QString* str)
 		for (i = pos + 1; i <= str->length(); i++) {
 			qDebug() << "789,123" << val2 << str->at(i);
 
-			if ((str->at(i) == '.')) {
+			if ((str->at(i) == QChar('.'))) {
 				if ((dot)) {
 					return (ERR_DOUBLE_DOT);
 				}
@@ -344,7 +344,7 @@ int Utils::compute(QString* str)
 				dot = true;
 			}
 
-			if ((str->at(i) == '-')) {
+			if ((str->at(i) == QChar('-'))) {
 				if (minus || dot) {
 					break;
 				}
@@ -352,8 +352,8 @@ int Utils::compute(QString* str)
 				if (i == 0) {
 					minus = true;
 				} else {
-					if ((str->at(i - 1) == '*') || (str->at(i - 1) == '/') || (str->at(i - 1) == '+')
-					        || (str->at(i - 1) == '-') || (str->at(i - 1) == '(')) {
+					if ((str->at(i - 1) == QChar('*')) || (str->at(i - 1) == QChar('/')) || (str->at(i - 1) == QChar('+'))
+					        || (str->at(i - 1) == QChar('-')) || (str->at(i - 1) == QChar('('))) {
 						minus = true;
 					} else {
 						break;
@@ -364,7 +364,7 @@ int Utils::compute(QString* str)
 				//                break;
 			}
 
-			if (!((str->at(i).isDigit() || (str->at(i) == '.') || (str->at(i) == '-')))) {
+			if (!((str->at(i).isDigit() || (str->at(i) == QChar('.')) || (str->at(i) == QChar('-'))))) {
 				break;
 			}
 
@@ -381,7 +381,7 @@ int Utils::compute(QString* str)
 		for (j = pos - 1; j >= 0; j--) {
 			qDebug() << "789,456" << val1 << str->at(j);
 
-			if ((str->at(j) == '.')) {
+			if ((str->at(j) == QChar('.'))) {
 				if ((dot)) {
 					return (ERR_DOUBLE_DOT);
 				}
@@ -389,20 +389,20 @@ int Utils::compute(QString* str)
 				dot = true;
 			}
 
-			if ((str->at(j) == '-')) {
+			if ((str->at(j) == QChar('-'))) {
 				if ((minus)) {
 					break;
 				}
 
 				if (j == 0) {
 					minus = true;
-				} else if ((str->at(j - 1) == '*') || (str->at(j - 1) == '/') || (str->at(j - 1) == '+')
-				           || (str->at(j - 1) == '-') || (str->at(j - 1) == '(')) {
+				} else if ((str->at(j - 1) == QChar('*')) || (str->at(j - 1) == QChar('/')) || (str->at(j - 1) == QChar('+'))
+				           || (str->at(j - 1) == QChar('-')) || (str->at(j - 1) == QChar('('))) {
 					minus = true;
 				}
 			}
 
-			if (!((str->at(j).isDigit() || (str->at(j) == '.') || (str->at(j) == '-')))) {
+			if (!((str->at(j).isDigit() || (str->at(j) == QChar('.')) || (str->at(j) == QChar('-'))))) {
 				break;
 			}
 
@@ -427,7 +427,7 @@ int Utils::compute(QString* str)
 		}
 
 		while (1) {
-			if (oper.at(0) == '-') {
+			if (oper.at(0) == QChar('-')) {
 				result = val1.toDouble(&ok) - val2.toDouble(&ok1);
 				break;
 			}
@@ -446,7 +446,7 @@ int Utils::compute(QString* str)
 		str->replace(j, (i - j) + 1, QString("%1").arg(result, 0, 'f', 3));
 	}
 
-	str->remove('(');
-	str->remove(')');
+	str->remove(QChar('('));
+	str->remove(QChar(')'));
 	return (0);
 }
