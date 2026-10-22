@@ -19,6 +19,7 @@
  */
 
 #include <QByteArray>           // for QByteArray
+#include <QChar>
 #include <QCheckBox>            // for QCheckBox
 #include <QDir>                 // for QDir, operator|
 #include <QEvent>               // for QEvent
@@ -159,10 +160,10 @@ void GUI::FileBrowserPanel::fileTreeViewDoubleClicked(const QModelIndex& index)
 	if ((info.exists()) && (info.isReadable())) {
 		if (info.isDir()) {
 			if (path.endsWith("..")) {
-				int idx = path.lastIndexOf('/');
+				int idx = path.lastIndexOf(QChar('/'));
 
 				if (idx > 0) {
-					idx = path.lastIndexOf('/', idx - 1);
+					idx = path.lastIndexOf(QChar('/'), idx - 1);
 
 					if (idx > 0) {
 						path.remove(idx, (path.length() - idx));
@@ -234,7 +235,7 @@ bool GUI::FileBrowserPanel::eventFilter(QObject* obj, QEvent* event)
 
 				file.close();
 
-				if (text.endsWith('\n')) {
+				if (text.endsWith(QChar('\n'))) {
 					text.remove(text.size() - 1, 1);
 				}
 			}

@@ -18,6 +18,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <QChar>                            // for QChar
 #include <QRegularExpression>               // for QRegularExpression, QRegularExpression::CaseInsensitiveOption
 #include <QRegularExpressionMatch>          // for QRegularExpressionMatch
 #include <QRegularExpressionMatchIterator>  // for QRegularExpressionMatchIterator
@@ -65,8 +66,8 @@ int Utils::i2mprog(QString& tx,
 
 		if (match.capturedLength(1) > 0) {
 			QString f_tx = match.captured(1);
-			f_tx.remove(' ');
-			f_tx.remove('\t');
+			f_tx.remove(QChar{' '});
+			f_tx.remove(QChar{'\t'});
 			bool ok;
 			double it = f_tx.toDouble(&ok);
 

@@ -17,9 +17,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <QChar>                    // for operator!=, QChar, operator==
-#include <QLatin1Char>              // for QLatin1Char
-#include <QLatin1String>            // for QLatin1String
+#include <QChar>                    // for QChar
 #include <QRegularExpression>       // for QRegularExpression, QRegularExpression::CaseInsensitiveOption
 #include <QRegularExpressionMatch>  // for QRegularExpressionMatch
 #include <QString>                  // for QString, operator+, QCharRef, QString::SectionIncludeTrailingSep
@@ -45,7 +43,7 @@ bool Utils::renumber(QString& text, const RenumberOptions& opt, const std::funct
 	int substr_end = 0;
 
 	while (substr_end >= 0) {
-		substr_end = text.indexOf('\n', substr_start);
+		substr_end = text.indexOf(QChar{'\n'}, substr_start);
 		QString line = text.mid(substr_start, substr_end - substr_start + 1);
 		substr_start = substr_end + 1;
 		bool localChange = false;
@@ -94,7 +92,7 @@ bool Utils::renumberWithoutN(QString& line, int num, int width, bool renumAll)
 		QRegularExpression::CaseInsensitiveOption
 	};
 	QRegularExpressionMatch&& match = regex.match(line);
-	QString n_word = QString("%1  ").arg(num, width, 10, QLatin1Char{' '});
+	QString n_word = QString("%1  ").arg(num, width, 10, QChar{' '});
 
 	if (match.hasMatch()) {
 		line.replace(match.capturedStart(1), match.capturedLength(1), n_word);
@@ -127,8 +125,8 @@ bool Utils::renumberWithN(QString& line, int num, int width, int from, int to, b
 
 	if (num_captured) {
 		QString digits = match.captured(2);
-		digits.remove(' ');
-		digits.remove('\t');
+		digits.remove(QChar{' '});
+		digits.remove(QChar{'\t'});
 		int current = digits.toInt();
 
 		if (current < from || current > to) {
@@ -141,7 +139,7 @@ bool Utils::renumberWithN(QString& line, int num, int width, int from, int to, b
 
 		// The regular expression N_MARK_REGEXPR can capture the end-of-line character.
 		if (line.isEmpty()) {
-			line.append('\n');
+			line.append(QChar{'\n'});
 		}
 	} else {
 		return false;
@@ -188,7 +186,7 @@ bool Utils::renumberAll(QString& line, int num, int width, bool renumEmpty, bool
 
 		// The regular expression N_MARK_REGEXPR can capture the end-of-line character.
 		if (line.isEmpty()) {
-			line.append('\n');
+			line.append(QChar{'\n'});
 		}
 	}
 
@@ -247,10 +245,10 @@ bool Utils::renumberRemoveAll(QString& line, bool removeMarked)
 
 void Utils::insertNWord(QString& line, int num, int width)
 {
-	QString n_word = QString(QLatin1String("N%1")).arg(num, width, 10, QLatin1Char{'0'});
+	QString n_word = QString("N%1").arg(num, width, 10, QChar{'0'});
 
-	if (line.size() > 0 && line.at(0) != '\n') {
-		n_word.append(' ');
+	if (line.size() > 0 && line.at(0) != QChar{'\n'}) {
+		n_word.append(QChar{' '});
 	}
 
 	line.prepend(n_word);

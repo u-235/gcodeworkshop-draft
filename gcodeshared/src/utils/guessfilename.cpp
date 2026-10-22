@@ -18,6 +18,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <QChar>                    // for QChar
 #include <QRegularExpression>       // for QRegularExpression
 #include <QRegularExpressionMatch>  // for QRegularExpressionMatch
 #include <QString>                  // for QString
@@ -53,8 +54,8 @@ Utils::FileExt Utils::guessFileNameByProgNum(const QString& text)
 			if (match.hasMatch()) {
 				file.ext = match.captured();
 				file.name.remove(file.ext);
-				file.ext.remove(" ");
-				file.ext.replace('_', '.');;
+				file.ext.remove(QChar(' '));
+				file.ext.replace(QChar('_'), QChar('.'));;
 			} else {
 				file.ext.clear();
 			}
@@ -68,7 +69,7 @@ Utils::FileExt Utils::guessFileNameByProgNum(const QString& text)
 
 		if (match.hasMatch()) {
 			file.name = match.captured();
-			file.name.remove("$");
+			file.name.remove(QChar('$'));
 
 			regex.setPattern("\\.(MIN|SSB|SDF|TOP|LIB|SUB|MSB)[%]{0,1}");
 			match = regex.match(file.name);
@@ -76,8 +77,8 @@ Utils::FileExt Utils::guessFileNameByProgNum(const QString& text)
 			if (match.hasMatch()) {
 				file.ext = match.captured();
 				file.name.remove(file.ext);
-				file.ext.remove(" ");
-				file.ext.remove("%");
+				file.ext.remove(QChar(' '));
+				file.ext.remove(QChar('%'));
 			} else {
 				file.ext.clear();
 			}
@@ -101,9 +102,9 @@ Utils::FileExt Utils::guessFileNameByProgNum(const QString& text)
 			if (match.hasMatch()) {
 				file.ext = match.captured();
 				file.name.remove(file.ext);
-				file.ext.remove(" ");
-				file.ext.remove("%");
-				file.ext.prepend('.');
+				file.ext.remove(QChar(' '));
+				file.ext.remove(QChar('%'));
+				file.ext.prepend(QChar('.'));
 			} else {
 				file.ext.clear();
 			}
@@ -130,7 +131,7 @@ Utils::FileExt Utils::guessFileNameByProgNum(const QString& text)
 
 		if (match.hasMatch()) {
 			file.name = match.captured();
-			file.name.replace(':', 'O');
+			file.name.replace(QChar(':'), QChar('O'));
 
 			//                if(name1.at(0)!='O')
 			//                    name1[0]='O';
@@ -147,7 +148,7 @@ Utils::FileExt Utils::guessFileNameByProgNum(const QString& text)
 
 		if (match.hasMatch()) {
 			file.name = match.captured();
-			file.name.remove("%");
+			file.name.remove(QChar('%'));
 			file.name.remove(QRegularExpression("[ \\t]"));
 			file.ext.clear();
 			qDebug() << "14" << file.name << file.ext;
@@ -183,8 +184,8 @@ Utils::FileExt Utils::guessFileNameByProgNum(const QString& text)
 		break;
 	}
 
-	file.name.remove(".");
-	file.name.remove(",");
+	file.name.remove(QChar('.'));
+	file.name.remove(QChar(','));
 	file.name = file.name.simplified();
 	file.ext = file.ext.simplified();
 	return file;
@@ -201,7 +202,7 @@ QString Utils::guessFileNameByComments(const QString& text)
 
 		if (match.capturedStart() >= 2) {
 			fileName = match.captured();
-			fileName.remove(";");
+			fileName.remove(QChar(';'));
 			break;
 		}
 
@@ -210,8 +211,8 @@ QString Utils::guessFileNameByComments(const QString& text)
 
 		if (match.capturedStart() >= 2) {
 			fileName = match.captured();
-			fileName.remove("(");
-			fileName.remove(")");
+			fileName.remove(QChar('('));
+			fileName.remove(QChar(')'));
 			break;
 		}
 
@@ -230,25 +231,25 @@ Utils::FileExt Utils::guessFileNameByRegExp(const QString& text, const QString& 
 
 	if (match.hasMatch()) {
 		file.name = match.captured();
-		file.name.remove(";");
-		file.name.remove("(");
-		file.name.remove(")");
-		file.name.remove("[");
-		file.name.remove("]");
+		file.name.remove(QChar(';'));
+		file.name.remove(QChar('('));
+		file.name.remove(QChar(')'));
+		file.name.remove(QChar('['));
+		file.name.remove(QChar(']'));
 
-		int pos = file.name.lastIndexOf('.');
+		int pos = file.name.lastIndexOf(QChar('.'));
 
 		if (pos >= 0) {
 			file.ext = file.name.mid(pos);
 			file.name.remove(regex);
-			file.ext.remove(" ");
+			file.ext.remove(QChar(' '));
 		} else {
 			file.ext.clear();
 		}
 	}
 
-	file.name.remove("*");
-	file.name.remove(",");
+	file.name.remove(QChar('*'));
+	file.name.remove(QChar(','));
 	file.name = file.name.simplified();
 	file.ext = file.ext.simplified();
 

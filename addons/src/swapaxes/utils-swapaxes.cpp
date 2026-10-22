@@ -98,8 +98,8 @@ bool Utils::swapAxes(QString& text,
 		}
 
 		QString digits = match.captured(4);
-		digits.remove(' ');
-		digits.remove('\t');
+		digits.remove(QChar{' '});
+		digits.remove(QChar{'\t'});
 		bool ok;
 		double val = digits.toDouble(&ok);
 
@@ -149,7 +149,7 @@ bool Utils::swapAxes(QString& text,
 		        word == "O" ||
 		        word == "o" ||
 		        word == "N" ||
-		        word == "n") && word.endsWith('.')) {
+		        word == "n") && word.endsWith(QChar{'.'})) {
 			word.chop(1);
 		}
 
