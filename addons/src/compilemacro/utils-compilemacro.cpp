@@ -29,9 +29,6 @@
 #include "utils-compilemacro.h"
 
 
-#define tr(s) (QCoreApplication::translate("CompileMacro", s))
-
-
 int Utils::CompileMacro::compile(const QString& tx)
 {
 	int error;
@@ -45,7 +42,8 @@ int Utils::CompileMacro::compile(const QString& tx)
 	auto matchEnd = regexEnd.match(m_result, matchBegin.capturedEnd());
 
 	if (!matchBegin.hasMatch() || !matchEnd.hasMatch()) {
-		m_status = tr("No constant definition .\n{BEGIN}\n...\n{END}\n No macro ?");
+		m_status = QCoreApplication::translate("Addons::CompileMacro",
+		                                       "No constant definition .\n{BEGIN}\n...\n{END}\n No macro ?");
 		return -1;
 	}
 
@@ -67,7 +65,7 @@ int Utils::CompileMacro::compile(const QString& tx)
 			pos++;
 
 			if (m_result.at(pos) == QChar{'\n'} || m_result.at(pos) == QChar{'{'}) {
-				m_status = tr("Param list: no bracket \'}\' !");
+				m_status = QCoreApplication::translate("Addons::CompileMacro", "Param list: no bracket \'}\' !");
 				return -1;
 			}
 		} while ((m_result.at(pos) != QChar{'}'}));
@@ -178,30 +176,32 @@ void Utils::CompileMacro::setError(int error, const QString& tx)
 	if (error < 0) {
 		switch (error) {
 		case ERR_NO_BRAC:
-			m_status = tr("No ( or ) !");
+			m_status = QCoreApplication::translate("Addons::CompileMacro", "No ( or ) !");
 			break;
 
 		case ERR_NO_PARAM:
-			m_status = tr("Function parameter not found ! \n Check +-*/.\n\"%1\"").arg(tx);
+			m_status = QCoreApplication::translate("Addons::CompileMacro",
+			                                       "Function parameter not found ! \n Check +-*/.\n\"%1\"").arg(tx);
 			break;
 
 		case ERR_CONVERT:
-			m_status = tr("Wrong number !");
+			m_status = QCoreApplication::translate("Addons::CompileMacro", "Wrong number !");
 			break;
 
 		case ERR_UNKNOWN_FUNC:
-			m_status = tr("Unknown math function !\n\"%1\"").arg(tx);
+			m_status = QCoreApplication::translate("Addons::CompileMacro", "Unknown math function !\n\"%1\"").arg(tx);
 			break;
 
 		case ERR_DOUBLE_DOT:
-			m_status = tr("Decimal point or minus written two times !\n\"%1\"").arg(tx);
+			m_status = QCoreApplication::translate("Addons::CompileMacro",
+			                                       "Decimal point or minus written two times !\n\"%1\"").arg(tx);
 			break;
 
 		default:
-			m_status = tr("Unknown error !");
+			m_status = QCoreApplication::translate("Addons::CompileMacro", "Unknown error !");
 		}
 
-		m_status = tr("BRC error:\n%1\nCode=%2").arg(m_status).arg(error);
+		m_status = QCoreApplication::translate("Addons::CompileMacro", "BRC error:\n%1\nCode=%2").arg(m_status).arg(error);
 	}
 }
 
@@ -209,66 +209,67 @@ void Utils::CompileMacro::setBasicError(int error)
 {
 	switch (error) {
 	case 0:
-		m_status = tr("Syntax error");
+		m_status = QCoreApplication::translate("Addons::CompileMacro", "Syntax error");
 		break;
 
 	case 1:
-		m_status = tr("Unbalanced parentheses");
+		m_status = QCoreApplication::translate("Addons::CompileMacro", "Unbalanced parentheses");
 		break;
 
 	case 2:
-		m_status = tr("No expression present");
+		m_status = QCoreApplication::translate("Addons::CompileMacro", "No expression present");
 		break;
 
 	case 3:
-		m_status = tr("Equals sign expected");
+		m_status = QCoreApplication::translate("Addons::CompileMacro", "Equals sign expected");
 		break;
 
 	case 4:
-		m_status = tr("Not a variable");
+		m_status = QCoreApplication::translate("Addons::CompileMacro", "Not a variable");
 		break;
 
 	case 5:
-		m_status = tr("Label table full");
+		m_status = QCoreApplication::translate("Addons::CompileMacro", "Label table full");
 		break;
 
 	case 6:
-		m_status = tr("Duplicate label");
+		m_status = QCoreApplication::translate("Addons::CompileMacro", "Duplicate label");
 		break;
 
 	case 7:
-		m_status = tr("Undefined label");
+		m_status = QCoreApplication::translate("Addons::CompileMacro", "Undefined label");
 		break;
 
 	case 8:
-		m_status = tr("THEN expected");
+		m_status = QCoreApplication::translate("Addons::CompileMacro", "THEN expected");
 		break;
 
 	case 9:
-		m_status = tr("TO expected");
+		m_status = QCoreApplication::translate("Addons::CompileMacro", "TO expected");
 		break;
 
 	case 10:
-		m_status = tr("Too many nested FOR loops");
+		m_status = QCoreApplication::translate("Addons::CompileMacro", "Too many nested FOR loops");
 		break;
 
 	case 11:
-		m_status = tr("NEXT without FOR");
+		m_status = QCoreApplication::translate("Addons::CompileMacro", "NEXT without FOR");
 		break;
 
 	case 12:
-		m_status = tr("Too many nested GOSUBs");
+		m_status = QCoreApplication::translate("Addons::CompileMacro", "Too many nested GOSUBs");
 		break;
 
 	case 13:
-		m_status = tr("RETURN without GOSUBs");
+		m_status = QCoreApplication::translate("Addons::CompileMacro", "RETURN without GOSUBs");
 		break;
 
 	default:
-		m_status = tr("Unknown error");
+		m_status = QCoreApplication::translate("Addons::CompileMacro", "Unknown error");
 	}
 
-	m_status = tr("Basic interpreter error:\n%1\nCode=%2").arg(m_status).arg(error);
+	m_status = QCoreApplication::translate("Addons::CompileMacro",
+	                                       "Basic interpreter error:\n%1\nCode=%2").arg(m_status).arg(error);
 }
 
 void Utils::CompileMacro::cleanUp(QString& str)  //remove not needed zeros

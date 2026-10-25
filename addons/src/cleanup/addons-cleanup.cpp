@@ -58,9 +58,9 @@ bool Addons::doCleanUp(QWidget* parent, QSettings* settings,  QString& tx)
 		        << "(\\()[\\w,.;:/*+\\\\! $%^&-]{0,}(\\))"
 		        << "[\n]{2,}";
 		opt.comments
-		        << QObject::tr("Lines with: '(comment)")
-		        << QObject::tr("Any: (comment)")
-		        << QObject::tr("Empty lines:");
+		        << QCoreApplication::translate("Addons::CleanUp", "Lines with: '(comment)")
+		        << QCoreApplication::translate("Addons::CleanUp", "Any: (comment)")
+		        << QCoreApplication::translate("Addons::CleanUp", "Empty lines:");
 		dlg->setOptions(opt);
 		dlg->loadSettings();
 	}
@@ -72,7 +72,7 @@ bool Addons::doCleanUp(QWidget* parent, QSettings* settings,  QString& tx)
 	}
 
 	GUI::LongJobHelper helper{parent};
-	helper.begin(tx.length(), QCoreApplication::translate("Addons::Actions", "Cleaning up"), 20);
+	helper.begin(tx.length(), QCoreApplication::translate("Addons::CleanUp", "Cleaning up"), 20);
 
 	result = Utils::removeTextByRegExp(tx, dlg->options().selected, true, [&helper](int pos) -> bool{
 		return helper.check(pos) == GUI::LongJobHelper::CANCEL;
