@@ -22,18 +22,18 @@
 <context>
     <name>DiffTextWindowFrame</name>
     <message>
-        <location filename="../3rdparty/kdiff3/difftextwindow.cpp" line="1799"/>
-        <location filename="../3rdparty/kdiff3/difftextwindow.cpp" line="1982"/>
+        <location filename="../3rdparty/kdiff3/difftextwindow.cpp" line="1805"/>
+        <location filename="../3rdparty/kdiff3/difftextwindow.cpp" line="1988"/>
         <source>Open file...</source>
         <translation>打开文件...</translation>
     </message>
     <message>
-        <location filename="../3rdparty/kdiff3/difftextwindow.cpp" line="1893"/>
+        <location filename="../3rdparty/kdiff3/difftextwindow.cpp" line="1899"/>
         <source>Top line</source>
         <translation>顶部行</translation>
     </message>
     <message>
-        <location filename="../3rdparty/kdiff3/difftextwindow.cpp" line="1903"/>
+        <location filename="../3rdparty/kdiff3/difftextwindow.cpp" line="1909"/>
         <source>End</source>
         <translation>结束</translation>
     </message>
@@ -121,7 +121,7 @@ Continue at your own risk.</source>
         <translation>将当前选中内容复制到剪贴板</translation>
     </message>
     <message>
-        <location filename="../3rdparty/kdiff3/pdiff.cpp" line="972"/>
+        <location filename="../3rdparty/kdiff3/pdiff.cpp" line="967"/>
         <source>Opening of these files failed:</source>
         <translation>打开这些文件失败:</translation>
     </message>
@@ -140,7 +140,7 @@ Continue at your own risk.</source>
     </message>
     <message>
         <location filename="../3rdparty/kdiff3/mergeresultwindow.cpp" line="1807"/>
-        <location filename="../3rdparty/kdiff3/mergeresultwindow.cpp" line="2723"/>
+        <location filename="../3rdparty/kdiff3/mergeresultwindow.cpp" line="2728"/>
         <source>&lt;Merge Conflict&gt;</source>
         <translation>&lt;合并冲突&gt;</translation>
     </message>
@@ -148,22 +148,22 @@ Continue at your own risk.</source>
 <context>
     <name>OptionEncodingComboBox</name>
     <message>
-        <location filename="../3rdparty/kdiff3/optiondialog.cpp" line="531"/>
+        <location filename="../3rdparty/kdiff3/optiondialog.cpp" line="539"/>
         <source>Unicode, 8 bit</source>
         <translation>Unicode, 8位</translation>
     </message>
     <message>
-        <location filename="../3rdparty/kdiff3/optiondialog.cpp" line="532"/>
+        <location filename="../3rdparty/kdiff3/optiondialog.cpp" line="540"/>
         <source>Unicode</source>
         <translation>Unicode</translation>
     </message>
     <message>
-        <location filename="../3rdparty/kdiff3/optiondialog.cpp" line="533"/>
+        <location filename="../3rdparty/kdiff3/optiondialog.cpp" line="541"/>
         <source>Latin1</source>
         <translation>Latin1</translation>
     </message>
     <message>
-        <location filename="../3rdparty/kdiff3/optiondialog.cpp" line="553"/>
+        <location filename="../3rdparty/kdiff3/optiondialog.cpp" line="561"/>
         <source>Change this if non-ASCII characters are not displayed correctly.</source>
         <translation>如果非ASCII字符显示不正确，请修改此设置。</translation>
     </message>
@@ -200,30 +200,30 @@ Continue at your own risk.</source>
 <context>
     <name>WindowTitleWidget</name>
     <message>
-        <location filename="../3rdparty/kdiff3/mergeresultwindow.cpp" line="3336"/>
+        <location filename="../3rdparty/kdiff3/mergeresultwindow.cpp" line="3342"/>
         <source>Output</source>
         <translation>输出</translation>
     </message>
     <message>
-        <location filename="../3rdparty/kdiff3/mergeresultwindow.cpp" line="3348"/>
-        <location filename="../3rdparty/kdiff3/mergeresultwindow.cpp" line="3545"/>
+        <location filename="../3rdparty/kdiff3/mergeresultwindow.cpp" line="3354"/>
+        <location filename="../3rdparty/kdiff3/mergeresultwindow.cpp" line="3551"/>
         <source>[Modified]</source>
         <translation>[已修改]</translation>
     </message>
     <message>
-        <location filename="../3rdparty/kdiff3/mergeresultwindow.cpp" line="3355"/>
+        <location filename="../3rdparty/kdiff3/mergeresultwindow.cpp" line="3361"/>
         <source>Encoding for saving</source>
         <translation>保存编码</translation>
     </message>
     <message>
-        <location filename="../3rdparty/kdiff3/mergeresultwindow.cpp" line="3363"/>
+        <location filename="../3rdparty/kdiff3/mergeresultwindow.cpp" line="3369"/>
         <source>Line end style:</source>
         <translation>行尾样式:</translation>
     </message>
     <message>
-        <location filename="../3rdparty/kdiff3/mergeresultwindow.cpp" line="3480"/>
-        <location filename="../3rdparty/kdiff3/mergeresultwindow.cpp" line="3485"/>
-        <location filename="../3rdparty/kdiff3/mergeresultwindow.cpp" line="3490"/>
+        <location filename="../3rdparty/kdiff3/mergeresultwindow.cpp" line="3486"/>
+        <location filename="../3rdparty/kdiff3/mergeresultwindow.cpp" line="3491"/>
+        <location filename="../3rdparty/kdiff3/mergeresultwindow.cpp" line="3496"/>
         <source>Codec from</source>
         <translation>编码来源</translation>
     </message>

@@ -22,18 +22,18 @@
 <context>
     <name>DiffTextWindowFrame</name>
     <message>
-        <location filename="../3rdparty/kdiff3/difftextwindow.cpp" line="1799"/>
-        <location filename="../3rdparty/kdiff3/difftextwindow.cpp" line="1982"/>
+        <location filename="../3rdparty/kdiff3/difftextwindow.cpp" line="1805"/>
+        <location filename="../3rdparty/kdiff3/difftextwindow.cpp" line="1988"/>
         <source>Open file...</source>
         <translation>Otevřít soubor...</translation>
     </message>
     <message>
-        <location filename="../3rdparty/kdiff3/difftextwindow.cpp" line="1893"/>
+        <location filename="../3rdparty/kdiff3/difftextwindow.cpp" line="1899"/>
         <source>Top line</source>
         <translation>Horní řádek</translation>
     </message>
     <message>
-        <location filename="../3rdparty/kdiff3/difftextwindow.cpp" line="1903"/>
+        <location filename="../3rdparty/kdiff3/difftextwindow.cpp" line="1909"/>
         <source>End</source>
         <translation>Konec</translation>
     </message>
@@ -49,7 +49,7 @@
 <context>
     <name>KDiff3App</name>
     <message>
-        <location filename="../3rdparty/kdiff3/pdiff.cpp" line="972"/>
+        <location filename="../3rdparty/kdiff3/pdiff.cpp" line="967"/>
         <source>Opening of these files failed:</source>
         <translation>Nepodařilo se otevřít tyto soubory:</translation>
     </message>
@@ -139,7 +139,7 @@ Pokračujte na vlastní nebezpečí.</translation>
     </message>
     <message>
         <location filename="../3rdparty/kdiff3/mergeresultwindow.cpp" line="1807"/>
-        <location filename="../3rdparty/kdiff3/mergeresultwindow.cpp" line="2723"/>
+        <location filename="../3rdparty/kdiff3/mergeresultwindow.cpp" line="2728"/>
         <source>&lt;Merge Conflict&gt;</source>
         <translation>&lt;Střet při sloučení&gt;</translation>
     </message>
@@ -147,22 +147,22 @@ Pokračujte na vlastní nebezpečí.</translation>
 <context>
     <name>OptionEncodingComboBox</name>
     <message>
-        <location filename="../3rdparty/kdiff3/optiondialog.cpp" line="531"/>
+        <location filename="../3rdparty/kdiff3/optiondialog.cpp" line="539"/>
         <source>Unicode, 8 bit</source>
         <translation>Unicode, 8 bitů</translation>
     </message>
     <message>
-        <location filename="../3rdparty/kdiff3/optiondialog.cpp" line="532"/>
+        <location filename="../3rdparty/kdiff3/optiondialog.cpp" line="540"/>
         <source>Unicode</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../3rdparty/kdiff3/optiondialog.cpp" line="533"/>
+        <location filename="../3rdparty/kdiff3/optiondialog.cpp" line="541"/>
         <source>Latin1</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../3rdparty/kdiff3/optiondialog.cpp" line="553"/>
+        <location filename="../3rdparty/kdiff3/optiondialog.cpp" line="561"/>
         <source>Change this if non-ASCII characters are not displayed correctly.</source>
         <translation>Toto změňte v případě, že se ne-ASCII znaky nezobrazují správně.</translation>
     </message>
@@ -199,30 +199,30 @@ Pokračujte na vlastní nebezpečí.</translation>
 <context>
     <name>WindowTitleWidget</name>
     <message>
-        <location filename="../3rdparty/kdiff3/mergeresultwindow.cpp" line="3336"/>
+        <location filename="../3rdparty/kdiff3/mergeresultwindow.cpp" line="3342"/>
         <source>Output</source>
         <translation>Výstup</translation>
     </message>
     <message>
-        <location filename="../3rdparty/kdiff3/mergeresultwindow.cpp" line="3348"/>
-        <location filename="../3rdparty/kdiff3/mergeresultwindow.cpp" line="3545"/>
+        <location filename="../3rdparty/kdiff3/mergeresultwindow.cpp" line="3354"/>
+        <location filename="../3rdparty/kdiff3/mergeresultwindow.cpp" line="3551"/>
         <source>[Modified]</source>
         <translation>[Upraveno]</translation>
     </message>
     <message>
-        <location filename="../3rdparty/kdiff3/mergeresultwindow.cpp" line="3355"/>
+        <location filename="../3rdparty/kdiff3/mergeresultwindow.cpp" line="3361"/>
         <source>Encoding for saving</source>
         <translation>Kódování pro uložení</translation>
     </message>
     <message>
-        <location filename="../3rdparty/kdiff3/mergeresultwindow.cpp" line="3363"/>
+        <location filename="../3rdparty/kdiff3/mergeresultwindow.cpp" line="3369"/>
         <source>Line end style:</source>
         <translation>Čára a styl:</translation>
     </message>
     <message>
-        <location filename="../3rdparty/kdiff3/mergeresultwindow.cpp" line="3480"/>
-        <location filename="../3rdparty/kdiff3/mergeresultwindow.cpp" line="3485"/>
-        <location filename="../3rdparty/kdiff3/mergeresultwindow.cpp" line="3490"/>
+        <location filename="../3rdparty/kdiff3/mergeresultwindow.cpp" line="3486"/>
+        <location filename="../3rdparty/kdiff3/mergeresultwindow.cpp" line="3491"/>
+        <location filename="../3rdparty/kdiff3/mergeresultwindow.cpp" line="3496"/>
         <source>Codec from</source>
         <translation>Kodek od</translation>
     </message>
