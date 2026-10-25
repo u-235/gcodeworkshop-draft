@@ -120,7 +120,7 @@ Jatka omalla vastuullasi.</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../3rdparty/kdiff3/pdiff.cpp" line="972"/>
+        <location filename="../3rdparty/kdiff3/pdiff.cpp" line="967"/>
         <source>Opening of these files failed:</source>
         <translation>Näiden tiedostojen avaus epäonnistui:</translation>
     </message>
@@ -147,22 +147,22 @@ Jatka omalla vastuullasi.</translation>
 <context>
     <name>OptionEncodingComboBox</name>
     <message>
-        <location filename="../3rdparty/kdiff3/optiondialog.cpp" line="531"/>
+        <location filename="../3rdparty/kdiff3/optiondialog.cpp" line="539"/>
         <source>Unicode, 8 bit</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../3rdparty/kdiff3/optiondialog.cpp" line="532"/>
+        <location filename="../3rdparty/kdiff3/optiondialog.cpp" line="540"/>
         <source>Unicode</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../3rdparty/kdiff3/optiondialog.cpp" line="533"/>
+        <location filename="../3rdparty/kdiff3/optiondialog.cpp" line="541"/>
         <source>Latin1</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../3rdparty/kdiff3/optiondialog.cpp" line="553"/>
+        <location filename="../3rdparty/kdiff3/optiondialog.cpp" line="561"/>
         <source>Change this if non-ASCII characters are not displayed correctly.</source>
         <translation>Vaihda asetusta, jos ei-ASCII-merkit eivät näy oikein.</translation>
     </message>

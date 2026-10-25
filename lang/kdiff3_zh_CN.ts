@@ -121,7 +121,7 @@ Continue at your own risk.</source>
         <translation>将当前选中内容复制到剪贴板</translation>
     </message>
     <message>
-        <location filename="../3rdparty/kdiff3/pdiff.cpp" line="972"/>
+        <location filename="../3rdparty/kdiff3/pdiff.cpp" line="967"/>
         <source>Opening of these files failed:</source>
         <translation>打开这些文件失败:</translation>
     </message>
@@ -148,22 +148,22 @@ Continue at your own risk.</source>
 <context>
     <name>OptionEncodingComboBox</name>
     <message>
-        <location filename="../3rdparty/kdiff3/optiondialog.cpp" line="531"/>
+        <location filename="../3rdparty/kdiff3/optiondialog.cpp" line="539"/>
         <source>Unicode, 8 bit</source>
         <translation>Unicode, 8位</translation>
     </message>
     <message>
-        <location filename="../3rdparty/kdiff3/optiondialog.cpp" line="532"/>
+        <location filename="../3rdparty/kdiff3/optiondialog.cpp" line="540"/>
         <source>Unicode</source>
         <translation>Unicode</translation>
     </message>
     <message>
-        <location filename="../3rdparty/kdiff3/optiondialog.cpp" line="533"/>
+        <location filename="../3rdparty/kdiff3/optiondialog.cpp" line="541"/>
         <source>Latin1</source>
         <translation>Latin1</translation>
     </message>
     <message>
-        <location filename="../3rdparty/kdiff3/optiondialog.cpp" line="553"/>
+        <location filename="../3rdparty/kdiff3/optiondialog.cpp" line="561"/>
         <source>Change this if non-ASCII characters are not displayed correctly.</source>
         <translation>如果非ASCII字符显示不正确，请修改此设置。</translation>
     </message>

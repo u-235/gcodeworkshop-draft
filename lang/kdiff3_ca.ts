@@ -50,7 +50,7 @@
 <context>
     <name>KDiff3App</name>
     <message>
-        <location filename="../3rdparty/kdiff3/pdiff.cpp" line="972"/>
+        <location filename="../3rdparty/kdiff3/pdiff.cpp" line="967"/>
         <source>Opening of these files failed:</source>
         <translation>Ha fallat l&apos;obertura d&apos;aquest fitxers:</translation>
     </message>
@@ -148,22 +148,22 @@ Continueu sota la vostra responsabilitat.</translation>
 <context>
     <name>OptionEncodingComboBox</name>
     <message>
-        <location filename="../3rdparty/kdiff3/optiondialog.cpp" line="531"/>
+        <location filename="../3rdparty/kdiff3/optiondialog.cpp" line="539"/>
         <source>Unicode, 8 bit</source>
         <translation>Unicode de 8 bits</translation>
     </message>
     <message>
-        <location filename="../3rdparty/kdiff3/optiondialog.cpp" line="532"/>
+        <location filename="../3rdparty/kdiff3/optiondialog.cpp" line="540"/>
         <source>Unicode</source>
         <translation>Unicode</translation>
     </message>
     <message>
-        <location filename="../3rdparty/kdiff3/optiondialog.cpp" line="533"/>
+        <location filename="../3rdparty/kdiff3/optiondialog.cpp" line="541"/>
         <source>Latin1</source>
         <translation>Latin1</translation>
     </message>
     <message>
-        <location filename="../3rdparty/kdiff3/optiondialog.cpp" line="553"/>
+        <location filename="../3rdparty/kdiff3/optiondialog.cpp" line="561"/>
         <source>Change this if non-ASCII characters are not displayed correctly.</source>
         <translation>Canvieu-ho si els caràcters no ASCIi no es mostres correctament.</translation>
     </message>
