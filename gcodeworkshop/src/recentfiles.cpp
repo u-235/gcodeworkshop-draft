@@ -20,6 +20,8 @@
 #include <QSettings>    // for QSettings
 #include <QVariant>     // for QVariant
 
+#include <utils/as_const.h>
+
 #include "recentfiles.h"
 
 
@@ -122,7 +124,7 @@ void RecentFiles::save(QSettings* cfg)
 	cfg->beginGroup(CFG_KEY_FILES);
 	int count = 0;
 
-	for (const QString& file : m_files) {
+	for (const QString& file : asConst(m_files)) {
 		if (!file.isEmpty()) {
 			cfg->setValue(QString::number(++count), file);
 		}

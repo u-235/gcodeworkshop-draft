@@ -66,6 +66,7 @@ class QWidget;
 
 #include <gcoderstyle.h>            // for GCoderStyle, HighlightColors
 #include <gcoderwidgetproperties.h> // for GCoderWidgetProperties, SHOW_FILENAME, SHOW_FILEPATH, SHOW_PROGTITLE
+#include <utils/as_const.h>
 
 #include "highlightmode.h"  // for HighlightMode
 #include "setupdialog.h"
@@ -740,7 +741,7 @@ void GUI::SetupDialog::fillCodecs()
 
 	QList<QByteArray> codecList;
 
-	for (int i : mibList) {
+	for (int i : asConst(mibList)) {
 		QTextCodec* tc = QTextCodec::codecForMib(i);
 
 		if (tc != nullptr) {

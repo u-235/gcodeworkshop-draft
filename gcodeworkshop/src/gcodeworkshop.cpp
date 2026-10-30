@@ -78,6 +78,7 @@
 #include <gcoderwidgetproperties.h>     // for GCoderWidgetProperties
 #include <gcodeworkshop.h>              // IWYU pragma: associated
 #include <kdiff3/common.h>              // getFilters()
+#include <utils/as_const.h>
 #include <utils/keysequencemap.h>       // for KeySequenceMap
 #include <utils/medium.h>               // Medium
 #include <utils/gcode-converter.h>      // for Converter
@@ -322,13 +323,11 @@ Document* GCodeWorkShop::newFile()
 
 void GCodeWorkShop::openDir(const QDir& dir)
 {
-	const QString& filters = getFilters(m_extensions);
-
-	QStringList files = QFileDialog::getOpenFileNames(
-	                        mainWindow(),
-	                        tr("Select one or more files to open"),
-	                        dir.canonicalPath(),
-	                        filters, 0);
+	const QStringList& files = QFileDialog::getOpenFileNames(
+	                               mainWindow(),
+	                               tr("Select one or more files to open"),
+	                               dir.canonicalPath(),
+	                               getFilters(m_extensions), 0);
 
 	for (const QString& fileName : files) {
 		openFile(fileName);
@@ -393,7 +392,7 @@ bool GCodeWorkShop::saveDocument(Document* doc, bool forceSaveAs)
 
 		QString filters = extText.arg(m_saveExtension);
 
-		for (const QString& ext : m_extensions) {
+		for (const QString& ext : asConst(m_extensions)) {
 			QString saveExt = extText.arg(ext);
 
 			if (ext != m_saveExtension) {
@@ -472,7 +471,9 @@ bool GCodeWorkShop::saveAll()
 	bool saved = true;
 	int i = 0;
 
-	for (Document* doc : m_documentManager->documentList()) {
+	const auto dlist = m_documentManager->documentList();
+
+	for (Document* doc : dlist) {
 		if (doc->isModified()) {
 			if (saveDocument(doc, false)) {
 				i++;
@@ -512,7 +513,9 @@ bool GCodeWorkShop::maybeSaveAll()
 {
 	bool saved = true;
 
-	for (Document* doc : m_documentManager->documentList()) {
+	const auto& dlist = m_documentManager->documentList();
+
+	for (Document* doc : dlist) {
 		if (!maybeSave(doc)) {
 			saved = false;
 		}
@@ -698,7 +701,9 @@ void GCodeWorkShop::config()
 
 		m_documentManager->updateDocuments(GCoder::DOCUMENT_TYPE);
 
-		for (Document* doc : m_documentManager->documentList()) {
+		const auto& dlist = m_documentManager->documentList();
+
+		for (Document* doc : dlist) {
 			doc->setReadOnly(m_defaultReadOnly);
 		}
 
@@ -1120,7 +1125,7 @@ void GCodeWorkShop::attachSerialConfigToDir(const QString& name, bool attach)
 		dir.setSorting(QDir::Name);
 		dir.setNameFilters(QStringList("*.ini"));
 
-		QFileInfoList list = dir.entryInfoList();
+		const QFileInfoList& list = dir.entryInfoList();
 
 		for (const QFileInfo& fileInfo : list) {
 			file.setFileName(fileInfo.absoluteFilePath());
@@ -1204,7 +1209,7 @@ void GCodeWorkShop::attachHighlighterToDir(bool attach)
 		dir.setSorting(QDir::Name);
 		dir.setNameFilters(QStringList("*.cfg"));
 
-		QFileInfoList list = dir.entryInfoList();
+		const QFileInfoList& list = dir.entryInfoList();
 
 		for (const QFileInfo& fileInfo : list) {
 			file.setFileName(fileInfo.absoluteFilePath());
@@ -1295,7 +1300,9 @@ void GCodeWorkShop::changeSession(const QString& name)
 
 void GCodeWorkShop::openFilesFromSession()
 {
-	for (const DocumentInfo::Ptr& info : m_sessionManager->documentInfoList()) {
+	const auto& dilist = m_sessionManager->documentInfoList();
+
+	for (const DocumentInfo::Ptr& info : dilist) {
 		m_MdiWidgetsMaximized = false;
 		loadFile(info, false);
 	}
@@ -1304,8 +1311,9 @@ void GCodeWorkShop::openFilesFromSession()
 void GCodeWorkShop::storeFileInfoInSession()
 {
 	QList<DocumentInfo::Ptr> infoList;
+	const auto& dlist = m_documentManager->documentList();
 
-	for (const Document* doc : m_documentManager->documentList()) {
+	for (const Document* doc : dlist) {
 		DocumentInfo::Ptr info = doc->documentInfo();
 		infoList.append(info);
 	}

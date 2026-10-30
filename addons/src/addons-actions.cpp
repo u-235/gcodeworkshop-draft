@@ -43,6 +43,7 @@
 #include <gcodeworkshop.h>              // for GCodeWorkShop
 #include <gui/longjobhelper.h>          // for GUI::LongJobHelper, GUI::LongJobHelper::CANCEL
 #include <gui/workshop/knownactions.h>  // for KnownActions
+#include <utils/as_const.h>
 #include <utils/medium.h>               // for Medium
 #include <utils/splitfile.h>            // for splitFile
 
@@ -554,7 +555,7 @@ void Addons::Actions::doSplitProgramms()
 		return;
 	}
 
-	for (QString it : list) {
+	for (const QString& it : asConst(list)) {
 		GCoderDocument* gdoc = dynamic_cast<GCoderDocument*>(m_app->newFile());
 
 		if (gdoc == nullptr) {

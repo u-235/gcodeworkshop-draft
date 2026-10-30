@@ -27,6 +27,7 @@ HEADERS += \
     include/gui/serialport/serialportconfigdialog.h \
     include/qt/qoverload.h \
     include/serialportsettings.h \
+    include/utils/as_const.h \
     include/version.h
 
 FORMS += \

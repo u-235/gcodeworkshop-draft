@@ -594,8 +594,10 @@ void GUI::WorkShop::MainWindow::setMdiTabbedMode(bool tabbed)
 		ui->mdiArea->setViewMode(QMdiArea::SubWindowView);
 
 		// Therefore, if necessary, we restore the maximized window.
+		const auto& wlist = ui->mdiArea->subWindowList();
+
 		if (maximized) {
-			for (auto window : ui->mdiArea->subWindowList()) {
+			for (auto window : wlist) {
 				window->showMaximized();
 			}
 		}
@@ -881,7 +883,9 @@ void GUI::WorkShop::MainWindow::dropEvent(QDropEvent* event)
 		return;
 	}
 
-	for (const QUrl& url : event->mimeData()->urls()) {
+	const auto& urlList = event->mimeData()->urls();
+
+	for (const QUrl& url : urlList) {
 		app()->openFile(url.toString(QUrl::PreferLocalFile));
 	}
 

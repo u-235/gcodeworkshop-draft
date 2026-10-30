@@ -26,13 +26,6 @@
 #include <QString>          // for QString, operator==
 #include <Qt>               // for ConnectionType, DirectConnection
 #include <QtDebug>          // for QDebug
-#include <QtGlobal>         // for qAsConst, qWarning
-// As long as qAsConst is used.
-// IWYU pragma: no_include "type_traits"
-// IWYU pragma: no_include <type_traits>
-#if (QT_VERSION < QT_VERSION_CHECK(5, 7, 0))
-	#define qAsConst(s) (s)
-#endif
 
 #include <document.h>                   // for Document
 #include <documentinfo.h>               // for DocumentInfo
@@ -40,6 +33,8 @@
 #include <documentproducer.h>           // for DocumentProducer
 #include <documentstyle.h>              // for DocumentStyle
 #include <documentwidgetproperties.h>   // for DocumentWidgetProperties
+
+#include <utils/as_const.h>
 
 
 DocumentManager::DocumentManager(QObject* parent) :
@@ -52,7 +47,7 @@ DocumentManager::DocumentManager(QObject* parent) :
 
 DocumentManager::~DocumentManager()
 {
-	for (DocumentProducer* prod : qAsConst(m_producers)) {
+	for (DocumentProducer* prod : asConst(m_producers)) {
 		delete prod;
 	}
 }
@@ -69,7 +64,7 @@ Document* DocumentManager::activeDocument() const
 
 	QMdiSubWindow* subWindow = m_area->subWindowList(QMdiArea::StackingOrder).last();
 
-	for (const DocumentListItem& item : qAsConst(m_docList)) {
+	for (const DocumentListItem& item : asConst(m_docList)) {
 		if (item.subWindow == subWindow) {
 			return item.document;
 		}
@@ -89,7 +84,7 @@ bool DocumentManager::setActiveDocument(Document* doc)
 		return false;
 	}
 
-	for (const DocumentListItem& item : qAsConst(m_docList)) {
+	for (const DocumentListItem& item : asConst(m_docList)) {
 		if (item.document == doc) {
 			m_area->setActiveSubWindow(item.subWindow);
 			return true;
@@ -106,7 +101,7 @@ bool DocumentManager::setActiveDocument(const QString& filePath)
 
 Document* DocumentManager::findDocumentById(const QString& id) const
 {
-	for (const DocumentListItem& item : qAsConst(m_docList)) {
+	for (const DocumentListItem& item : asConst(m_docList)) {
 		if (item.id == id) {
 			return item.document;
 		}
@@ -117,7 +112,7 @@ Document* DocumentManager::findDocumentById(const QString& id) const
 
 Document* DocumentManager::findDocumentByFilePath(const QString& filePath) const
 {
-	for (const DocumentListItem& item : qAsConst(m_docList)) {
+	for (const DocumentListItem& item : asConst(m_docList)) {
 		if (item.document->filePath() == filePath) {
 			return item.document;
 		}
@@ -130,7 +125,7 @@ QList<Document*> DocumentManager::documentList() const
 {
 	QList<Document*> list;
 
-	for (auto doc : m_docList) {
+	for (const auto& doc : asConst(m_docList)) {
 		list.append(doc.document);
 	}
 
@@ -206,7 +201,7 @@ void DocumentManager::updateDocuments(const QString& type)
 		return;
 	}
 
-	for (const DocumentListItem& item : qAsConst(m_docList)) {
+	for (const DocumentListItem& item : asConst(m_docList)) {
 		if (item.document->type() == type) {
 			producer->updateDocument(item.document);
 		}
@@ -343,14 +338,14 @@ void DocumentManager::setMdiArea(QMdiArea* mdi)
 	connect(m_area, &QMdiArea::subWindowActivated, this, &DocumentManager::activeWindowChanged);
 
 
-	for (auto item : m_docList) {
+	for (auto item : asConst(m_docList)) {
 		item.subWindow = m_area->addSubWindow(item.document->widget());
 	}
 }
 
 void DocumentManager::activeWindowChanged(QMdiSubWindow* window)
 {
-	for (const DocumentListItem& item : qAsConst(m_docList)) {
+	for (const DocumentListItem& item : asConst(m_docList)) {
 		if (item.subWindow == window) {
 			emit activeDocumentChanged(item.document);
 		}
