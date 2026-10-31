@@ -40,10 +40,12 @@
 
 
 #include "qtlocalpeer.h"
+#include <QByteArray>
 #include <QCoreApplication>
 #include <QDataStream>
 #include <QRegularExpression>
 #include <QTime>
+#include <QtGlobal>
 
 #if defined(Q_OS_WIN)
 #include <QLibrary>
@@ -83,7 +85,11 @@ QtLocalPeer::QtLocalPeer(QObject* parent, const QString &appId)
     prefix.truncate(6);
 
     QByteArray idc = id.toUtf8();
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     quint16 idNum = qChecksum(idc.constData(), idc.size());
+#else
+    quint16 idNum = qChecksum(idc);
+#endif
     socketName = QLatin1String("qtsingleapp-") + prefix
                  + QLatin1Char('-') + QString::number(idNum, 16);
 

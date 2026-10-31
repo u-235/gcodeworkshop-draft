@@ -2056,10 +2056,11 @@ void MergeResultWindow::convertToLinePos(int x, int y, int &line, int &pos)
 void MergeResultWindow::mousePressEvent(QMouseEvent *e)
 {
     m_bCursorOn = true;
-
+    int x = ::eventPosX(e);
+    int y = ::eventPosY(e);
     int line;
     int pos;
-    convertToLinePos(e->x(), e->y(), line, pos);
+    convertToLinePos(x, y, line, pos);
 
     bool bLMB = e->button() == Qt::LeftButton;
     bool bMMB = e->button() == Qt::MiddleButton;
@@ -2131,9 +2132,11 @@ void MergeResultWindow::mousePressEvent(QMouseEvent *e)
 void MergeResultWindow::mouseDoubleClickEvent(QMouseEvent *e)
 {
     if (e->button() == Qt::LeftButton) {
+        int x = ::eventPosX(e);
+        int y = ::eventPosY(e);
         int line;
         int pos;
-        convertToLinePos(e->x(), e->y(), line, pos);
+        convertToLinePos(x, y, line, pos);
         m_cursorXPos = pos;
         m_cursorOldXPos = pos;
         m_cursorYPos = line;
@@ -2176,9 +2179,11 @@ void MergeResultWindow::mouseReleaseEvent(QMouseEvent *e)
 
 void MergeResultWindow::mouseMoveEvent(QMouseEvent *e)
 {
+    int x = ::eventPosX(e);
+    int y = ::eventPosY(e);
     int line;
     int pos;
-    convertToLinePos(e->x(), e->y(), line, pos);
+    convertToLinePos(x, y, line, pos);
     m_cursorXPos = pos;
     m_cursorOldXPos = pos;
     m_cursorYPos = line;
@@ -2197,28 +2202,28 @@ void MergeResultWindow::mouseMoveEvent(QMouseEvent *e)
         int deltaY = 0;
 
         if (! m_pOptionDialog->m_bRightToLeftLanguage) {
-            if (e->x() < leftInfoWidth * fontWidth) {
+            if (x < leftInfoWidth * fontWidth) {
                 deltaX = -1;
             }
 
-            if (e->x() > width()) {
+            if (x > width()) {
                 deltaX = +1;
             }
         } else {
-            if (e->x() > width() - 1 - leftInfoWidth * fontWidth) {
+            if (x > width() - 1 - leftInfoWidth * fontWidth) {
                 deltaX = -1;
             }
 
-            if (e->x() < fontWidth) {
+            if (x < fontWidth) {
                 deltaX = +1;
             }
         }
 
-        if (e->y() < topLineYOffset) {
+        if (y < topLineYOffset) {
             deltaY = -1;
         }
 
-        if (e->y() > height()) {
+        if (y > height()) {
             deltaY = +1;
         }
 
@@ -3116,11 +3121,12 @@ Overview::e_OverviewMode Overview::getOverviewMode()
 
 void Overview::mousePressEvent(QMouseEvent *e)
 {
+    int y = ::eventPosY(e);
     int h = height() - 1;
     int h1 = h * m_pageHeight / max2(1, m_nofLines) + 3;
 
     if (h > 0) {
-        emit setLine((e->y() - h1 / 2)*m_nofLines / h);
+        emit setLine((y - h1 / 2)*m_nofLines / h);
     }
 }
 

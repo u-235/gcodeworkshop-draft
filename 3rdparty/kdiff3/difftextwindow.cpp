@@ -407,9 +407,11 @@ void DiffTextWindow::focusInEvent(QFocusEvent *e)
 void DiffTextWindow::mousePressEvent(QMouseEvent *e)
 {
     if (e->button() == Qt::LeftButton) {
+        int x = ::eventPosX(e);
+        int y = ::eventPosY(e);
         int line;
         int pos;
-        convertToLinePos(e->x(), e->y(), line, pos);
+        convertToLinePos(x, y, line, pos);
 
         if (pos < d->m_firstColumn) {
             emit setFastSelectorLine(convertLineToDiff3LineIdx(line));
@@ -470,9 +472,11 @@ void DiffTextWindow::mouseDoubleClickEvent(QMouseEvent *e)
     d->m_lastKnownMousePos = e->pos();
 
     if (e->button() == Qt::LeftButton) {
+        int x = ::eventPosX(e);
+        int y = ::eventPosY(e);
         int line;
         int pos;
-        convertToLinePos(e->x(), e->y(), line, pos);
+        convertToLinePos(x, y, line, pos);
 
         // Get the string data of the current line
         QString s;
@@ -536,9 +540,11 @@ inline int sqr(int x)
 
 void DiffTextWindow::mouseMoveEvent(QMouseEvent *e)
 {
+    int x = ::eventPosX(e);
+    int y = ::eventPosY(e);
     int line;
     int pos;
-    convertToLinePos(e->x(), e->y(), line, pos);
+    convertToLinePos(x, y, line, pos);
     d->m_lastKnownMousePos = e->pos();
 
     if (d->m_selection.firstLine != -1) {
@@ -553,29 +559,29 @@ void DiffTextWindow::mouseMoveEvent(QMouseEvent *e)
         int deltaY = 0;
 
         if (! false) { //d->m_pOptionDialog->m_color->m_bRightToLeftLanguage
-            if (e->x() < d->leftInfoWidth()*fontWidth) {
-                deltaX = -1 - abs(e->x() - d->leftInfoWidth() * fontWidth) / fontWidth;
+            if (x < d->leftInfoWidth()*fontWidth) {
+                deltaX = -1 - abs(x - d->leftInfoWidth() * fontWidth) / fontWidth;
             }
 
-            if (e->x() > width()) {
-                deltaX = +1 + abs(e->x() - width()) / fontWidth;
+            if (x > width()) {
+                deltaX = +1 + abs(x - width()) / fontWidth;
             }
         } else {
-            if (e->x() > width() - 1 - d->leftInfoWidth()*fontWidth) {
-                deltaX = +1 + abs(e->x() - (width() - 1 - d->leftInfoWidth() * fontWidth)) / fontWidth;
+            if (x > width() - 1 - d->leftInfoWidth()*fontWidth) {
+                deltaX = +1 + abs(x - (width() - 1 - d->leftInfoWidth() * fontWidth)) / fontWidth;
             }
 
-            if (e->x() < fontWidth) {
-                deltaX = -1 - abs(e->x() - fontWidth) / fontWidth;
+            if (x < fontWidth) {
+                deltaX = -1 - abs(x - fontWidth) / fontWidth;
             }
         }
 
-        if (e->y() < 0) {
-            deltaY = -1 - sqr(e->y()) / sqr(fm.height());
+        if (y < 0) {
+            deltaY = -1 - sqr(y) / sqr(fm.height());
         }
 
-        if (e->y() > height()) {
-            deltaY = +1 + sqr(e->y() - height()) / sqr(fm.height());
+        if (y > height()) {
+            deltaY = +1 + sqr(y - height()) / sqr(fm.height());
         }
 
         if ((deltaX != 0 && d->m_scrollDeltaX != deltaX) || (deltaY != 0

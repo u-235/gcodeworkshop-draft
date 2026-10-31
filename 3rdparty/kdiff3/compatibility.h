@@ -18,7 +18,8 @@
 #ifndef COMPATIBILITY_H
 #define COMPATIBILITY_H
 
-#include <QtGlobal> // QT_VERSION QT_VERSION_CHECK
+#include <QMouseEvent>
+#include <QtGlobal>     // QT_VERSION QT_VERSION_CHECK
 #include <QFontMetrics>
 
 inline int fontWidth(const QFontMetrics &fm)
@@ -36,6 +37,24 @@ inline bool isFontFixed(const QFontMetrics &fm)
     return fm.width('W') == fm.width('i');
 #else
     return fm.horizontalAdvance('W') == fm.horizontalAdvance('i');
+#endif
+}
+
+inline int eventPosX(QMouseEvent *e)
+{
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+    return e->x();
+#else
+    return e->position().toPoint().x();
+#endif
+}
+
+inline int eventPosY(QMouseEvent *e)
+{
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+    return e->y();
+#else
+    return e->position().toPoint().y();
 #endif
 }
 

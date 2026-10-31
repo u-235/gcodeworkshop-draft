@@ -42,6 +42,7 @@
 #include <QString>          // for QString
 #include <QVariant>         // for QVariant
 #include <Qt>               // for Key, KeyboardModifier, GlobalColor, WidgetAttribute
+#include <QtGlobal>         // for QT_VERSION, QT_VERSION_CHECK
 
 class QValidator;
 class QWidget;
@@ -109,8 +110,13 @@ FeedsDialog::FeedsDialog(QWidget* parent, QSettings* settings) :
 	connect(sInput, &QLineEdit::textChanged, this, & FeedsDialog::inputChanged);
 	connect(fInput, &QLineEdit::textChanged, this, & FeedsDialog::inputChanged);
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 9, 0)
 	connect(mmCheckBox, &QCheckBox::stateChanged, this, & FeedsDialog::checkBoxChanged);
 	connect(inchCheckBox, &QCheckBox::stateChanged, this, & FeedsDialog::checkBoxChanged);
+#else
+	connect(mmCheckBox, &QCheckBox::checkStateChanged, this, & FeedsDialog::checkBoxChanged);
+	connect(inchCheckBox, &QCheckBox::checkStateChanged, this, & FeedsDialog::checkBoxChanged);
+#endif
 }
 
 FeedsDialog::~FeedsDialog()

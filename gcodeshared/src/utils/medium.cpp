@@ -56,7 +56,7 @@ Medium::Medium(QObject* parent) :
 	QObject(parent),
 	lauchType(checkLaunch())
 {
-	addTranslationDir(QLibraryInfo::location(QLibraryInfo::TranslationsPath));
+	addTranslationDir(qtTranslationPath());
 	addTranslationDir(COLON + SLASH_LANG);
 	addTranslationUnit("qtbase"); // For Qt base module;
 	addTranslationUnit(APP_NAME);
@@ -74,6 +74,15 @@ Medium::Medium(QObject* parent) :
 	mSettings = new QSettings(settingFile, QSettings::IniFormat);
 
 	updateTranslation();
+}
+
+QString Medium::qtTranslationPath()
+{
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+	return QLibraryInfo::location(QLibraryInfo::TranslationsPath);
+#else
+	return QLibraryInfo::path(QLibraryInfo::TranslationsPath);
+#endif
 }
 
 Medium::~Medium()
@@ -212,7 +221,7 @@ QList<QLocale> Medium::findTranslation(bool skipQtDir)
 		QStringList fileList = QDir(dir).entryList(QDir::Files);
 
 		// Skip Qt translation directory.
-		if (dir == QLibraryInfo::location(QLibraryInfo::TranslationsPath) && skipQtDir) {
+		if (dir == qtTranslationPath() && skipQtDir) {
 			continue;
 		}
 

@@ -288,9 +288,16 @@ GUI::SetupDialog::SetupDialog(QWidget* parent, const AppConfig* prop, Qt::Window
 	connect(ui->okButton, &QPushButton::clicked, this, &GUI::SetupDialog::accept);
 	connect(ui->cancelButton, &QPushButton::clicked, this, &GUI::SetupDialog::close);
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 9, 0)
 	connect(ui->showAllCodecs, &QCheckBox::stateChanged, this, &GUI::SetupDialog::showAllCodecsClicked);
 	connect(ui->showAllCodecs, &QCheckBox::stateChanged, this, &GUI::SetupDialog::fillCodecs);
 	connect(ui->showAliases, &QCheckBox::stateChanged, this, &GUI::SetupDialog::fillCodecs);
+#else
+	connect(ui->showAllCodecs, &QCheckBox::checkStateChanged, this, &GUI::SetupDialog::showAllCodecsClicked);
+	connect(ui->showAllCodecs, &QCheckBox::checkStateChanged, this, &GUI::SetupDialog::fillCodecs);
+	connect(ui->showAliases, &QCheckBox::checkStateChanged, this, &GUI::SetupDialog::fillCodecs);
+#endif
+
 	ui->dropControl->setChecked(prop->gcodeConverterOptions.dropControll);
 	ui->dropExtra->setChecked(prop->gcodeConverterOptions.dropExtented);
 	ui->dropEmptyLine->setChecked(prop->gcodeConverterOptions.dropEmptyLine);

@@ -146,10 +146,18 @@ GUI::SerialPortConfigDialog::SerialPortConfigDialog(QWidget* parent, const QStri
 	connect(ui->deleteEobCharButton, &QToolButton::clicked, this, &SerialPortConfigDialog::deleteEobCharButtonClicked);
 	connect(ui->eobComboBox, &QComboBox::editTextChanged, this, &SerialPortConfigDialog::eobComboBoxEditTextChanged);
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 9, 0)
 	connect(ui->autoSaveCheckBox, &QCheckBox::stateChanged, this, &SerialPortConfigDialog::autoSaveCheckBoxChanged);
 	connect(ui->fileServerCheckBox, &QCheckBox::stateChanged, this, &SerialPortConfigDialog::fileServerCheckBoxChanged);
 	connect(ui->appendExtCheckBox, &QCheckBox::stateChanged, this, &SerialPortConfigDialog::appendExtCheckBoxChanged);
 	connect(ui->useAsExtCheckBox, &QCheckBox::stateChanged, this, &SerialPortConfigDialog::useAsExtCheckBoxChanged);
+#else
+	connect(ui->autoSaveCheckBox, &QCheckBox::checkStateChanged, this, &SerialPortConfigDialog::autoSaveCheckBoxChanged);
+	connect(ui->fileServerCheckBox, &QCheckBox::checkStateChanged, this,
+	        &SerialPortConfigDialog::fileServerCheckBoxChanged);
+	connect(ui->appendExtCheckBox, &QCheckBox::checkStateChanged, this, &SerialPortConfigDialog::appendExtCheckBoxChanged);
+	connect(ui->useAsExtCheckBox, &QCheckBox::checkStateChanged, this, &SerialPortConfigDialog::useAsExtCheckBoxChanged);
+#endif
 
 	connect(ui->searchPath1LineEdit, &QLineEdit::textChanged, this, &SerialPortConfigDialog::readPath1Changed);
 	connect(ui->searchPath2LineEdit, &QLineEdit::textChanged, this, &SerialPortConfigDialog::readPath2Changed);

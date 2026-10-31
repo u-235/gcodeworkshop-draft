@@ -106,6 +106,8 @@ signals:
 protected:
 	explicit Medium(QObject* parent = 0);
 
+	QString qtTranslationPath();
+
 	QStringList mTranslationDirs;
 	QStringList mTranslationUnits;
 	QList<QTranslator*> mTranslators;
