@@ -65,7 +65,6 @@ ${PACKAGE_INSTALL_PREFIX}/bin/gcodefileserver
 ${PACKAGE_INSTALL_PREFIX}/bin/gcodeworkshop
 ${PACKAGE_INSTALL_PREFIX}/share/applications/gcodeworkshop.desktop
 ${PACKAGE_INSTALL_PREFIX}/share/doc/gcodeworkshop/COPYING
-${PACKAGE_INSTALL_PREFIX}/share/doc/gcodeworkshop/COPYING.LESSER
 ${PACKAGE_INSTALL_PREFIX}/share/doc/gcodeworkshop/README.md
 ${PACKAGE_INSTALL_PREFIX}/share/doc/gcodeworkshop/SerialTransmission_Help.html
 ${PACKAGE_INSTALL_PREFIX}/share/gcodeworkshop/examples/0100.nc

@@ -81,7 +81,7 @@ Command line options
 
 ## License
 
-GCodeWorkShop is distributed under the GNU LGPL version 3 license. You can get
+GCodeWorkShop is distributed under the GNU GPL version 2 license. You can get
 the source code at the following sites:
 
 - [GitHub](https://github.com/GCodeProjects/GCodeWorkShop)

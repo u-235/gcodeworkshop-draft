@@ -53,7 +53,6 @@ deploy()
     mkdir -p "$PACKAGE_I18N_DIR"
     make install
     cp "$SOURCE_DIR"/COPYING "$PACKAGE_DIR"/LICENSE.txt
-    cp "$SOURCE_DIR"/COPYING.LESSER "$PACKAGE_DIR"/LICENSE.LESSER.txt
 
 cat <<EOF > "$PACKAGE_BIN_DIR"/qt.conf
 ; https://doc.qt.io/qt-5/qt-conf.html

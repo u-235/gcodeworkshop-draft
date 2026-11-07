@@ -9,7 +9,7 @@ include(lang/lang.pri)
 
 examples.files = $$PROJECT_ROOT_PATH/examples/*
 doc.files = $$PROJECT_ROOT_PATH/README.md $$PROJECT_ROOT_PATH/doc/SerialTransmission_Help.html
-license.files = $$PROJECT_ROOT_PATH/COPYING $$PROJECT_ROOT_PATH/COPYING.LESSER
+license.files = $$PROJECT_ROOT_PATH/COPYING
 
 
 # target platforms dependencies
