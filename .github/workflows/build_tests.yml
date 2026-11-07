@@ -50,7 +50,7 @@ jobs:
           }
         - {
             name:     macOS_arm64,
-            os:       macos-14,
+            os:       macos-15,
             # https://stackoverflow.com/a/77631382
             q_extra:  "-early QMAKE_DEFAULT_LIBDIRS=$(xcrun -show-sdk-path)/usr/lib",
             build:    make

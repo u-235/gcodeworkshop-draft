@@ -39,11 +39,6 @@ jobs:
             artifact:   "Qt6"
             extra_pack: "qt6-base-dev qt6-base-dev-tools qt6-serialport-dev qt6-5compat-dev qt6-l10n-tools qt6-translations-l10n"
             flags:      "-q qmake6"
-          - name:       bullseye
-            version:    11
-            artifact:   "Qt5"
-            extra_pack: "qtbase5-dev libqt5serialport5-dev qttools5-dev-tools"
-            flags:      ""
         arch:
           - name: amd64
             id:   linux/amd64
