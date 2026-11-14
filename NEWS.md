@@ -1,3 +1,11 @@
+2026-11-14 v2026-11
+-------------------
+
+This release does not include any major updates, but marks the completion of a
+lengthy refactoring phase. However, thanks to @vvinggth, the app now features a
+Chinese translation of the user interface.
+
+
 2025-04-26 v2025-04
 --------------------
 

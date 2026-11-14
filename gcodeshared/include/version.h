@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2024 Nick Egorrov, nicegorov@yandex.ru
+ *  Copyright (C) 2024-2026 Nick Egorrov, nicegorov@yandex.ru
  *
  *  This file is part of GCodeWorkShop.
  *
@@ -21,7 +21,7 @@
 #define VERSION_H
 
 #ifndef GCODEWORKSHOP_VERSION
-	#define GCODEWORKSHOP_VERSION "2025.04"
+	#define GCODEWORKSHOP_VERSION "2026.11"
 #endif
 
 #endif // VERSION_H
